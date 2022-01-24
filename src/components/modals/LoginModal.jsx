@@ -1,17 +1,15 @@
-import { useEffect } from 'react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { allActionCreators } from '../store/reducers/action-creators'
-import { AuthActionCreators } from '../store/reducers/auth/action-creators'
+import { allActionCreators } from 'store/reducers/action-creators'
 
-const Modal = () => {
+const LoginModal = () => {
     const [email, setEmail] = useState('email@gmail.com')
     const [password, setPassword] = useState('123456789')
     const [name, setName] = useState('Имя')
     const [phone, setPhone] = useState('12345')
 
     const dispatch = useDispatch()
-    const { checkEmail, login, register, setShowModal } = allActionCreators
+    const { checkEmail, login, register, setShowModal, changeStep } = allActionCreators
     const { showModal, step, error } = useSelector((state) => state.auth)
 
     const steps = {
@@ -24,13 +22,13 @@ const Modal = () => {
         LOGIN: {
             title: 'Вход',
             btn: 'Войти',
-            onPrev: () => dispatch(AuthActionCreators.changeStep('CHECK_EMAIL')),
+            onPrev: () => dispatch(changeStep('CHECK_EMAIL')),
             onNext: () => dispatch(login({ email, password })),
         },
         REGISTER: {
             title: 'Регистрация',
             btn: 'Создать аккаунт',
-            onPrev: () => dispatch(AuthActionCreators.changeStep('CHECK_EMAIL')),
+            onPrev: () => dispatch(changeStep('CHECK_EMAIL')),
             onNext: () => dispatch(register({ name, phone, email, password })),
         },
     }
@@ -168,4 +166,4 @@ const Modal = () => {
     )
 }
 
-export default Modal
+export default LoginModal

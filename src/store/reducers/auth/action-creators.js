@@ -1,4 +1,4 @@
-import AuthService from '../../../api/AuthService'
+import AuthService from 'api/AuthService'
 import { authTypes } from './types'
 
 export const AuthActionCreators = {

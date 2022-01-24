@@ -1,4 +1,4 @@
-import LessonsService from '../../../api/LessonsService'
+import LessonsService from 'api/LessonsService'
 import { lessonsTypes } from './types'
 
 export const LessonsActionCreators = {
