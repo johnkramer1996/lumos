@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { RouteNames } from '../routes'
+import { RouteNames } from 'routes'
 import { allActionCreators } from '../store/reducers/action-creators'
 
 const AddLesson = () => {
