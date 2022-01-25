@@ -5,7 +5,7 @@ const initialState = {
     step: 'CHECK_EMAIL',
     isAuth: false,
     error: '',
-    isLoading: false,
+    isLoading: true,
     user: {},
     token: '',
 }
@@ -17,13 +17,13 @@ export default function authReducer(state = initialState, action) {
         case authTypes.SET_STEP:
             return { ...state, step: action.payload }
         case authTypes.SET_AUTH:
-            return { ...state, isAuth: action.payload, isLoading: false }
+            return { ...state, isAuth: action.payload }
         case authTypes.SET_USER:
             return { ...state, user: action.payload }
         case authTypes.SET_TOKEN:
             return { ...state, token: action.payload }
         case authTypes.SET_ERROR:
-            return { ...state, error: action.payload, isLoading: false }
+            return { ...state, error: action.payload }
         case authTypes.SET_IS_LOADING:
             return { ...state, isLoading: action.payload }
         default:

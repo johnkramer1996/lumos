@@ -1,4 +1,5 @@
-import axios, { authURL } from './axios'
+import axios from './axios'
+import { authURL } from './urls'
 
 export default class AuthService {
     static async auth() {
@@ -12,7 +13,7 @@ export default class AuthService {
             return error.response
         }
     }
-    static async checkEmail(body) {
+    static async checkEmail(body = {}) {
         try {
             return await axios.post(authURL.CHECK_EMAIL_URL, JSON.stringify(body), {
                 headers: { 'Content-Type': 'application/json' },
@@ -21,7 +22,7 @@ export default class AuthService {
             return error.response
         }
     }
-    static async login(body) {
+    static async login(body = {}) {
         try {
             return await axios.post(authURL.LOGIN_URL, JSON.stringify(body), {
                 headers: { 'Content-Type': 'application/json' },
@@ -30,7 +31,7 @@ export default class AuthService {
             return error.response
         }
     }
-    static async register(body) {
+    static async register(body = {}) {
         try {
             return await axios.post(authURL.REGISTER_URL, JSON.stringify(body), {
                 headers: { 'Content-Type': 'application/json' },

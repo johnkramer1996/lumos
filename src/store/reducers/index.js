@@ -1,7 +1,9 @@
 import auth from './auth'
-import lessons from './lessons'
+import courses from './courses'
+import system from './system'
 
 export default {
     auth,
-    lessons,
+    courses,
+    system,
 }

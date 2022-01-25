@@ -4,7 +4,9 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { privateRoutes, publicRoutes, RouteNames } from 'routes'
 
 const AppRouter = () => {
-    const { isAuth } = useSelector((state) => state.auth)
+    const {
+        auth: { isAuth },
+    } = useSelector((state) => state)
 
     return (
         <>

@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 
 const HeaderSearch = ({ isActive: isActiveNav }) => {
     const [isActive, setIsActive] = useState(false)
+
     useEffect(() => setIsActive(isActiveNav), [isActiveNav])
+
     return (
         <div className={`header__search ${isActive ? 'header__search--active' : ''}`}>
             <input type='text' placeholder='Поиск' />

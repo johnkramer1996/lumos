@@ -1,27 +1,26 @@
-import LessonsService from 'api/LessonsService'
-import { lessonsTypes } from './types'
+import CoursesService from 'api/CoursesService'
+import { coursesTypes } from './types'
 
-export const LessonsActionCreators = {
-    setLessons: (lessons) => ({ type: lessonsTypes.SET_LESSONS, payload: lessons }),
-    fetchLessons: () => async (dispatch) => {
+export const CoursesActionCreators = {
+    setCourses: (courses) => ({ type: coursesTypes.SET_COURSES, payload: courses }),
+    fetchCourses: (data) => async (dispatch) => {
         try {
-            const response = await LessonsService.fetchLessons()
+            const response = await CoursesService.fetchAll(data)
 
             if (response.status === 200) {
                 const {
-                    data: {
-                        data: { data: lessons },
-                    },
+                    data: { data },
                 } = response
-                dispatch(LessonsActionCreators.setLessons(lessons))
+
+                dispatch(CoursesActionCreators.setCourses(data))
 
                 return
             }
         } catch (e) {}
     },
-    addLesson: (body) => async (dispatch) => {
+    addCourse: (data) => async (dispatch) => {
         try {
-            const response = await LessonsService.addLesson(body)
+            const response = await CoursesService.add(data)
 
             if (response.status === 200) {
                 alert('Урок добавлен')

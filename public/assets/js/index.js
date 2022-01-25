@@ -133,9 +133,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // document.querySelector('.header__search').classList.toggle('header__search--active')
     // }
 
-    document.querySelector('.nav__dropdown-show').onclick = function () {
-        this.classList.toggle('nav__dropdown-show--active')
-    }
+    // document.querySelector('.nav__dropdown-show').onclick = function () {
+    //     this.classList.toggle('nav__dropdown-show--active')
+    // }
 
     // document.querySelector(".header__search").onclick = function() {
     //     this.classList.add('header__search--active');
