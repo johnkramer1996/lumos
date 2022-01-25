@@ -1,11 +1,11 @@
 import React from 'react'
 
-const Button = ({ className, color = 'blue', light, isOutline, text, ...rest }) => {
-    const classNames = [isOutline ? 'btn-outline' : light ? `btn-light-${color}` : `btn-${color}`, className]
+const Button = ({ children, className, color = 'blue', light, outline, text, ...rest }) => {
+    const classNames = [outline ? 'btn-outline' : light ? `btn-light-${color}` : `btn-${color}`, className]
 
     return (
         <button className={`btn ${classNames.join(' ')}`} {...rest}>
-            {text}
+            {children}
         </button>
     )
 }

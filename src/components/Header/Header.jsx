@@ -2,28 +2,23 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { allActionCreators } from 'store/reducers/action-creators'
-import { LoginModal } from 'components/modals'
-import HeaderLogo from './HeaderLogo'
-
-import Nav from 'components/Nav/Nav'
+import { HeaderBurger, HeaderLK, HeaderLogo, HeaderNotification, HeaderSearch } from './'
+import { Nav } from 'components/'
 import { Button } from 'components/ui/'
-import HeaderSearch from './HeaderSearch'
-import HeaderBurger from './HeaderBurger'
-import HeaderLK from './HeaderLK'
-import HeaderNotification from './HeaderNotification'
 
 const Header = () => {
     const dispatch = useDispatch()
-    const { setShowModal, changeStep, logout } = allActionCreators
-    const { isAuth } = useSelector((state) => state.auth)
+    const { setShowModal } = allActionCreators
+    const {
+        auth: { isAuth },
+        system: { references: { theme } = {} } = {},
+    } = useSelector((state) => state)
 
     const [isNavActive, setIsNavActive] = useState(false)
-    const onToggleNav = () => {
-        console.log(isNavActive)
-        setIsNavActive(!isNavActive)
-    }
 
-    const onShowModal = () => (dispatch(changeStep('CHECK_EMAIL')), dispatch(setShowModal(true)))
+    const onToggleNav = () => setIsNavActive(!isNavActive)
+
+    const onShowModal = () => dispatch(setShowModal(true))
 
     return (
         <>
@@ -45,14 +40,15 @@ const Header = () => {
                                 </div>
                             ) : (
                                 <>
-                                    <Button text={'Войти'} className='header__btn' onClick={onShowModal} light />
+                                    <Button className='header__btn' onClick={onShowModal} light>
+                                        Войти
+                                    </Button>
                                 </>
                             )}
                         </div>
                     </div>
                 </div>
             </header>
-            <LoginModal />
         </>
     )
 }

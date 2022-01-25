@@ -13,37 +13,41 @@ export const AuthActionCreators = {
         dispatch(AuthActionCreators.setError(''))
         dispatch(AuthActionCreators.setStep(step))
     },
-    checkEmail: (email) => async (dispatch) => {
+    checkEmail: (data) => async (dispatch) => {
         try {
             dispatch(AuthActionCreators.setError(''))
-            const response = await AuthService.checkEmail(email)
+            const response = await AuthService.checkEmail(data)
             if (response.data.exists) dispatch(AuthActionCreators.changeStep('LOGIN'))
             else dispatch(AuthActionCreators.changeStep('REGISTER'))
         } catch (e) {
             // dispatch(AuthActionCreators.setError('Произошла ошибка при проверке E-mail'))
         }
     },
-    login: (email, password) => async (dispatch) => {
-        try {
-            dispatch(AuthActionCreators.setError(''))
-            const response = await AuthService.login(email, password)
+    login:
+        ({ cb, ...data }) =>
+        async (dispatch) => {
+            try {
+                dispatch(AuthActionCreators.setError(''))
+                const response = await AuthService.login(data)
 
-            if (response.status === 200) {
-                const { user, token } = response.data
-                dispatch(AuthActionCreators.setShowModal(false))
-                dispatch(AuthActionCreators.setIsAuth(true))
-                dispatch(AuthActionCreators.setUser(user))
-                dispatch(AuthActionCreators.setToken(token))
+                if (response.status === 200) {
+                    const { user, token } = response.data
+                    dispatch(AuthActionCreators.setShowModal(false))
+                    dispatch(AuthActionCreators.setIsAuth(true))
+                    dispatch(AuthActionCreators.setUser(user))
+                    dispatch(AuthActionCreators.setToken(token))
 
-                localStorage.setItem('token', token)
+                    localStorage.setItem('token', token)
+                    // localStorage.setItem('token', '11|Z58sRgglIckxyFziYxJOjjFp0tRsejQUv2yQQ4Xu')
+                    cb()
 
-                return
+                    return
+                }
+                dispatch(AuthActionCreators.setError('Недействительные учетные данные'))
+            } catch (e) {
+                dispatch(AuthActionCreators.setError('Произошла ошибка при авторизации'))
             }
-            dispatch(AuthActionCreators.setError('Недействительные учетные данные'))
-        } catch (e) {
-            dispatch(AuthActionCreators.setError('Произошла ошибка при авторизации'))
-        }
-    },
+        },
     logout: () => async (dispatch) => {
         dispatch(AuthActionCreators.setIsAuth(false))
         dispatch(AuthActionCreators.setUser())
@@ -51,18 +55,16 @@ export const AuthActionCreators = {
 
         localStorage.removeItem('token')
     },
-    register: (name, phone, email, password) => async (dispatch) => {
+    register: (data) => async (dispatch) => {
         try {
             dispatch(AuthActionCreators.setError(''))
-            const response = await AuthService.register(name, phone, email, password)
+            const response = await AuthService.register(data)
 
             if (response.status === 200) {
                 dispatch(AuthActionCreators.changeStep('LOGIN'))
 
                 return
             }
-
-            console.log(response)
 
             const { error } = response.data
             const errorText = []
@@ -76,6 +78,7 @@ export const AuthActionCreators = {
     },
     auth: () => async (dispatch) => {
         try {
+            dispatch(AuthActionCreators.setIsLoading(true))
             dispatch(AuthActionCreators.setError(''))
             const response = await AuthService.auth(localStorage.getItem('token'))
 
@@ -92,6 +95,8 @@ export const AuthActionCreators = {
             // dispatch(AuthActionCreators.setError('Недействительные учетные данные'))
         } catch (e) {
             dispatch(AuthActionCreators.setError('Произошла ошибка при авторизации'))
+        } finally {
+            dispatch(AuthActionCreators.setIsLoading(false))
         }
     },
 }

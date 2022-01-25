@@ -1,44 +1,40 @@
+import { useLogout } from 'hooks/useLogout'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { RouteNames } from 'routes'
 import { allActionCreators } from 'store/reducers/action-creators'
 
 const HeaderLK = () => {
     const [isActive, setIsActive] = useState(false)
-    const { logout } = allActionCreators
-    const dispatch = useDispatch()
-    const { user } = useSelector((state) => state.auth)
+    const {
+        auth: { user = {} },
+    } = useSelector((state) => state)
+    user.img = './assets/img/avatar2.jpg'
 
-    const onLogout = () => dispatch(logout())
+    const [onLogout] = useLogout()
 
-    console.log(user)
+    const items = [
+        { title: user?.name || 'Имя', href: RouteNames.CABINET, number: 0 },
+        { title: 'Мои курсы', href: '/', number: 0 },
+        { title: 'Мои мероприятия', href: '/', number: 1 },
+        { title: 'Служба поддержки', href: '/', number: 0 },
+        { title: 'Настройки аккаунта', href: '/', number: 0 },
+    ]
 
     return (
         <div className='header__lk'>
             <div className='header__lk-avatar' onClick={() => setIsActive(!isActive)}>
-                <img src='./assets/img/avatar2.jpg' alt='' />
+                <img src={user.img} alt='' />
             </div>
-            <div className={`header__lk-dropdown ${isActive ? 'header__lk-dropdown--active' : ''}`}>
-                <a href='' className='header__lk-item'>
-                    <span>{user?.name}</span>
-                    <i></i>
-                </a>
-                <a href='' className='header__lk-item'>
-                    <span>Мои курсы</span>
-                    <i></i>
-                </a>
-                <a href='' className='header__lk-item header__lk-item--notification'>
-                    <span>Мои мероприятия</span>
-                    <i>1</i>
-                </a>
-                <a href='' className='header__lk-item'>
-                    <span>Служба поддержки</span>
-                    <i></i>
-                </a>
-                <a href='' className='header__lk-item'>
-                    <span>Настройки аккаунта</span>
-                    <i></i>
-                </a>
+            <div className={`header__lk-dropdown${isActive ? ' header__lk-dropdown--active' : ''}`}>
+                {items.map(({ title, href, number }, index) => (
+                    <Link key={index} to={href} className={`header__lk-item ${number ? 'header__lk-item--notification' : ''}`}>
+                        <span>{title}</span>
+                        <i>{number}</i>
+                    </Link>
+                ))}
                 <button className='header__lk-item header__lk-item--logout' onClick={onLogout}>
                     <span>Выйти из аккаунта</span>
                     <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>

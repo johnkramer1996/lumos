@@ -1,16 +1,5 @@
 import axios from 'axios'
-
-export const API_URL = `https://lumus.wistis.ru/api/v1`
-export const authURL = {
-    AUTHORIZATION_URL: '/cabinet/user',
-    CHECK_EMAIL_URL: '/auth/check-email',
-    LOGIN_URL: '/auth/login',
-    REGISTER_URL: '/auth/register',
-}
-export const lessonsURL = {
-    FETCH_LESSONS: '/cabinet/courses',
-    ADD_LESSON: '/cabinet/courses',
-}
+import { API_URL, authURL } from './urls'
 
 const $api = axios.create({ baseURL: API_URL })
 

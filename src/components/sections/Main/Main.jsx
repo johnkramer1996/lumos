@@ -12,8 +12,12 @@ const Main = ({ title, descr, img }) => {
                         <h1 className='main__title display-1'>{title}</h1>
                         <div className='main__desc'>{descr}</div>
                         <div className='main__buttons'>
-                            <Button text={'Найти курс для себя'} className='main__btn' onClick={() => {}} />
-                            <Button text={'Какой курс выбрать?'} className='main__btn' onClick={() => {}} isOutline />
+                            <Button className='main__btn' onClick={() => {}}>
+                                Найти курс для себя
+                            </Button>
+                            <Button className='main__btn' onClick={() => {}} outline>
+                                Какой курс выбрать?
+                            </Button>
                         </div>
                     </div>
                     <div className='main__img'>

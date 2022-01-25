@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+import { RouteNames } from 'routes'
 import { allActionCreators } from 'store/reducers/action-creators'
 
 const LoginModal = () => {
@@ -8,9 +10,12 @@ const LoginModal = () => {
     const [name, setName] = useState('Имя')
     const [phone, setPhone] = useState('12345')
 
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const { checkEmail, login, register, setShowModal, changeStep } = allActionCreators
-    const { showModal, step, error } = useSelector((state) => state.auth)
+    const {
+        auth: { showModal, step, error },
+    } = useSelector((state) => state)
 
     const steps = {
         CHECK_EMAIL: {
@@ -23,7 +28,7 @@ const LoginModal = () => {
             title: 'Вход',
             btn: 'Войти',
             onPrev: () => dispatch(changeStep('CHECK_EMAIL')),
-            onNext: () => dispatch(login({ email, password })),
+            onNext: () => dispatch(login({ email, password, cb: () => navigate(RouteNames.CABINET) })),
         },
         REGISTER: {
             title: 'Регистрация',

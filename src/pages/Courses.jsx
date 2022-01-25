@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { allActionCreators } from '../store/reducers/action-creators'
+import { allActionCreators } from 'store/reducers/action-creators'
 import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
 
 const Lessons = () => {
     const dispatch = useDispatch()
-    const { fetchLessons } = allActionCreators
+    const { fetchCourses } = allActionCreators
     const { lessons } = useSelector((state) => state.lessons)
 
     useEffect(() => {
-        dispatch(fetchLessons())
+        dispatch(fetchCourses())
     }, [])
 
     return (
