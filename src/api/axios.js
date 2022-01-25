@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { API_URL, authURL } from './urls'
+import { API_URL, authURL } from './URLS'
 
 const $api = axios.create({ baseURL: API_URL })
 
@@ -16,7 +16,7 @@ $api.interceptors.response.use(
         if (error.response.status === 401 && error.config && !error.config.headers._IsRetry) {
             error.config.headers._IsRetry = true
             try {
-                const response = await $api.get(`${authURL.AUTHORIZATION_URL}`, {
+                const response = await $api.get(`${authURL.AUTHORIZATION}`, {
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,

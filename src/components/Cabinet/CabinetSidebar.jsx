@@ -13,7 +13,7 @@ const CabinetSidebar = () => {
     return (
         <aside className='cabinet-page__sidebar'>
             <div className='sidebar'>
-                <div className='sidebar__item sidebar__item--notification'>
+                {/* <div className='sidebar__item sidebar__item--notification'>
                     <div className='sidebar__item-show'>
                         <span>Мои мероприятия</span>
                         <i>1</i>
@@ -36,7 +36,7 @@ const CabinetSidebar = () => {
                             <i></i>
                         </a>
                     </div>
-                </div>
+                </div> */}
                 {items.map(({ title, href, number }, index) => (
                     <Link key={index} to={href} className='sidebar__link'>
                         <span>{title}</span>

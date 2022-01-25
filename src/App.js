@@ -7,7 +7,7 @@ import { LoginModal } from 'components/modals'
 
 const App = () => {
     const dispatch = useDispatch()
-    const { auth, fetchReferences } = allActionCreators
+    const { auth, fetchReferences, setIsLoading, fetchSocUrls } = allActionCreators
     const {
         auth: { isLoading },
         system: { references } = {},
@@ -15,7 +15,9 @@ const App = () => {
 
     useEffect(() => {
         dispatch(fetchReferences())
-        localStorage.getItem('token') && dispatch(auth())
+        localStorage.getItem('token') ? dispatch(auth()) : dispatch(setIsLoading(false))
+
+        dispatch(fetchSocUrls())
     }, [])
 
     console.log(useSelector((state) => state))
@@ -32,10 +34,10 @@ const App = () => {
                     ) : (
                         <>
                             <AppRouter />
-                            <Footer />
-                            <LoginModal />
                         </>
                     )}
+                    <Footer />
+                    <LoginModal />
                 </div>
             </div>
         </>
