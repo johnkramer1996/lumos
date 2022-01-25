@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from 'components/ui/'
+import { RouteNames } from 'routes'
 
 const Main = ({ title, descr, img }) => {
     return (
@@ -12,7 +13,7 @@ const Main = ({ title, descr, img }) => {
                         <h1 className='main__title display-1'>{title}</h1>
                         <div className='main__desc'>{descr}</div>
                         <div className='main__buttons'>
-                            <Button className='main__btn' onClick={() => {}}>
+                            <Button className='main__btn' to={RouteNames.COURSES} link>
                                 Найти курс для себя
                             </Button>
                             <Button className='main__btn' onClick={() => {}} outline>

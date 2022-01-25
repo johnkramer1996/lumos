@@ -24,22 +24,20 @@ const App = () => {
 
     return (
         <>
-            <div className='wrapper'>
-                <div className='content'>
-                    <Header />
-                    {isLoading ? (
-                        <>
-                            <h1 style={{ textAlign: 'center' }}>Loading...</h1>
-                        </>
-                    ) : (
-                        <>
-                            <AppRouter />
-                        </>
-                    )}
-                    <Footer />
-                    <LoginModal />
-                </div>
+            <div className='content'>
+                <Header />
+                {isLoading ? (
+                    <>
+                        <h1 style={{ textAlign: 'center' }}>Loading...</h1>
+                    </>
+                ) : (
+                    <>
+                        <AppRouter />
+                    </>
+                )}
             </div>
+            <Footer />
+            <LoginModal />
         </>
     )
 }

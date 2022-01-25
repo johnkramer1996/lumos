@@ -10122,3 +10122,6 @@ body {
 .blog-page__text {
     overflow: hidden;
 }
+.cabinet-page__items4 {
+    grid-template-columns: calc(25% - 16px) calc(25% - 16px) calc(25% - 16px) calc(25% - 16px);
+}

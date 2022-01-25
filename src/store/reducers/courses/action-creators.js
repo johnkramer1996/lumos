@@ -2,15 +2,14 @@ import CoursesService from 'api/CoursesService'
 import { coursesTypes } from './types'
 
 export const CoursesActionCreators = {
-    setCourses: (courses) => ({ type: coursesTypes.SET_COURSES, payload: courses }),
+    setCourses: (payload) => ({ type: coursesTypes.SET_COURSES, payload }),
     fetchCourses: (data) => async (dispatch) => {
         try {
             const response = await CoursesService.fetchAll(data)
 
             if (response.status === 200) {
-                const {
-                    data: { data },
-                } = response
+                const { data } = response
+                console.log(response, 'response')
 
                 dispatch(CoursesActionCreators.setCourses(data))
 

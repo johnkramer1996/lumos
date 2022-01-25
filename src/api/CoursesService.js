@@ -8,7 +8,7 @@ export default class CoursesService {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                params: { page, _limit: limit },
+                // params: { page, _limit: limit },
             })
         } catch (error) {
             return error.response
