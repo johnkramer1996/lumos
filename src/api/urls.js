@@ -1,3 +1,4 @@
+export const SITE_URL = 'http://lumus.wistis.ru'
 export const API_URL = 'https://lumus.wistis.ru/api/v1'
 export const systemURL = {
     FETCH_REFERENCES: '/data/references',
