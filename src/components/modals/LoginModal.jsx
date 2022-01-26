@@ -18,29 +18,26 @@ const LoginModal = () => {
         setStep(step)
     }
 
-    const steps = useMemo(
-        () => ({
-            CHECK_EMAIL: {
-                title: 'Вход или регистрация',
-                btn: 'Продолжить',
-                onPrev: () => {},
-                onNext: () => checkEmail({ email }),
-            },
-            LOGIN: {
-                title: 'Вход',
-                btn: 'Войти',
-                onPrev: () => changeStep('CHECK_EMAIL'),
-                onNext: () => login({ email, password, cb: () => navigate(RouteNames.CABINET) }),
-            },
-            REGISTER: {
-                title: 'Регистрация',
-                btn: 'Создать аккаунт',
-                onPrev: () => changeStep('CHECK_EMAIL'),
-                onNext: () => register({ name, phone, email, password }),
-            },
-        }),
-        [],
-    )
+    const steps = {
+        CHECK_EMAIL: {
+            title: 'Вход или регистрация',
+            btn: 'Продолжить',
+            onPrev: () => {},
+            onNext: () => checkEmail({ email }),
+        },
+        LOGIN: {
+            title: 'Вход',
+            btn: 'Войти',
+            onPrev: () => changeStep('CHECK_EMAIL'),
+            onNext: () => login({ email, password, cb: () => navigate(RouteNames.CABINET) }),
+        },
+        REGISTER: {
+            title: 'Регистрация',
+            btn: 'Создать аккаунт',
+            onPrev: () => changeStep('CHECK_EMAIL'),
+            onNext: () => register({ name, phone, email, password }),
+        },
+    }
 
     const onSubmit = (e) => {
         e.preventDefault()

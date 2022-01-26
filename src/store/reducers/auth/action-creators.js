@@ -16,24 +16,15 @@ export const AuthActionCreators = {
 
         localStorage.removeItem('token')
     },
-    checkEmail: (data) => async (dispatch) => {
-        try {
-            dispatch(AuthActionCreators.setError(''))
-            const response = await AuthService.checkEmail(data)
-
-            if (response.status === 200) {
-                dispatch(response.data.exists ? AuthActionCreators.setStep('LOGIN') : AuthActionCreators.setStep('REGISTER'))
-            }
-        } catch (e) {
-            dispatch(AuthActionCreators.setError('Произошла ошибка при проверке E-mail'))
-        }
-    },
     login:
         ({ cb, ...data }) =>
         async (dispatch) => {
             try {
+                console.log(data)
                 dispatch(AuthActionCreators.setError(''))
                 const response = await AuthService.login(data)
+
+                console.log(response, 'response')
 
                 if (response.status === 200) {
                     dispatch(AuthActionCreators.setShowModal(false))
@@ -47,6 +38,36 @@ export const AuthActionCreators = {
                 dispatch(AuthActionCreators.setError('Недействительные учетные данные'))
             }
         },
+    restore:
+        ({ cb, ...data }) =>
+        async (dispatch) => {
+            try {
+                dispatch(AuthActionCreators.setError(''))
+                const response = await AuthService.restore(data)
+
+                if (response.status === 200) {
+                    dispatch(AuthActionCreators.setShowModal(false))
+                    dispatch(AuthActionCreators.setIsAuth(true))
+                    dispatch(AuthActionCreators.setUser(response.data?.user))
+                    dispatch(AuthActionCreators.setToken(response.data?.token))
+                    localStorage.setItem('token', response.data?.token)
+                }
+            } catch (e) {
+                dispatch(AuthActionCreators.setError('Недействительные учетные данные'))
+            }
+        },
+    checkEmail: (data) => async (dispatch) => {
+        try {
+            dispatch(AuthActionCreators.setError(''))
+            const response = await AuthService.checkEmail(data)
+
+            if (response.status === 200) {
+                dispatch(response.data.exists ? AuthActionCreators.setStep('LOGIN') : AuthActionCreators.setStep('REGISTER'))
+            }
+        } catch (e) {
+            dispatch(AuthActionCreators.setError('Произошла ошибка при проверке E-mail'))
+        }
+    },
     register: (data) => async (dispatch) => {
         try {
             dispatch(AuthActionCreators.setError(''))

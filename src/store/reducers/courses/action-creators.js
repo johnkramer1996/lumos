@@ -11,7 +11,7 @@ export const CoursesActionCreators = {
                 dispatch(CoursesActionCreators.setCourses(response.data))
             }
         } catch (e) {
-            console.log(e)
+            console.log(e.response)
         }
     },
     addCourse: (data) => async (dispatch) => {
