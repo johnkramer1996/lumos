@@ -5,7 +5,6 @@ const $api = axios.create({ baseURL: API_URL })
 
 $api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
-    config.headers.Authorization = `Bearer 11|Z58sRgglIckxyFziYxJOjjFp0tRsejQUv2yQQ4Xu`
     return config
 })
 
@@ -27,7 +26,7 @@ $api.interceptors.response.use(
                 localStorage.setItem('token', response.data.token)
                 return $api.request(error.config)
             } catch (e) {
-                console.log('ERROR')
+                console.log(e.response)
             }
         }
         throw error

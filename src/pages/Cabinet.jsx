@@ -1,7 +1,7 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { CabinetEmployee, CabinetSidebar, CabinetTrainer, CabinetUser } from 'components/'
 import { Settings } from 'components/'
-import { useParams } from 'react-router-dom'
 import { useSelector } from 'hooks/'
 import { RouteNames } from 'routes'
 
@@ -10,14 +10,13 @@ const Cabinet = () => {
         user: { roles = [] },
     } = useSelector()
 
-    const activeCabinet = [<CabinetUser />, <CabinetTrainer />, <CabinetEmployee />][roles[0]?.pivot?.role_id - 1 || 0]
+    const activeRole = roles[0]?.pivot?.role_id - 1 || 0
+    const activeCabinet = [<CabinetUser />, <CabinetTrainer />, <CabinetEmployee />][activeRole]
 
-    console.log(undefined || 0)
+    const { item } = useParams()
 
-    const { menu } = useParams()
-
-    const getActiveItem = (menu) => {
-        switch (RouteNames.CABINET + '/' + menu) {
+    const getActiveItem = (item) => {
+        switch (RouteNames.CABINET + '/' + item) {
             case RouteNames.CABINET_COURSES:
                 return activeCabinet
             case RouteNames.CABINET_EVENTS:
@@ -39,7 +38,7 @@ const Cabinet = () => {
             <div className='container'>
                 <div className='cabinet-page__inner'>
                     <CabinetSidebar />
-                    <main className='cabinet-page__main dashboard'>{getActiveItem(menu)}</main>
+                    <main className='cabinet-page__main dashboard'>{getActiveItem(item)}</main>
                 </div>
             </div>
         </section>

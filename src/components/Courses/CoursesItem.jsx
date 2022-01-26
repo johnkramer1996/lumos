@@ -1,25 +1,19 @@
+import { IMG_URL } from 'api/URLS'
 import React from 'react'
 
-const CoursesItem = ({ img, name, created_at }) => {
+const CourseItem = ({ image = '', title, descr, student }) => {
     return (
-        <div className='cabinet-page__item'>
-            <div className='course-card3'>
-                <div className='course-card3__img'>
-                    <img src='./assets/img/course.jpg' alt='' />
-                </div>
-                <div className='course-card3__content'>
-                    <div className='course-card3__title'>{name}</div>
-                    <div className='course-card3__bottom'>
-                        <div className='course-card3__students'>
-                            <div className='course-card3__students-title'>48 учеников</div>
-                            <div className='course-card3__students-new'>8 новых</div>
-                        </div>
-                        <div className='course-card3__num'>2</div>
-                    </div>
-                </div>
+        <div className='course-card'>
+            <div className='course-card__img'>
+                <img src={IMG_URL + image} alt='' />
+            </div>
+            <div className='course-card__content'>
+                <div className='course-card__student'>{student}</div>
+                <div className='course-card__title'>{title}</div>
+                <div className='course-card__desc'>{descr}</div>
             </div>
         </div>
     )
 }
 
-export default CoursesItem
+export default CourseItem

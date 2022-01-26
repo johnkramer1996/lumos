@@ -1,8 +1,7 @@
-import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RouteNames } from 'routes'
-import { allActionCreators } from 'store/reducers/action-creators'
+import { useDispatch, useSelector } from 'hooks'
 
 const LoginModal = () => {
     const [email, setEmail] = useState('email@gmail.com')
@@ -11,32 +10,37 @@ const LoginModal = () => {
     const [phone, setPhone] = useState('12345')
 
     const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const { checkEmail, login, register, setShowModal, changeStep } = allActionCreators
-    const {
-        auth: { showModal, step, error },
-    } = useSelector((state) => state)
+    const { checkEmail, login, register, setShowModal, setError, setStep } = useDispatch()
+    const { showModal, step, error } = useSelector()
 
-    const steps = {
-        CHECK_EMAIL: {
-            title: 'Вход или регистрация',
-            btn: 'Продолжить',
-            onPrev: () => {},
-            onNext: () => dispatch(checkEmail({ email })),
-        },
-        LOGIN: {
-            title: 'Вход',
-            btn: 'Войти',
-            onPrev: () => dispatch(changeStep('CHECK_EMAIL')),
-            onNext: () => dispatch(login({ email, password, cb: () => navigate(RouteNames.CABINET) })),
-        },
-        REGISTER: {
-            title: 'Регистрация',
-            btn: 'Создать аккаунт',
-            onPrev: () => dispatch(changeStep('CHECK_EMAIL')),
-            onNext: () => dispatch(register({ name, phone, email, password })),
-        },
+    const changeStep = (step) => {
+        setError('')
+        setStep(step)
     }
+
+    const steps = useMemo(
+        () => ({
+            CHECK_EMAIL: {
+                title: 'Вход или регистрация',
+                btn: 'Продолжить',
+                onPrev: () => {},
+                onNext: () => checkEmail({ email }),
+            },
+            LOGIN: {
+                title: 'Вход',
+                btn: 'Войти',
+                onPrev: () => changeStep('CHECK_EMAIL'),
+                onNext: () => login({ email, password, cb: () => navigate(RouteNames.CABINET) }),
+            },
+            REGISTER: {
+                title: 'Регистрация',
+                btn: 'Создать аккаунт',
+                onPrev: () => changeStep('CHECK_EMAIL'),
+                onNext: () => register({ name, phone, email, password }),
+            },
+        }),
+        [],
+    )
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -46,7 +50,7 @@ const LoginModal = () => {
 
     return (
         <div className={`modal ${showModal && 'modal--show'}`} id='modal'>
-            <div className='modal__bg' onClick={() => dispatch(setShowModal(false))}></div>
+            <div className='modal__bg' onClick={() => setShowModal(false)}></div>
             <div className='modal-dialog'>
                 <div className='modal__top'>
                     <div className='modal__title'>
@@ -57,7 +61,7 @@ const LoginModal = () => {
                         )}
                         <span>{steps[step].title}</span>
                     </div>
-                    <button className='modal__close' onClick={() => dispatch(setShowModal(false))}>
+                    <button className='modal__close' onClick={() => setShowModal(false)}>
                         <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
                             <path d='M13.3327 2.66602L2.66602 13.3327' stroke='#1B2C3E' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
                             <path d='M13.3327 13.3327L2.66602 2.66602' stroke='#1B2C3E' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />

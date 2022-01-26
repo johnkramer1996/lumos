@@ -1,8 +1,9 @@
 import React from 'react'
-import { Main, CourseDetail, Course } from 'components/'
+import { Main, CourseDetail, CoursesSlider } from 'components/'
+import { useSelector } from 'hooks'
 
 const Home = () => {
-    const lessons = [
+    const courses = [
         {
             id: 1,
             img: 'assets/img/course.jpg',
@@ -25,62 +26,48 @@ const Home = () => {
             descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id elit lacus magnis mattis quisque volutpat.',
         },
     ]
+
+    const { themes } = useSelector()
+    const items = themes.map((item) => ({ ...item, items: courses }))
+
     return (
         <>
             <Main
                 title={'Обучение без ограничений'}
                 descr={'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa id sem sem vitae, ac in vulputate enim elementum.'}
-                img={'/assets/img/art.svg'}
+                img={'./assets/img/art.svg'}
             />
 
-            <Course
-                className={'course-slider1'}
-                title={'Популярные курсы'}
+            <CoursesSlider className={'course-slider1'} title={'Популярные курсы'} items={items} />
+
+            <CourseDetail
                 items={[
                     {
                         id: 1,
-                        title: 'Программирование',
-                        items: lessons,
+                        img: 'assets/img/course4.jpg',
+                        title: 'Название курса',
+                        descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa id sem sem vitae, ac in vulputate enim elementum.',
+                        btn: 'Пройти пробный урок',
+                        stock: '-35%',
+                        date: 'до 16 сентября',
+                        price: '4 800 руб.',
+                        priceOld: '6 000 руб.',
                     },
                     {
                         id: 2,
-                        title: 'Дизайн',
-                        items: lessons,
-                    },
-                    {
-                        id: 3,
-                        title: 'Маркетинг',
-                        items: lessons,
-                    },
-                    {
-                        id: 4,
-                        title: 'Бизнес',
-                        items: lessons,
-                    },
-                    {
-                        id: 5,
-                        title: 'Фото',
-                        items: lessons,
-                    },
-                    {
-                        id: 6,
-                        title: 'Видео',
-                        items: lessons,
+                        img: 'assets/img/course4.jpg',
+                        title: 'Название курса',
+                        descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa id sem sem vitae, ac in vulputate enim elementum.',
+                        btn: 'Пройти пробный урок',
+                        stock: '-35%',
+                        date: 'до 16 сентября',
+                        price: '4 800 руб.',
+                        priceOld: '6 000 руб.',
                     },
                 ]}
             />
 
-            <CourseDetail />
-
-            <Course
-                className={'course-slider2'}
-                title={'Новые курсы'}
-                items={[
-                    {
-                        items: lessons,
-                    },
-                ]}
-            />
+            <CoursesSlider className={'course-slider2'} title={'Новые курсы'} items={[items[0]]} />
         </>
     )
 }

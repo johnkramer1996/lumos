@@ -3,6 +3,7 @@ import { CabinetGreet } from 'components'
 import { Button } from 'components/ui'
 import { useDispatch, useSelector, useNavigate } from 'hooks'
 import { declOfNum, getDeclOfArray } from 'utils'
+import { IMG_URL } from 'api/URLS'
 
 const CabinetUser = () => {
     const { toAddCourse } = useNavigate()
@@ -35,7 +36,7 @@ const CabinetUser = () => {
                         <div className='cabinet-page__item' key={id}>
                             <div className='course-card3'>
                                 <div className='course-card3__img'>
-                                    <img src='./assets/img/course2.jpg' alt='' />
+                                    <img src={IMG_URL + image} alt='' />
                                 </div>
                                 <div className='course-card3__content'>
                                     <div className='course-card3__info'>

@@ -1,5 +1,6 @@
-export const SITE_URL = 'http://lumus.wistis.ru'
-export const API_URL = 'https://lumus.wistis.ru/api/v1'
+export const SITE_URL = 'https://lumus.wistis.ru'
+export const API_URL = `${SITE_URL}/api/v1`
+export const IMG_URL = `${SITE_URL}/`
 export const systemURL = {
     FETCH_REFERENCES: '/data/references',
     FETCH_SOC_URLS: '/data/soc_urls',

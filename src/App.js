@@ -8,6 +8,7 @@ const App = () => {
     const { isLoading } = useSelector()
     const { auth, fetchReferences, setIsLoading, fetchSocUrls } = useDispatch()
 
+    console.log(useSelector())
     useEffect(() => {
         fetchReferences()
         localStorage.getItem('token') ? auth() : setIsLoading(false)

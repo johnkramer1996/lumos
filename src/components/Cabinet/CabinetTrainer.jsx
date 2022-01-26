@@ -1,9 +1,9 @@
-import { Button } from 'components/ui'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { RouteNames } from 'routes'
+import { Button } from 'components/ui'
+import { useNavigate } from 'hooks'
+import { CoursesItem3 } from 'components'
 
-const CabinetTrainer = () => {
+const CabinetTrainer = ({ items = [] }) => {
     const { toAddCourse } = useNavigate()
 
     return (
@@ -42,70 +42,9 @@ const CabinetTrainer = () => {
                 </div>
             </div>
             <div className='cabinet-page__items'>
-                <div className='cabinet-page__item'>
-                    <div className='course-card3'>
-                        <div className='course-card3__img'>
-                            <img src='./assets/img/course.jpg' alt='' />
-                        </div>
-                        <div className='course-card3__content'>
-                            <div className='course-card3__title truncate'>Название курса в нескольких строках Название курса в нескольких строках</div>
-                            <div className='course-card3__bottom'>
-                                <div className='course-card3__students'>
-                                    <div className='course-card3__students-title'>48 учеников</div>
-                                    <div className='course-card3__students-new'>8 новых</div>
-                                </div>
-                                <div className='course-card3__num'>2</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className='cabinet-page__item'>
-                    <div className='course-card3'>
-                        <div className='course-card3__img'>
-                            <img src='./assets/img/course2.jpg' alt='' />
-                        </div>
-                        <div className='course-card3__content'>
-                            <div className='course-card3__title truncate'>Название курса в нескольких строках оооо</div>
-                            <div className='course-card3__bottom'>
-                                <div className='course-card3__students'>
-                                    <div className='course-card3__students-title'>48 учеников</div>
-                                    <div className='course-card3__students-new'>8 новых</div>
-                                </div>
-                                <div className='course-card3__num'>2</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className='cabinet-page__item'>
-                    <div className='course-card3'>
-                        <div className='course-card3__img'>
-                            <img src='./assets/img/course3.jpg' alt='' />
-                        </div>
-                        <div className='course-card3__content'>
-                            <div className='course-card3__title truncate'>Название курса в нескольких строках оооо</div>
-                            <div className='course-card3__bottom'>
-                                <div className='course-card3__students'>
-                                    <div className='course-card3__students-title'>48 учеников</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className='cabinet-page__item'>
-                    <div className='course-card3'>
-                        <div className='course-card3__img'>
-                            <img src='./assets/img/course4.jpg' alt='' />
-                        </div>
-                        <div className='course-card3__content'>
-                            <div className='course-card3__title truncate'>Название курса в нескольких строках оооо</div>
-                            <div className='course-card3__bottom'>
-                                <div className='course-card3__students'>
-                                    <div className='course-card3__students-status'>На модерации</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {items.map(({ id, ...props }) => (
+                    <CoursesItem3 key={id} {...props} />
+                ))}
             </div>
         </div>
     )

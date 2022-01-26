@@ -1,5 +1,5 @@
 import React from 'react'
-import CourseItem from './CourseItem'
+import CourseItem from '../Courses/CoursesItem'
 import { Swiper } from 'components/ui/'
 
 const Course = ({ title = 'Курсы', items = [], className }) => {
@@ -11,9 +11,9 @@ const Course = ({ title = 'Курсы', items = [], className }) => {
                     {items.length > 1 && (
                         <div className='course-slider__tabs'>
                             <div className='course-slider__tab course-slider__tab--active'>Все категории</div>
-                            {items.map(({ id, title }) => (
+                            {items.map(({ id, name }) => (
                                 <div key={id} className='course-slider__tab'>
-                                    {title}
+                                    {name}
                                 </div>
                             ))}
                         </div>

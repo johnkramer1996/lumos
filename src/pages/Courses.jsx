@@ -1,22 +1,18 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { allActionCreators } from 'store/reducers/action-creators'
 import { Courses as CoursesComponent } from 'components/'
+import { useDispatch, useSelector } from 'hooks'
+import { useParams } from 'react-router-dom'
 
 const Courses = () => {
-    const dispatch = useDispatch()
-    const { fetchCourses } = allActionCreators
-    const { courses } = useSelector((state) => state)
+    const { id } = useParams()
+    const { fetchCourses } = useDispatch()
+    const { courses } = useSelector()
 
-    useEffect(() => {
-        dispatch(fetchCourses())
-    }, [])
-
-    console.log(courses)
+    useEffect(() => fetchCourses({ page: 1, limit: 100 }), [])
 
     return (
         <>
-            <CoursesComponent items={courses.info?.data?.data} />
+            <CoursesComponent items={courses} />
         </>
     )
 }

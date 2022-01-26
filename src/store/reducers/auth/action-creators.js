@@ -2,25 +2,30 @@ import AuthService from 'api/AuthService'
 import { authTypes } from './types'
 
 export const AuthActionCreators = {
-    setShowModal: (show) => ({ type: authTypes.SET_SHOW_MODAL, payload: show }),
-    setUser: (user) => ({ type: authTypes.SET_USER, payload: user }),
-    setToken: (token) => ({ type: authTypes.SET_TOKEN, payload: token }),
-    setIsAuth: (auth) => ({ type: authTypes.SET_AUTH, payload: auth }),
+    setShowModal: (payload) => ({ type: authTypes.SET_SHOW_MODAL, payload }),
+    setUser: (payload) => ({ type: authTypes.SET_USER, payload }),
+    setToken: (payload) => ({ type: authTypes.SET_TOKEN, payload }),
+    setIsAuth: (payload) => ({ type: authTypes.SET_AUTH, payload }),
     setIsLoading: (payload) => ({ type: authTypes.SET_IS_LOADING, payload }),
     setError: (payload) => ({ type: authTypes.SET_ERROR, payload }),
-    setStep: (step) => ({ type: authTypes.SET_STEP, payload: step }),
-    changeStep: (step) => async (dispatch) => {
-        dispatch(AuthActionCreators.setError(''))
-        dispatch(AuthActionCreators.setStep(step))
+    setStep: (payload) => ({ type: authTypes.SET_STEP, payload }),
+    logout: () => async (dispatch) => {
+        dispatch(AuthActionCreators.setIsAuth(false))
+        dispatch(AuthActionCreators.setUser())
+        dispatch(AuthActionCreators.setToken())
+
+        localStorage.removeItem('token')
     },
     checkEmail: (data) => async (dispatch) => {
         try {
             dispatch(AuthActionCreators.setError(''))
             const response = await AuthService.checkEmail(data)
-            if (response.data.exists) dispatch(AuthActionCreators.changeStep('LOGIN'))
-            else dispatch(AuthActionCreators.changeStep('REGISTER'))
+
+            if (response.status === 200) {
+                dispatch(response.data.exists ? AuthActionCreators.setStep('LOGIN') : AuthActionCreators.setStep('REGISTER'))
+            }
         } catch (e) {
-            // dispatch(AuthActionCreators.setError('Произошла ошибка при проверке E-mail'))
+            dispatch(AuthActionCreators.setError('Произошла ошибка при проверке E-mail'))
         }
     },
     login:
@@ -31,68 +36,47 @@ export const AuthActionCreators = {
                 const response = await AuthService.login(data)
 
                 if (response.status === 200) {
-                    const { user, token } = response.data
                     dispatch(AuthActionCreators.setShowModal(false))
                     dispatch(AuthActionCreators.setIsAuth(true))
-                    dispatch(AuthActionCreators.setUser(user))
-                    dispatch(AuthActionCreators.setToken(token))
-
-                    localStorage.setItem('token', token)
-                    // localStorage.setItem('token', '11|Z58sRgglIckxyFziYxJOjjFp0tRsejQUv2yQQ4Xu')
+                    dispatch(AuthActionCreators.setUser(response.data?.user))
+                    dispatch(AuthActionCreators.setToken(response.data?.token))
+                    localStorage.setItem('token', response.data?.token)
                     cb()
-
-                    return
                 }
-                dispatch(AuthActionCreators.setError('Недействительные учетные данные'))
             } catch (e) {
-                dispatch(AuthActionCreators.setError('Произошла ошибка при авторизации'))
+                dispatch(AuthActionCreators.setError('Недействительные учетные данные'))
             }
         },
-    logout: () => async (dispatch) => {
-        dispatch(AuthActionCreators.setIsAuth(false))
-        dispatch(AuthActionCreators.setUser())
-        dispatch(AuthActionCreators.setToken())
-
-        localStorage.removeItem('token')
-    },
     register: (data) => async (dispatch) => {
         try {
             dispatch(AuthActionCreators.setError(''))
             const response = await AuthService.register(data)
 
             if (response.status === 200) {
-                dispatch(AuthActionCreators.changeStep('LOGIN'))
-
-                return
+                dispatch(AuthActionCreators.setStep('LOGIN'))
             }
-
-            const { error } = response.data
-            const errorText = []
-            Object.values(error).forEach((err) => {
-                err.forEach((e) => errorText.push(e))
-            })
-            dispatch(AuthActionCreators.setError(errorText.join(' ')))
         } catch (e) {
-            dispatch(AuthActionCreators.setError('Произошла ошибка при авторизации'))
+            try {
+                const errorText = []
+                Object.values(e.response.data.error).forEach((err) => err.forEach((e) => errorText.push(e)))
+                dispatch(AuthActionCreators.setError(errorText.join(' ')))
+            } catch (e) {
+                dispatch(AuthActionCreators.setError('Произошла ошибка при регистрации'))
+            }
         }
     },
     auth: () => async (dispatch) => {
         try {
             dispatch(AuthActionCreators.setIsLoading(true))
             dispatch(AuthActionCreators.setError(''))
-            const response = await AuthService.auth(localStorage.getItem('token'))
+            const response = await AuthService.auth()
 
             if (response.status === 200) {
-                const { user, token } = response.data
                 dispatch(AuthActionCreators.setIsAuth(true))
-                dispatch(AuthActionCreators.setUser(user))
-                dispatch(AuthActionCreators.setToken(token))
-
-                localStorage.setItem('token', token)
-
-                return
+                dispatch(AuthActionCreators.setUser(response.data?.user))
+                dispatch(AuthActionCreators.setToken(response.data?.token))
+                localStorage.setItem('token', response.data?.token)
             }
-            // dispatch(AuthActionCreators.setError('Недействительные учетные данные'))
         } catch (e) {
             dispatch(AuthActionCreators.setError('Произошла ошибка при авторизации'))
         } finally {

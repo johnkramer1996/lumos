@@ -1,7 +1,7 @@
 import React from 'react'
 import EventsItem from './EventsItem'
 
-const Events = ({ title, items = [] }) => {
+const Events = ({ title = 'Мероприятия', items = [] }) => {
     return (
         <section className='events'>
             <div className='container'>

@@ -6,6 +6,7 @@ export const RouteNames = {
     ADD_COURSE: '/add-courses',
     BLOG: '/blog',
     CABINET: '/cabinet',
+    CABINET_ITEM: '/cabinet/:item',
     CABINET_COURSES: '/cabinet/courses',
     CABINET_EVENTS: '/cabinet/events',
     CABINET_STATISTICS: '/cabinet/statistics',
@@ -13,6 +14,7 @@ export const RouteNames = {
     CABINET_SETTINGS: '/cabinet/settings',
     CONTACTS: '/contacts',
     COURSES: '/courses',
+    COURSES_ITEM: '/courses/:id',
     FAQ: '/faq',
     EVENTS: '/events',
     HOME: '/',
@@ -21,12 +23,12 @@ export const RouteNames = {
     REVIEWS: '/reviews',
     SUBSCRIBE: '/subscribe',
 }
-
 export const publicRoutes = [
     { path: RouteNames.ABOUT, element: <About /> },
     { path: RouteNames.BLOG, element: <Blog /> },
     { path: RouteNames.CONTACTS, element: <Contacts /> },
     { path: RouteNames.COURSES, element: <Courses /> },
+    { path: RouteNames.COURSES_ITEM, element: <Courses /> },
     { path: RouteNames.EVENTS, element: <Events /> },
     { path: RouteNames.FAQ, element: <Faq /> },
     { path: RouteNames.HOME, element: <Home /> },
@@ -35,11 +37,17 @@ export const publicRoutes = [
     { path: RouteNames.REVIEWS, element: <Reviews /> },
     { path: RouteNames.SUBSCRIBE, element: <Subscribe /> },
 ]
-
 export const privateRoutes = [
     ...publicRoutes,
     { path: RouteNames.ADD_COURSE, element: <AddCourse /> },
     { path: RouteNames.CABINET, element: <Cabinet /> },
-    { path: RouteNames.CABINET + '/:menu', element: <Cabinet /> },
+    { path: RouteNames.CABINET_ITEM, element: <Cabinet /> },
     // { path: RouteNames.SETTINGS, element: <Cabinet /> },
+]
+export const cabinetLinks = [
+    { title: 'Мои курсы', href: RouteNames.CABINET_COURSES, number: 0 },
+    { title: 'Мои мероприятия', href: RouteNames.CABINET_EVENTS, number: 1 },
+    { title: 'Статистика', href: RouteNames.CABINET_STATISTICS, number: 0 },
+    { title: 'Служба поддержки', href: RouteNames.CABINET_SUPPORT, number: 0 },
+    { title: 'Настройки аккаунта', href: RouteNames.CABINET_SETTINGS, number: 0 },
 ]

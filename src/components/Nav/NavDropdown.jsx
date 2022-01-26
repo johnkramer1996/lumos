@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { RouteNames } from 'routes'
 
 const NavDropdown = ({ items = [] }) => {
     const [isActive, setIsActive] = useState(false)
@@ -14,7 +15,7 @@ const NavDropdown = ({ items = [] }) => {
             </div>
             <div className='nav__dropdown-hidden'>
                 {items.map(({ id, name }) => (
-                    <Link key={id} to={'/'} className='nav__dropdown-link'>
+                    <Link key={id} to={`${RouteNames.COURSES}/${id}`} className='nav__dropdown-link'>
                         {name}
                     </Link>
                 ))}

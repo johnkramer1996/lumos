@@ -9,14 +9,10 @@ export const SystemActionCreators = {
             const response = await SystemService.fetchReferences()
 
             if (response.status === 200) {
-                const { data } = response
-
-                dispatch(SystemActionCreators.setReferences(data))
-
-                return
+                dispatch(SystemActionCreators.setReferences(response.data))
             }
         } catch (e) {
-            console.log(e)
+            console.log(e.response)
         }
     },
     fetchSocUrls: () => async (dispatch) => {
@@ -24,14 +20,10 @@ export const SystemActionCreators = {
             const response = await SystemService.fetchSocUrls()
 
             if (response.status === 200) {
-                const { data } = response
-
-                dispatch(SystemActionCreators.setSocUrls(data))
-
-                return
+                dispatch(SystemActionCreators.setSocUrls(response.data))
             }
         } catch (e) {
-            console.log(e)
+            console.log(e.response)
         }
     },
 }

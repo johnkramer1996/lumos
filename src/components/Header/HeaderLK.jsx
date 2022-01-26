@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { RouteNames } from 'routes'
+import { cabinetLinks, RouteNames } from 'routes'
 import { useDispatch, useSelector } from 'hooks/'
+import { IMG_URL } from 'api/URLS'
 
 const HeaderLK = () => {
     const [isActive, setIsActive] = useState(false)
     const { user } = useSelector()
-    user.img = './assets/img/avatar2.jpg'
 
-    const { onLogout } = useDispatch()
+    const { logout } = useDispatch()
 
     const items = [
         { title: user?.name || 'Имя', href: RouteNames.CABINET, number: 0 },
@@ -21,16 +21,16 @@ const HeaderLK = () => {
     return (
         <div className='header__lk'>
             <div className='header__lk-avatar' onClick={() => setIsActive(!isActive)}>
-                <img src={user.img} alt='' />
+                <img src={IMG_URL + user.avatar} alt='' />
             </div>
             <div className={`header__lk-dropdown${isActive ? ' header__lk-dropdown--active' : ''}`}>
-                {items.map(({ title, href, number }, index) => (
+                {cabinetLinks.map(({ title, href, number }, index) => (
                     <Link key={index} to={href} className={`header__lk-item ${number ? 'header__lk-item--notification' : ''}`}>
                         <span>{title}</span>
                         <i>{number}</i>
                     </Link>
                 ))}
-                <button className='header__lk-item header__lk-item--logout' onClick={onLogout}>
+                <button className='header__lk-item header__lk-item--logout' onClick={logout}>
                     <span>Выйти из аккаунта</span>
                     <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path

@@ -1,13 +1,10 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'hooks/'
+import { useSelector, useDispatch } from 'hooks/'
+import { SITE_URL } from 'api/URLS'
 
 const Settings = () => {
-    const {
-        auth: { user = {} },
-    } = useSelector((state) => state)
-
-    const { onLogout } = useDispatch()
+    const { user } = useSelector()
+    const { logout } = useDispatch()
 
     return (
         <div className='account-settings'>
@@ -18,7 +15,7 @@ const Settings = () => {
                     <div className='account-settings__photo-title'>Фото</div>
                     <div className='account-settings__photo-wrap'>
                         <div className='account-settings__photo-img'>
-                            <img src={user.img} alt='' />
+                            <img src={SITE_URL + user.avatar} alt='' />
                         </div>
                         <div className='account-settings__photo-buttons'>
                             <button className='account-settings__photo-save btn btn-blue'>Загрузить новое</button>
@@ -116,7 +113,7 @@ const Settings = () => {
                     </div>
                     <input className='account-settings__item-input' disabled type='text' value='12 апреля 2021' />
                 </div>
-                <button className='account-settings__logout btn btn-light-red' onClick={onLogout}>
+                <button className='account-settings__logout btn btn-light-red' onClick={logout}>
                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
                             d='M15.0165 7.38948V6.45648C15.0165 4.42148 13.3665 2.77148 11.3315 2.77148H6.45646C4.42246 2.77148 2.77246 4.42148 2.77246 6.45648V17.5865C2.77246 19.6215 4.42246 21.2715 6.45646 21.2715H11.3415C13.3705 21.2715 15.0165 19.6265 15.0165 17.5975V16.6545'

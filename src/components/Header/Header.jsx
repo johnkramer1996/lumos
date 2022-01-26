@@ -4,6 +4,7 @@ import { HeaderBurger, HeaderLK, HeaderLogo, HeaderNotification, HeaderSearch } 
 import { Nav } from 'components/'
 import { Button } from 'components/ui/'
 import { useDispatch, useSelector } from 'hooks/'
+import { RouteNames } from 'routes'
 
 const Header = () => {
     const [isNavActive, setIsNavActive] = useState(false)
@@ -15,6 +16,13 @@ const Header = () => {
 
     const onShowModal = () => setShowModal(true)
 
+    const itemsNav = [
+        { title: 'Мероприятия', href: RouteNames.EVENTS },
+        { title: 'Подписка', href: RouteNames.SUBSCRIBE },
+        { title: 'О нас', href: RouteNames.ABOUT },
+        { title: 'Новости', href: RouteNames.NEWS },
+    ]
+
     return (
         <>
             <header className='header header--b0'>
@@ -23,7 +31,7 @@ const Header = () => {
                         <div className='header__left'>
                             <HeaderBurger onClick={onToggleNav} isActive={isNavActive} />
                             <HeaderLogo />
-                            <Nav isActive={isNavActive} />
+                            <Nav items={itemsNav} isActive={isNavActive} />
                         </div>
                         <div className='header__right'>
                             <HeaderSearch isActive={isNavActive} />

@@ -1,24 +1,16 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
 import NavDropdown from './NavDropdown'
 import NavItem from './NavItem'
+import { useSelector } from 'hooks'
 
-const Nav = ({ isActive }) => {
-    const { system: { references: { themes: courses = [] } = {} } = {} } = useSelector((state) => state)
-
-    const items = [
-        { title: 'Мероприятия', href: RouteNames.EVENTS },
-        { title: 'Подписка', href: RouteNames.SUBSCRIBE },
-        { title: 'О нас', href: RouteNames.ABOUT },
-        { title: 'Новости', href: RouteNames.NEWS },
-    ]
+const Nav = ({ items = [], isActive }) => {
+    const { themes } = useSelector()
 
     return (
         <nav className={`nav${isActive ? ' nav--active' : ''}`}>
             <div className='nav__wrap'>
-                <NavDropdown items={courses} />
+                <NavDropdown items={themes} />
                 {items.map((item, index) => (
                     <NavItem key={index} {...item} />
                 ))}
