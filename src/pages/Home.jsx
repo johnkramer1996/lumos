@@ -1,5 +1,5 @@
 import React from 'react'
-import { Main, Course, CourseDetail } from 'components/sections/'
+import { Main, CourseDetail, Course } from 'components/'
 
 const Home = () => {
     const lessons = [

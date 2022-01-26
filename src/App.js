@@ -1,26 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import AppRouter from './components/AppRouter'
-import { useDispatch, useSelector } from 'react-redux'
-import { allActionCreators } from 'store/reducers/action-creators'
 import { Header, Footer } from 'components/'
+import { useDispatch, useSelector } from 'hooks'
 import { LoginModal } from 'components/modals'
 
 const App = () => {
-    const dispatch = useDispatch()
-    const { auth, fetchReferences, setIsLoading, fetchSocUrls } = allActionCreators
-    const {
-        auth: { isLoading },
-        system: { references } = {},
-    } = useSelector((state) => state)
+    const { isLoading } = useSelector()
+    const { auth, fetchReferences, setIsLoading, fetchSocUrls } = useDispatch()
 
     useEffect(() => {
-        dispatch(fetchReferences())
-        localStorage.getItem('token') ? dispatch(auth()) : dispatch(setIsLoading(false))
-
-        dispatch(fetchSocUrls())
+        fetchReferences()
+        localStorage.getItem('token') ? auth() : setIsLoading(false)
+        fetchSocUrls()
     }, [])
-
-    console.log(useSelector((state) => state))
 
     return (
         <>

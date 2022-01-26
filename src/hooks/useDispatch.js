@@ -2,12 +2,8 @@ import { useDispatch as useDispatchRedux } from 'react-redux'
 import { allActionCreators } from 'store/reducers/action-creators'
 
 const useDispatch = () => {
-    const { logout, setShowModal } = allActionCreators
     const dispatch = useDispatchRedux()
-    return {
-        onLogout: () => dispatch(logout()),
-        onShowModal: (onShowModalProps) => dispatch(setShowModal(onShowModalProps)),
-    }
+    return Object.keys(allActionCreators).reduce((obj, item) => ((obj[item] = (...props) => dispatch(allActionCreators[item](...props))), obj), {})
 }
 
 export default useDispatch

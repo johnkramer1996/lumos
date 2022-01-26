@@ -10,7 +10,9 @@ const Cabinet = () => {
         user: { roles = [] },
     } = useSelector()
 
-    const activeCabinet = [<CabinetUser />, <CabinetTrainer />, <CabinetEmployee />][roles[0]?.pivot?.role_id - 1]
+    const activeCabinet = [<CabinetUser />, <CabinetTrainer />, <CabinetEmployee />][roles[0]?.pivot?.role_id - 1 || 0]
+
+    console.log(undefined || 0)
 
     const { menu } = useParams()
 

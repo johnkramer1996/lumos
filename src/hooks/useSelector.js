@@ -7,6 +7,8 @@ const useSelector = () => {
         system: { references = {} },
     } = useSelectorRedux((state) => state)
 
+    courses.courses = courses?.info?.data?.data1 || []
+
     references.themes = references.themes ? references.themes : []
     references.typeStudy = references.type_study ? references.type_study : []
     delete references.type_study
