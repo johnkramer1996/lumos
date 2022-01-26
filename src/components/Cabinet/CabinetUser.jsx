@@ -1,25 +1,15 @@
 import React, { useEffect } from 'react'
 import { CabinetGreet } from 'components'
 import { Button } from 'components/ui'
-import { useNavigate } from 'react-router-dom'
-import { RouteNames } from 'routes'
+import { useDispatch, useSelector, useNavigate } from 'hooks'
 import { declOfNum, getDeclOfArray } from 'utils'
-import { useDispatch, useSelector } from 'react-redux'
-import { allActionCreators } from 'store/reducers/action-creators'
 
 const CabinetUser = () => {
-    const navigate = useNavigate()
-    const dispatch = useDispatch()
-    const { fetchCourses } = allActionCreators
-    const {
-        courses: { info: { data: courses = [], total } = {} },
-    } = useSelector((state) => state)
+    const { toAddCourse } = useNavigate()
+    const { fetchCourses } = useDispatch()
+    const { courses, total } = useSelector()
 
-    useEffect(() => {
-        dispatch(fetchCourses({ page: 1, limit: 3 }))
-    }, [])
-
-    const toAddCourse = () => navigate(RouteNames.ADD_COURSE)
+    useEffect(() => fetchCourses({ page: 1, limit: 3 }), [])
 
     return (
         <>

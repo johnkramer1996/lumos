@@ -2,7 +2,7 @@ import React from 'react'
 import CourseItem from './CourseItem'
 import { Swiper } from 'components/ui/'
 
-const Course = ({ items = [], className, title }) => {
+const Course = ({ title = 'Курсы', items = [], className }) => {
     return (
         <section className={`course-slider ${className}`}>
             <div className='container'>
@@ -12,7 +12,7 @@ const Course = ({ items = [], className, title }) => {
                         <div className='course-slider__tabs'>
                             <div className='course-slider__tab course-slider__tab--active'>Все категории</div>
                             {items.map(({ id, title }) => (
-                                <div className='course-slider__tab' key={id}>
+                                <div key={id} className='course-slider__tab'>
                                     {title}
                                 </div>
                             ))}

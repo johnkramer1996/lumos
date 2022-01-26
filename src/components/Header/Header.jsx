@@ -11,7 +11,9 @@ const Header = () => {
 
     const { isAuth } = useSelector()
 
-    const { onShowModal } = useDispatch({ onShowModalProps: true })
+    const { setShowModal } = useDispatch({ onShowModalProps: true })
+
+    const onShowModal = () => setShowModal(true)
 
     return (
         <>

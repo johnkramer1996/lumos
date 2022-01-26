@@ -1,10 +1,8 @@
+import { useSelector } from 'hooks'
 import React from 'react'
-import { useSelector } from 'react-redux'
 
 const CabinetGreet = () => {
-    const {
-        auth: { user },
-    } = useSelector((state) => state)
+    const { user } = useSelector()
 
     return (
         <div className='dashboard__greet card-bg'>

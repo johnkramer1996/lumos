@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { RouteNames } from 'routes'
 
 const CabinetTrainer = () => {
-    const navigate = useNavigate()
-    const toAddCourse = () => navigate(RouteNames.ADD_COURSE)
+    const { toAddCourse } = useNavigate()
 
     return (
         <div className='lkt-courses'>
