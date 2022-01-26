@@ -9,6 +9,7 @@ export const useSelector = () => {
 
     references.themes = references.themes ? references.themes : []
     references.typeStudy = references.type_study ? references.type_study : []
+    delete references.type_study
     references.format = references.format ? references.format : []
 
     return {

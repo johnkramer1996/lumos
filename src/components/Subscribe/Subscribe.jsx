@@ -11,8 +11,8 @@ const Subscribe = ({ title, items = [] }) => {
                     dictum faucibus duis in odio tempus amet. Malesuada purus elit nunc senectus porta tortor molestie.{' '}
                 </div>
                 <div className='sub__items'>
-                    {items.map(({ id, ...rest }) => (
-                        <SubscribeItem key={id} {...rest} />
+                    {items.map(({ id, ...props }) => (
+                        <SubscribeItem key={id} {...props} />
                     ))}
                 </div>
             </div>

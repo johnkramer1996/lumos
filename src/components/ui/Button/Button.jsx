@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Button = ({ children, className, color = 'blue', light, outline, text, link, to = '', ...rest }) => {
+const Button = ({ children, className, color = 'blue', light, outline, text, link, to = '', ...props }) => {
     const classNames = [outline ? 'btn-outline' : light ? `btn-light-${color}` : `btn-${color}`, className]
 
     console.log(link)
@@ -13,7 +13,7 @@ const Button = ({ children, className, color = 'blue', light, outline, text, lin
                     {children}
                 </Link>
             ) : (
-                <button className={`btn ${classNames.join(' ')}`} {...rest}>
+                <button className={`btn ${classNames.join(' ')}`} {...props}>
                     {children}
                 </button>
             )}

@@ -21,8 +21,8 @@ const News = ({ title, popularItems = [], newItems = [] }) => {
                         <button className='blog__all btn btn-outline'>Показать все</button>
                     </div>
                     <div className='blog__items'>
-                        {popularItems.map(({ id, ...rest }) => (
-                            <NewsItem key={id} {...rest} />
+                        {popularItems.map(({ id, ...props }) => (
+                            <NewsItem key={id} {...props} />
                         ))}
                     </div>
                     <div className='blog__group'>
@@ -31,8 +31,8 @@ const News = ({ title, popularItems = [], newItems = [] }) => {
                             <button className='blog__all btn btn-outline'>Показать все</button>
                         </div>
                         <div className='blog__items'>
-                            {newItems.map(({ id, ...rest }) => (
-                                <NewsItem key={id} {...rest} />
+                            {newItems.map(({ id, ...props }) => (
+                                <NewsItem key={id} {...props} />
                             ))}
                         </div>
                     </div>

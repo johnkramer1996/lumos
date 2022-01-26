@@ -21,7 +21,7 @@ const Course = ({ items = [], className, title }) => {
 
                     <div className='course-slider__wrap'>
                         <Swiper items={items[0]?.items} className={''} prefix={'course-slider'} options={{ slidesPerView: 3 }}>
-                            {(rest) => <CourseItem {...rest} />}
+                            {(props) => <CourseItem {...props} />}
                         </Swiper>
                     </div>
                 </div>

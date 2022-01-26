@@ -8,8 +8,8 @@ const Courses = ({ title, items = [] }) => {
             <div className='container'>
                 <h1 className='blog__title display-2'>{title}</h1>
                 <div className='cabinet-page__items cabinet-page__items4'>
-                    {items.reverse().map(({ id, ...rest }) => (
-                        <CoursesItem key={id} {...rest} />
+                    {items.reverse().map(({ id, ...props }) => (
+                        <CoursesItem key={id} {...props} />
                     ))}
                 </div>
             </div>

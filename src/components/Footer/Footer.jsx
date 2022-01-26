@@ -1,111 +1,79 @@
+import { useSelector } from 'hooks/useSelector'
 import React from 'react'
+import { Link } from 'react-router-dom'
+import { RouteNames } from 'routes'
 
 const Footer = () => {
+    const { themes } = useSelector()
+    const items = [
+        [
+            {
+                title: 'О портале',
+                items: [
+                    { href: RouteNames.ABOUT, title: 'Информация о нас' },
+                    { href: RouteNames.BLOG, title: 'Блог' },
+                    { href: RouteNames.ABOUT, title: 'Партнёры' },
+                    { href: RouteNames.ABOUT, title: 'Для прессы' },
+                    { href: RouteNames.ABOUT, title: 'Наша миссия' },
+                    { href: RouteNames.ABOUT, title: 'Вакансии' },
+                    { href: RouteNames.REVIEWS, title: 'Отзывы' },
+                    { href: RouteNames.ABOUT, title: 'Партнёрская программа' },
+                    { href: RouteNames.FAQ, title: 'Часто задаваемые вопросы' },
+                    { href: RouteNames.CONTACTS, title: 'Контакты' },
+                ],
+            },
+        ],
+        [
+            {
+                title: 'Направления обучения',
+                items: themes.map(({ id, name }) => ({ href: '', title: name })),
+            },
+        ],
+        [
+            {
+                title: 'Аккаунт',
+                items: [
+                    { href: '', title: 'Личный кабинет' },
+                    { href: '', title: 'Рабочий кабинет' },
+                    { href: '', title: 'Выйти' },
+                ],
+            },
+            {
+                title: 'Информация',
+                items: [
+                    { href: '', title: 'Условия пользования' },
+                    { href: '', title: 'Правила конфиденциальности' },
+                ],
+            },
+        ],
+    ]
+
     return (
         <footer className='footer'>
             <section className='footer-top'>
                 <div className='container'>
                     <div className='footer-top__inner'>
-                        <div className='footer__col'>
-                            <div className='footer__group'>
-                                <div className='footer__title'>О портале</div>
-                                <a href='' className='footer__link'>
-                                    Информация о нас
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Блог
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Партнёры
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Для прессы
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Наша миссия
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Вакансии
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Отзывы
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Партнёрская программа
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Часто задаваемые вопросы
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Контакты
-                                </a>
+                        {items.map((col, indexCol) => (
+                            <div key={indexCol} className='footer__col'>
+                                {col.map(({ title, items }, indexGroup) => (
+                                    <div key={indexGroup} className='footer__group'>
+                                        <div className='footer__title'>{title}</div>
+                                        {items.map(({ href, title }, indexLink) => (
+                                            <Link key={indexLink} to={href} className='footer__link'>
+                                                {title}
+                                            </Link>
+                                        ))}
+                                    </div>
+                                ))}
                             </div>
-                        </div>
-                        <div className='footer__col'>
-                            <div className='footer__group'>
-                                <div className='footer__title'>Направления обучения</div>
-                                <a href='' className='footer__link'>
-                                    Программирование
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Дизайн
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Маркетинг
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Управление
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Аналитика
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Фото/Видео
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Бизнес
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Компаниям
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Пример направления 1
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Пример направления 2
-                                </a>
-                            </div>
-                        </div>
-                        <div className='footer__col'>
-                            <div className='footer__group'>
-                                <div className='footer__title'>Аккаунт</div>
-                                <a href='' className='footer__link'>
-                                    Личный кабинет
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Рабочий кабинет
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Выйти
-                                </a>
-                            </div>
-                            <div className='footer__group'>
-                                <div className='footer__title'>Информация</div>
-                                <a href='' className='footer__link'>
-                                    Условия пользования
-                                </a>
-                                <a href='' className='footer__link'>
-                                    Правила конфиденциальности
-                                </a>
-                            </div>
-                        </div>
+                        ))}
                     </div>
                 </div>
             </section>
             <section className='footer-bottom'>
                 <div className='container'>
                     <div className='footer-bottom__inner'>
-                        <div className='footer__by'>© 2021 Люмос</div>
+                        <div className='footer__by'>&copy; {new Date().getFullYear()} Люмос</div>
                         <div className='footer__socials'>
                             <a href='' className='footer__socials-item'>
                                 <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>

@@ -33,7 +33,7 @@ const CourseDetail = () => {
             <div className='container'>
                 <div className='course-detail__inner'>
                     <Swiper items={items} className={'course-detail__item'} prefix={'course-detail'} bgImg>
-                        {(rest) => <CourseDetailItem {...rest} />}
+                        {(props) => <CourseDetailItem {...props} />}
                     </Swiper>
                 </div>
             </div>

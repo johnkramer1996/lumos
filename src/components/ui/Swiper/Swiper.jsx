@@ -29,9 +29,9 @@ const SwiperSlider = ({ items = [], children, className, prefix, options, bgImg 
     return (
         <>
             <Swiper ref={swiper} {...defaultOptions} {...options}>
-                {items.map(({ id, ...rest }) => (
-                    <SwiperSlide key={id} className={className} style={bgImg ? { backgroundImage: `url(${rest.img})` } : {}}>
-                        {children(rest)}
+                {items.map(({ id, ...props }) => (
+                    <SwiperSlide key={id} className={className} style={bgImg ? { backgroundImage: `url(${props.img})` } : {}}>
+                        {children(props)}
                     </SwiperSlide>
                 ))}
             </Swiper>
