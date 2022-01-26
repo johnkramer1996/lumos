@@ -1,6 +1,6 @@
 import { useSelector as useSelectorRedux } from 'react-redux'
 
-export const useSelector = () => {
+const useSelector = () => {
     const {
         auth,
         courses,
@@ -18,3 +18,4 @@ export const useSelector = () => {
         ...references,
     }
 }
+export default useSelector

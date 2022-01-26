@@ -1,24 +1,17 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
-import { allActionCreators } from 'store/reducers/action-creators'
 import { HeaderBurger, HeaderLK, HeaderLogo, HeaderNotification, HeaderSearch } from './'
 import { Nav } from 'components/'
 import { Button } from 'components/ui/'
+import { useDispatch, useSelector } from 'hooks/'
 
 const Header = () => {
-    const dispatch = useDispatch()
-    const { setShowModal } = allActionCreators
-    const {
-        auth: { isAuth },
-        system: { references: { theme } = {} } = {},
-    } = useSelector((state) => state)
-
     const [isNavActive, setIsNavActive] = useState(false)
-
     const onToggleNav = () => setIsNavActive(!isNavActive)
 
-    const onShowModal = () => dispatch(setShowModal(true))
+    const { isAuth } = useSelector()
+
+    const { onShowModal } = useDispatch({ onShowModalProps: true })
 
     return (
         <>

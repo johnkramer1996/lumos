@@ -1,19 +1,14 @@
-import { useLogout } from 'hooks/useLogout'
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
-import { allActionCreators } from 'store/reducers/action-creators'
+import { useDispatch, useSelector } from 'hooks/'
 
 const HeaderLK = () => {
     const [isActive, setIsActive] = useState(false)
-    const {
-        auth: { user = {} },
-    } = useSelector((state) => state)
+    const { user } = useSelector()
     user.img = './assets/img/avatar2.jpg'
 
-    const [onLogout] = useLogout()
+    const { onLogout } = useDispatch()
 
     const items = [
         { title: user?.name || 'Имя', href: RouteNames.CABINET, number: 0 },

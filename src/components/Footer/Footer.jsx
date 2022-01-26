@@ -1,7 +1,7 @@
-import { useSelector } from 'hooks/useSelector'
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
+import { useSelector } from 'hooks/'
 
 const Footer = () => {
     const { themes } = useSelector()

@@ -2,7 +2,7 @@ import React from 'react'
 import { CabinetEmployee, CabinetSidebar, CabinetTrainer, CabinetUser } from 'components/'
 import { Settings } from 'components/'
 import { useParams } from 'react-router-dom'
-import { useSelector } from 'hooks/useSelector'
+import { useSelector } from 'hooks/'
 import { RouteNames } from 'routes'
 
 const Cabinet = () => {

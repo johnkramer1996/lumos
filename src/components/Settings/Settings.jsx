@@ -1,13 +1,13 @@
-import { useLogout } from 'hooks/useLogout'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { useDispatch } from 'hooks/'
 
 const Settings = () => {
     const {
         auth: { user = {} },
     } = useSelector((state) => state)
 
-    const [onLogout] = useLogout()
+    const { onLogout } = useDispatch()
 
     return (
         <div className='account-settings'>

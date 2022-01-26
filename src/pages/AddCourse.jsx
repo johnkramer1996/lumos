@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from 'components/ui/Button/Button'
-import { useSelector } from 'hooks/useSelector'
+import { useSelector } from 'hooks/'
 
 const AddCourse = () => {
     const { themes, typeStudy, format } = useSelector()

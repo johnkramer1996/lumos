@@ -2,7 +2,7 @@ import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation, Pagination } from 'swiper'
 import { SwiperControls } from 'components/ui/'
-import { useSwiper } from 'hooks/useSwiper'
+import { useSwiper } from 'hooks/'
 
 export const defaultOptions = {
     className: 'swiper-container',
