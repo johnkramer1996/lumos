@@ -9,4 +9,4 @@ export const getDeclOfArray = {
     event: ['мероприятие', 'мероприятия', 'мероприятий'],
 }
 
-export const getImgUrl = (src) => (src ? `${SITE_URL}/${src}` : '/assets/img/avatar2.jpg')
+export const getImgUrl = (src, defaultSrc = '/assets/img/avatar2.jpg') => (src ? `${SITE_URL}/${src}` : defaultSrc)

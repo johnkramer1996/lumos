@@ -32,6 +32,22 @@ const HeaderNotification = () => {
             text: 'Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem.',
             date: '12 сен в 12:40',
         },
+        {
+            icon: {
+                color: '',
+                type: 0,
+            },
+            text: 'Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem.',
+            date: '12 сен в 12:40',
+        },
+        {
+            icon: {
+                color: '',
+                type: 0,
+            },
+            text: 'Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem.',
+            date: '12 сен в 12:40',
+        },
     ]
 
     const isNotifications = items.length > 0
@@ -67,9 +83,11 @@ const HeaderNotification = () => {
                     <div className='header__notification-new'>{items.length} новых</div>
                 </div>
                 <div className='header__notification-items'>
-                    {items.map((item, index) => (
-                        <HeaderNotificationItem key={index} {...item} />
-                    ))}
+                    {items
+                        .filter((_, index) => index < 3)
+                        .map((item, index) => (
+                            <HeaderNotificationItem key={index} {...item} />
+                        ))}
                 </div>
                 {isNotifications && (
                     <div className='header__notification-bottom'>

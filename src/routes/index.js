@@ -4,6 +4,7 @@ export const RouteNames = {
     ABOUT: '/about',
     ADD_LESSON: '/add',
     ADD_COURSE: '/add-courses',
+    ADD_COURSE_ITEM: '/add-courses/:id',
     BLOG: '/blog',
     CABINET: '/cabinet',
     CABINET_ITEM: '/cabinet/:item',
@@ -44,6 +45,7 @@ export const publicRoutes = [
 export const privateRoutes = [
     ...publicRoutes,
     { path: RouteNames.ADD_COURSE, element: <AddCourse /> },
+    { path: RouteNames.ADD_COURSE_ITEM, element: <AddCourse /> },
     { path: RouteNames.CABINET, element: <Cabinet /> },
     { path: RouteNames.CABINET_ITEM, element: <Cabinet /> },
     // { path: RouteNames.SETTINGS, element: <Cabinet /> },

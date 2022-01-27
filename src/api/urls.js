@@ -15,19 +15,19 @@ export const authURL = {
 }
 export const trainerCoursesURL = {
     FETCH_COURSES: '/cabinet/courses',
-    ADD_COURSES: '/cabinet/courses',
-    GET_COURSE: '/cabinet/courses',
-    PUT_COURSE: '/cabinet/courses',
-    PATCH_COURSE: '/cabinet/courses',
-    DELETE_COURSE: '/cabinet/courses',
+    ADD_COURSE: '/cabinet/courses',
+    GET_COURSE: ({ id }) => `/cabinet/courses/${id}`,
+    PUT_COURSE: ({ id }) => `/cabinet/courses/${id}`,
+    PATCH_COURSE: ({ id }) => `/cabinet/courses/${id}`,
+    DELETE_COURSE: ({ id }) => `/cabinet/courses/${id}`,
     GET_INFO: '/cabinet/courses/{COURSE}/info',
     EDIT_INFO: '/cabinet/courses/{COURSE}/info',
     DELETE_INFO: '/cabinet/courses/{COURSE}/info',
     GET_COURSE_USER: '/cabinet/courses/{COURSE}/users',
 }
 export const trainerCoursesModulesURL = {
-    FETCH_MODULES: '/cabinet/courses/{COURSE}/moduls',
-    ADD_MODULES_MAS: '/cabinet/courses/{COURSE}/moduls/mass',
+    FETCH_MODULES: ({ course }) => `/cabinet/courses/${course}/moduls`,
+    ADD_MODULES_MASS: ({ course }) => `/cabinet/courses/${course}/moduls/mass`,
     ADD_MODULES: '/cabinet/courses/{COURSE}/moduls',
     GET_MODULE: '/cabinet/courses/{COURSE}/moduls/{ID}',
     PUT_MODULE: '/cabinet/courses/{COURSE}/moduls/{ID}',
@@ -35,7 +35,7 @@ export const trainerCoursesModulesURL = {
     DELETE_MODULE: '/cabinet/courses/{COURSE}/moduls/{ID}',
 }
 export const trainerCoursesLessonsURL = {
-    FETCH_LESSONS: '/cabinet/courses/{COURSE}/lessons',
+    FETCH_LESSONS: ({ course }) => `/cabinet/courses/${course}/lessons`,
     DELETE_FILE: '/cabinet/courses/{COURSE}/lessons/{LESSON}/delete_file',
     FETCH_LESSON: '/cabinet/courses/{COURSE}/lessons/{ID}',
     DELETE_LESSON: '/cabinet/courses/{COURSE}/lessons/{ID}',

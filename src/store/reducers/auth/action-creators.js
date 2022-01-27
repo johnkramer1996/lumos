@@ -20,11 +20,8 @@ export const AuthActionCreators = {
         ({ cb, ...data }) =>
         async (dispatch) => {
             try {
-                console.log(data)
                 dispatch(AuthActionCreators.setError(''))
                 const response = await AuthService.login(data)
-
-                console.log(response, 'response')
 
                 if (response.status === 200) {
                     dispatch(AuthActionCreators.setShowModal(false))
@@ -44,8 +41,6 @@ export const AuthActionCreators = {
             try {
                 dispatch(AuthActionCreators.setError(''))
                 const response = await AuthService.restore(data)
-
-                console.log(response)
 
                 if (response.status === 200) {
                     dispatch(AuthActionCreators.setShowModal(false))

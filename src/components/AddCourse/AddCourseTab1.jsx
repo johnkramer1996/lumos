@@ -1,39 +1,41 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'hooks'
 import { Button } from 'components/ui'
+import { getImgUrl } from 'utils'
 
 const AddCourseTab1 = React.forwardRef((_, ref) => {
-    const { themes, typeStudy, format } = useSelector()
-    const [name, setName] = useState('')
-    const [category_id, setCategoryId] = useState(0)
-    const [type_study, setStudy] = useState(0)
-    const [format_study, setFormatStudy] = useState(0)
-    const [sale_subscribe, setSubscribe] = useState(true)
-    const [width, setWidth] = useState('')
-    const [dataImg, setDataImg] = useState('')
-    const image = useRef()
+    const { themes, typeStudy, format, course } = useSelector()
+    const [name, setName] = useState(course.name || 'Название курса')
+    const [category_id, setCategoryId] = useState(course.category_id || 1)
+    const [type_study, setStudy] = useState(course.type_study || 1)
+    const [format_study, setFormatStudy] = useState(course.format_study || 1)
+    const [sale_subscribe, setSubscribe] = useState(course.sale_subscribe || true)
+    const [width, setWidth] = useState(course.width || 'Длительность')
+    const [dataImg, setDataImg] = useState(getImgUrl(course.image, false) || '')
+    const inputImage = useRef()
+    const imgRef = useRef()
 
     ref.current = () => {
         const body = new FormData()
+
         body.append('name', name)
         body.append('category_id', category_id)
         body.append('type_study', type_study)
         body.append('format_study', format_study)
         body.append('sale_subscribe', '1')
         body.append('width', width)
-        body.append('image', image.current?.files[0])
+        body.append('image', inputImage.current?.files[0])
         return body
     }
 
     const uploadImg = (e) => {
-        const files = e.target.files
-        const file = files[0]
+        const file = e.target.files[0]
         if (!file) return
 
         const size = file.size || 0
 
         if (size > 5 * 1024 * 1024) {
-            image.current.value = ''
+            inputImage.current.value = ''
             alert('*Слишком большой файл')
 
             return
@@ -41,11 +43,11 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
 
         const reader = new FileReader()
         reader.onload = (e) => setDataImg(e.target.result)
-        reader.readAsDataURL(files[0])
+        reader.readAsDataURL(file)
     }
 
     const deleteImg = (e) => {
-        image.current.value = ''
+        inputImage.current.value = ''
         setDataImg('')
     }
 
@@ -121,10 +123,10 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
                     Соотношение сторон: 16:9 (рекомендуемое разрешение: 1280x720) <br /> PNG, JPG до 5 MБ
                 </div>
                 <div className='course-edit__form-upload-wrap'>
-                    <div className='course-edit__form-upload-img'>{dataImg && <img src={dataImg} alt='' />}</div>
+                    <div className='course-edit__form-upload-img'>{dataImg && <img ref={imgRef} src={dataImg} alt='' />}</div>
                     <div className='course-edit__form-upload-buttons'>
                         <Button className='course-edit__form-upload-btn'>
-                            <input ref={image} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={uploadImg} />
+                            <input ref={inputImage} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={uploadImg} />
                             Загрузить {dataImg ? 'новое' : 'изображение'}
                         </Button>
                         <Button className='course-edit__form-upload-delete' onClick={deleteImg} outline>

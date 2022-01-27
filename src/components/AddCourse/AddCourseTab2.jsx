@@ -1,12 +1,24 @@
 import { Button } from 'components/ui'
-import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'hooks'
+import React, { useEffect, useState } from 'react'
 
 const AddCourseTab2 = React.forwardRef((_, ref) => {
-    const [shortDescr, setShortDescr] = useState()
-    const [modules, setModules] = useState([{ lessons: [{}] }])
+    const { modules: moduls = [] } = useSelector()
+    console.log(moduls)
+
+    const [shortDescr, setShortDescr] = useState('')
+    // const [modules, setModules] = useState([{ name: '', lessons: [{}] }])
+    const [modules, setModules] = useState(moduls)
+
+    ref.current = () => {
+        return {
+            short_desc: shortDescr,
+            moduls: modules.map((item) => (item.name ? { ...item, name: 'Модуль' } : item)).map((item) => ({ ...item, lessons: item.lessonsshort })),
+        }
+    }
 
     const onAddModule = () => {
-        setModules([...modules, { lessons: [{}] }])
+        setModules([...modules, { name: '', lessonsshort: [{}] }])
     }
 
     const onDeleteModule = (index) => {
@@ -18,11 +30,11 @@ const AddCourseTab2 = React.forwardRef((_, ref) => {
     }
 
     const onAddLesson = (index) => {
-        setModules(modules.map((item, inx) => (inx === index ? { ...item, lessons: [...item.lessons, {}] } : item)))
+        setModules(modules.map((item, inx) => (inx === index ? { ...item, lessonsshort: [...item.lessonsshort, {}] } : item)))
     }
 
     const setLessonName = (item, index, name) => {
-        item.lessons = item.lessons.map((item, inx) => (inx === index ? { ...item, name } : item))
+        item.lessonsshort = item.lessonsshort.map((item, inx) => (inx === index ? { ...item, name } : item))
         setModules([...modules])
         // setModules(modules.map((item, inx) => (inx === index ? { ...item, name } : item)))
     }
@@ -46,7 +58,7 @@ const AddCourseTab2 = React.forwardRef((_, ref) => {
                         <div key={index} className='create-module__item form-group'>
                             <label>Название модуля {index + 1}</label>
                             <div className='create-module__input'>
-                                <input type='text' placeholder='Название модуля' onChange={(e) => setModuleName(item, index, e.target.value)} />
+                                <input type='text' placeholder='Название модуля' value={item.name} onChange={(e) => setModuleName(item, index, e.target.value)} />
                                 <button className='create-module__delete' onClick={() => onDeleteModule(index)}>
                                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                                         <path
@@ -85,10 +97,10 @@ const AddCourseTab2 = React.forwardRef((_, ref) => {
                         <h3 className='create-module__title display-4'>{item?.name || 'Модуль ' + (index + 1)}</h3>
                     </div>
                     <div className='create-module__items'>
-                        {item?.lessons?.map((itemLesson, indexLesson) => (
+                        {item?.lessonsshort?.map((itemLesson, indexLesson) => (
                             <div key={indexLesson} className='create-module__item form-group'>
                                 <div className='create-module__input'>
-                                    <input type='text' placeholder='Название урока' onChange={(e) => setLessonName(item, indexLesson, e.target.value)} />
+                                    <input type='text' placeholder='Название урока' value={itemLesson.name} onChange={(e) => setLessonName(item, indexLesson, e.target.value)} />
                                 </div>
                             </div>
                         ))}
