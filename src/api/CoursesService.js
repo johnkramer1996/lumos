@@ -34,6 +34,24 @@ export default class CoursesService {
             },
         })
     }
+    static async deleteCourse({ id = 1 } = {}) {
+        return await axios.delete(trainerCoursesURL.DELETE_COURSE({ id }))
+    }
+    static async getInfo({ course = 1 } = {}) {
+        return await axios.get(trainerCoursesURL.GET_INFO({ course }))
+    }
+    static async editInfo({ course = 1 } = {}) {
+        return await axios.put(trainerCoursesURL.GET_INFO({ course }))
+    }
+    static async deleteInfo({ course = 1 } = {}) {
+        return await axios.delete(trainerCoursesURL.DELETE_INFO({ course }))
+    }
+    static async getCourseUser({ course = 1 } = {}) {
+        return await axios.get(trainerCoursesURL.GET_COURSE_USER({ course }))
+    }
+    static async fetchModules({ course = 1 } = {}) {
+        return await axios.get(trainerCoursesModulesURL.FETCH_MODULES({ course }))
+    }
     static async addModulesMass({ course = 1, body = {} } = {}) {
         return await axios.post(trainerCoursesModulesURL.ADD_MODULES_MASS({ course }), body, {
             headers: {
@@ -41,10 +59,72 @@ export default class CoursesService {
             },
         })
     }
-    static async fetchModules({ course = 1 } = {}) {
-        return await axios.get(trainerCoursesModulesURL.FETCH_MODULES({ course }))
+    static async addModule({ course = 1, body = {} } = {}) {
+        return await axios.post(trainerCoursesModulesURL.ADD_MODULES({ course }), body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    }
+    static async getModule({ course = 1, body = {} } = {}) {
+        return await axios.post(trainerCoursesModulesURL.GET_MODULE({ course }), body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    }
+    static async putModule({ course = 1, body = {} } = {}) {
+        return await axios.put(trainerCoursesModulesURL.PUT_MODULE({ course }), body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    }
+    static async patchModule({ course = 1, body = {} } = {}) {
+        return await axios.put(trainerCoursesModulesURL.PATCH_MODULE({ course }), body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    }
+    static async deleteModule({ course = 1, body = {} } = {}) {
+        return await axios.put(trainerCoursesModulesURL.DELETE_MODULE({ course }), body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
     }
     static async fetchLessons({ course = 1 } = {}) {
         return await axios.get(trainerCoursesLessonsURL.FETCH_LESSONS({ course }))
+    }
+    static async deleteFile({ course = 1, lesson = 1 } = {}) {
+        return await axios.delete(trainerCoursesLessonsURL.FETCH_LESSONS({ course, lesson }))
+    }
+    static async fetchLesson({ course = 1, lesson = 1 } = {}) {
+        return await axios.get(trainerCoursesLessonsURL.FETCH_LESSON({ course, lesson }))
+    }
+    static async deleteLesson({ course = 1, lesson = 1 } = {}) {
+        return await axios.get(trainerCoursesLessonsURL.DELETE_LESSON({ course, lesson }))
+    }
+    static async addFile({ course = 1, lesson = 1, body = {} } = {}) {
+        return await axios.post(trainerCoursesLessonsURL.FETCH_LESSONS({ course, lesson }), body, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+    }
+    static async putLesson({ course = 1, lesson = 1, body = {} } = {}) {
+        return await axios.get(trainerCoursesLessonsURL.PUT_LESSON({ course, lesson }), body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    }
+    static async putchLesson({ course = 1, lesson = 1, body = {} } = {}) {
+        return await axios.get(trainerCoursesLessonsURL.PATCH_LESSON({ course, lesson }), body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
     }
 }
