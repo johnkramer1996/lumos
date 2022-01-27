@@ -20,7 +20,7 @@ export const trainerCoursesURL = {
     PUT_COURSE: ({ id }) => `/cabinet/courses/${id}`,
     PATCH_COURSE: ({ id }) => `/cabinet/courses/${id}`,
     DELETE_COURSE: ({ id }) => `/cabinet/courses/${id}`,
-    GET_INFO: '/cabinet/courses/{COURSE}/info',
+    GET_INFO: ({ course }) => `/cabinet/courses/${course}/info`,
     EDIT_INFO: '/cabinet/courses/{COURSE}/info',
     DELETE_INFO: '/cabinet/courses/{COURSE}/info',
     GET_COURSE_USER: '/cabinet/courses/{COURSE}/users',
