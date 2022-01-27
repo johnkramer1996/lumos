@@ -2,8 +2,9 @@ import React from 'react'
 import { Button } from 'components/ui'
 import { useNavigate } from 'hooks'
 import { CoursesItem3 } from 'components'
+import { declOfNum, getDeclOfArray } from 'utils'
 
-const CabinetTrainer = ({ items = [] }) => {
+const CabinetTrainer = ({ items = [], total }) => {
     const { toAddCourse } = useNavigate()
 
     return (
@@ -19,7 +20,9 @@ const CabinetTrainer = ({ items = [] }) => {
                 </Button>
             </div>
             <div className='cabinet-page__nav lkt-courses__nav'>
-                <div className='cabinet-page__nav-title'>4 курса</div>
+                <div className='cabinet-page__nav-title'>
+                    {total} {declOfNum(total, getDeclOfArray['course'])}
+                </div>
                 <div className='cabinet-page__nav-wrap'>
                     <button className='cabinet-page__nav-item cabinet-page__nav-item--col cabinet-page__nav-item--active'>
                         <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>

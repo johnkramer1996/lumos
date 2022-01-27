@@ -1,6 +1,8 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import { RouteNames } from 'routes'
 
-const EventsItem = ({ day, month, year, time, img, title, descr }) => {
+const EventsItem = ({ id, day, month, year, time, img, title, descr }) => {
     return (
         <div className='events__item'>
             <div className='event-card'>
@@ -14,7 +16,9 @@ const EventsItem = ({ day, month, year, time, img, title, descr }) => {
                     <img src={img} alt='' />
                 </div>
                 <div className='event-card__right'>
-                    <div className='event-card__title'>{title}</div>
+                    <Link to={RouteNames.EVENTS + '/' + id} className='event-card__title'>
+                        {title}
+                    </Link>
                     <div className='event-card__desc'>{descr}</div>
                 </div>
             </div>

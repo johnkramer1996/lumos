@@ -11,7 +11,7 @@ export default class CoursesService {
         })
     }
     static async add(body = {}) {
-        return await axios.post(trainerCoursesURL.ADD_LESSON, body, {
+        return await axios.post(trainerCoursesURL.ADD_COURSES, body, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },

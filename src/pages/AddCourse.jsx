@@ -1,9 +1,27 @@
-import React from 'react'
+import React, { useRef, useState } from 'react'
 import Button from 'components/ui/Button/Button'
-import { useSelector } from 'hooks/'
+import { useDispatch } from 'hooks/'
+import { AddCourseTab1 } from 'components'
+import AddCourseTab2 from 'components/AddCourse/AddCourseTab2'
 
 const AddCourse = () => {
-    const { themes, typeStudy, format } = useSelector()
+    const { addCourse } = useDispatch()
+    const [tasbActive, setTabsActive] = useState(1)
+    const tabsItem = ['Основная информация', 'Уроки', 'Страница курса']
+    const forwardRefTab1 = useRef()
+    const forwardRefTab2 = useRef()
+    const forwardRefTab3 = useRef()
+
+    const onSave = (e) => {
+        e.preventDefault()
+
+        if (tasbActive === 0) {
+            addCourse(forwardRefTab1.current())
+            return
+        }
+    }
+
+    const onTabsChange = (index) => setTabsActive(index)
 
     return (
         <section className='course-edit'>
@@ -11,681 +29,22 @@ const AddCourse = () => {
                 <div className='course-edit__inner'>
                     <div className='course-edit__left'>
                         <h1 className='course-edit__title display-3'>
-                            <span>Редактирование курса</span>
+                            <span>Добавление курса</span>
                         </h1>
                         <div className='course-edit__tabs'>
-                            <div data-tab-path='1' className='course-edit__tab course-edit__tab--active'>
-                                Основная информация
-                            </div>
-                            <div data-tab-path='2' className='course-edit__tab'>
-                                Уроки
-                            </div>
-                            <div data-tab-path='3' className='course-edit__tab'>
-                                Страница курса
-                            </div>
+                            {tabsItem.map((title, index) => (
+                                <div key={index} className={`course-edit__tab${tasbActive === index ? ' course-edit__tab--active' : ''}`} onClick={() => onTabsChange(index)}>
+                                    {title}
+                                </div>
+                            ))}
                         </div>
-                        <div data-tab-path='1' className='course-edit__content course-edit__content--active'>
-                            <form className='course-edit__form'>
-                                <h3 className='course-edit__form-title'>Основная информация</h3>
-                                <div className='course-edit__form-grid'>
-                                    <div className='course-edit__form-group form-group'>
-                                        <label>Название</label>
-                                        <input type='text' placeholder='Название' />
-                                    </div>
-                                    <div className='course-edit__form-group form-group'>
-                                        <label>Категория</label>
-                                        <select>
-                                            <option selected hidden>
-                                                Категория
-                                            </option>
-                                            {themes.map(({ id, name }) => (
-                                                <option key={id} value={id}>
-                                                    {name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className='course-edit__form-group form-group'>
-                                        <label>Тип обучения</label>
-                                        <select>
-                                            <option selected hidden>
-                                                Тип обучения
-                                            </option>
-                                            {typeStudy.map(({ id, name }) => (
-                                                <option key={id} value={id}>
-                                                    {name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className='course-edit__form-group form-group'>
-                                        <label>Формат</label>
-                                        <select>
-                                            <option selected hidden>
-                                                Формат
-                                            </option>
-                                            {format.map(({ id, name }) => (
-                                                <option key={id} value={id}>
-                                                    {name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className='course-edit__form-group form-group'>
-                                        <label>Старт курса</label>
-                                        <select>
-                                            <option selected hidden>
-                                                Старт курса
-                                            </option>
-                                            <option value=''>В любое время</option>
-                                            <option value=''>В любое время 2</option>
-                                        </select>
-                                    </div>
-                                    <div className='course-edit__form-group form-group'>
-                                        <label>Длительность</label>
-                                        <input type='text' placeholder='Длительность' />
-                                    </div>
-                                    <div className='course-edit__form-checkbox checkbox'>
-                                        <input type='checkbox' className='checkbox' id='c' />
-                                        <label htmlFor='c'>Разрешить продавать по подписке</label>
-                                    </div>
-                                </div>
-                                <div className='course-edit__form-upload'>
-                                    <div className='course-edit__form-upload-title'>Изображение</div>
-                                    <div className='course-edit__form-upload-desc'>
-                                        Соотношение сторон: 16:9 (рекомендуемое разрешение: 1280x720) <br /> PNG, JPG до 5 MБ
-                                    </div>
-                                    <div className='course-edit__form-upload-wrap'>
-                                        <div className='course-edit__form-upload-img'>
-                                            <img src='./assets/img/course4.jpg' alt='' />
-                                        </div>
-                                        <div className='course-edit__form-upload-buttons'>
-                                            <button className='course-edit__form-upload-btn btn btn-blue' type='button'>
-                                                Загрузить новое
-                                            </button>
-                                            <button className='course-edit__form-upload-delete btn btn-outline' type='button'>
-                                                Удалить
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                        <div className={`course-edit__content${tasbActive === 0 ? ' course-edit__content--active' : ''}`}>
+                            <AddCourseTab1 ref={forwardRefTab1} />
                         </div>
-                        <div data-tab-path='2' className='course-edit__content'>
-                            <div className='course-edit__small-desc card-bg'>
-                                <div className='course-edit__small-desc-title display-4'>Короткое описание</div>
-                                <div className='form-group'>
-                                    <label>
-                                        <span>Описание</span>
-                                        <span>335/600</span>
-                                    </label>
-                                    <textarea placeholder='Описание'></textarea>
-                                </div>
-                            </div>
-                            <div className='create-module card-bg'>
-                                <h3 className='create-module__title display-4'>Модули</h3>
-                                <div className='create-module__items'>
-                                    <div className='create-module__item form-group'>
-                                        <label>Название модуля 1</label>
-                                        <div className='create-module__input'>
-                                            <input type='text' placeholder='Название модуля' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className='create-module__item form-group'>
-                                        <label>Название модуля 2</label>
-                                        <div className='create-module__input'>
-                                            <input type='text' placeholder='Название модуля' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className='create-module__item form-group'>
-                                        <label>Название модуля 3</label>
-                                        <div className='create-module__input'>
-                                            <input type='text' placeholder='Название модуля' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button className='create-module__add btn btn-outline'>
-                                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                        <path d='M12.039 4V20' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                        <path d='M20 12.038H4' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                    </svg>
-                                    <span>Добавить модуль</span>
-                                </button>
-                            </div>
-                            <div className='create-module card-bg'>
-                                <div className='create-module__top'>
-                                    <h3 className='create-module__title display-4'>Модуль 1</h3>
-                                    <div className='create-module__num'>4 урока</div>
-                                </div>
-                                <div className='create-module__items'>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <button className='create-module__drag'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 4C10 5.10457 9.10457 6 8 6C6.89543 6 6 5.10457 6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4Z' fill='#9FADBF' />
-                                                    <path d='M18 4C18 5.10457 17.1046 6 16 6C14.8954 6 14 5.10457 14 4C14 2.89543 14.8954 2 16 2C17.1046 2 18 2.89543 18 4Z' fill='#9FADBF' />
-                                                    <path d='M10 12C10 13.1046 9.10457 14 8 14C6.89543 14 6 13.1046 6 12C6 10.8954 6.89543 10 8 10C9.10457 10 10 10.8954 10 12Z' fill='#9FADBF' />
-                                                    <path d='M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z' fill='#9FADBF' />
-                                                    <path d='M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z' fill='#9FADBF' />
-                                                    <path d='M18 20C18 21.1046 17.1046 22 16 22C14.8954 22 14 21.1046 14 20C14 18.8954 14.8954 18 16 18C17.1046 18 18 18.8954 18 20Z' fill='#9FADBF' />
-                                                </svg>
-                                            </button>
-                                            <button className='create-module__link'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 7H6.5C5.33333 7.16667 2 8 2 12C2 16 5.33333 16.8333 6.5 17H10' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M14 7H17.5C18.6667 7.16667 22 8 22 12C22 16 18.6667 16.8333 17.5 17H14' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                </svg>
-                                            </button>
-                                            <input type='text' placeholder='Название урока' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <button className='create-module__drag'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 4C10 5.10457 9.10457 6 8 6C6.89543 6 6 5.10457 6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4Z' fill='#9FADBF' />
-                                                    <path d='M18 4C18 5.10457 17.1046 6 16 6C14.8954 6 14 5.10457 14 4C14 2.89543 14.8954 2 16 2C17.1046 2 18 2.89543 18 4Z' fill='#9FADBF' />
-                                                    <path d='M10 12C10 13.1046 9.10457 14 8 14C6.89543 14 6 13.1046 6 12C6 10.8954 6.89543 10 8 10C9.10457 10 10 10.8954 10 12Z' fill='#9FADBF' />
-                                                    <path d='M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z' fill='#9FADBF' />
-                                                    <path d='M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z' fill='#9FADBF' />
-                                                    <path d='M18 20C18 21.1046 17.1046 22 16 22C14.8954 22 14 21.1046 14 20C14 18.8954 14.8954 18 16 18C17.1046 18 18 18.8954 18 20Z' fill='#9FADBF' />
-                                                </svg>
-                                            </button>
-                                            <button className='create-module__link'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 7H6.5C5.33333 7.16667 2 8 2 12C2 16 5.33333 16.8333 6.5 17H10' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M14 7H17.5C18.6667 7.16667 22 8 22 12C22 16 18.6667 16.8333 17.5 17H14' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                </svg>
-                                            </button>
-                                            <input type='text' placeholder='Название урока' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <button className='create-module__drag'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 4C10 5.10457 9.10457 6 8 6C6.89543 6 6 5.10457 6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4Z' fill='#9FADBF' />
-                                                    <path d='M18 4C18 5.10457 17.1046 6 16 6C14.8954 6 14 5.10457 14 4C14 2.89543 14.8954 2 16 2C17.1046 2 18 2.89543 18 4Z' fill='#9FADBF' />
-                                                    <path d='M10 12C10 13.1046 9.10457 14 8 14C6.89543 14 6 13.1046 6 12C6 10.8954 6.89543 10 8 10C9.10457 10 10 10.8954 10 12Z' fill='#9FADBF' />
-                                                    <path d='M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z' fill='#9FADBF' />
-                                                    <path d='M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z' fill='#9FADBF' />
-                                                    <path d='M18 20C18 21.1046 17.1046 22 16 22C14.8954 22 14 21.1046 14 20C14 18.8954 14.8954 18 16 18C17.1046 18 18 18.8954 18 20Z' fill='#9FADBF' />
-                                                </svg>
-                                            </button>
-                                            <button className='create-module__link'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 7H6.5C5.33333 7.16667 2 8 2 12C2 16 5.33333 16.8333 6.5 17H10' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M14 7H17.5C18.6667 7.16667 22 8 22 12C22 16 18.6667 16.8333 17.5 17H14' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                </svg>
-                                            </button>
-                                            <input type='text' placeholder='Название урока' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <button className='create-module__drag'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 4C10 5.10457 9.10457 6 8 6C6.89543 6 6 5.10457 6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4Z' fill='#9FADBF' />
-                                                    <path d='M18 4C18 5.10457 17.1046 6 16 6C14.8954 6 14 5.10457 14 4C14 2.89543 14.8954 2 16 2C17.1046 2 18 2.89543 18 4Z' fill='#9FADBF' />
-                                                    <path d='M10 12C10 13.1046 9.10457 14 8 14C6.89543 14 6 13.1046 6 12C6 10.8954 6.89543 10 8 10C9.10457 10 10 10.8954 10 12Z' fill='#9FADBF' />
-                                                    <path d='M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z' fill='#9FADBF' />
-                                                    <path d='M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z' fill='#9FADBF' />
-                                                    <path d='M18 20C18 21.1046 17.1046 22 16 22C14.8954 22 14 21.1046 14 20C14 18.8954 14.8954 18 16 18C17.1046 18 18 18.8954 18 20Z' fill='#9FADBF' />
-                                                </svg>
-                                            </button>
-                                            <button className='create-module__link'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 7H6.5C5.33333 7.16667 2 8 2 12C2 16 5.33333 16.8333 6.5 17H10' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M14 7H17.5C18.6667 7.16667 22 8 22 12C22 16 18.6667 16.8333 17.5 17H14' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                </svg>
-                                            </button>
-                                            <input type='text' placeholder='Название урока' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button className='create-module__add btn btn-outline'>
-                                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                        <path d='M12.039 4V20' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                        <path d='M20 12.038H4' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                    </svg>
-                                    <span>Добавить урок</span>
-                                </button>
-                            </div>
-                            <div className='create-module card-bg'>
-                                <div className='create-module__top'>
-                                    <h3 className='create-module__title display-4'>Модуль 2</h3>
-                                    <div className='create-module__num'>6 уроков</div>
-                                </div>
-                                <div className='create-module__items'>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <button className='create-module__drag'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 4C10 5.10457 9.10457 6 8 6C6.89543 6 6 5.10457 6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4Z' fill='#9FADBF' />
-                                                    <path d='M18 4C18 5.10457 17.1046 6 16 6C14.8954 6 14 5.10457 14 4C14 2.89543 14.8954 2 16 2C17.1046 2 18 2.89543 18 4Z' fill='#9FADBF' />
-                                                    <path d='M10 12C10 13.1046 9.10457 14 8 14C6.89543 14 6 13.1046 6 12C6 10.8954 6.89543 10 8 10C9.10457 10 10 10.8954 10 12Z' fill='#9FADBF' />
-                                                    <path d='M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z' fill='#9FADBF' />
-                                                    <path d='M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z' fill='#9FADBF' />
-                                                    <path d='M18 20C18 21.1046 17.1046 22 16 22C14.8954 22 14 21.1046 14 20C14 18.8954 14.8954 18 16 18C17.1046 18 18 18.8954 18 20Z' fill='#9FADBF' />
-                                                </svg>
-                                            </button>
-                                            <button className='create-module__link'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 7H6.5C5.33333 7.16667 2 8 2 12C2 16 5.33333 16.8333 6.5 17H10' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M14 7H17.5C18.6667 7.16667 22 8 22 12C22 16 18.6667 16.8333 17.5 17H14' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                </svg>
-                                            </button>
-                                            <input type='text' placeholder='Название урока' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <button className='create-module__drag'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 4C10 5.10457 9.10457 6 8 6C6.89543 6 6 5.10457 6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4Z' fill='#9FADBF' />
-                                                    <path d='M18 4C18 5.10457 17.1046 6 16 6C14.8954 6 14 5.10457 14 4C14 2.89543 14.8954 2 16 2C17.1046 2 18 2.89543 18 4Z' fill='#9FADBF' />
-                                                    <path d='M10 12C10 13.1046 9.10457 14 8 14C6.89543 14 6 13.1046 6 12C6 10.8954 6.89543 10 8 10C9.10457 10 10 10.8954 10 12Z' fill='#9FADBF' />
-                                                    <path d='M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z' fill='#9FADBF' />
-                                                    <path d='M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z' fill='#9FADBF' />
-                                                    <path d='M18 20C18 21.1046 17.1046 22 16 22C14.8954 22 14 21.1046 14 20C14 18.8954 14.8954 18 16 18C17.1046 18 18 18.8954 18 20Z' fill='#9FADBF' />
-                                                </svg>
-                                            </button>
-                                            <button className='create-module__link'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 7H6.5C5.33333 7.16667 2 8 2 12C2 16 5.33333 16.8333 6.5 17H10' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M14 7H17.5C18.6667 7.16667 22 8 22 12C22 16 18.6667 16.8333 17.5 17H14' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                </svg>
-                                            </button>
-                                            <input type='text' placeholder='Название урока' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <button className='create-module__drag'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 4C10 5.10457 9.10457 6 8 6C6.89543 6 6 5.10457 6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4Z' fill='#9FADBF' />
-                                                    <path d='M18 4C18 5.10457 17.1046 6 16 6C14.8954 6 14 5.10457 14 4C14 2.89543 14.8954 2 16 2C17.1046 2 18 2.89543 18 4Z' fill='#9FADBF' />
-                                                    <path d='M10 12C10 13.1046 9.10457 14 8 14C6.89543 14 6 13.1046 6 12C6 10.8954 6.89543 10 8 10C9.10457 10 10 10.8954 10 12Z' fill='#9FADBF' />
-                                                    <path d='M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z' fill='#9FADBF' />
-                                                    <path d='M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z' fill='#9FADBF' />
-                                                    <path d='M18 20C18 21.1046 17.1046 22 16 22C14.8954 22 14 21.1046 14 20C14 18.8954 14.8954 18 16 18C17.1046 18 18 18.8954 18 20Z' fill='#9FADBF' />
-                                                </svg>
-                                            </button>
-                                            <button className='create-module__link'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 7H6.5C5.33333 7.16667 2 8 2 12C2 16 5.33333 16.8333 6.5 17H10' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M14 7H17.5C18.6667 7.16667 22 8 22 12C22 16 18.6667 16.8333 17.5 17H14' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                </svg>
-                                            </button>
-                                            <input type='text' placeholder='Название урока' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <button className='create-module__drag'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 4C10 5.10457 9.10457 6 8 6C6.89543 6 6 5.10457 6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4Z' fill='#9FADBF' />
-                                                    <path d='M18 4C18 5.10457 17.1046 6 16 6C14.8954 6 14 5.10457 14 4C14 2.89543 14.8954 2 16 2C17.1046 2 18 2.89543 18 4Z' fill='#9FADBF' />
-                                                    <path d='M10 12C10 13.1046 9.10457 14 8 14C6.89543 14 6 13.1046 6 12C6 10.8954 6.89543 10 8 10C9.10457 10 10 10.8954 10 12Z' fill='#9FADBF' />
-                                                    <path d='M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z' fill='#9FADBF' />
-                                                    <path d='M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z' fill='#9FADBF' />
-                                                    <path d='M18 20C18 21.1046 17.1046 22 16 22C14.8954 22 14 21.1046 14 20C14 18.8954 14.8954 18 16 18C17.1046 18 18 18.8954 18 20Z' fill='#9FADBF' />
-                                                </svg>
-                                            </button>
-                                            <button className='create-module__link'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 7H6.5C5.33333 7.16667 2 8 2 12C2 16 5.33333 16.8333 6.5 17H10' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M14 7H17.5C18.6667 7.16667 22 8 22 12C22 16 18.6667 16.8333 17.5 17H14' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                </svg>
-                                            </button>
-                                            <input type='text' placeholder='Название урока' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <button className='create-module__drag'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 4C10 5.10457 9.10457 6 8 6C6.89543 6 6 5.10457 6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4Z' fill='#9FADBF' />
-                                                    <path d='M18 4C18 5.10457 17.1046 6 16 6C14.8954 6 14 5.10457 14 4C14 2.89543 14.8954 2 16 2C17.1046 2 18 2.89543 18 4Z' fill='#9FADBF' />
-                                                    <path d='M10 12C10 13.1046 9.10457 14 8 14C6.89543 14 6 13.1046 6 12C6 10.8954 6.89543 10 8 10C9.10457 10 10 10.8954 10 12Z' fill='#9FADBF' />
-                                                    <path d='M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z' fill='#9FADBF' />
-                                                    <path d='M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z' fill='#9FADBF' />
-                                                    <path d='M18 20C18 21.1046 17.1046 22 16 22C14.8954 22 14 21.1046 14 20C14 18.8954 14.8954 18 16 18C17.1046 18 18 18.8954 18 20Z' fill='#9FADBF' />
-                                                </svg>
-                                            </button>
-                                            <button className='create-module__link'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 7H6.5C5.33333 7.16667 2 8 2 12C2 16 5.33333 16.8333 6.5 17H10' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M14 7H17.5C18.6667 7.16667 22 8 22 12C22 16 18.6667 16.8333 17.5 17H14' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                </svg>
-                                            </button>
-                                            <input type='text' placeholder='Название урока' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <button className='create-module__drag'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 4C10 5.10457 9.10457 6 8 6C6.89543 6 6 5.10457 6 4C6 2.89543 6.89543 2 8 2C9.10457 2 10 2.89543 10 4Z' fill='#9FADBF' />
-                                                    <path d='M18 4C18 5.10457 17.1046 6 16 6C14.8954 6 14 5.10457 14 4C14 2.89543 14.8954 2 16 2C17.1046 2 18 2.89543 18 4Z' fill='#9FADBF' />
-                                                    <path d='M10 12C10 13.1046 9.10457 14 8 14C6.89543 14 6 13.1046 6 12C6 10.8954 6.89543 10 8 10C9.10457 10 10 10.8954 10 12Z' fill='#9FADBF' />
-                                                    <path d='M18 12C18 13.1046 17.1046 14 16 14C14.8954 14 14 13.1046 14 12C14 10.8954 14.8954 10 16 10C17.1046 10 18 10.8954 18 12Z' fill='#9FADBF' />
-                                                    <path d='M10 20C10 21.1046 9.10457 22 8 22C6.89543 22 6 21.1046 6 20C6 18.8954 6.89543 18 8 18C9.10457 18 10 18.8954 10 20Z' fill='#9FADBF' />
-                                                    <path d='M18 20C18 21.1046 17.1046 22 16 22C14.8954 22 14 21.1046 14 20C14 18.8954 14.8954 18 16 18C17.1046 18 18 18.8954 18 20Z' fill='#9FADBF' />
-                                                </svg>
-                                            </button>
-                                            <button className='create-module__link'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path d='M10 7H6.5C5.33333 7.16667 2 8 2 12C2 16 5.33333 16.8333 6.5 17H10' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M14 7H17.5C18.6667 7.16667 22 8 22 12C22 16 18.6667 16.8333 17.5 17H14' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                    <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
-                                                </svg>
-                                            </button>
-                                            <input type='text' placeholder='Название урока' />
-                                            <button className='create-module__delete'>
-                                                <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                    <path
-                                                        d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                    <path d='M20.7082 6.23975H3.75024' stroke='#EC9898' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                                    <path
-                                                        d='M17.4406 6.23973C16.6556 6.23973 15.9796 5.68473 15.8256 4.91573L15.5826 3.69973C15.4326 3.13873 14.9246 2.75073 14.3456 2.75073H10.1126C9.53358 2.75073 9.02558 3.13873 8.87558 3.69973L8.63258 4.91573C8.47858 5.68473 7.80258 6.23973 7.01758 6.23973'
-                                                        stroke='#EC9898'
-                                                        strokeWidth='1.5'
-                                                        strokeLinecap='round'
-                                                        strokeLinejoin='round'
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button className='create-module__add btn btn-outline'>
-                                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                        <path d='M12.039 4V20' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                        <path d='M20 12.038H4' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                    </svg>
-                                    <span>Добавить урок</span>
-                                </button>
-                            </div>
-                            <div className='create-module card-bg'>
-                                <div className='create-module__top'>
-                                    <h3 className='create-module__title display-4'>Модуль 3</h3>
-                                </div>
-                                <div className='create-module__items'>
-                                    <div className='create-module__item form-group'>
-                                        <div className='create-module__input'>
-                                            <input type='text' placeholder='Название урока' />
-                                        </div>
-                                    </div>
-                                </div>
-                                <button className='create-module__add btn btn-outline'>
-                                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                        <path d='M12.039 4V20' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                        <path d='M20 12.038H4' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                                    </svg>
-                                    <span>Добавить урок</span>
-                                </button>
-                            </div>
-                            <div className='create-module card-bg'>
-                                <div className='create-module__top'>
-                                    <h3 className='create-module__title display-4'>Тестовый урок</h3>
-                                </div>
-                                <div className='create-module__items'>
-                                    <div className='create-module__item form-group'>
-                                        <label htmlFor=''>Выберите тестовый урок</label>
-                                        <select>
-                                            <option selected hidden>
-                                                Выберите тестовый урок
-                                            </option>
-                                            <option>Без тестового урока</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                        <div className={`course-edit__content${tasbActive === 1 ? ' course-edit__content--active' : ''}`}>
+                            <AddCourseTab2 ref={forwardRefTab1} />
                         </div>
-                        <div data-tab-path='3' className='course-edit__content'>
+                        <div className={`course-edit__content${tasbActive === 2 ? ' course-edit__content--active' : ''}`}>
                             <div className='create-about card-bg'>
                                 <h3 className='create-about__title display-4'>О курсе</h3>
                                 <div className='create-about__editor'>
@@ -720,7 +79,7 @@ const AddCourse = () => {
                                     </div>
                                     <div className='create-whom__uploaded'>
                                         <div className='create-whom__img'>
-                                            <img src='./assets/img/upload1.jpg' alt='' />
+                                            <img src='/assets/img/upload1.jpg' alt='' />
                                         </div>
                                         <div className='create-whom__uploaded-right'>
                                             <div className='create-whom__hint'>
@@ -770,7 +129,7 @@ const AddCourse = () => {
                                     </div>
                                     <div className='create-whom__uploaded'>
                                         <div className='create-whom__img'>
-                                            <img src='./assets/img/upload2.jpg' alt='' />
+                                            <img src='/assets/img/upload2.jpg' alt='' />
                                         </div>
                                         <div className='create-whom__uploaded-right'>
                                             <div className='create-whom__hint'>
@@ -904,7 +263,7 @@ const AddCourse = () => {
                                     </div>
                                     <div className='create-price__checks'>
                                         <div className='create-price__check checkbox'>
-                                            <input checked type='checkbox' className='checkbox' id='module1' />
+                                            <input type='checkbox' className='checkbox' id='module1' />
                                             <label htmlFor='module1'>Модуль 1</label>
                                         </div>
                                         <div className='create-price__check checkbox'>
@@ -967,11 +326,11 @@ const AddCourse = () => {
                                     </div>
                                     <div className='create-price__checks'>
                                         <div className='create-price__check checkbox'>
-                                            <input checked type='checkbox' className='checkbox' id='module4' />
+                                            <input type='checkbox' className='checkbox' id='module4' />
                                             <label htmlFor='module4'>Модуль 1</label>
                                         </div>
                                         <div className='create-price__check checkbox'>
-                                            <input checked type='checkbox' className='checkbox' id='module5' />
+                                            <input type='checkbox' className='checkbox' id='module5' />
                                             <label htmlFor='module5'>Модуль 2</label>
                                         </div>
                                         <div className='create-price__check checkbox'>
@@ -1030,15 +389,15 @@ const AddCourse = () => {
                                     </div>
                                     <div className='create-price__checks'>
                                         <div className='create-price__check checkbox'>
-                                            <input checked type='checkbox' className='checkbox' id='module7' />
+                                            <input type='checkbox' className='checkbox' id='module7' />
                                             <label htmlFor='module7'>Модуль 1</label>
                                         </div>
                                         <div className='create-price__check checkbox'>
-                                            <input checked type='checkbox' className='checkbox' id='module8' />
+                                            <input type='checkbox' className='checkbox' id='module8' />
                                             <label htmlFor='module8'>Модуль 2</label>
                                         </div>
                                         <div className='create-price__check checkbox'>
-                                            <input checked type='checkbox' className='checkbox' id='module9' />
+                                            <input type='checkbox' className='checkbox' id='module9' />
                                             <label htmlFor='module9'>Модуль 3</label>
                                         </div>
                                     </div>
@@ -1061,16 +420,14 @@ const AddCourse = () => {
                         </div>
                     </div>
                     <div className='course-edit__right'>
-                        <div className='course-edit__right'>
-                            <div className='course-edit__hint'>
-                                <Button className='course-edit__hint-btn' onClick={() => {}} color={'blue'}>
-                                    Сохранить
-                                </Button>
-                                <Button className='course-edit__hint-cancel' onClick={() => {}} outline>
-                                    <span>Отменить</span>
-                                </Button>
-                                <div className='course-edit__hint-desc'>Ваши изменения будут отправлены на модерацию.</div>
-                            </div>
+                        <div className='course-edit__hint'>
+                            <Button className='course-edit__hint-btn' onClick={onSave} color={'blue'}>
+                                Добавить
+                            </Button>
+                            {/* <Button className='course-edit__hint-cancel' onClick={() => {}} outline>
+                                <span>Отменить</span>
+                            </Button> */}
+                            {/* <div className='course-edit__hint-desc'>Ваши изменения будут отправлены на модерацию.</div> */}
                         </div>
                     </div>
                 </div>

@@ -45,6 +45,8 @@ export const AuthActionCreators = {
                 dispatch(AuthActionCreators.setError(''))
                 const response = await AuthService.restore(data)
 
+                console.log(response)
+
                 if (response.status === 200) {
                     dispatch(AuthActionCreators.setShowModal(false))
                     dispatch(AuthActionCreators.setIsAuth(true))

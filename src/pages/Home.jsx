@@ -35,7 +35,7 @@ const Home = () => {
             <Main
                 title={'Обучение без ограничений'}
                 descr={'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa id sem sem vitae, ac in vulputate enim elementum.'}
-                img={'./assets/img/art.svg'}
+                img={'/assets/img/art.svg'}
             />
 
             <CoursesSlider className={'course-slider1'} title={'Популярные курсы'} items={items} />

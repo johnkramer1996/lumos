@@ -10,13 +10,13 @@ const NewsItem = ({ img, category, title, descr, author, numberComments }) => {
                 </div>
                 <div className='blog-card__content'>
                     <div className='blog-card__category'>{category}</div>
-                    <a href={RouteNames.NEWS} className='blog-card__title'>
+                    <a href={RouteNames.NEWS + '/1'} className='blog-card__title'>
                         {title}
                     </a>
                     <div className='blog-card__desc'>{descr}</div>
                     <div className='blog-card__bottom'>
                         <div className='blog-card__name'>
-                            <img src='./assets/img/avatar5.jpg' alt='' />
+                            <img src='/assets/img/avatar5.jpg' alt='' />
                             <span>{author}</span>
                         </div>
                         <div className='blog-card__comments'>

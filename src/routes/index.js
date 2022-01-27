@@ -1,4 +1,4 @@
-import { About, Home, Contacts, Courses, Events, News, Subscribe, Cabinet, AddCourse, Blog, Partners, Reviews, Faq } from 'pages/'
+import { About, Home, Contacts, Courses, Events, EventsItem, News, NewsItem, Subscribe, Cabinet, AddCourse, Blog, Partners, Reviews, Faq } from 'pages/'
 
 export const RouteNames = {
     ABOUT: '/about',
@@ -17,8 +17,10 @@ export const RouteNames = {
     COURSES_ITEM: '/courses/:id',
     FAQ: '/faq',
     EVENTS: '/events',
+    EVENTS_ITEM: '/events/:id',
     HOME: '/',
     NEWS: '/news',
+    NEWS_ITEM: '/news/:id',
     PARTNERS: '/partners',
     REVIEWS: '/reviews',
     SUBSCRIBE: '/subscribe',
@@ -30,9 +32,11 @@ export const publicRoutes = [
     { path: RouteNames.COURSES, element: <Courses /> },
     { path: RouteNames.COURSES_ITEM, element: <Courses /> },
     { path: RouteNames.EVENTS, element: <Events /> },
+    { path: RouteNames.EVENTS_ITEM, element: <EventsItem /> },
     { path: RouteNames.FAQ, element: <Faq /> },
     { path: RouteNames.HOME, element: <Home /> },
     { path: RouteNames.NEWS, element: <News /> },
+    { path: RouteNames.NEWS_ITEM, element: <NewsItem /> },
     { path: RouteNames.PARTNERS, element: <Partners /> },
     { path: RouteNames.REVIEWS, element: <Reviews /> },
     { path: RouteNames.SUBSCRIBE, element: <Subscribe /> },

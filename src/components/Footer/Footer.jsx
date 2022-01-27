@@ -26,7 +26,7 @@ const Footer = () => {
         [
             {
                 title: 'Направления обучения',
-                items: themes.map(({ id, name }) => ({ href: '', title: name })),
+                items: themes.map(({ id, name }) => ({ href: `${RouteNames.COURSES}/${id}`, title: name })),
             },
         ],
         [

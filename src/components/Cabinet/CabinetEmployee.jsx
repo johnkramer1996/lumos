@@ -1,6 +1,8 @@
+import { CoursesItem3 } from 'components'
 import React from 'react'
+import { declOfNum, getDeclOfArray } from 'utils'
 
-const CabinetEmployee = () => {
+const CabinetEmployee = ({ items = [], total }) => {
     return (
         <div className='lks-course'>
             <div className='lks-course__top'>
@@ -96,73 +98,16 @@ const CabinetEmployee = () => {
                 <div className='cabinet-page__top'>
                     <div>
                         <h3 className='cabinet-page__group-title'>Активные</h3>
-                        <div className='cabinet-page__nav-title'>3 курса</div>
+                        <div className='cabinet-page__nav-title'>
+                            {total} {declOfNum(total, getDeclOfArray['course'])}
+                        </div>
                     </div>
                     <button className='lkt-courses__show btn btn-outline'>Показать все</button>
                 </div>
                 <div className='cabinet-page__items'>
-                    <div className='cabinet-page__item'>
-                        <div className='course-card3'>
-                            <div className='course-card3__img'>
-                                <img src='img/course.jpg' alt='' />
-                            </div>
-                            <div className='course-card3__content'>
-                                <div className='course-card3__title truncate'>Название курса в нескольких строках Название курса в нескольких строках</div>
-                                <div className='course-card3__bottom'>
-                                    <div className='course-card3__students'>
-                                        <div className='course-card3__students-title'>48 учеников</div>
-                                        <div className='course-card3__students-new'>8 новых</div>
-                                    </div>
-                                    <div className='course-card3__num'>2</div>
-                                </div>
-                                <div className='course-card3__user'>
-                                    <img src='img/avatar2.jpg' alt='' />
-                                    <span>Ольга Олеговна</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='cabinet-page__item'>
-                        <div className='course-card3'>
-                            <div className='course-card3__img'>
-                                <img src='img/course2.jpg' alt='' />
-                            </div>
-                            <div className='course-card3__content'>
-                                <div className='course-card3__title truncate'>Название курса в нескольких строках Название курса в нескольких строках</div>
-                                <div className='course-card3__bottom'>
-                                    <div className='course-card3__students'>
-                                        <div className='course-card3__students-title'>48 учеников</div>
-                                        <div className='course-card3__students-new'>8 новых</div>
-                                    </div>
-                                    <div className='course-card3__num'>2</div>
-                                </div>
-                                <div className='course-card3__user'>
-                                    <img src='img/avatar2.jpg' alt='' />
-                                    <span>Ольга Олеговна</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='cabinet-page__item'>
-                        <div className='course-card3'>
-                            <div className='course-card3__img'>
-                                <img src='img/course3.jpg' alt='' />
-                            </div>
-                            <div className='course-card3__content'>
-                                <div className='course-card3__title truncate'>Название курса в нескольких строках Название курса в нескольких строках</div>
-                                <div className='course-card3__bottom'>
-                                    <div className='course-card3__students'>
-                                        <div className='course-card3__students-title'>48 учеников</div>
-                                        <div className='course-card3__students-new'>8 новых</div>
-                                    </div>
-                                </div>
-                                <div className='course-card3__user'>
-                                    <img src='img/avatar2.jpg' alt='' />
-                                    <span>Ольга Олеговна</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {items.map(({ id, ...props }) => (
+                        <CoursesItem3 key={id} {...props} />
+                    ))}
                 </div>
             </div>
         </div>

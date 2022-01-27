@@ -6,13 +6,14 @@ import { LoginModal } from 'components/modals'
 
 const App = () => {
     const { isLoading } = useSelector()
-    const { auth, fetchReferences, setIsLoading, fetchSocUrls } = useDispatch()
+    const { auth, fetchReferences, setIsLoading, fetchSocUrls, restore } = useDispatch()
 
     console.log(useSelector())
     useEffect(() => {
         fetchReferences()
         localStorage.getItem('token') ? auth() : setIsLoading(false)
         fetchSocUrls()
+        // restore({ email: 'vitaliczinoviev@gmail.com' })
     }, [])
 
     return (

@@ -6,11 +6,12 @@ export const systemURL = {
     FETCH_SOC_URLS: '/data/soc_urls',
 }
 export const authURL = {
-    LOGIN_URL: '/auth/login',
-    PASSWORD_RESTORE: '/auth/password-restore',
+    LOGIN: '/auth/login',
+    RESTORE: '/auth/password-restore',
     CHECK_EMAIL: '/auth/check-email',
     REGISTER: '/auth/register',
     AUTHORIZATION: '/cabinet/user',
+    SETTINGS: '/cabinet/user/setting',
 }
 export const trainerCoursesURL = {
     FETCH_COURSES: '/cabinet/courses',

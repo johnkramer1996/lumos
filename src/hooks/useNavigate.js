@@ -5,6 +5,7 @@ const useDispatch = () => {
     const navigate = useNavigateRouterDom()
     return {
         toAddCourse: () => navigate(RouteNames.ADD_COURSE),
+        toCourse: () => navigate(RouteNames.COURSES),
     }
 }
 

@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { RouteNames } from 'routes'
 import { useDispatch, useSelector } from 'hooks'
 
 const LoginModal = () => {
-    const [email, setEmail] = useState('email@gmail.com')
-    const [password, setPassword] = useState('123456789')
+    const [email, setEmail] = useState('vitaliczinoviev@gmail.com')
+    const [password, setPassword] = useState('dtPUtGMy')
     const [name, setName] = useState('Имя')
     const [phone, setPhone] = useState('12345')
 

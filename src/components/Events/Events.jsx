@@ -33,7 +33,7 @@ const Events = ({ title = 'Мероприятия', items = [] }) => {
                 </div>
                 <div className='events__items'>
                     {items.map(({ id, ...props }) => (
-                        <EventsItem key={id} {...props} />
+                        <EventsItem key={id} id={id} {...props} />
                     ))}
                 </div>
                 <button className='events__all btn btn-outline'>Показать больше</button>

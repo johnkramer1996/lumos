@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector, useDispatch } from 'hooks/'
 import { SITE_URL } from 'api/URLS'
 
-const Settings = () => {
+const CabinetSettings = () => {
     const { user } = useSelector()
     const { logout } = useDispatch()
 
@@ -285,7 +285,7 @@ const Settings = () => {
                         <button className='account-settings__item-btn'>Изменить</button>
                     </div>
                     <div className='account-settings__item-doc'>
-                        <img src='./assets/img/document2.jpg' alt='' />
+                        <img src='/assets/img/document2.jpg' alt='' />
                     </div>
                 </div>
                 <div className='account-settings__item'>
@@ -337,4 +337,4 @@ const Settings = () => {
     )
 }
 
-export default Settings
+export default CabinetSettings

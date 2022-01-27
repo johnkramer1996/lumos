@@ -18,7 +18,7 @@ const Faq = ({ title = 'Часто задаваемые вопросы', items =
                     <aside className='faq__right'>
                         <div className='faq__card'>
                             <div className='faq__card-img'>
-                                <img src='./assets/img/faq.svg' alt='' />
+                                <img src='/assets/img/faq.svg' alt='' />
                             </div>
                             <div className='faq__card-title'>Не нашли ответ на свой вопрос?</div>
                             <div className='faq__card-desc'>Aliquam commodo dictum hendrerit. Lorem ipsum dolor sit amet, consectetur adipiscing elit dictum hendrerit.</div>

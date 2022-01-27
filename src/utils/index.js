@@ -4,5 +4,5 @@ export const declOfNum = (number, words = []) => {
 
 export const getDeclOfArray = {
     course: ['курс', 'курса', 'курсов'],
-    event: ['мероприятие', 'мероприятие', 'мероприятие'],
+    event: ['мероприятие', 'мероприятия', 'мероприятий'],
 }
