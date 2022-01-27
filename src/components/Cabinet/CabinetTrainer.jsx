@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from 'components/ui'
 import { useNavigate } from 'hooks'
 import { CoursesItem3 } from 'components'
@@ -6,6 +6,9 @@ import { declOfNum, getDeclOfArray } from 'utils'
 
 const CabinetTrainer = ({ items = [], total }) => {
     const { toAddCourse } = useNavigate()
+    const [typeShow, setTypeShow] = useState('col')
+
+    const changeTypeShow = (type) => setTypeShow(type)
 
     return (
         <div className='lkt-courses'>
@@ -24,7 +27,7 @@ const CabinetTrainer = ({ items = [], total }) => {
                     {total} {declOfNum(total, getDeclOfArray['course'])}
                 </div>
                 <div className='cabinet-page__nav-wrap'>
-                    <button className='cabinet-page__nav-item cabinet-page__nav-item--col cabinet-page__nav-item--active'>
+                    <button className={`cabinet-page__nav-item cabinet-page__nav-item--col${typeShow === 'col' ? ` cabinet-page__nav-item--active` : ''}`} onClick={() => changeTypeShow('col')}>
                         <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                             <rect x='1' y='5' width='6' height='6' rx='2' fill='#C6D0DD' />
                             <rect x='9' y='5' width='6' height='6' rx='2' fill='#C6D0DD' />
@@ -34,7 +37,7 @@ const CabinetTrainer = ({ items = [], total }) => {
                             <rect x='17' y='13' width='6' height='6' rx='2' fill='#C6D0DD' />
                         </svg>
                     </button>
-                    <button className='cabinet-page__nav-item cabinet-page__nav-item--row'>
+                    <button className={`cabinet-page__nav-item cabinet-page__nav-item--row${typeShow === 'row' ? ` cabinet-page__nav-item--active` : ''}`} onClick={() => changeTypeShow('row')}>
                         <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                             <rect x='1' y='5' width='6' height='6' rx='2' fill='#C6D0DD' />
                             <rect x='9' y='5' width='14' height='6' rx='2' fill='#C6D0DD' />
@@ -44,7 +47,7 @@ const CabinetTrainer = ({ items = [], total }) => {
                     </button>
                 </div>
             </div>
-            <div className='cabinet-page__items'>
+            <div className={`cabinet-page__items cabinet-page__items--${typeShow}`}>
                 {items.map(({ id, ...props }) => (
                     <CoursesItem3 key={id} {...props} />
                 ))}
