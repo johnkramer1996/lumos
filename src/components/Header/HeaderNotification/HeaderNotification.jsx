@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import HeaderNotificationItem from './HeaderNotificationItem'
 
 import './HeaderNotification.css'
+import { useEvent } from 'hooks'
 
 const HeaderNotification = () => {
     const [isActive, setIsActive] = useState(false)
@@ -34,6 +35,8 @@ const HeaderNotification = () => {
     ]
 
     const isNotifications = items.length > 0
+
+    useEvent('click', (e) => !e.target.closest('.header__notification') && setIsActive(false))
 
     return (
         <div className={`header__notification${isActive ? ' header__notification--active' : ''}`}>

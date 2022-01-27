@@ -1,9 +1,12 @@
-import React, { useState } from 'react'
+import { useEvent } from 'hooks'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
 
 const NavDropdown = ({ items = [] }) => {
     const [isActive, setIsActive] = useState(false)
+
+    useEvent('click', (e) => !e.target.closest('.nav__dropdown') && setIsActive(false))
 
     return (
         <div className='nav__dropdown'>

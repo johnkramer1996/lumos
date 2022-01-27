@@ -3,8 +3,10 @@ import AppRouter from './components/AppRouter'
 import { Header, Footer } from 'components/'
 import { useDispatch, useSelector } from 'hooks'
 import { LoginModal } from 'components/modals'
+import { useLocation } from 'react-router-dom'
 
 const App = () => {
+    const location = useLocation()
     const { isLoading } = useSelector()
     const { auth, fetchReferences, setIsLoading, fetchSocUrls, restore } = useDispatch()
 
@@ -15,6 +17,8 @@ const App = () => {
         fetchSocUrls()
         // restore({ email: 'vitaliczinoviev@gmail.com' })
     }, [])
+
+    useEffect(() => document.body.click(), [location])
 
     return (
         <>

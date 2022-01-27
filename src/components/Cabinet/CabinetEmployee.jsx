@@ -38,60 +38,9 @@ const CabinetEmployee = ({ items = [], total }) => {
                     <button className='lkt-courses__show btn btn-outline'>Показать все</button>
                 </div>
                 <div className='cabinet-page__items'>
-                    <div className='cabinet-page__item'>
-                        <div className='course-card3'>
-                            <div className='course-card3__img'>
-                                <img src='img/course.jpg' alt='' />
-                            </div>
-                            <div className='course-card3__content'>
-                                <div className='course-card3__title truncate'>Название курса в нескольких строках Название курса в нескольких строках</div>
-                                <div className='course-card3__user'>
-                                    <img src='img/avatar2.jpg' alt='' />
-                                    <span>Ольга Олеговна</span>
-                                </div>
-                                <div className='course-card3__status'>
-                                    <span>Новый</span>
-                                    <span>23 ч</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='cabinet-page__item'>
-                        <div className='course-card3'>
-                            <div className='course-card3__img'>
-                                <img src='img/course2.jpg' alt='' />
-                            </div>
-                            <div className='course-card3__content'>
-                                <div className='course-card3__title truncate'>Название курса в нескольких строках оооо</div>
-                                <div className='course-card3__user'>
-                                    <img src='img/avatar2.jpg' alt='' />
-                                    <span>Ольга Олеговна</span>
-                                </div>
-                                <div className='course-card3__status'>
-                                    <span>Новый</span>
-                                    <span>23 ч</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='cabinet-page__item'>
-                        <div className='course-card3'>
-                            <div className='course-card3__img'>
-                                <img src='img/course3.jpg' alt='' />
-                            </div>
-                            <div className='course-card3__content'>
-                                <div className='course-card3__title truncate'>Название курса в нескольких строках оооо</div>
-                                <div className='course-card3__user'>
-                                    <img src='img/avatar2.jpg' alt='' />
-                                    <span>Ольга Олеговна</span>
-                                </div>
-                                <div className='course-card3__status'>
-                                    <span>Новый</span>
-                                    <span>23 ч</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {items.map(({ id, ...props }) => (
+                        <CoursesItem3 key={id} {...props} />
+                    ))}
                 </div>
             </div>
             <div className='cabinet-page__group'>

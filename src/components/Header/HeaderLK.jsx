@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { cabinetLinks, RouteNames } from 'routes'
-import { useDispatch, useSelector } from 'hooks/'
+import { cabinetLinks } from 'routes'
+import { useDispatch, useSelector, useEvent } from 'hooks/'
 import { IMG_URL } from 'api/URLS'
 
 const HeaderLK = () => {
@@ -10,13 +10,7 @@ const HeaderLK = () => {
 
     const { logout } = useDispatch()
 
-    const items = [
-        { title: user?.name || 'Имя', href: RouteNames.CABINET, number: 0 },
-        { title: 'Мои курсы', href: '/', number: 0 },
-        { title: 'Мои мероприятия', href: '/', number: 1 },
-        { title: 'Служба поддержки', href: '/', number: 0 },
-        { title: 'Настройки аккаунта', href: '/', number: 0 },
-    ]
+    useEvent('click', (e) => !e.target.closest('.header__lk') && setIsActive(false))
 
     return (
         <div className='header__lk'>

@@ -15,6 +15,7 @@ const Cabinet = () => {
 
     const total = courses.length
     const activeRole = roles[0]?.pivot?.role_id - 1 || 0
+    // const activeRole = 2
     const activeCabinet = [<CabinetUser items={courses} total={total} />, <CabinetTrainer items={courses} total={total} />, <CabinetEmployee items={courses} total={total} />][activeRole]
 
     const getActiveItem = (item) => {

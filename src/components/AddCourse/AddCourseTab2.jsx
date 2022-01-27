@@ -27,8 +27,6 @@ const AddCourseTab2 = React.forwardRef((_, ref) => {
         // setModules(modules.map((item, inx) => (inx === index ? { ...item, name } : item)))
     }
 
-    console.log(modules)
-
     return (
         <>
             <div className='course-edit__small-desc card-bg'>
