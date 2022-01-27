@@ -71,9 +71,11 @@ const AddCourse = () => {
             forwardRefTab2.current()
             const body = {
                 short_desc: 'Короткое описание',
+                test_lesson_id: 1,
                 moduls: [
                     {
                         name: 'Модуль с ИД2 1',
+                        id: 1,
                         lessons: [
                             {
                                 name: 'Урок 1',
@@ -88,6 +90,22 @@ const AddCourse = () => {
                     },
                     {
                         name: 'Модуль с безйд',
+
+                        lessons: [
+                            {
+                                name: 'Урок 4',
+                            },
+                            {
+                                name: 'Урок 5',
+                            },
+                            {
+                                name: 'Урок 6',
+                            },
+                        ],
+                    },
+                    {
+                        name: 'Модуль с sdd',
+
                         lessons: [
                             {
                                 name: 'Урок 4',

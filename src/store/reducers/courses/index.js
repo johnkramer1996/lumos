@@ -3,8 +3,8 @@ import { coursesTypes } from './types'
 const initialState = {
     coursesInfo: {},
     course: {},
-    modules: {},
-    lessons: {},
+    modules: [],
+    lessons: [],
 }
 
 export default function coursesReducer(state = initialState, action) {
