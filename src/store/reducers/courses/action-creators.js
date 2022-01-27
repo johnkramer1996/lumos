@@ -3,7 +3,7 @@ import { coursesTypes } from './types'
 
 export const CoursesActionCreators = {
     setCourses: (payload) => ({ type: coursesTypes.SET_COURSES, payload }),
-    setCourseFields: (payload) => ({ type: coursesTypes.SET_COURSE_FIELDS, payload }),
+    setCourse: (payload) => ({ type: coursesTypes.SET_COURSE_FIELDS, payload }),
     fetchCourses: (data) => async (dispatch) => {
         try {
             const response = await CoursesService.fetchAll(data)
@@ -20,7 +20,9 @@ export const CoursesActionCreators = {
             const response = await CoursesService.add(data)
 
             if (response.status === 200) {
-                alert('Урок добавлен')
+                console.log(response)
+                dispatch(CoursesActionCreators.setCourse(response?.data?.course))
+                alert(response?.data?.message)
             }
         } catch (e) {
             try {

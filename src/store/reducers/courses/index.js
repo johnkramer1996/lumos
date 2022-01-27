@@ -2,7 +2,7 @@ import { coursesTypes } from './types'
 
 const initialState = {
     coursesInfo: {},
-    couseFields: {},
+    course: {},
 }
 
 export default function coursesReducer(state = initialState, action) {
@@ -10,7 +10,7 @@ export default function coursesReducer(state = initialState, action) {
         case coursesTypes.SET_COURSES:
             return { ...state, coursesInfo: action.payload }
         case coursesTypes.SET_COURSE_FIELDS:
-            return { ...state, couseFields: { ...state.couseFields, ...action.payload } }
+            return { ...state, course: { ...state.course, ...action.payload } }
         default:
             return state
     }

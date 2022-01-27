@@ -1,4 +1,3 @@
-import { SITE_URL } from 'api/URLS'
 import { useSelector } from 'hooks'
 import React from 'react'
 
@@ -8,7 +7,7 @@ const CabinetGreet = () => {
     return (
         <div className='dashboard__greet card-bg'>
             <div className='dashboard__greet-img'>
-                <img src={SITE_URL + user.avatar} alt='' />
+                <img src={user.avatarFullSrc} alt='' />
             </div>
             <div className='dashboard__greet-content'>
                 <div className='dashboard__greet-name'>Привет, {user.name}!</div>

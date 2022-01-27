@@ -15,7 +15,7 @@ const CabinetSettings = () => {
                     <div className='account-settings__photo-title'>Фото</div>
                     <div className='account-settings__photo-wrap'>
                         <div className='account-settings__photo-img'>
-                            <img src={SITE_URL + user.avatar} alt='' />
+                            <img src={user.avatarFullSrc} alt='' />
                         </div>
                         <div className='account-settings__photo-buttons'>
                             <button className='account-settings__photo-save btn btn-blue'>Загрузить новое</button>
