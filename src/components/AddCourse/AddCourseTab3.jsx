@@ -14,9 +14,6 @@ const AddCourseTab3 = React.forwardRef(({ modules, info }, ref) => {
     }, [info.descriptions, info.prices])
     // }, [])
 
-    console.log(modules)
-    console.log(info)
-
     ref.current = () => {
         const body = new FormData()
         // body.append('descriptions[2][image]', inputImage.current?.files[0])
@@ -85,6 +82,7 @@ const AddCourseTab3 = React.forwardRef(({ modules, info }, ref) => {
     }
     const changePricesModulesField = (field, index, value, checked) => {
         const newPrices = [...prices]
+        console.log('index', index)
         newPrices[index][field] = newPrices[index][field] ? newPrices[index][field] : {}
         newPrices[index][field][value] = checked
         console.log(newPrices)
@@ -117,7 +115,6 @@ const AddCourseTab3 = React.forwardRef(({ modules, info }, ref) => {
 
             <div className='create-price card-bg'>
                 <h3 className='create-price__title display-4'>Стоимость</h3>
-                {console.log(prices)}
                 {prices.map((props, index) => (
                     <AddCourseTab3Price key={index} {...props} index={index} changeField={changePricesField} changeModuleField={changePricesModulesField} modules={modules} />
                 ))}

@@ -7,8 +7,7 @@ const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, 
     const [priceValue, setprice] = useState(price)
     const [textValue, setText] = useState(text)
     const [modulesCheckbox, setModulesCheckbox] = useState([])
-
-    console.log(moduls, Array.isArray(moduls) && moduls?.find((item) => +item === index))
+    const myIndex = index
 
     const onChangeName = (value) => {
         setName(value)
@@ -32,7 +31,7 @@ const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, 
     }
 
     const onChangeModule = (value, checked) => {
-        changeModuleField('moduls', index, value, checked)
+        changeModuleField('moduls', myIndex, value, checked)
     }
 
     return (
@@ -78,17 +77,17 @@ const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, 
                 </div>
             </div>
             <div className='create-price__checks'>
-                {modules?.map(({ name }, index) => (
-                    <div key={index} className='create-price__check checkbox'>
+                {modules?.map(({ name }, mIndex) => (
+                    <div key={mIndex} className='create-price__check checkbox'>
                         <input
                             type='checkbox'
                             className='checkbox'
-                            id={`module` + name}
-                            value={index + 1}
-                            // defaultChecked={moduls?.find((item) => +item === index)}
-                            onChange={(e) => onChangeModule(index, e.target.checked)}
+                            id={`module-${index}-${mIndex}`}
+                            value={mIndex + 1}
+                            defaultChecked={Object.keys(moduls).find((item) => +item === mIndex)}
+                            onChange={(e) => onChangeModule(mIndex, e.target.checked)}
                         />
-                        <label htmlFor={`module` + name}>{name}</label>
+                        <label htmlFor={`module-${index}-${mIndex}`}>{name}</label>
                     </div>
                 ))}
             </div>

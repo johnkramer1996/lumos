@@ -7,7 +7,7 @@ import { CoursesService } from 'api'
 
 const AddCourse = () => {
     const { courseId: paramsCourseId } = useParams()
-    const { toAddCourse, toAddCourseById } = useNavigate()
+    const { toCourse, toAddCourse, toAddCourseById } = useNavigate()
     const { setCourse } = useDispatch()
     const [tabActive, setTabActive] = useState(0)
     const [tabAvailable, setTabAvailabel] = useState(0)
@@ -35,7 +35,7 @@ const AddCourse = () => {
             alert('Курс добавлен')
             setTabActive(1)
             setTabAvailabel(1)
-            // toAddCourseById(response.data.course.id)
+            toAddCourseById(response.data.course.id)
             setCourseId(response.data.course.id)
         },
         (error) => {},
@@ -68,7 +68,7 @@ const AddCourse = () => {
         (response) => {
             getInfo({ course: courseId })
             alert('Добавленно')
-            setTabActive(0)
+            toCourse(0)
         },
         (error) => {
             getInfo({ course: courseId })
