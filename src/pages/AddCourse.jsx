@@ -10,6 +10,7 @@ const AddCourse = () => {
     const { toAddCourse, toAddCourseById } = useNavigate()
     const { setCourse } = useDispatch()
     const [tabActive, setTabActive] = useState(0)
+    const [tabAvailable, setTabAvailabel] = useState(0)
     const tabItems = ['Основная информация', 'Уроки', 'Страница курса']
     const forwardRefTab1 = useRef()
     const forwardRefTab2 = useRef()
@@ -32,7 +33,9 @@ const AddCourse = () => {
         async (data) => await CoursesService.addCourse(data),
         (response) => {
             alert('Курс добавлен')
-            toAddCourseById(response.data.course.id)
+            setTabActive(1)
+            setTabAvailabel(1)
+            // toAddCourseById(response.data.course.id)
             setCourseId(response.data.course.id)
         },
         (error) => {},
@@ -42,6 +45,7 @@ const AddCourse = () => {
         async (data) => await CoursesService.putCourse(data),
         (response) => {
             alert('Курс Обновлен')
+            setTabActive(1)
         },
         (error) => {},
     )
@@ -51,6 +55,8 @@ const AddCourse = () => {
         (response) => {
             fetchModules({ course: courseId })
             alert('Добавленно')
+            setTabActive(2)
+            setTabAvailabel(2)
         },
         (error) => {
             console.log(error)
@@ -62,6 +68,7 @@ const AddCourse = () => {
         (response) => {
             getInfo({ course: courseId })
             alert('Добавленно')
+            setTabActive(0)
         },
         (error) => {
             getInfo({ course: courseId })
@@ -87,28 +94,24 @@ const AddCourse = () => {
 
     useEffect(() => {
         paramsCourseId === courseId && courseId !== undefined ? fetchCourse({ course: courseId }) : setCourseId(undefined)
-        courseId && fetchModules({ course: courseId })
-        courseId && getInfo({ course: courseId })
-
+        if (courseId) {
+            setTabAvailabel(tabItems.length)
+            courseId && fetchModules({ course: courseId })
+            courseId && getInfo({ course: courseId })
+        } else {
+        }
         return () => {
             setCourse({})
         }
     }, [])
-
-    const onAdd = (e) => {
-        e.preventDefault()
-
-        const { body, isError } = forwardRefTab1?.current()
-        if (isError) return
-        addCourse({ body })
-    }
 
     const onSave = (e) => {
         e.preventDefault()
 
         if (tabActive === 0) {
             const { body = {}, isError } = forwardRefTab1?.current() || {}
-            return !isError && putCourse({ course: courseId, body })
+            if (isError) return
+            courseId ? putCourse({ course: courseId, body }) : addCourse({ body })
         }
         if (tabActive === 1) {
             const { body = {}, isError } = forwardRefTab2?.current() || {}
@@ -123,21 +126,26 @@ const AddCourse = () => {
         }
     }
 
+    const changeTab = (index) => {
+        console.log(index < tabAvailable, index, tabAvailable)
+        index <= tabAvailable && setTabActive(index)
+    }
+
     return (
         <section className='course-edit'>
             <div className='container'>
                 <div className='course-edit__inner'>
                     <div className='course-edit__left'>
                         <h1 className='course-edit__title display-3'>
-                            <span>{courseId ? 'Редактирование' : 'Добавление'} курса</span>
+                            <span>Добавление курса</span>
                         </h1>
                         <div className='course-edit__tabs'>
                             {tabItems.map((title, index) => (
                                 <div
                                     key={index}
                                     className={`course-edit__tab${tabActive === index ? ' course-edit__tab--active' : ''}`}
-                                    onClick={() => setTabActive(index)}
-                                    style={{ pointerEvents: courseId === undefined ? 'none' : '' }}
+                                    onClick={() => changeTab(index)}
+                                    // style={{ pointerEvents: courseId === undefined ? 'none' : '' }}
                                 >
                                     {title}
                                 </div>
@@ -154,23 +162,16 @@ const AddCourse = () => {
                                     <AddCourseTab2 ref={forwardRefTab2} modules={modules} setModules={setModules} />
                                 </div>
                                 <div className={`course-edit__content${tabActive === 2 ? ' course-edit__content--active' : ''}`}>
-                                    {false ? 'Loading...' : <AddCourseTab3 ref={forwardRefTab3} modules={modules} setModules={setModules} info={info} />}
+                                    <AddCourseTab3 ref={forwardRefTab3} modules={modules} setModules={setModules} info={info} />
                                 </div>
                             </>
                         )}
                     </div>
                     <div className='course-edit__right'>
                         <div className='course-edit__hint'>
-                            {courseId ? (
-                                <Button className='course-edit__hint-btn' onClick={onSave} color={'blue'}>
-                                    Сохранить
-                                </Button>
-                            ) : (
-                                <Button className='course-edit__hint-btn' onClick={onAdd} color={'blue'}>
-                                    Добавить
-                                </Button>
-                            )}
-
+                            <Button className='course-edit__hint-btn' onClick={onSave} color={'blue'}>
+                                Добавить
+                            </Button>
                             {/* <Button className='course-edit__hint-cancel' onClick={() => {}} outline>
                                 <span>Отменить</span>
                             </Button> */}

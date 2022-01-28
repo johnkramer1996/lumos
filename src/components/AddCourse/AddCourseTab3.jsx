@@ -117,6 +117,7 @@ const AddCourseTab3 = React.forwardRef(({ modules, info }, ref) => {
 
             <div className='create-price card-bg'>
                 <h3 className='create-price__title display-4'>Стоимость</h3>
+                {console.log(prices)}
                 {prices.map((props, index) => (
                     <AddCourseTab3Price key={index} {...props} index={index} changeField={changePricesField} changeModuleField={changePricesModulesField} modules={modules} />
                 ))}

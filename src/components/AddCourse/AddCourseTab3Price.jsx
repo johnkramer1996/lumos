@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 
-const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, changeField, changeModuleField, modules, moduls }) => {
+const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, changeField, changeModuleField, modules, moduls = [] }) => {
     const [nameValue, setName] = useState(name)
     const [widthValue, setWidth] = useState(width)
     const [price_with_saleValue, setprice_with_sale] = useState(price_with_sale || '')
     const [priceValue, setprice] = useState(price)
     const [textValue, setText] = useState(text)
     const [modulesCheckbox, setModulesCheckbox] = useState([])
+
+    console.log(moduls, Array.isArray(moduls) && moduls?.find((item) => +item === index))
 
     const onChangeName = (value) => {
         setName(value)
@@ -30,7 +32,6 @@ const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, 
     }
 
     const onChangeModule = (value, checked) => {
-        // setModulesCheckbox()
         changeModuleField('moduls', index, value, checked)
     }
 
@@ -77,14 +78,14 @@ const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, 
                 </div>
             </div>
             <div className='create-price__checks'>
-                {modules.map(({ name, isChecked }, index) => (
+                {modules?.map(({ name }, index) => (
                     <div key={index} className='create-price__check checkbox'>
                         <input
                             type='checkbox'
                             className='checkbox'
                             id={`module` + name}
                             value={index + 1}
-                            defaultChecked={!!moduls.find((item) => +item === index)}
+                            // defaultChecked={moduls?.find((item) => +item === index)}
                             onChange={(e) => onChangeModule(index, e.target.checked)}
                         />
                         <label htmlFor={`module` + name}>{name}</label>
