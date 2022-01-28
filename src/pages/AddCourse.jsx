@@ -9,7 +9,7 @@ const AddCourse = () => {
     const { courseId: paramsCourseId } = useParams()
     const { setCourse } = useDispatch()
     const { course } = useSelector()
-    const [tabActive, setTabActive] = useState(1)
+    const [tabActive, setTabActive] = useState(0)
     const tabItems = ['Основная информация', 'Уроки', 'Страница курса']
     const forwardRefTab1 = useRef()
     const forwardRefTab2 = useRef()
@@ -21,7 +21,6 @@ const AddCourse = () => {
         async (data) => await CoursesService.fetchCourse(data),
         (response) => setCourse(response.data?.data),
         (error) => {},
-        true,
     )
 
     const [addCourse, isAddCourseLoading, isAddCourseError] = useFetching(
@@ -106,7 +105,12 @@ const AddCourse = () => {
                         </h1>
                         <div className='course-edit__tabs'>
                             {tabItems.map((title, index) => (
-                                <div key={index} className={`course-edit__tab${tabActive === index ? ' course-edit__tab--active' : ''}`} onClick={() => onTabsChange(index)}>
+                                <div
+                                    key={index}
+                                    className={`course-edit__tab${tabActive === index ? ' course-edit__tab--active' : ''}`}
+                                    onClick={() => onTabsChange(index)}
+                                    style={{ pointerEvents: courseId === undefined || index < 1 ? '' : 'none' }}
+                                >
                                     {title}
                                 </div>
                             ))}

@@ -9,9 +9,9 @@ const AddCourseTab3 = React.forwardRef((_, ref) => {
 
     ref.current = () => {
         const body = new FormData()
-        body.append('descriptions[2][name]', 'Название3')
-        body.append('descriptions[2][text]', 'Тект3')
-        body.append('descriptions[2][image]', inputImage.current?.files[0])
+        // body.append('descriptions[2][name]', 'Название3')
+        // body.append('descriptions[2][text]', 'Тект3')
+        // body.append('descriptions[2][image]', inputImage.current?.files[0])
         body.append('descriptions[new_1][name]', 'Название 2')
         body.append('descriptions[new_1][text]', 'Текст 2')
         body.append('prices[new_0][name]', 'Название цены')
