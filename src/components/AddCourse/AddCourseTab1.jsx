@@ -17,7 +17,6 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
 
     ref.current = () => {
         const body = new FormData()
-
         body.append('name', name)
         body.append('category_id', category_id)
         body.append('type_study', type_study)
@@ -25,7 +24,17 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
         body.append('sale_subscribe', '1')
         body.append('width', width)
         body.append('image', inputImage.current?.files[0])
-        return body
+
+        const errors = []
+        for (const [key, value] of body.entries()) if (value === '' || value === 'undefined' || value === '0') errors.push(key)
+
+        const isError = errors.length
+        if (isError) alert('Обязательные поля - ' + errors.join(', '))
+
+        return {
+            isError,
+            body,
+        }
     }
 
     const uploadImg = (e) => {

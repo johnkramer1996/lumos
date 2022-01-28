@@ -14,7 +14,7 @@ export const CoursesActionCreators = {
                 dispatch(CoursesActionCreators.setCourses(response.data?.data))
             }
         } catch (e) {
-            console.log(e.response)
+            console.log(e.response || e.message)
         }
     },
     addCourse: (data, cb) => async (dispatch) => {
@@ -27,13 +27,7 @@ export const CoursesActionCreators = {
                 cb(response.data?.course?.id)
             }
         } catch (e) {
-            try {
-                const response = e.response || e.message
-                console.log(response)
-            } catch (e) {
-                const response = e.response || e.message
-                console.log(response)
-            }
+            console.log(e.response || e.message)
         }
     },
     getCourse: (data, cb) => async (dispatch) => {
@@ -45,13 +39,7 @@ export const CoursesActionCreators = {
                 cb()
             }
         } catch (e) {
-            try {
-                const response = e.response || e.message
-                console.log(response)
-            } catch (e) {
-                const response = e.response || e.message
-                console.log(response)
-            }
+            console.log(e.response || e.message)
         }
     },
     putCourse: (data, cb) => async (dispatch) => {
@@ -65,13 +53,7 @@ export const CoursesActionCreators = {
                 // cb()
             }
         } catch (e) {
-            try {
-                const response = e.response || e.message
-                console.log(response)
-            } catch (e) {
-                const response = e.response || e.message
-                console.log(response)
-            }
+            console.log(e.response || e.message)
         }
     },
     addModulesMass: (data) => async (dispatch) => {
@@ -84,13 +66,7 @@ export const CoursesActionCreators = {
                 alert('Успех')
             }
         } catch (e) {
-            try {
-                const response = e.response || e.message
-                console.log(response)
-            } catch (e) {
-                const response = e.response || e.message
-                console.log(response)
-            }
+            console.log(e.response || e.message)
         }
     },
     fetchModules: (data, cb) => async (dispatch) => {
@@ -104,13 +80,7 @@ export const CoursesActionCreators = {
                 cb()
             }
         } catch (e) {
-            try {
-                const response = e.response || e.message
-                console.log(response)
-            } catch (e) {
-                const response = e.response || e.message
-                console.log(response)
-            }
+            console.log(e.response || e.message)
         }
     },
     fetchLessons: (data) => async (dispatch) => {
@@ -121,13 +91,7 @@ export const CoursesActionCreators = {
                 dispatch(CoursesActionCreators.setLessons(response.data.data.data))
             }
         } catch (e) {
-            try {
-                const response = e.response || e.message
-                console.log(response)
-            } catch (e) {
-                const response = e.response || e.message
-                console.log(response)
-            }
+            console.log(e.response || e.message)
         }
     },
 }

@@ -6,7 +6,7 @@ const AddCourseModule = (item) => {
         <div className='create-module__item form-group'>
             <label>Название модуля {index + 1}</label>
             <div className='create-module__input'>
-                <input type='text' placeholder='Название модуля' value={name} onChange={(e) => setName(item, index, e.target.value)} />
+                <input type='text' placeholder='Название модуля' value={name} onChange={(e) => setName(index, e.target.value)} />
                 <button className='create-module__delete' onClick={() => onDelete(index)}>
                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path

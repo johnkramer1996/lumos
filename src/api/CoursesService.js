@@ -7,41 +7,44 @@ export default class CoursesService {
             params: { page, _limit: limit },
         })
     }
-    static async addCourse(body = {}) {
-        console.log(trainerCoursesURL)
+    static async addCourse({ body = {} } = {}) {
         return await axios.post(trainerCoursesURL.ADD_COURSE, body, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         })
     }
-    static async getCourse({ id = 1 } = {}) {
-        return await axios.get(trainerCoursesURL.GET_COURSE({ id }))
+    static async fetchCourse({ course = 1 } = {}) {
+        return await axios.get(trainerCoursesURL.FETCH_COURSE({ course }))
     }
-    static async putCourse({ id = 1, body = {} } = {}) {
+    static async putCourse({ course = 1, body = {} } = {}) {
         body.append('_method', 'PUT')
-        return await axios.post(trainerCoursesURL.PUT_COURSE({ id }), body, {
+        return await axios.post(trainerCoursesURL.PUT_COURSE({ course }), body, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         })
     }
-    static async patchCourse({ id = 1, body = {} } = {}) {
+    static async patchCourse({ course = 1, body = {} } = {}) {
         body.append('_method', 'PATCH')
-        return await axios.post(trainerCoursesURL.PATCH_COURSE({ id }), body, {
+        return await axios.post(trainerCoursesURL.PATCH_COURSE({ course }), body, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         })
     }
-    static async deleteCourse({ id = 1 } = {}) {
-        return await axios.delete(trainerCoursesURL.DELETE_COURSE({ id }))
+    static async deleteCourse({ course = 1 } = {}) {
+        return await axios.delete(trainerCoursesURL.DELETE_COURSE({ course }))
     }
     static async getInfo({ course = 1 } = {}) {
         return await axios.get(trainerCoursesURL.GET_INFO({ course }))
     }
-    static async editInfo({ course = 1 } = {}) {
-        return await axios.put(trainerCoursesURL.GET_INFO({ course }))
+    static async editInfo({ course = 1, body = {} } = {}) {
+        return await axios.post(trainerCoursesURL.EDIT_INFO({ course }), body, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
     }
     static async deleteInfo({ course = 1 } = {}) {
         return await axios.delete(trainerCoursesURL.DELETE_INFO({ course }))

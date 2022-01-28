@@ -1,126 +1,100 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Button } from 'components/ui'
-import { useDispatch, useNavigate, useSelector } from 'hooks/'
+import { useDispatch, useFetching, useSelector } from 'hooks/'
 import { AddCourseTab1, AddCourseTab2, AddCourseTab3 } from 'components'
 import { useParams } from 'react-router-dom'
+import { CoursesService } from 'api'
 
 const AddCourse = () => {
-    const { id } = useParams()
-    const { addCourse, getCourse, putCourse, addModulesMass, fetchModules, fetchLessons } = useDispatch()
+    const { courseId: paramsCourseId } = useParams()
+    const { setCourse } = useDispatch()
     const { course } = useSelector()
-    const [tasbActive, setTabsActive] = useState(0)
-    const { toAddCourseById } = useNavigate()
-    const tabsItem = ['Основная информация', 'Уроки', 'Страница курса']
+    const [tabActive, setTabActive] = useState(1)
+    const tabItems = ['Основная информация', 'Уроки', 'Страница курса']
     const forwardRefTab1 = useRef()
     const forwardRefTab2 = useRef()
+    const [courseId, setCourseId] = useState(paramsCourseId)
     const forwardRefTab3 = useRef()
-    const [isLoading, setIsLoading] = useState(true)
-    const [isLoadingModules, setIsLoadingModules] = useState(true)
+    // toAddCourseById(response.data?.data?.id)
+
+    const [fetchCourse, isfetchCourseLoading, isfetchCourseError] = useFetching(
+        async (data) => await CoursesService.fetchCourse(data),
+        (response) => setCourse(response.data?.data),
+        (error) => {},
+        true,
+    )
+
+    const [addCourse, isAddCourseLoading, isAddCourseError] = useFetching(
+        async (data) => await CoursesService.addCourse(data),
+        (response) => {
+            alert('Курс добавлен')
+            setCourseId(response.data.course.id)
+        },
+        (error) => {},
+    )
+
+    const [putCourse, isPutCourseLoading, isPutCourseError] = useFetching(
+        async (data) => await CoursesService.putCourse(data),
+        (response) => {
+            alert('Курс Обновлен')
+        },
+        (error) => {},
+    )
+
+    const [addModulesMass, isaddModulesMassLoading, isaddModulesMassError] = useFetching(
+        async (data) => await CoursesService.addModulesMass(data),
+        (response) => {
+            alert('Добавленно')
+        },
+        (error) => {
+            console.log(error)
+        },
+    )
+
+    const [editInfo, iseditInfoLoading, iseditInfoError] = useFetching(
+        async (data) => await CoursesService.editInfo(data),
+        (response) => {
+            alert('Добавленно')
+        },
+        (error) => {
+            console.log(error)
+        },
+    )
 
     useEffect(() => {
-        if (id) {
-            getCourse({ id }, () => setIsLoading(false))
-        } else setIsLoading(false)
-
-        if (id) {
-            fetchModules({ course: id }, () => setIsLoadingModules(false))
-            // fetchLessons({ course: id })
-        } else setIsLoadingModules(false)
+        courseId && fetchCourse({ course: courseId })
     }, [])
 
-    const checkFields = () => {
-        const dataTab1 = forwardRefTab1.current()
+    const onAdd = (e) => {
+        e.preventDefault()
 
-        const error = []
-        for (const [key, value] of dataTab1.entries()) if (value === '' || value === 'undefined' || value === '0') error.push(key)
-        return error
+        const { body, isError } = forwardRefTab1?.current()
+        if (isError) return
+        addCourse({ body })
     }
-
-    const add = () => {
-        if (!id) {
-            const errors = checkFields()
-            if (!errors.length) {
-                addCourse(forwardRefTab1?.current(), (id) => {
-                    toAddCourseById(id)
-                })
-            } else {
-                alert('Обязательные поля - ' + errors.join(', '))
-            }
-        }
-    }
-
-    const onTabsChange = (index) => {
-        //add course
-        if (!id) add()
-        //edit course
-        else setTabsActive(index)
-    }
-
-    console.log(course)
 
     const onSave = (e) => {
         e.preventDefault()
 
-        if (!id) return add()
-
-        if (tasbActive === 0) {
-            const body = forwardRefTab1.current()
-            putCourse({ id, body })
+        if (tabActive === 0) {
+            const { body, isError } = forwardRefTab1?.current()
+            if (isError) return
+            putCourse({ course: courseId, body })
         }
-        if (tasbActive === 1) {
-            const body = forwardRefTab2.current()
-            // forwardRefTab2.current()
-            // const body = {
-            //     short_desc: 'Короткое описание111',
-            //     moduls: [
-            //         {
-            //             name: 'Модуль с ИД2 111',
-            //             lessons: [
-            //                 {
-            //                     name: 'Урок 111',
-            //                 },
-            //                 {
-            //                     name: 'Урок 112',
-            //                 },
-            //                 {
-            //                     name: 'Урок 113',
-            //                 },
-            //             ],
-            //         },
-            //         {
-            //             name: 'Модуль с безйд11',
-            //             lessons: [
-            //                 {
-            //                     name: 'Урок 4111',
-            //                 },
-            //                 {
-            //                     name: 'Урок 511',
-            //                 },
-            //                 {
-            //                     name: 'Урок 1111',
-            //                 },
-            //             ],
-            //         },
-            //         {
-            //             name: 'Модуль с sdd11',
-            //             lessons: [
-            //                 {
-            //                     name: 'Урок 114',
-            //                 },
-            //                 {
-            //                     name: 'Урок 1115',
-            //                 },
-            //                 {
-            //                     name: 'Урок 116',
-            //                 },
-            //             ],
-            //         },
-            //     ],
-            // }
-
-            addModulesMass({ course: id, body })
+        if (tabActive === 1) {
+            const { body, isError } = forwardRefTab2?.current()
+            if (isError) return
+            addModulesMass({ course: courseId, body })
+        }
+        if (tabActive === 2) {
+            const { body, isError } = forwardRefTab3?.current()
+            if (isError) return
+            console.log(body)
+            editInfo({ course: courseId, body })
         }
     }
+
+    const onTabsChange = (index) => setTabActive(index)
 
     return (
         <section className='course-edit'>
@@ -131,33 +105,40 @@ const AddCourse = () => {
                             <span>Добавление курса</span>
                         </h1>
                         <div className='course-edit__tabs'>
-                            {tabsItem.map((title, index) => (
-                                <div key={index} className={`course-edit__tab${tasbActive === index ? ' course-edit__tab--active' : ''}`} onClick={() => onTabsChange(index)}>
+                            {tabItems.map((title, index) => (
+                                <div key={index} className={`course-edit__tab${tabActive === index ? ' course-edit__tab--active' : ''}`} onClick={() => onTabsChange(index)}>
                                     {title}
                                 </div>
                             ))}
                         </div>
-                        {isLoading ? (
+                        {isfetchCourseLoading ? (
                             'loading...'
                         ) : (
                             <>
-                                <div className={`course-edit__content${tasbActive === 0 ? ' course-edit__content--active' : ''}`}>
+                                <div className={`course-edit__content${tabActive === 0 ? ' course-edit__content--active' : ''}`}>
                                     <AddCourseTab1 ref={forwardRefTab1} course={course} />
                                 </div>
-                                <div className={`course-edit__content${tasbActive === 1 ? ' course-edit__content--active' : ''}`}>
-                                    {isLoadingModules ? 'loading...' : <AddCourseTab2 ref={forwardRefTab2} />}
+                                <div className={`course-edit__content${tabActive === 1 ? ' course-edit__content--active' : ''}`}>
+                                    <AddCourseTab2 ref={forwardRefTab2} />
                                 </div>
-                                <div className={`course-edit__content${tasbActive === 2 ? ' course-edit__content--active' : ''}`}>
-                                    <AddCourseTab3 />
+                                <div className={`course-edit__content${tabActive === 2 ? ' course-edit__content--active' : ''}`}>
+                                    <AddCourseTab3 ref={forwardRefTab3} />
                                 </div>
                             </>
                         )}
                     </div>
                     <div className='course-edit__right'>
                         <div className='course-edit__hint'>
-                            <Button className='course-edit__hint-btn' onClick={onSave} color={'blue'}>
-                                {id ? 'Сохранить' : 'Добавить'}
-                            </Button>
+                            {courseId ? (
+                                <Button className='course-edit__hint-btn' onClick={onSave} color={'blue'}>
+                                    Сохранить
+                                </Button>
+                            ) : (
+                                <Button className='course-edit__hint-btn' onClick={onAdd} color={'blue'}>
+                                    Добавить
+                                </Button>
+                            )}
+
                             {/* <Button className='course-edit__hint-cancel' onClick={() => {}} outline>
                                 <span>Отменить</span>
                             </Button> */}

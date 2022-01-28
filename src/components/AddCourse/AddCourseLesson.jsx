@@ -1,20 +1,16 @@
 import { Button } from 'components/ui'
-import React, { useState } from 'react'
+import React from 'react'
 import AddCourseLessonItem from './AddCourseLessonItem'
+import { declOfNum, getDeclOfArray } from 'utils'
 
-const AddCourseLesson = (item) => {
-    const { index, name, onAdd, setName, lessons } = item
-    const [state, setState] = useState(name)
-
-    // const changeName = (item, indexLesson, value) => {
-    //     setName(index, indexLesson, value)
-    // }
-
+const AddCourseLesson = ({ index, name, onAdd, setName, lessons }) => {
     return (
         <div className='create-module card-bg'>
             <div className='create-module__top'>
                 <h3 className='create-module__title display-4'>{name || 'Модуль ' + (index + 1)}</h3>
-                <div className='create-module__num'>4 урока</div>
+                <div className='create-module__num'>
+                    {lessons?.length} {declOfNum(lessons?.length, getDeclOfArray['course'])}
+                </div>
             </div>
             <div className='create-module__items'>
                 {lessons?.map((itemLesson, indexLesson) => (

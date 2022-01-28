@@ -1,30 +1,54 @@
+import { CoursesService } from 'api'
 import { Button } from 'components/ui'
-import { useDispatch, useSelector } from 'hooks'
+import { useDispatch, useFetching, useSelector } from 'hooks'
 import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import AddCourseLesson from './AddCourseLesson'
 import AddCourseModule from './AddCourseModule'
 
 const AddCourseTab2 = React.forwardRef((_, ref) => {
-    const { modules: moduls = [] } = useSelector()
+    const { courseId } = useParams()
+
+    // const { modules: moduls = [] } = useSelector()
 
     const [shortDescr, setShortDescr] = useState('')
     const [text_hidden_id, setText_hidden_id] = useState('')
-    // const [modules, setModules] = useState([{ name: '', lessons: [{}] }])
-    const [modules, setModules] = useState([...moduls.map((mods) => ({ ...mods, lessons: mods.lessonsshort }))])
+    const [modules, setModules] = useState([])
+
+    const [fetchModules, isfetchModulesLoading, isfetchModulesError] = useFetching(
+        async (data) => await CoursesService.fetchModules(data),
+        (response) => {
+            setModules([...response.data?.data?.data.map((item) => ({ ...item, lessons: item.lessonsshort }))])
+        },
+        (error) => {},
+    )
+
+    const [getInfo, isgetInfoLoading, isgetInfoError] = useFetching(
+        async (data) => await CoursesService.getInfo(data),
+        (response) => {
+            console.log(response, 'info')
+        },
+        (error) => {},
+    )
+
+    useEffect(() => {
+        courseId && fetchModules({ course: courseId })
+        courseId && getInfo({ course: courseId })
+    }, [])
 
     ref.current = () => {
         return {
-            short_desc: shortDescr,
-            // moduls: modules.map((item) => ({ ...item, lessons: item.lessons })),
-            moduls: modules,
-            text_hidden_id,
+            isError: false,
+            body: {
+                short_desc: shortDescr,
+                moduls: modules,
+                text_hidden_id,
+            },
         }
     }
 
-    console.log(modules)
-
     const onAddModule = () => {
-        const mod = [...modules, { name: '', lessons: [{}] }]
+        const mod = [...modules, { name: '', lessons: [{ name: '' }] }]
         setModules([...mod])
     }
 
@@ -32,7 +56,7 @@ const AddCourseTab2 = React.forwardRef((_, ref) => {
         setModules(modules.filter((item, inx) => inx !== index))
     }
 
-    const setModuleName = (item, index, name) => {
+    const setModuleName = (index, name) => {
         setModules(modules.map((item, inx) => (inx === index ? { ...item, name } : item)))
     }
 
@@ -46,9 +70,6 @@ const AddCourseTab2 = React.forwardRef((_, ref) => {
         const mods = [...modules]
         mods[index].lessons[indexLesson].name = value
         mods[index].lessons[indexLesson].hidden_id = index + '' + indexLesson
-        // let i = 0
-        // const mods2 = [...mods.map((mod) => mod.lessons.map((l) => (l.hidden_id = i)))]
-
         setModules([...mods])
     }
 

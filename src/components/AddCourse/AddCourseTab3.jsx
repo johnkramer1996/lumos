@@ -1,13 +1,36 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import AddCourseTab3Descr from './AddCourseTab3Descr'
 import AddCourseTab3Price from './AddCourseTab3Price'
 
-const AddCourseTab3 = () => {
+const AddCourseTab3 = React.forwardRef((_, ref) => {
     const [course_description, setCourse_description] = useState('')
     const [descriptions, setDescriptions] = useState([])
+    const inputImage = useRef()
+
+    ref.current = () => {
+        const body = new FormData()
+        body.append('descriptions[2][name]', 'Название3')
+        body.append('descriptions[2][text]', 'Тект3')
+        body.append('descriptions[2][image]', inputImage.current?.files[0])
+        body.append('descriptions[new_1][name]', 'Название 2')
+        body.append('descriptions[new_1][text]', 'Текст 2')
+        body.append('prices[new_0][name]', 'Название цены')
+        body.append('prices[new_0][width]', 'Длительность')
+        body.append('prices[new_0][price_with_sale]', '1000')
+        body.append('prices[new_0][price]', '10000')
+        body.append('prices[new_0][text]', 'Описание')
+        body.append('prices[new_0][moduls][]', '1')
+        body.append('prices[new_0][moduls][]', '2')
+
+        return {
+            isError: false,
+            body,
+        }
+    }
 
     return (
         <>
+            <input ref={inputImage} type='file' name='image' accept='image/png, image/gif, image/jpeg' />
             <div className='create-about card-bg'>
                 <h3 className='create-about__title display-4'>О курсе</h3>
                 <div className='create-about__editor'>
@@ -41,6 +64,6 @@ const AddCourseTab3 = () => {
             </div>
         </>
     )
-}
+})
 
 export default AddCourseTab3

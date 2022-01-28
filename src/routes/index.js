@@ -4,7 +4,7 @@ export const RouteNames = {
     ABOUT: '/about',
     ADD_LESSON: '/add',
     ADD_COURSE: '/add-courses',
-    ADD_COURSE_ITEM: '/add-courses/:id',
+    ADD_COURSE_ITEM: '/add-courses/:courseId',
     BLOG: '/blog',
     CABINET: '/cabinet',
     CABINET_ITEM: '/cabinet/:item',

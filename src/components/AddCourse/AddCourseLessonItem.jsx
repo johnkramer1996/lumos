@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 const AddCourseLessonItem = ({ name, indexLesson, index, setName }) => {
     const [state, setstate] = useState(name)
-    const onChange = (index, indexLesson, value) => {
+    const onChange = (value) => {
         setstate(value)
         setName(index, indexLesson, value)
     }
@@ -26,7 +26,7 @@ const AddCourseLessonItem = ({ name, indexLesson, index, setName }) => {
                         <path d='M8 12H16' stroke='#8B9EE6' strokeWidth='1.5' strokeLinecap='round' />
                     </svg>
                 </button>
-                <input type='text' placeholder='Название урока' value={state} onChange={(e) => onChange(index, indexLesson, e.target.value)} />
+                <input type='text' placeholder='Название урока' value={state} onChange={(e) => onChange(e.target.value)} />
                 <button className='create-module__delete'>
                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
