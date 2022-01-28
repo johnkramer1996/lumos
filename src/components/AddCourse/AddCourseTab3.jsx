@@ -14,6 +14,7 @@ const AddCourseTab3 = React.forwardRef(({ modules, info }, ref) => {
     }, [info.descriptions, info.prices])
     // }, [])
 
+    console.log(modules)
     console.log(info)
 
     ref.current = () => {
@@ -38,7 +39,7 @@ const AddCourseTab3 = React.forwardRef(({ modules, info }, ref) => {
             body.append(`descriptions[${createId}][text]`, text || 'Текст')
         })
 
-        prices.forEach(({ id, name, text, width, price_with_sale, price }, index) => {
+        prices.forEach(({ id, name, text, width, price_with_sale, price, moduls = [] }, index) => {
             const createId = id !== undefined ? id : 'new_' + index
 
             body.append(`prices[${createId}][name]`, name || 'Текст')
@@ -46,7 +47,11 @@ const AddCourseTab3 = React.forwardRef(({ modules, info }, ref) => {
             body.append(`prices[${createId}][price_with_sale]`, price_with_sale || 'Текст')
             body.append(`prices[${createId}][price]`, price || 'Текст')
             body.append(`prices[${createId}][text]`, text || 'Текст')
-            body.append(`prices[${createId}][moduls][]`, '1')
+
+            for (const item of Object.keys(moduls)) {
+                moduls[item] && body.append(`prices[${createId}][moduls][]`, item)
+            }
+
             // body.append(`prices[${createId}][moduls][]`, '2')
         })
         body.append('course_description', course_description)
@@ -78,6 +83,13 @@ const AddCourseTab3 = React.forwardRef(({ modules, info }, ref) => {
         newPrices[index][field] = value
         setPrices([...newPrices])
     }
+    const changePricesModulesField = (field, index, value, checked) => {
+        const newPrices = [...prices]
+        newPrices[index][field] = newPrices[index][field] ? newPrices[index][field] : {}
+        newPrices[index][field][value] = checked
+        console.log(newPrices)
+        setPrices([...newPrices])
+    }
 
     return (
         <>
@@ -106,7 +118,7 @@ const AddCourseTab3 = React.forwardRef(({ modules, info }, ref) => {
             <div className='create-price card-bg'>
                 <h3 className='create-price__title display-4'>Стоимость</h3>
                 {prices.map((props, index) => (
-                    <AddCourseTab3Price key={index} {...props} index={index} changeField={changePricesField} modules={modules} />
+                    <AddCourseTab3Price key={index} {...props} index={index} changeField={changePricesField} changeModuleField={changePricesModulesField} modules={modules} />
                 ))}
 
                 <Button className='create-whom__add' onClick={() => onAddPrices()} outline>

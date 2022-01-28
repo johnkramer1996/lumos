@@ -14,7 +14,6 @@ const AddCourseTab2 = React.forwardRef(({ modules, setModules }, ref) => {
 
     ref.current = () => {
         const moduls = modules.map((mod) => ({ ...mod, name: mod.name || 'Название модуля', lessons: mod.lessons.map((l) => ({ ...l, name: l.name || 'Название урока' })) }))
-        console.log(moduls)
         return {
             isError: false,
             body: {
@@ -24,8 +23,6 @@ const AddCourseTab2 = React.forwardRef(({ modules, setModules }, ref) => {
             },
         }
     }
-
-    console.log('updated modules')
 
     const onAddModule = () => {
         setModules([...modules, { name: '', lessons: [{ name: '' }] }])
@@ -94,7 +91,6 @@ const AddCourseTab2 = React.forwardRef(({ modules, setModules }, ref) => {
 
                         <select
                             onChange={(e) => {
-                                console.dir(e.target)
                                 sethidden_id(e.target.value)
                             }}
                         >
