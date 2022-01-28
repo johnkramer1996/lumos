@@ -10125,10 +10125,12 @@ body {
 .cabinet-page__items4 {
     grid-template-columns: calc(25% - 16px) calc(25% - 16px) calc(25% - 16px) calc(25% - 16px);
 }
-.course-edit__form-upload-btn {
+.course-edit__form-upload-btn,
+.btn--uploadfile {
     position: relative;
 }
-.course-edit__form-upload-btn input {
+.course-edit__form-upload-btn input,
+.btn--uploadfile input {
     position: absolute;
     top: 0;
     left: 0;

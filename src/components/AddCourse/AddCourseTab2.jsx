@@ -6,50 +6,29 @@ import { useParams } from 'react-router-dom'
 import AddCourseLesson from './AddCourseLesson'
 import AddCourseModule from './AddCourseModule'
 
-const AddCourseTab2 = React.forwardRef((_, ref) => {
-    const { courseId } = useParams()
-
-    // const { modules: moduls = [] } = useSelector()
-
+const AddCourseTab2 = React.forwardRef(({ modules, setModules }, ref) => {
     const [shortDescr, setShortDescr] = useState('')
-    const [text_hidden_id, setText_hidden_id] = useState('')
-    const [modules, setModules] = useState([])
+    const [hidden_id, sethidden_id] = useState('')
 
-    const [fetchModules, isfetchModulesLoading, isfetchModulesError] = useFetching(
-        async (data) => await CoursesService.fetchModules(data),
-        (response) => {
-            setModules([...response.data?.data?.data.map((item) => ({ ...item, lessons: item.lessonsshort }))])
-        },
-        (error) => {},
-    )
-
-    const [getInfo, isgetInfoLoading, isgetInfoError] = useFetching(
-        async (data) => await CoursesService.getInfo(data),
-        (response) => {
-            console.log(response, 'info')
-        },
-        (error) => {},
-    )
-
-    useEffect(() => {
-        courseId && fetchModules({ course: courseId })
-        courseId && getInfo({ course: courseId })
-    }, [])
+    useEffect(() => {}, [])
 
     ref.current = () => {
+        const moduls = modules.map((mod) => ({ ...mod, name: mod.name || 'Название модуля', lessons: mod.lessons.map((l) => ({ ...l, name: l.name || 'Название урока' })) }))
+        console.log(moduls)
         return {
             isError: false,
             body: {
-                short_desc: shortDescr,
-                moduls: modules,
-                text_hidden_id,
+                short_desc: shortDescr || 'Описание',
+                moduls,
+                hidden_id: hidden_id || 0,
             },
         }
     }
 
+    console.log('updated modules')
+
     const onAddModule = () => {
-        const mod = [...modules, { name: '', lessons: [{ name: '' }] }]
-        setModules([...mod])
+        setModules([...modules, { name: '', lessons: [{ name: '' }] }])
     }
 
     const onDeleteModule = (index) => {
@@ -61,16 +40,16 @@ const AddCourseTab2 = React.forwardRef((_, ref) => {
     }
 
     const onAddLesson = (index) => {
-        const mod = [...modules]
-        mod[index].lessons.push({ name: '' })
-        setModules([...mod])
+        const newModules = [...modules]
+        newModules[index].lessons.push({ name: '' })
+        setModules([...newModules])
     }
 
     const setLessonName = (index, indexLesson, value) => {
-        const mods = [...modules]
-        mods[index].lessons[indexLesson].name = value
-        mods[index].lessons[indexLesson].hidden_id = index + '' + indexLesson
-        setModules([...mods])
+        const newModules = [...modules]
+        newModules[index].lessons[indexLesson].name = value
+        newModules[index].lessons[indexLesson].hidden_id = index + '' + indexLesson
+        setModules([...newModules])
     }
 
     return (
@@ -116,7 +95,7 @@ const AddCourseTab2 = React.forwardRef((_, ref) => {
                         <select
                             onChange={(e) => {
                                 console.dir(e.target)
-                                setText_hidden_id(e.target.value)
+                                sethidden_id(e.target.value)
                             }}
                         >
                             <option defaultValue hidden>
@@ -124,11 +103,13 @@ const AddCourseTab2 = React.forwardRef((_, ref) => {
                             </option>
                             <option>Без тестового урока</option>
                             {modules.map((item, index) =>
-                                item?.lessons?.map((itemLesson, indexLesson) => (
-                                    <option key={index + '' + indexLesson} value={itemLesson.hidden_id}>
-                                        {itemLesson.name}
-                                    </option>
-                                )),
+                                item?.lessons
+                                    ?.filter(({ name }) => name !== '')
+                                    .map(({ name, hidden_id }, indexLesson) => (
+                                        <option key={index + '' + indexLesson} value={hidden_id}>
+                                            {name}
+                                        </option>
+                                    )),
                             )}
                         </select>
                     </div>

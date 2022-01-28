@@ -1,10 +1,37 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const AddCourseTab3Price = () => {
+const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, changeField, modules }) => {
+    const [nameValue, setName] = useState(name)
+    const [widthValue, setWidth] = useState(width)
+    const [price_with_saleValue, setprice_with_sale] = useState(price_with_sale || '')
+    const [priceValue, setprice] = useState(price)
+    const [textValue, setText] = useState(text)
+
+    const onChangeName = (value) => {
+        setName(value)
+        changeField('name', index, value)
+    }
+    const onChangeWidth = (value) => {
+        setWidth(value)
+        changeField('width', index, value)
+    }
+    const onChangePriceSale = (value) => {
+        setprice_with_sale(value)
+        changeField('price_with_sale', index, value)
+    }
+    const onChangePrice = (value) => {
+        setprice(value)
+        changeField('price', index, value)
+    }
+    const onChangeText = (value) => {
+        setText(value)
+        changeField('text', index, value)
+    }
+
     return (
         <div className='create-price__group'>
             <div className='create-price__group-top'>
-                <div className='create-price__subtitle'>Вариант участия 1</div>
+                <div className='create-price__subtitle'>Вариант участия {index + 1}</div>
                 <button className='create-price__delete'>
                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
@@ -28,41 +55,35 @@ const AddCourseTab3Price = () => {
             <div className='create-price__grid'>
                 <div className='create-price__form-group form-group'>
                     <label>Название</label>
-                    <input type='text' />
+                    <input type='text' value={nameValue} onChange={(e) => onChangeName(e.target.value)} />
                 </div>
                 <div className='create-price__form-group form-group'>
                     <label>Длительность обучения</label>
-                    <input type='text' />
+                    <input type='text' value={widthValue} onChange={(e) => onChangeWidth(e.target.value)} />
                 </div>
                 <div className='create-price__form-group form-group'>
                     <label>Стоимость без скидки (в рублях)</label>
-                    <input type='number' />
+                    <input type='text' value={price_with_saleValue} onChange={(e) => onChangePriceSale(e.target.value)} />
                 </div>
                 <div className='create-price__form-group form-group'>
                     <label>Стоимость со скидкой (в рублях)</label>
-                    <input type='number' />
+                    <input type='text' value={priceValue} onChange={(e) => onChangePrice(e.target.value)} />
                 </div>
             </div>
             <div className='create-price__checks'>
-                <div className='create-price__check checkbox'>
-                    <input type='checkbox' className='checkbox' id='module1' />
-                    <label htmlFor='module1'>Модуль 1</label>
-                </div>
-                <div className='create-price__check checkbox'>
-                    <input type='checkbox' className='checkbox' id='module2' />
-                    <label htmlFor='module2'>Модуль 2</label>
-                </div>
-                <div className='create-price__check checkbox'>
-                    <input type='checkbox' className='checkbox' id='module3' />
-                    <label htmlFor='module3'>Модуль 3</label>
-                </div>
+                {modules.map((item, index) => (
+                    <div key={index} className='create-price__check checkbox'>
+                        <input type='checkbox' className='checkbox' id='module1' />
+                        <label htmlFor='module1'>Модуль 1</label>
+                    </div>
+                ))}
             </div>
             <div className='create-price__text form-group'>
                 <label>
                     <span>Описание (новый пункт через Enter)</span>
                     <span>335/600</span>
                 </label>
-                <textarea></textarea>
+                <textarea value={textValue} onChange={(e) => onChangeText(e.target.value)}></textarea>
             </div>
         </div>
     )
