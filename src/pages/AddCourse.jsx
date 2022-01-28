@@ -98,10 +98,9 @@ const AddCourse = () => {
             setTabAvailabel(tabItems.length)
             courseId && fetchModules({ course: courseId })
             courseId && getInfo({ course: courseId })
-        } else {
         }
         return () => {
-            setCourse({})
+            // setCourse({})
         }
     }, [])
 
@@ -121,13 +120,11 @@ const AddCourse = () => {
         if (tabActive === 2) {
             const { body = {}, isError } = forwardRefTab3?.current() || {}
             if (isError) return
-            console.log(body)
             editInfo({ course: courseId, body })
         }
     }
 
     const changeTab = (index) => {
-        console.log(index < tabAvailable, index, tabAvailable)
         index <= tabAvailable && setTabActive(index)
     }
 
