@@ -109,7 +109,7 @@ const AddCourse = () => {
                                     key={index}
                                     className={`course-edit__tab${tabActive === index ? ' course-edit__tab--active' : ''}`}
                                     onClick={() => onTabsChange(index)}
-                                    style={{ pointerEvents: courseId === undefined || index < 1 ? '' : 'none' }}
+                                    style={{ pointerEvents: courseId === undefined ? 'none' : '' }}
                                 >
                                     {title}
                                 </div>
