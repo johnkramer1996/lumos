@@ -1,9 +1,10 @@
 import React from 'react'
-import { useSelector, useDispatch } from 'hooks/'
-import { SITE_URL } from 'api/URLS'
+import { useDispatch } from 'hooks/'
+import { getImgUrl } from 'utils'
+import { useSelector } from 'react-redux'
 
 const CabinetSettings = () => {
-    const { user } = useSelector()
+    const { email, avatar, phone, first_name, last_name, created_at } = useSelector(({ auth }) => auth.user)
     const { logout } = useDispatch()
 
     return (
@@ -15,7 +16,7 @@ const CabinetSettings = () => {
                     <div className='account-settings__photo-title'>Фото</div>
                     <div className='account-settings__photo-wrap'>
                         <div className='account-settings__photo-img'>
-                            <img src={user.avatarFullSrc} alt='' />
+                            <img src={getImgUrl(avatar)} alt='' />
                         </div>
                         <div className='account-settings__photo-buttons'>
                             <button className='account-settings__photo-save btn btn-blue'>Загрузить новое</button>
@@ -28,7 +29,7 @@ const CabinetSettings = () => {
                         <span className='account-settings__item-title'>E-mail</span>
                         <button className='account-settings__item-btn'>Изменить</button>
                     </div>
-                    <input className='account-settings__item-input' disabled type='email' value={user.email} />
+                    <input className='account-settings__item-input' disabled type='email' value={email} />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
@@ -39,7 +40,7 @@ const CabinetSettings = () => {
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
-                        <span className='account-settings__item-title'>Социальные сети</span>
+                        <span className='account-settizngs__item-title'>Социальные сети</span>
                     </div>
                     <div className='account-settings__item-socials'>
                         <div className='account-settings__item-social account-settings__item-social--active'>
@@ -111,7 +112,7 @@ const CabinetSettings = () => {
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Дата регистрации</span>
                     </div>
-                    <input className='account-settings__item-input' disabled type='text' value='12 апреля 2021' />
+                    <input className='account-settings__item-input' disabled type='text' value={created_at} />
                 </div>
                 <button className='account-settings__logout btn btn-light-red' onClick={logout}>
                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -134,20 +135,20 @@ const CabinetSettings = () => {
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Имя</span>
                     </div>
-                    <input className='account-settings__item-input' disabled type='text' value='Ольга' />
+                    <input className='account-settings__item-input' disabled type='text' value={first_name} />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Фамилия</span>
                     </div>
-                    <input className='account-settings__item-input' disabled type='text' value='Олеговна' />
+                    <input className='account-settings__item-input' disabled type='text' value={last_name} />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Номер телефона</span>
                         <button className='account-settings__item-btn'>Изменить</button>
                     </div>
-                    <input className='account-settings__item-input' disabled type='tel' value='+7 999 888 77 66' />
+                    <input className='account-settings__item-input' disabled type='tel' value={phone} />
                 </div>
             </div>
             <div className='account-settings__group card-bg'>

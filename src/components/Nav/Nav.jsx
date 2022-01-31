@@ -1,11 +1,10 @@
-import React from 'react'
-import { RouteNames } from 'routes'
+import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import NavDropdown from './NavDropdown'
 import NavItem from './NavItem'
-import { useSelector } from 'hooks'
 
 const Nav = ({ items = [], isActive }) => {
-    const { themes } = useSelector()
+    const { themes = [] } = useSelector((state) => state.system.references)
 
     return (
         <nav className={`nav${isActive ? ' nav--active' : ''}`}>

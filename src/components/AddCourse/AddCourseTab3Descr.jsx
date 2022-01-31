@@ -7,14 +7,6 @@ const AddCourseTab3Descr = ({ index, image, name, text, changeField }) => {
     const [nameValue, setName] = useState(name)
     const [textValue, setText] = useState(text)
     const [dataImg, setDataImg] = useState(getImgUrl(image, false) || '')
-    const inputImage = useRef()
-    const imgRef = useRef()
-
-    useEffect(() => {
-        // setName(name)
-        // setName(text)
-        // setDataImg(image)
-    }, [name, text, image])
 
     const onChangeName = (value) => {
         setName(value)
@@ -24,6 +16,9 @@ const AddCourseTab3Descr = ({ index, image, name, text, changeField }) => {
         setText(value)
         changeField('text', index, value)
     }
+
+    const inputImage = useRef()
+    const imgRef = useRef()
 
     const uploadImg = (e) => {
         const file = e.target.files[0]
@@ -75,10 +70,7 @@ const AddCourseTab3Descr = ({ index, image, name, text, changeField }) => {
                 </button>
             </div>
             <div className='create-whom__uploaded'>
-                <div className='create-whom__img'>
-                    {/* <img src='/assets/img/upload1.jpg' alt='' /> */}
-                    {dataImg && <img ref={imgRef} src={dataImg} alt='' />}
-                </div>
+                <div className='create-whom__img'>{dataImg && <img ref={imgRef} src={dataImg} alt='' />}</div>
                 <div className='create-whom__uploaded-right'>
                     <div className='create-whom__hint'>
                         Соотношение сторон: 1:1 (рекомендуемое разрешение: 248x248) <br />

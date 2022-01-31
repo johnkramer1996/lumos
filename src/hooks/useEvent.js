@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-const useEvent = (event = 'click', listener, element = document.body) => {
+const useEvent = (listener, event = 'click', element = document.body) => {
     useEffect(() => {
         element.addEventListener(event, listener)
         return () => element.removeEventListener(event, listener)

@@ -1,25 +1,24 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { cabinetLinks } from 'routes'
-import { useDispatch, useSelector, useEvent } from 'hooks/'
+import { useDispatch, useEvent } from 'hooks/'
 import { getImgUrl } from 'utils'
+import { useSelector } from 'react-redux'
 
 const HeaderLK = () => {
-    const [isActive, setIsActive] = useState(false)
-    const { user } = useSelector()
-
     const { logout } = useDispatch()
-
-    useEvent('click', (e) => !e.target.closest('.header__lk') && setIsActive(false))
+    const user = useSelector((state) => state.auth?.user)
+    const [isActive, setIsActive] = useState(false)
+    useEvent((e) => !e.target.closest('.header__lk') && setIsActive(false))
 
     return (
         <div className='header__lk'>
             <div className='header__lk-avatar' onClick={() => setIsActive(!isActive)}>
-                <img src={user.avatarFullSrc} alt='' />
+                <img src={getImgUrl(user?.avatar)} alt='' />
             </div>
             <div className={`header__lk-dropdown${isActive ? ' header__lk-dropdown--active' : ''}`}>
                 {cabinetLinks.map(({ title, href, number }, index) => (
-                    <Link key={index} to={href} className={`header__lk-item ${number ? 'header__lk-item--notification' : ''}`}>
+                    <Link key={index} to={href} className={`header__lk-item ${number ? 'header__lk-item--notification' : ''}`} onClick={() => setIsActive(false)}>
                         <span>{title}</span>
                         <i>{number}</i>
                     </Link>

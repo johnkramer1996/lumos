@@ -1,21 +1,28 @@
 import React, { useEffect } from 'react'
-import { Courses as CoursesComponent, CoursesEmpty } from 'components/'
-import { useDispatch, useNavigate, useSelector } from 'hooks'
+import { Courses as CoursesComponent } from 'components/'
+import { useDispatch } from 'hooks'
 import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import useRequest from 'hooks/useRequest'
 
 const Courses = () => {
-    const { id } = useParams()
+    const { courseId } = useParams()
     const { fetchCourses } = useDispatch()
-    const { courses: allCourses, themes } = useSelector()
+    const { themes = [] } = useSelector(({ system }) => system.references)
+    const { data: allCourses = [] } = useSelector(({ courses }) => courses.courses)
+    const fetchCoursesRequest = useRequest({
+        request: fetchCourses,
+    })
+    useEffect(() => fetchCoursesRequest.call({ page: 1, limit: 3 }), [])
 
-    const isCourseId = id !== undefined
-    const courses = isCourseId ? allCourses.filter((item) => item.format_study === +id) : allCourses
-    const title = themes[isCourseId && +id - 1]?.name
-    useEffect(() => fetchCourses(), [])
+    const isCourseId = courseId !== undefined
+    const courses = isCourseId ? allCourses.filter((item) => item.format_study === +courseId) : allCourses
+    const title = themes[isCourseId && +courseId - 1]?.name
 
     return (
         <>
-            <CoursesComponent title={title} items={courses} />
+            <div>{fetchCoursesRequest.isLoading}</div>
+            <CoursesComponent title={title} items={courses} isLoading={fetchCoursesRequest.isLoading} />
         </>
     )
 }

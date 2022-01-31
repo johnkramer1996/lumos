@@ -3,6 +3,7 @@ import { Main, CourseDetail, CoursesSlider } from 'components/'
 import { useSelector } from 'hooks'
 
 const Home = () => {
+    const { themes = [] } = useSelector(({ system }) => system.references)
     const courses = [
         {
             id: 1,
@@ -26,8 +27,6 @@ const Home = () => {
             descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id elit lacus magnis mattis quisque volutpat.',
         },
     ]
-
-    const { themes } = useSelector()
     const items = themes.map((item) => ({ ...item, items: courses }))
 
     return (

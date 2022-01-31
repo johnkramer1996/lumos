@@ -52,7 +52,7 @@ const HeaderNotification = () => {
 
     const isNotifications = items.length > 0
 
-    useEvent('click', (e) => !e.target.closest('.header__notification') && setIsActive(false))
+    useEvent((e) => !e.target.closest('.header__notification') && setIsActive(false))
 
     return (
         <div className={`header__notification${isActive ? ' header__notification--active' : ''}`}>

@@ -1,19 +1,32 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'hooks'
 import { Button } from 'components/ui'
 import { getImgUrl } from 'utils'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'hooks'
 
 const AddCourseTab1 = React.forwardRef((_, ref) => {
-    const { themes, typeStudy, format, course } = useSelector()
+    const { setContent, setIsShow } = useDispatch()
+    const course = useSelector(({ courses }) => courses.course)
+    const { themes = [], type_study: typeStudy = [], format = [] } = useSelector(({ system }) => system.references)
     const [name, setName] = useState(course.name || 'Название курса')
     const [category_id, setCategoryId] = useState(course.category_id || 1)
-    const [type_study, setStudy] = useState(course.type_study || 1)
+    const [type_study, setTypeStudy] = useState(course.type_study || 1)
     const [format_study, setFormatStudy] = useState(course.format_study || 1)
     const [sale_subscribe, setSubscribe] = useState(course.sale_subscribe || true)
     const [width, setWidth] = useState(course.width || 'Длительность')
     const [dataImg, setDataImg] = useState(getImgUrl(course.image, false) || '')
-    const inputImage = useRef()
+    const inputImageRef = useRef()
     const imgRef = useRef()
+
+    useEffect(() => {
+        course.name && setName(course.name)
+        course.category_id && setCategoryId(course.category_id)
+        course.type_study && setTypeStudy(course.type_study)
+        course.course && setFormatStudy(course.course)
+        course.sale_subscribe && setSubscribe(course.sale_subscribe)
+        course.width && setWidth(course.width)
+        course.image && setDataImg(getImgUrl(course.image, false))
+    }, [course])
 
     ref.current = () => {
         const body = new FormData()
@@ -23,13 +36,15 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
         body.append('format_study', format_study)
         body.append('sale_subscribe', '1')
         body.append('width', width)
-        body.append('image', inputImage.current?.files[0])
+        body.append('image', inputImageRef.current?.files[0])
 
         const errors = []
         for (const [key, value] of body.entries()) if (value === '' || value === 'undefined' || value === '0') errors.push(key)
-
         const isError = errors.length
-        if (isError) alert('Обязательные поля - ' + errors.join(', '))
+        if (isError) {
+            setIsShow(true)
+            setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
+        }
 
         return {
             isError,
@@ -44,7 +59,7 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
         const size = file.size || 0
 
         if (size > 5 * 1024 * 1024) {
-            inputImage.current.value = ''
+            inputImageRef.current.value = ''
             alert('*Слишком большой файл')
 
             return
@@ -56,7 +71,7 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
     }
 
     const deleteImg = (e) => {
-        inputImage.current.value = ''
+        inputImageRef.current.value = ''
         setDataImg('')
     }
 
@@ -83,7 +98,7 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
                 </div>
                 <div className='course-edit__form-group form-group'>
                     <label>Тип обучения</label>
-                    <select value={type_study} onChange={(e) => setStudy(e.target.value)}>
+                    <select value={type_study} onChange={(e) => setTypeStudy(e.target.value)}>
                         <option defaultValue hidden>
                             Тип обучения
                         </option>
@@ -135,7 +150,7 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
                     <div className='course-edit__form-upload-img'>{dataImg && <img ref={imgRef} src={dataImg} alt='' />}</div>
                     <div className='course-edit__form-upload-buttons'>
                         <Button className='course-edit__form-upload-btn'>
-                            <input ref={inputImage} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={uploadImg} />
+                            <input ref={inputImageRef} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={uploadImg} />
                             Загрузить {dataImg ? 'новое' : 'изображение'}
                         </Button>
                         <Button className='course-edit__form-upload-delete' onClick={deleteImg} outline>

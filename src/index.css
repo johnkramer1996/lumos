@@ -10141,3 +10141,14 @@ body {
     z-index: 9;
     cursor: pointer;
 }
+.error-page {
+    text-align: center;
+    padding: 200px 0;
+}
+.error-page__btn {
+    margin: 50px auto 0;
+    max-width: 250px;
+}
+.modal__title {
+    cursor: auto;
+}

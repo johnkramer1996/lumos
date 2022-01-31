@@ -1,4 +1,6 @@
 import AuthService from 'api/AuthService'
+import { asyncAction, crateActionCreator, crateHandles } from 'utils'
+import { ModalsActionCreators } from '../modals/action-creators'
 import { authTypes } from './types'
 
 export const AuthActionCreators = {
@@ -9,96 +11,81 @@ export const AuthActionCreators = {
     setIsLoading: (payload) => ({ type: authTypes.SET_IS_LOADING, payload }),
     setError: (payload) => ({ type: authTypes.SET_ERROR, payload }),
     setStep: (payload) => ({ type: authTypes.SET_STEP, payload }),
-    logout: () => async (dispatch) => {
+    logout: (data) => async (dispatch) => {
         dispatch(AuthActionCreators.setIsAuth(false))
         dispatch(AuthActionCreators.setUser())
         dispatch(AuthActionCreators.setToken())
-
         localStorage.removeItem('token')
     },
-    login:
-        ({ cb, ...data }) =>
-        async (dispatch) => {
-            try {
-                dispatch(AuthActionCreators.setError(''))
-                const response = await AuthService.login(data)
+    ...crateActionCreator(AuthService),
+}
 
-                if (response.status === 200) {
-                    dispatch(AuthActionCreators.setShowModal(false))
-                    dispatch(AuthActionCreators.setIsAuth(true))
-                    dispatch(AuthActionCreators.setUser(response.data?.user))
-                    dispatch(AuthActionCreators.setToken(response.data?.token))
-                    localStorage.setItem('token', response.data?.token)
-                    cb()
-                }
-            } catch (e) {
-                dispatch(AuthActionCreators.setError('Недействительные учетные данные'))
-            }
+export const defaultHandlers = crateHandles(AuthService)
+
+export const authHandlers = {
+    ...defaultHandlers,
+    login: {
+        ...defaultHandlers.login,
+        success: ({ dispatch, response, data }) => {
+            dispatch(AuthActionCreators.setShowModal(false))
+            dispatch(AuthActionCreators.setIsAuth(true))
+            dispatch(AuthActionCreators.setUser(data?.user))
+            dispatch(AuthActionCreators.setToken(data?.token))
+            localStorage.setItem('token', data?.token)
         },
-    restore:
-        ({ cb, ...data }) =>
-        async (dispatch) => {
-            try {
-                dispatch(AuthActionCreators.setError(''))
-                const response = await AuthService.restore(data)
-
-                if (response.status === 200) {
-                    dispatch(AuthActionCreators.setShowModal(false))
-                    dispatch(AuthActionCreators.setIsAuth(true))
-                    dispatch(AuthActionCreators.setUser(response.data?.user))
-                    dispatch(AuthActionCreators.setToken(response.data?.token))
-                    localStorage.setItem('token', response.data?.token)
-                }
-            } catch (e) {
-                dispatch(AuthActionCreators.setError('Недействительные учетные данные'))
-            }
+        error: ({ dispatch, error }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Недействительные учетные данные' }))
         },
-    checkEmail: (data) => async (dispatch) => {
-        try {
-            dispatch(AuthActionCreators.setError(''))
-            const response = await AuthService.checkEmail(data)
-
-            if (response.status === 200) {
-                dispatch(response.data.exists ? AuthActionCreators.setStep('LOGIN') : AuthActionCreators.setStep('REGISTER'))
-            }
-        } catch (e) {
-            dispatch(AuthActionCreators.setError('Произошла ошибка при проверке E-mail'))
-        }
     },
-    register: (data) => async (dispatch) => {
-        try {
-            dispatch(AuthActionCreators.setError(''))
-            const response = await AuthService.register(data)
-
-            if (response.status === 200) {
-                dispatch(AuthActionCreators.setStep('LOGIN'))
-            }
-        } catch (e) {
-            try {
-                const errorText = []
-                Object.values(e.response.data.error).forEach((err) => err.forEach((e) => errorText.push(e)))
-                dispatch(AuthActionCreators.setError(errorText.join(' ')))
-            } catch (e) {
-                dispatch(AuthActionCreators.setError('Произошла ошибка при регистрации'))
-            }
-        }
+    restore: {
+        ...defaultHandlers.restore,
+        // before: ({ dispatch }) => {
+        //     dispatch(AuthActionCreators.setError(''))
+        // },
+        success: ({ dispatch, response, data }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Мы отправили новый пароль на почту' }))
+        },
+        error: ({ dispatch, error }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Недействительные учетные данные' }))
+        },
     },
-    auth: () => async (dispatch) => {
-        try {
+    register: {
+        ...defaultHandlers.register,
+        // before: ({ dispatch }) => {
+        //     dispatch(AuthActionCreators.setError(''))
+        // },
+        success: ({ dispatch, response, data }) => {
+            dispatch(AuthActionCreators.setUser(data?.user))
+            dispatch(AuthActionCreators.setToken(data?.token))
+            dispatch(AuthActionCreators.setIsAuth(true))
+            localStorage.setItem('token', data?.token)
+        },
+        error: ({ dispatch, error }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Произошла ошибка при регистрации' }))
+        },
+    },
+    auth: {
+        ...defaultHandlers.auth,
+        before: ({ dispatch }) => {
             dispatch(AuthActionCreators.setIsLoading(true))
-            dispatch(AuthActionCreators.setError(''))
-            const response = await AuthService.auth()
-
-            if (response.status === 200) {
-                dispatch(AuthActionCreators.setIsAuth(true))
-                dispatch(AuthActionCreators.setUser(response.data?.user))
-                dispatch(AuthActionCreators.setToken(response.data?.token))
-                localStorage.setItem('token', response.data?.token)
-            }
-        } catch (e) {
-            dispatch(AuthActionCreators.setError('Произошла ошибка при авторизации'))
-        } finally {
+            // dispatch(AuthActionCreators.setError(''))
+        },
+        success: ({ dispatch, response, data }) => {
+            dispatch(AuthActionCreators.setIsAuth(true))
+            dispatch(AuthActionCreators.setUser(data?.user))
+            dispatch(AuthActionCreators.setToken(data?.token))
+            localStorage.setItem('token', data?.token)
+        },
+        error: ({ dispatch, error }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Произошла ошибка при авторизации' }))
+        },
+        after: ({ dispatch }) => {
             dispatch(AuthActionCreators.setIsLoading(false))
-        }
+        },
     },
 }

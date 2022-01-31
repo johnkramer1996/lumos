@@ -3,4 +3,5 @@ export const coursesTypes = {
     SET_COURSE: 'SET_COURSE',
     SET_MODULES: 'SET_MODULES',
     SET_LESSONS: 'SET_LESSONS',
+    SET_INFO: 'SET_INFO',
 }

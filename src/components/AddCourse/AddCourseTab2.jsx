@@ -1,51 +1,60 @@
 import { CoursesService } from 'api'
 import { Button } from 'components/ui'
-import { useDispatch, useFetching, useSelector } from 'hooks'
+import { useDispatch, useFetching, useRequest } from 'hooks'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import AddCourseLesson from './AddCourseLesson'
 import AddCourseModule from './AddCourseModule'
 
-const AddCourseTab2 = React.forwardRef(({ modules, setModules }, ref) => {
+const AddCourseTab2 = React.forwardRef((_, ref) => {
+    const modules = useSelector(({ courses }) => courses.modules)
+    const info = useSelector(({ courses }) => courses.info)
     const [shortDescr, setShortDescr] = useState('')
     const [hidden_id, sethidden_id] = useState('')
+    const [modulesState, setModules] = useState([])
 
-    useEffect(() => {}, [])
+    useEffect(() => {
+        modules.data?.length && setModules([...modules.data.reverse()])
+    }, [modules])
+
+    useEffect(() => {
+        info.course?.description && setShortDescr(info.course?.description)
+    }, [info.course])
 
     ref.current = () => {
-        const moduls = modules.map((mod) => ({ ...mod, name: mod.name || 'Название модуля', lessons: mod.lessons.map((l) => ({ ...l, name: l.name || 'Название урока' })) }))
         return {
             isError: false,
             body: {
-                short_desc: shortDescr || 'Описание',
-                moduls,
-                hidden_id: hidden_id || 0,
+                short_desc: shortDescr || 'Описание 100',
+                moduls: modulesState.map((mod) => ({ ...mod, name: mod.name || 'Название модуля', lessons: mod.lessonsshort?.map((l) => ({ ...l, name: l.name || 'Название урока' })) })),
+                // test_lesson_id: +hidden_id || 0,
             },
         }
     }
 
     const onAddModule = () => {
-        setModules([...modules, { name: '', lessons: [{ name: '' }] }])
+        setModules([...modulesState, { name: '', lessonsshort: [{ name: '' }] }])
     }
 
     const onDeleteModule = (index) => {
-        setModules(modules.filter((item, inx) => inx !== index))
+        setModules(modulesState.filter((item, inx) => inx !== index))
     }
 
     const setModuleName = (index, name) => {
-        setModules(modules.map((item, inx) => (inx === index ? { ...item, name } : item)))
+        setModules(modulesState.map((item, inx) => (inx === index ? { ...item, name } : item)))
     }
 
     const onAddLesson = (index) => {
-        const newModules = [...modules]
-        newModules[index].lessons.push({ name: '' })
+        const newModules = [...modulesState]
+        newModules[index].lessonsshort.push({ name: '' })
         setModules([...newModules])
     }
 
     const setLessonName = (index, indexLesson, value) => {
-        const newModules = [...modules]
-        newModules[index].lessons[indexLesson].name = value
-        newModules[index].lessons[indexLesson].hidden_id = index + '' + indexLesson
+        const newModules = [...modulesState]
+        newModules[index].lessonsshort[indexLesson].name = value
+        newModules[index].lessonsshort[indexLesson].hidden_id = new Date().getTime()
         setModules([...newModules])
     }
 
@@ -64,7 +73,7 @@ const AddCourseTab2 = React.forwardRef(({ modules, setModules }, ref) => {
             <div className='create-module card-bg'>
                 <h3 className='create-module__title display-4'>Модули</h3>
                 <div className='create-module__items'>
-                    {modules.map((props, index) => (
+                    {modulesState.map((props, index) => (
                         <AddCourseModule key={index} {...props} index={index} setName={setModuleName} onDelete={onDeleteModule} />
                     ))}
                 </div>
@@ -76,9 +85,8 @@ const AddCourseTab2 = React.forwardRef(({ modules, setModules }, ref) => {
                     <span>Добавить модуль</span>
                 </Button>
             </div>
-
-            {modules.map((props, index) => (
-                <AddCourseLesson key={index} {...props} index={index} setName={setLessonName} onAdd={onAddLesson} />
+            {modulesState.map((props, index) => (
+                <AddCourseLesson key={index} {...props} lessons={props.lessonsshort} index={index} setName={setLessonName} onAdd={onAddLesson} />
             ))}
 
             <div className='create-module card-bg'>
@@ -89,17 +97,13 @@ const AddCourseTab2 = React.forwardRef(({ modules, setModules }, ref) => {
                     <div className='create-module__item form-group'>
                         <label htmlFor=''>Выберите тестовый урок</label>
 
-                        <select
-                            onChange={(e) => {
-                                sethidden_id(e.target.value)
-                            }}
-                        >
+                        <select onChange={(e) => sethidden_id(e.target.value)}>
                             <option defaultValue hidden>
                                 Выберите тестовый урок
                             </option>
                             <option>Без тестового урока</option>
-                            {modules.map((item, index) =>
-                                item?.lessons
+                            {modulesState.map((item, index) =>
+                                item?.lessonsshort
                                     ?.filter(({ name }) => name !== '')
                                     .map(({ name, hidden_id }, indexLesson) => (
                                         <option key={index + '' + indexLesson} value={hidden_id}>

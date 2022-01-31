@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
-import { useSelector } from 'hooks/'
 
 const Footer = () => {
-    const { themes } = useSelector()
+    const { themes = [] } = useSelector(({ system }) => system.references)
+
     const items = [
         [
             {

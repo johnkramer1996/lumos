@@ -5,8 +5,7 @@ import { RouteNames } from 'routes'
 
 const NavDropdown = ({ items = [] }) => {
     const [isActive, setIsActive] = useState(false)
-
-    useEvent('click', (e) => !e.target.closest('.nav__dropdown') && setIsActive(false))
+    useEvent((e) => !e.target.closest('.nav__dropdown') && setIsActive(false))
 
     return (
         <div className='nav__dropdown'>
@@ -18,7 +17,7 @@ const NavDropdown = ({ items = [] }) => {
             </div>
             <div className='nav__dropdown-hidden'>
                 {items.map(({ id, name }) => (
-                    <Link key={id} to={`${RouteNames.COURSES}/${id}`} className='nav__dropdown-link'>
+                    <Link key={id} to={`${RouteNames.COURSES}/${id}`} className='nav__dropdown-link' onClick={() => setIsActive(false)}>
                         {name}
                     </Link>
                 ))}

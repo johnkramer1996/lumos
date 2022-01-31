@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Button = ({ children, className, color = 'blue', light, outline, text, link, to = '', ...props }) => {
+const Button = React.memo(({ children, className, color = 'blue', light, outline, text, link, to = '', ...props }) => {
     const classNames = [outline ? 'btn-outline' : light ? `btn-light-${color}` : `btn-${color}`, className]
 
     return (
@@ -17,6 +17,6 @@ const Button = ({ children, className, color = 'blue', light, outline, text, lin
             )}
         </>
     )
-}
+})
 
 export default Button

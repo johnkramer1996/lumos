@@ -1,4 +1,6 @@
 import CoursesService from 'api/CoursesService'
+import { asyncAction, crateActionCreator, crateHandles } from 'utils'
+import { ModalsActionCreators } from '../modals/action-creators'
 import { coursesTypes } from './types'
 
 export const CoursesActionCreators = {
@@ -6,92 +8,71 @@ export const CoursesActionCreators = {
     setCourse: (payload) => ({ type: coursesTypes.SET_COURSE, payload }),
     setModules: (payload) => ({ type: coursesTypes.SET_MODULES, payload }),
     setLessons: (payload) => ({ type: coursesTypes.SET_LESSONS, payload }),
-    fetchCourses: (data) => async (dispatch) => {
-        try {
-            const response = await CoursesService.fetchCourses(data)
+    setInfo: (payload) => ({ type: coursesTypes.SET_INFO, payload }),
+    ...crateActionCreator(CoursesService),
+}
 
-            if (response.status === 200) {
-                dispatch(CoursesActionCreators.setCourses(response.data?.data))
-            }
-        } catch (e) {
-            console.log(e.response || e.message)
-        }
-    },
-    addCourse: (data, cb) => async (dispatch) => {
-        try {
-            const response = await CoursesService.addCourse(data)
+const defaultHandlers = crateHandles(CoursesService)
 
-            console.log(response, 'response')
-            if (response.status === 200) {
-                dispatch(CoursesActionCreators.setCourse(response.data?.course))
-                cb(response.data?.course?.id)
-            }
-        } catch (e) {
-            console.log(e.response || e.message)
-        }
+export const courseHandlers = {
+    ...defaultHandlers,
+    fetchCourses: {
+        ...defaultHandlers.fetchCourses,
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setCourses(data)),
     },
-    getCourse: (data, cb) => async (dispatch) => {
-        try {
-            const response = await CoursesService.getCourse(data)
-
-            if (response.status === 200) {
-                dispatch(CoursesActionCreators.setCourse(response?.data.data))
-                cb()
-            }
-        } catch (e) {
-            console.log(e.response || e.message)
-        }
+    fetchCourse: {
+        ...defaultHandlers.fetchCourse,
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setCourse(data)),
     },
-    putCourse: (data, cb) => async (dispatch) => {
-        try {
-            const response = await CoursesService.putCourse(data)
-            console.log(response)
-
-            if (response.status === 200) {
-                alert('Успех')
-                // dispatch(CoursesActionCreators.setCourse(response?.data.data))
-                // cb()
-            }
-        } catch (e) {
-            console.log(e.response || e.message)
-        }
+    addCourse: {
+        ...defaultHandlers.addCourse,
+        success: ({ dispatch, response, data }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Курс добавлен' }))
+        },
     },
-    addModulesMass: (data) => async (dispatch) => {
-        try {
+    putCourse: {
+        ...defaultHandlers.putCourse,
+        success: ({ dispatch, response, data }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Курс Обновлен' }))
+        },
+    },
+    // patchCourse
+    // deleteCourse
+    fetchInfo: {
+        ...defaultHandlers.fetchInfo,
+        success: ({ dispatch, response, data }) => {
+            dispatch(CoursesActionCreators.setInfo(data))
+        },
+    },
+    editInfo: {
+        ...defaultHandlers.editInfo,
+        success: ({ dispatch, response, data }) => {
             console.log(data)
-            const response = await CoursesService.addModulesMass(data)
-            console.log(response)
-
-            if (response.status === 200) {
-                alert('Успех')
-            }
-        } catch (e) {
-            console.log(e.response || e.message)
-        }
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Информация добавлена' }))
+        },
     },
-    fetchModules: (data, cb) => async (dispatch) => {
-        try {
-            console.log(data, 'response')
-            const response = await CoursesService.fetchModules(data)
-            console.log(response, 'response')
-
-            if (response.status === 200) {
-                dispatch(CoursesActionCreators.setModules(response.data.data.data))
-                cb()
-            }
-        } catch (e) {
-            console.log(e.response || e.message)
-        }
+    // deleteInfo
+    // fetchCourseUser
+    fetchModules: {
+        ...defaultHandlers.fetchModules,
+        success: ({ dispatch, response, data }) => {
+            dispatch(CoursesActionCreators.setModules(data))
+        },
     },
-    fetchLessons: (data) => async (dispatch) => {
-        try {
-            const response = await CoursesService.fetchLessons(data)
-
-            if (response.status === 200) {
-                dispatch(CoursesActionCreators.setLessons(response.data.data.data))
-            }
-        } catch (e) {
-            console.log(e.response || e.message)
-        }
+    addModulesMass: {
+        ...defaultHandlers.addModulesMass,
+        success: ({ dispatch, response, data }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Модули добавлены' }))
+        },
     },
+    // addModule
+    // fetchModule
+    // putModule
+    // patchModule
+    // deleteModule
+    // fetchLessons
 }

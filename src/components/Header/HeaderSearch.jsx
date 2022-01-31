@@ -6,7 +6,7 @@ const HeaderSearch = ({ isActive: isActiveNav }) => {
 
     useEffect(() => setIsActive(isActiveNav), [isActiveNav])
 
-    useEvent('click', (e) => !e.target.closest('.header__search') && setIsActive(false))
+    useEvent((e) => !e.target.closest('.header__search') && setIsActive(false))
 
     return (
         <div className={`header__search${isActive ? ' header__search--active' : ''}`}>

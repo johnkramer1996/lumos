@@ -6,8 +6,6 @@ const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, 
     const [price_with_saleValue, setprice_with_sale] = useState(price_with_sale || '')
     const [priceValue, setprice] = useState(price)
     const [textValue, setText] = useState(text)
-    const [modulesCheckbox, setModulesCheckbox] = useState([])
-    const myIndex = index
 
     const onChangeName = (value) => {
         setName(value)
@@ -31,7 +29,7 @@ const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, 
     }
 
     const onChangeModule = (value, checked) => {
-        changeModuleField('moduls', myIndex, value, checked)
+        changeModuleField('moduls', index, value, checked)
     }
 
     return (

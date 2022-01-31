@@ -1,40 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import AppRouter from './components/AppRouter'
-import { Header, Footer } from 'components/'
-import { useDispatch, useSelector } from 'hooks'
-import { LoginModal } from 'components/modals'
-import { useLocation } from 'react-router-dom'
+import { Header, Footer, Modal } from 'components/'
+import { useDispatch } from 'hooks'
 
 const App = () => {
-    const location = useLocation()
-    const { isLoading } = useSelector()
-    const { auth, fetchReferences, setIsLoading, fetchSocUrls, restore } = useDispatch()
+    const { fetchReferences, fetchSocUrls } = useDispatch()
 
     useEffect(() => {
         fetchReferences()
-        localStorage.getItem('token') ? auth() : setIsLoading(false)
         fetchSocUrls()
-        // restore({ email: 'vitaliczinoviev@gmail.com' })
     }, [])
-
-    useEffect(() => document.body.click(), [location])
 
     return (
         <>
-            <div className='content'>
-                <Header />
-                {isLoading ? (
-                    <>
-                        <h1 style={{ textAlign: 'center' }}>Loading...</h1>
-                    </>
-                ) : (
-                    <>
-                        <AppRouter />
-                    </>
-                )}
-            </div>
+            <Header />
+            <AppRouter />
             <Footer />
-            <LoginModal />
+            <Modal />
         </>
     )
 }

@@ -1,30 +1,32 @@
-import { About, Home, Contacts, Courses, Events, EventsItem, News, NewsItem, Subscribe, Cabinet, AddCourse, Blog, Partners, Reviews, Faq } from 'pages/'
+import { About, Home, Contacts, Courses, Events, EventsItem, News, NewsItem, Subscribe, Cabinet, AddCourse, Blog, Partners, Reviews, Faq, CoursesItem, Error } from 'pages/'
 
 export const RouteNames = {
     ABOUT: '/about',
     ADD_LESSON: '/add',
-    ADD_COURSE: '/add-courses',
-    ADD_COURSE_ITEM: '/add-courses/:courseId',
     BLOG: '/blog',
     CABINET: '/cabinet',
-    CABINET_ITEM: '/cabinet/:item',
+    CABINET_ITEM: '/cabinet/:cabinetId',
     CABINET_COURSES: '/cabinet/courses',
+    CABINET_COURSES_ITEM: '/cabinet/courses/:courseId',
+    CABINET_COURSES_EDIT: '/cabinet/courses/:courseId/edit',
     CABINET_EVENTS: '/cabinet/events',
     CABINET_STATISTICS: '/cabinet/statistics',
     CABINET_SUPPORT: '/cabinet/support',
     CABINET_SETTINGS: '/cabinet/settings',
+    CABINET_COURSES_ADD: '/cabinet/courses/add',
     CONTACTS: '/contacts',
     COURSES: '/courses',
-    COURSES_ITEM: '/courses/:id',
+    COURSES_ITEM: '/courses/:courseId',
     FAQ: '/faq',
     EVENTS: '/events',
-    EVENTS_ITEM: '/events/:id',
+    EVENTS_ITEM: '/events/:eventsId',
     HOME: '/',
     NEWS: '/news',
     NEWS_ITEM: '/news/:id',
     PARTNERS: '/partners',
     REVIEWS: '/reviews',
     SUBSCRIBE: '/subscribe',
+    ERROR: '/error',
 }
 export const publicRoutes = [
     { path: RouteNames.ABOUT, element: <About /> },
@@ -41,14 +43,15 @@ export const publicRoutes = [
     { path: RouteNames.PARTNERS, element: <Partners /> },
     { path: RouteNames.REVIEWS, element: <Reviews /> },
     { path: RouteNames.SUBSCRIBE, element: <Subscribe /> },
+    { path: RouteNames.ERROR, element: <Error /> },
 ]
 export const privateRoutes = [
     ...publicRoutes,
-    { path: RouteNames.ADD_COURSE, element: <AddCourse /> },
-    { path: RouteNames.ADD_COURSE_ITEM, element: <AddCourse /> },
     { path: RouteNames.CABINET, element: <Cabinet /> },
     { path: RouteNames.CABINET_ITEM, element: <Cabinet /> },
-    // { path: RouteNames.SETTINGS, element: <Cabinet /> },
+    { path: RouteNames.CABINET_COURSES_EDIT, element: <AddCourse /> },
+    { path: RouteNames.CABINET_COURSES_ITEM, element: <CoursesItem /> },
+    { path: RouteNames.CABINET_COURSES_ADD, element: <AddCourse /> },
 ]
 export const cabinetLinks = [
     { title: 'Мои курсы', href: RouteNames.CABINET_COURSES, number: 0 },

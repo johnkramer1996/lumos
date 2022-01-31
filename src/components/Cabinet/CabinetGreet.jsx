@@ -1,13 +1,14 @@
 import { useSelector } from 'hooks'
 import React from 'react'
+import { getImgUrl } from 'utils'
 
 const CabinetGreet = () => {
-    const { user } = useSelector()
+    const user = useSelector(({ auth }) => auth.user)
 
     return (
         <div className='dashboard__greet card-bg'>
             <div className='dashboard__greet-img'>
-                <img src={user.avatarFullSrc} alt='' />
+                <img src={getImgUrl(user?.avatar)} alt='' />
             </div>
             <div className='dashboard__greet-content'>
                 <div className='dashboard__greet-name'>Привет, {user.name}!</div>

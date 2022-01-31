@@ -9,12 +9,12 @@ const AddCourseLesson = ({ index, name, onAdd, setName, lessons }) => {
             <div className='create-module__top'>
                 <h3 className='create-module__title display-4'>{name || 'Модуль ' + (index + 1)}</h3>
                 <div className='create-module__num'>
-                    {lessons?.length} {declOfNum(lessons?.length, getDeclOfArray['course'])}
+                    {lessons?.length} {declOfNum(lessons?.length, getDeclOfArray['lesson'])}
                 </div>
             </div>
             <div className='create-module__items'>
-                {lessons?.map((itemLesson, indexLesson) => (
-                    <AddCourseLessonItem key={indexLesson} {...itemLesson} indexLesson={indexLesson} index={index} setName={setName} />
+                {lessons?.map((props, indexLesson) => (
+                    <AddCourseLessonItem key={indexLesson} {...props} indexLesson={indexLesson} index={index} setName={setName} />
                 ))}
             </div>
             <Button className='create-module__add' onClick={() => onAdd(index)} outline>

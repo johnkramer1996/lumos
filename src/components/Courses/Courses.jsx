@@ -1,22 +1,12 @@
-import { CoursesEmpty } from 'components'
 import React from 'react'
-import CoursesItem3 from './CoursesItem3'
+import CoursesItemWrapper from './CoursesItemWrapper'
 
-const Courses = ({ title = 'Все курсы', items = [] }) => {
+const Courses = ({ title = 'Все курсы', items = [], isLoading }) => {
     return (
         <section className='blog'>
             <div className='container'>
                 <h1 className='blog__title display-2'>{title}</h1>
-
-                {items.length ? (
-                    <div className='cabinet-page__items cabinet-page__items4'>
-                        {items.map(({ id, ...props }) => (
-                            <CoursesItem3 key={id} {...props} />
-                        ))}
-                    </div>
-                ) : (
-                    <CoursesEmpty />
-                )}
+                <CoursesItemWrapper items={items} isLoading={isLoading} />
             </div>
         </section>
     )

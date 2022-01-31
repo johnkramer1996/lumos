@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Button } from 'components/ui'
 import { useNavigate } from 'hooks'
 import { CoursesItem3 } from 'components'
 import { declOfNum, getDeclOfArray } from 'utils'
+import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 
-const CabinetTrainer = ({ items = [], total }) => {
-    const { toAddCourse } = useNavigate()
+const CabinetTrainer = ({ items = [], isLoading, total }) => {
+    const { toCabinetCoursesAdd } = useNavigate()
     const [typeShow, setTypeShow] = useState('col')
 
     const changeTypeShow = (type) => setTypeShow(type)
@@ -14,7 +15,7 @@ const CabinetTrainer = ({ items = [], total }) => {
         <div className='lkt-courses'>
             <div className='cabinet-page__top'>
                 <h1 className='lkt-courses__title display-3'>Мои курсы</h1>
-                <Button className='lkt-courses__add' onClick={toAddCourse} outline>
+                <Button className='lkt-courses__add' onClick={toCabinetCoursesAdd} outline>
                     <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path d='M8.02858 2.66675V13.3334' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
                         <path d='M13.3347 8.02548H2.66797' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
@@ -48,10 +49,11 @@ const CabinetTrainer = ({ items = [], total }) => {
                 </div>
             </div>
             <div className={`cabinet-page__items cabinet-page__items--${typeShow}`}>
-                {items.map(({ id, ...props }) => (
-                    <CoursesItem3 key={id} {...props} />
+                {items.map(({ ...props }) => (
+                    <CoursesItem3 key={props.id} {...props} />
                 ))}
             </div>
+            <CoursesItemWrapper items={items} isLoading={isLoading} />
         </div>
     )
 }
