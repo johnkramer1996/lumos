@@ -11,7 +11,7 @@ export const AuthActionCreators = {
     setIsLoading: (payload) => ({ type: authTypes.SET_IS_LOADING, payload }),
     setError: (payload) => ({ type: authTypes.SET_ERROR, payload }),
     setStep: (payload) => ({ type: authTypes.SET_STEP, payload }),
-    logout: (data) => async (dispatch) => {
+    logout: () => async (dispatch) => {
         dispatch(AuthActionCreators.setIsAuth(false))
         dispatch(AuthActionCreators.setUser())
         dispatch(AuthActionCreators.setToken())
@@ -91,7 +91,9 @@ export const authHandlers = {
     settings: {
         ...defaultHandlers.settings,
         success: ({ dispatch, response, data }) => {
-            console.log(data)
+            // dispatch(ModalsActionCreators.setIsShow(true))
+            // dispatch(ModalsActionCreators.setContent({ title: 'Данные успешно обновлены' }))
+            dispatch(AuthActionCreators.setUser(data?.user))
         },
         error: ({ dispatch, error }) => {
             dispatch(ModalsActionCreators.setIsShow(true))
@@ -101,11 +103,12 @@ export const authHandlers = {
     changeEmail: {
         ...defaultHandlers.changeEmail,
         success: ({ dispatch, response, data }) => {
-            console.log(data)
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'E-mail успешно обновлен' }))
         },
         error: ({ dispatch, error }) => {
             dispatch(ModalsActionCreators.setIsShow(true))
-            dispatch(ModalsActionCreators.setContent({ title: 'Произошла ошибка при сохранение данных' }))
+            dispatch(ModalsActionCreators.setContent({ title: 'Произошла ошибка при изменении данных' }))
         },
     },
 }

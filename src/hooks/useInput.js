@@ -2,20 +2,20 @@ import { useRef, useState } from 'react'
 
 const useInput = (initialValue = '') => {
     const [value, setValue] = useState(initialValue)
-    const [oldValue, setOldValue] = useState(initialValue)
+    const [prevValue, setPrevValue] = useState(initialValue)
     const ref = useRef()
 
-    const onChange = (e) => {
-        setValue(e.target.value)
-    }
+    const onChange = (e) => setValue(e.target.value)
 
-    const onFocus = (e) => setOldValue(e.target.value)
+    const onFocus = (e) => setPrevValue(e.target.value)
+
+    const clear = () => setValue('')
 
     return {
         value,
-        oldValue,
+        prevValue,
         setValue,
-        clear: () => setValue(''),
+        clear,
         ref,
         bind: {
             value,

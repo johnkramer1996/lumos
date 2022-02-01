@@ -10160,3 +10160,6 @@ body {
 .account-settings__item-input {
     width: 100%;
 }
+.account-settings__item--active .account-settings__upload {
+    display: none;
+}

@@ -108,29 +108,6 @@ const CabinetAddCourse = () => {
                             <span>{isEditPage ? 'Редактирование' : 'Добавление'} курса</span>
                         </h1>
                         <Tabs ref={refTabs} items={tabItems} classPrefix={'course-edit'} isLoading={fetchCourseRequest.isLoading} />
-
-                        {/* <div className='course-edit__tabs'>
-                            {tabItems.items.map(({ title }, index) => (
-                                <div key={index} className={`course-edit__tab${tabItems.indexActive === index ? ' course-edit__tab--active' : ''}`} onClick={() => changeTab(index)}>
-                                    {title}
-                                </div>
-                            ))}
-                        </div>
-                        {fetchCourseRequest.isLoading ? (
-                            <Loader />
-                        ) : (
-                            <>
-                                <div className={`course-edit__content${tabItems.indexActive === 0 ? ' course-edit__content--active' : ''}`}>
-                                    <AddCourseTab1 ref={refTabMain} />
-                                </div>
-                                <div className={`course-edit__content${tabItems.indexActive === 1 ? ' course-edit__content--active' : ''}`}>
-                                    <AddCourseTab2 ref={refTabLesson} />
-                                </div>
-                                <div className={`course-edit__content${tabItems.indexActive === 2 ? ' course-edit__content--active' : ''}`}>
-                                    <AddCourseTab3 ref={refTabDescription} />
-                                </div>
-                            </>
-                        )} */}
                     </div>
                     <div className='course-edit__right'>
                         <div className='course-edit__hint'>

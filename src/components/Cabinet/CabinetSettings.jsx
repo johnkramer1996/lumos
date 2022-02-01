@@ -3,10 +3,12 @@ import { useSelector } from 'react-redux'
 import { useDispatch, useRequest, useInput } from 'hooks/'
 import { deleteImg, getDate, getImgUrl, uploadImg } from 'utils'
 import { Button } from 'components/ui'
+import DatePicker from 'react-datepicker'
+
+import 'react-datepicker/dist/react-datepicker.css'
 
 const CabinetSettings = () => {
     const { logout, settings } = useDispatch()
-    // const { email, avatar, phone, first_name, last_name, created_at } = useSelector(({ user }) => user.user)
     const user = useSelector(({ auth }) => auth.user)
     const firstName = useInput()
     const lastName = useInput()
@@ -14,20 +16,61 @@ const CabinetSettings = () => {
     const phone = useInput()
     const createdAt = useInput()
     const password = useInput()
-    const vocation = useInput()
+    const vacationStart = useInput('')
+    const vacationEnd = useInput('')
+    const novifications = useInput([])
     const [avatarImg, setAvatarImg] = useState('')
     const inputImageRef = useRef()
 
-    const settingsRequest = useRequest({ request: settings, success: (data) => console.log(data) })
+    useEffect(() => {
+        var dateInputMask = function dateInputMask(elm) {
+            elm.addEventListener('keypress', function (e) {
+                if (e.keyCode < 47 || e.keyCode > 57) {
+                    e.preventDefault()
+                }
+
+                var len = elm.value.length
+                // i.e., 12/12/1212
+                if (len !== 1 || len !== 3) {
+                    if (e.keyCode == 47) {
+                        e.preventDefault()
+                    }
+                }
+
+                // If they don't add the slash, do it for them...
+                if (len === 4) {
+                    elm.value += '-'
+                }
+
+                // If they don't add the slash, do it for them...
+                if (len === 7) {
+                    elm.value += '-'
+                }
+            })
+        }
+
+        dateInputMask(vacationStart.ref.current)
+        dateInputMask(vacationEnd.ref.current)
+    }, [])
+
+    const settingsRequest = useRequest({
+        request: settings,
+    })
 
     useEffect(() => {
         console.log(user)
-        firstName.setValue(user.first_name)
-        lastName.setValue(user.last_name)
-        email.setValue(user.email)
-        phone.setValue(user.phone)
-        createdAt.setValue(getDate(user.created_at))
-        // vocation.setValue(user.vocation)
+        user.first_name && firstName.setValue(user.first_name)
+        user.last_name && lastName.setValue(user.last_name)
+        user.email && email.setValue(user.email)
+        user.phone && phone.setValue(user.phone)
+        user.created_at && createdAt.setValue(getDate(user.created_at))
+        user.vacation[0] && vacationStart.setValue(user.vacation[0])
+        user.vacation[1] && vacationEnd.setValue(user.vacation[1])
+        user.notifications && novifications.setValue(user.notifications)
+        user.docs.file_passport_1 && setDataImgParport1(getImgUrl(user.docs.file_passport_1, false))
+        user.docs.file_passport_2 && setDataImgParport2(getImgUrl(user.docs.file_passport_2, false))
+        user.docs.file_diplom && setDataImgDiplom(getImgUrl(user.docs.file_diplom, false))
+        user.docs.file_treaty && setDataImgTreaty(getImgUrl(user.docs.file_treaty, false))
         setAvatarImg(getImgUrl(user.avatar))
     }, [user, setAvatarImg])
 
@@ -45,55 +88,111 @@ const CabinetSettings = () => {
         body.append('delete_avatar', '1')
         settingsRequest.call({ body })
     }
-
-    const onChange = (input) => {
-        if (input.oldValue === input.value) return
-        const { name, value } = input.ref.current
+    const onBlur = (input) => {
         const body = new FormData()
+        if (input.ref.current.dataset?.disabled) {
+            input.ref.current.setAttribute('disabled', 'disabled')
+        }
+        if (input.prevValue === input.value) return
+        const { name, value } = input.ref.current
         body.append(name, value)
-        if (name === 'password') {
-            body.append('password_confirmation', value)
-        }
-        if (name === 'avatar') {
-            body.append(name, inputImageRef.current?.files[0])
-        }
+        if (name === 'password') body.append('password_confirmation', value)
         settingsRequest.call({ body })
-
-        return
-        // body.append('new_email', 'dolor')
-        body.append('first_name', firstName.value)
-        body.append('last_name', lastName.value)
-        body.append('phone', phone.value)
-        // body.append('password', password.value)
-        // body.append('password_confirmation', password.value)
-        // body.append('name', 'quidem')
-        // body.append('vacation_start', '2022-01-27T20:18:33')
-        // body.append('vacation_end', '2022-01-27T20:18:33')
-        // body.append('phone', 'temporibus')
-        // body.append('password', '12345678')
-        // body.append('password_confirmation', '12345678')
-        // body.append('delete_avatar', '0')
-        // body.append('delete_file_passport_1', '0')
-        // body.append('delete_file_passport_2', '0')
-        // body.append('delete_file_diplom', '0')
-        // body.append('delete_file_treaty', '0')
-        // body.append('notifications[][type]', '0')
-        // body.append('notifications[][source]', '0')
-        // body.append('notifications[][status]', '0')
-        // body.append('avatar', inputImageRef.current?.files[0])
     }
-
     const onChangeInput = (input) => {
         input.ref.current.removeAttribute('disabled')
         input.ref.current.focus()
     }
+
+    const [dataImgParport1, setDataImgParport1] = useState('')
+    const inputImgRefPassport1 = useRef()
+    const onChangeInputImgPassport1 = (e) => {
+        uploadImg(e.target, setDataImgParport1)
+
+        const body = new FormData()
+        body.append('file_passport_1', inputImgRefPassport1.current?.files[0])
+        settingsRequest.call({ body })
+    }
+    const onDeleteInputImgPassport1 = (e) => {
+        deleteImg(inputImgRefPassport1, setDataImgParport1)
+
+        const body = new FormData()
+        body.append('delete_file_passport_1', '1')
+        settingsRequest.call({ body })
+    }
+
+    const [dataImgParport2, setDataImgParport2] = useState('')
+    const inputImgRefPassport2 = useRef()
+    const onChangeInputImgPassport2 = (e) => {
+        uploadImg(e.target, setDataImgParport2)
+
+        const body = new FormData()
+        body.append('file_passport_2', inputImgRefPassport2.current?.files[0])
+        settingsRequest.call({ body })
+    }
+    const onDeleteInputImgPassport2 = (e) => {
+        deleteImg(inputImgRefPassport2, setDataImgParport2)
+
+        const body = new FormData()
+        body.append('delete_file_passport_2', '1')
+        settingsRequest.call({ body })
+    }
+
+    const [dataImgDiplom, setDataImgDiplom] = useState('')
+    const inputImgRefDiplom = useRef()
+    const onChangeInputImgDiplom = (e) => {
+        uploadImg(e.target, setDataImgDiplom)
+
+        const body = new FormData()
+        body.append('file_diplom', inputImgRefDiplom.current?.files[0])
+        settingsRequest.call({ body })
+    }
+    const onDeleteInputImgDiplom = (e) => {
+        deleteImg(inputImgRefDiplom, setDataImgDiplom)
+
+        const body = new FormData()
+        body.append('delete_file_diplom', '1')
+        settingsRequest.call({ body })
+    }
+
+    const [dataImgTreaty, setDataImgTreaty] = useState('')
+    const inputImgRefTreaty = useRef()
+    const onChangeInputImgTreaty = (e) => {
+        uploadImg(e.target, setDataImgTreaty)
+
+        const body = new FormData()
+        body.append('file_treaty', inputImgRefTreaty.current?.files[0])
+        settingsRequest.call({ body })
+    }
+    const onDeleteInputImgTreaty = (e) => {
+        deleteImg(inputImgRefTreaty, setDataImgTreaty)
+
+        const body = new FormData()
+        body.append('delete_file_treaty', '1')
+        settingsRequest.call({ body })
+    }
+
+    const notificationsArray = {
+        '0_0': novifications.value.find(({ type, source }) => type === 0 && source === 0),
+        '0_1': novifications.value.find(({ type, source }) => type === 0 && source === 1),
+        '0_2': novifications.value.find(({ type, source }) => type === 0 && source === 2),
+
+        '1_0': novifications.value.find(({ type, source }) => type === 1 && source === 0),
+        '1_1': novifications.value.find(({ type, source }) => type === 1 && source === 1),
+        '1_2': novifications.value.find(({ type, source }) => type === 1 && source === 2),
+
+        '2_0': novifications.value.find(({ type, source }) => type === 2 && source === 0),
+        '2_1': novifications.value.find(({ type, source }) => type === 2 && source === 1),
+        '2_2': novifications.value.find(({ type, source }) => type === 2 && source === 2),
+    }
+
+    const checkbox1 = useInput(true)
 
     return (
         <div className='account-settings'>
             <h1 className='account-settings__title display-3'>Настройки аккаунта</h1>
             <div className='account-settings__group card-bg'>
                 <h3 className='account-settings__subtitle display-4'>Аккаунт</h3>
-                <button onClick={onChange}>Сохранить</button>
                 <div className='account-settings__photo'>
                     <div className='account-settings__photo-title'>Фото</div>
                     <div className='account-settings__photo-wrap'>
@@ -118,7 +217,7 @@ const CabinetSettings = () => {
                             Изменить
                         </button>
                     </div>
-                    <input className='account-settings__item-input' type='email' name='new_email' onBlur={() => onChange(email)} {...email.bind} disabled />
+                    <input className='account-settings__item-input' type='email' name='new_email' onBlur={() => onBlur(email)} {...email.bind} data-disabled='true' disabled />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
@@ -127,7 +226,7 @@ const CabinetSettings = () => {
                             Изменить пароль
                         </button>
                     </div>
-                    <input className='account-settings__item-input' type='password' name='password' onBlur={() => onChange(password)} {...password.bind} disabled />
+                    <input className='account-settings__item-input' type='password' name='password' onBlur={() => onBlur(password)} {...password.bind} data-disabled='true' disabled />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
@@ -195,15 +294,21 @@ const CabinetSettings = () => {
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
-                        <span className='account-settings__item-title'>Отпуск</span>
+                        <span className='account-settings__item-title'>Отпуск от</span>
                     </div>
-                    <input className='account-settings__item-input' type='text' name='vocation' onBlur={() => onChange(vocation)} {...vocation.bind} />
+                    <input className='account-settings__item-input' type='text' onBlur={() => onBlur(vacationStart)} {...vacationStart.bind} maxLength='10' name='vacation_start' />
+                </div>
+                <div className='account-settings__item'>
+                    <div className='account-settings__item-top'>
+                        <span className='account-settings__item-title'>Отпуск до</span>
+                    </div>
+                    <input className='account-settings__item-input' type='text' onBlur={() => onBlur(vacationEnd)} {...vacationEnd.bind} maxLength='10' name='vacation_end' />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Дата регистрации</span>
                     </div>
-                    <input className='account-settings__item-input' type='text' name='created_at' onBlur={() => onChange(createdAt)} {...createdAt.bind} />
+                    <input className='account-settings__item-input' type='text' name='created_at' onBlur={() => onBlur(createdAt)} {...createdAt.bind} disabled />
                 </div>
                 <button className='account-settings__logout btn btn-light-red' onClick={logout}>
                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -226,25 +331,25 @@ const CabinetSettings = () => {
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Имя</span>
                     </div>
-                    <input className='account-settings__item-input' type='text' name='first_name' onBlur={() => onChange(firstName)} {...firstName.bind} />
+                    <input className='account-settings__item-input' type='text' name='first_name' onBlur={() => onBlur(firstName)} {...firstName.bind} />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Фамилия</span>
                     </div>
-                    <input className='account-settings__item-input' type='text' name='last_name' onBlur={() => onChange(lastName)} {...lastName.bind} />
+                    <input className='account-settings__item-input' type='text' name='last_name' onBlur={() => onBlur(lastName)} {...lastName.bind} />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Номер телефона</span>
-                        <button className='account-settings__item-btn' onClick={onChangeInput}>
+                        <button className='account-settings__item-btn' onClick={() => onChangeInput(phone)}>
                             Изменить
                         </button>
                     </div>
-                    <input className='account-settings__item-input' type='tel' name='phone' onBlur={() => onChange(phone)} {...phone.bind} />
+                    <input className='account-settings__item-input' type='tel' name='phone' onBlur={() => onBlur(phone)} {...phone.bind} data-disabled='true' disabled />
                 </div>
             </div>
-            <div className='account-settings__group card-bg'>
+            {/* <div className='account-settings__group card-bg'>
                 <h3 className='account-settings__subtitle display-4'>Уведомления</h3>
                 <div className='account-settings__item'>
                     <span className='account-settings__item-title'>Социальные сети</span>
@@ -262,13 +367,28 @@ const CabinetSettings = () => {
                     </div>
                 </div>
                 <div className='account-settings__item'>
-                    <span className='account-settings__item-title'>Модерация курсов</span>
+                    <span className='account-settings__item-title'>Системные</span>
                     <span className='account-settings__item-desc'>Оповещения о добавлении новых курсов или их редактировании</span>
                     <div className='account-settings__switches'>
                         <div className='account-settings__switch'>
                             <div className='account-settings__switch-title'>Электронная почта</div>
                             <div className='account-settings__switch-input switch'>
-                                <input type='checkbox' className='checkbox' id='switch1' />
+                                <input
+                                    type='checkbox'
+                                    className='checkbox'
+                                    id='switch1'
+                                    defaultChecked={checkbox1.value}
+                                    {...checkbox1.bind}
+                                    onChange={(e) => {
+                                        checkbox1.setValue(e.target.checked)
+																				const body = new FormData()
+																				if (input.prevValue === input.value) return
+																				const { name, value } = input.ref.current
+																				body.append(name, value)
+																				if (name === 'password') body.append('password_confirmation', value)
+																				settingsRequest.call({ body })
+                                    }}
+                                />
                                 <label htmlFor='switch1'></label>
                             </div>
                         </div>
@@ -289,7 +409,7 @@ const CabinetSettings = () => {
                     </div>
                 </div>
                 <div className='account-settings__item'>
-                    <span className='account-settings__item-title'>Комментарии в блоге</span>
+                    <span className='account-settings__item-title'>От поддержк</span>
                     <span className='account-settings__item-desc'>Оповещения о добавлении новых комментариев к статьям блога</span>
                     <div className='account-settings__switches'>
                         <div className='account-settings__switch'>
@@ -316,7 +436,7 @@ const CabinetSettings = () => {
                     </div>
                 </div>
                 <div className='account-settings__item'>
-                    <span className='account-settings__item-title'>Заявки</span>
+                    <span className='account-settings__item-title'>Комментарии от клиентов</span>
                     <span className='account-settings__item-desc'>Оповещения о добавлении новых заявок в поддержку</span>
                     <div className='account-settings__switches'>
                         <div className='account-settings__switch'>
@@ -342,52 +462,19 @@ const CabinetSettings = () => {
                         </div>
                     </div>
                 </div>
-                <div className='account-settings__item'>
-                    <span className='account-settings__item-title'>Мероприятия</span>
-                    <span className='account-settings__item-desc'>Оповещения о добавлении новых мероприятий</span>
-                    <div className='account-settings__switches'>
-                        <div className='account-settings__switch'>
-                            <div className='account-settings__switch-title'>Электронная почта</div>
-                            <div className='account-settings__switch-input switch'>
-                                <input type='checkbox' className='checkbox' id='switch7' />
-                                <label htmlFor='switch7'></label>
-                            </div>
-                        </div>
-                        <div className='account-settings__switch'>
-                            <div className='account-settings__switch-title'>На сайте</div>
-                            <div className='account-settings__switch-input switch'>
-                                <input type='checkbox' className='checkbox' id='switch8' />
-                                <label htmlFor='switch8'></label>
-                            </div>
-                        </div>
-                        <div className='account-settings__switch'>
-                            <div className='account-settings__switch-title'>Telegram</div>
-                            <div className='account-settings__switch-input switch'>
-                                <input type='checkbox' className='checkbox' id='switch9' />
-                                <label htmlFor='switch9'></label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </div> */}
             <div className='account-settings__group card-bg'>
                 <h3 className='account-settings__subtitle display-4'>Документы</h3>
                 <div className='account-settings__desc'>Фото должны быть четкими, а текст на документах хорошо считываться</div>
-                <div className='account-settings__item'>
+
+                <div className={`account-settings__item ${dataImgParport1 ? 'account-settings__item--active' : ''}`}>
                     <div className='account-settings__item-top'>
-                        <span className='account-settings__item-title'>Название документа</span>
-                        <button className='account-settings__item-btn' onClick={onChangeInput}>
+                        <span className='account-settings__item-title'>Файл паспорта 1</span>
+                        <button className='account-settings__item-btn' onClick={onDeleteInputImgPassport1}>
                             Изменить
                         </button>
                     </div>
-                    <div className='account-settings__item-doc'>
-                        <img src='/assets/img/document2.jpg' alt='' />
-                    </div>
-                </div>
-                <div className='account-settings__item'>
-                    <div className='account-settings__item-top'>
-                        <span className='account-settings__item-title'>Название документа 2</span>
-                    </div>
+                    <div className='account-settings__item-doc'>{dataImgParport1 && <img src={dataImgParport1} alt='' />}</div>
                     <div className='account-settings__upload'>
                         <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
                             <path
@@ -403,13 +490,18 @@ const CabinetSettings = () => {
                             <span>или перетащите его сюда</span>
                         </div>
                         <div className='account-settings__upload-hint'>PNG, JPG до 5 MБ</div>
-                        <input type='file' className='account-settings__upload-input' />
+                        <input ref={inputImgRefPassport1} type='file' className='account-settings__upload-input' accept='image/png, image/gif, image/jpeg' onChange={onChangeInputImgPassport1} />
                     </div>
                 </div>
-                <div className='account-settings__item'>
+
+                <div className={`account-settings__item ${dataImgParport2 ? 'account-settings__item--active' : ''}`}>
                     <div className='account-settings__item-top'>
-                        <span className='account-settings__item-title'>Название документа 3</span>
+                        <span className='account-settings__item-title'>Файл паспорта 2</span>
+                        <button className='account-settings__item-btn' onClick={onDeleteInputImgPassport2}>
+                            Изменить
+                        </button>
                     </div>
+                    <div className='account-settings__item-doc'>{dataImgParport2 && <img src={dataImgParport2} alt='' />}</div>
                     <div className='account-settings__upload'>
                         <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
                             <path
@@ -425,7 +517,61 @@ const CabinetSettings = () => {
                             <span>или перетащите его сюда</span>
                         </div>
                         <div className='account-settings__upload-hint'>PNG, JPG до 5 MБ</div>
-                        <input type='file' className='account-settings__upload-input' />
+                        <input ref={inputImgRefPassport2} type='file' className='account-settings__upload-input' accept='image/png, image/gif, image/jpeg' onChange={onChangeInputImgPassport2} />
+                    </div>
+                </div>
+
+                <div className={`account-settings__item ${dataImgDiplom ? 'account-settings__item--active' : ''}`}>
+                    <div className='account-settings__item-top'>
+                        <span className='account-settings__item-title'>Файл диплома</span>
+                        <button className='account-settings__item-btn' onClick={onDeleteInputImgDiplom}>
+                            Изменить
+                        </button>
+                    </div>
+                    <div className='account-settings__item-doc'>{dataImgDiplom && <img src={dataImgDiplom} alt='' />}</div>
+                    <div className='account-settings__upload'>
+                        <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                            <path
+                                d='M5.33325 21.3333L11.4479 15.2186C11.948 14.7187 12.6261 14.4378 13.3333 14.4378C14.0404 14.4378 14.7185 14.7187 15.2186 15.2186L21.3333 21.3333M18.6666 18.6666L20.7813 16.5519C21.2813 16.052 21.9595 15.7712 22.6666 15.7712C23.3737 15.7712 24.0518 16.052 24.5519 16.5519L26.6666 18.6666M18.6666 10.6666H18.6799M7.99992 26.6666H23.9999C24.7072 26.6666 25.3854 26.3856 25.8855 25.8855C26.3856 25.3854 26.6666 24.7072 26.6666 23.9999V7.99992C26.6666 7.29267 26.3856 6.6144 25.8855 6.1143C25.3854 5.6142 24.7072 5.33325 23.9999 5.33325H7.99992C7.29267 5.33325 6.6144 5.6142 6.1143 6.1143C5.6142 6.6144 5.33325 7.29267 5.33325 7.99992V23.9999C5.33325 24.7072 5.6142 25.3854 6.1143 25.8855C6.6144 26.3856 7.29267 26.6666 7.99992 26.6666Z'
+                                stroke='#C5D6F1'
+                                strokeWidth='2'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                            ></path>
+                        </svg>
+                        <div className='account-settings__upload-title'>
+                            <strong>Загрузите файл</strong>
+                            <span>или перетащите его сюда</span>
+                        </div>
+                        <div className='account-settings__upload-hint'>PNG, JPG до 5 MБ</div>
+                        <input ref={inputImgRefDiplom} type='file' className='account-settings__upload-input' accept='image/png, image/gif, image/jpeg' onChange={onChangeInputImgDiplom} />
+                    </div>
+                </div>
+
+                <div className={`account-settings__item ${dataImgTreaty ? 'account-settings__item--active' : ''}`}>
+                    <div className='account-settings__item-top'>
+                        <span className='account-settings__item-title'>Файл договора</span>
+                        <button className='account-settings__item-btn' onClick={onDeleteInputImgTreaty}>
+                            Изменить
+                        </button>
+                    </div>
+                    <div className='account-settings__item-doc'>{dataImgTreaty && <img src={dataImgTreaty} alt='' />}</div>
+                    <div className='account-settings__upload'>
+                        <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                            <path
+                                d='M5.33325 21.3333L11.4479 15.2186C11.948 14.7187 12.6261 14.4378 13.3333 14.4378C14.0404 14.4378 14.7185 14.7187 15.2186 15.2186L21.3333 21.3333M18.6666 18.6666L20.7813 16.5519C21.2813 16.052 21.9595 15.7712 22.6666 15.7712C23.3737 15.7712 24.0518 16.052 24.5519 16.5519L26.6666 18.6666M18.6666 10.6666H18.6799M7.99992 26.6666H23.9999C24.7072 26.6666 25.3854 26.3856 25.8855 25.8855C26.3856 25.3854 26.6666 24.7072 26.6666 23.9999V7.99992C26.6666 7.29267 26.3856 6.6144 25.8855 6.1143C25.3854 5.6142 24.7072 5.33325 23.9999 5.33325H7.99992C7.29267 5.33325 6.6144 5.6142 6.1143 6.1143C5.6142 6.6144 5.33325 7.29267 5.33325 7.99992V23.9999C5.33325 24.7072 5.6142 25.3854 6.1143 25.8855C6.6144 26.3856 7.29267 26.6666 7.99992 26.6666Z'
+                                stroke='#C5D6F1'
+                                strokeWidth='2'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                            ></path>
+                        </svg>
+                        <div className='account-settings__upload-title'>
+                            <strong>Загрузите файл</strong>
+                            <span>или перетащите его сюда</span>
+                        </div>
+                        <div className='account-settings__upload-hint'>PNG, JPG до 5 MБ</div>
+                        <input ref={inputImgRefTreaty} type='file' className='account-settings__upload-input' accept='image/png, image/gif, image/jpeg' onChange={onChangeInputImgTreaty} />
                     </div>
                 </div>
             </div>

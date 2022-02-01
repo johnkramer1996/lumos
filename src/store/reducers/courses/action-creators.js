@@ -49,7 +49,6 @@ export const courseHandlers = {
     editInfo: {
         ...defaultHandlers.editInfo,
         success: ({ dispatch, response, data }) => {
-            console.log(data)
             dispatch(ModalsActionCreators.setIsShow(true))
             dispatch(ModalsActionCreators.setContent({ title: 'Информация добавлена', descr: 'Ваш курс отправлен на модерацию.' }))
         },
