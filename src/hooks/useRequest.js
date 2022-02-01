@@ -9,10 +9,10 @@ const useRequest = ({ before = () => {}, request = () => {}, success = () => {},
     const call = (args) => {
         request({
             data: { ...args },
-            before2: () => isMounted && (before(), setIsLoading(true)),
-            success2: (data) => isMounted && (success(data), setState(data.data)),
-            error2: (data) => isMounted && (error(data), setErrorText(data.error)),
-            after2: () => isMounted && (after(), setIsLoading(false)),
+            beforeTwo: () => isMounted && (before(), setIsLoading(true)),
+            successTwo: (data) => isMounted && (success(data), setState(data.data)),
+            errorTwo: (data) => isMounted && (error(data), setErrorText(data.error)),
+            afterTwo: () => isMounted && (after(), setIsLoading(false)),
         })
     }
 

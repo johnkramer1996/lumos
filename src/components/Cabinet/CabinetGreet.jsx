@@ -1,5 +1,5 @@
-import { useSelector } from 'hooks'
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { getImgUrl } from 'utils'
 
 const CabinetGreet = () => {

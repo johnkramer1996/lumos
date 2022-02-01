@@ -13,7 +13,7 @@ const Courses = () => {
     const fetchCoursesRequest = useRequest({
         request: fetchCourses,
     })
-    useEffect(() => fetchCoursesRequest.call({ page: 1, limit: 3 }), [])
+    useEffect(() => fetchCoursesRequest.call(), [])
 
     const isCourseId = courseId !== undefined
     const courses = isCourseId ? allCourses.filter((item) => item.format_study === +courseId) : allCourses
@@ -21,7 +21,6 @@ const Courses = () => {
 
     return (
         <>
-            <div>{fetchCoursesRequest.isLoading}</div>
             <CoursesComponent title={title} items={courses} isLoading={fetchCoursesRequest.isLoading} />
         </>
     )

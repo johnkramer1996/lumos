@@ -1,6 +1,6 @@
 import React from 'react'
 import { Main, CourseDetail, CoursesSlider } from 'components/'
-import { useSelector } from 'hooks'
+import { useSelector } from 'react-redux'
 
 const Home = () => {
     const { themes = [] } = useSelector(({ system }) => system.references)

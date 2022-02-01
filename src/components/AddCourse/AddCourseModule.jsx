@@ -1,7 +1,6 @@
 import React from 'react'
 
-const AddCourseModule = (item) => {
-    const { index, name, onDelete, setName } = item
+const AddCourseModule = ({ index, name, onDelete, setName }) => {
     return (
         <div className='create-module__item form-group'>
             <label>Название модуля {index + 1}</label>

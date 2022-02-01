@@ -48,7 +48,7 @@ const CabinetEmployee = ({ items = [], total }) => {
                     <div>
                         <h3 className='cabinet-page__group-title'>Активные</h3>
                         <div className='cabinet-page__nav-title'>
-                            {total} {declOfNum(total, getDeclOfArray['course'])}
+                            {total} {declOfNum(total, getDeclOfArray['courses'])}
                         </div>
                     </div>
                     <button className='lkt-courses__show btn btn-outline'>Показать все</button>

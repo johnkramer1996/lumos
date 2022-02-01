@@ -5,7 +5,7 @@ import { useNavigate } from 'hooks'
 import { declOfNum, getDeclOfArray } from 'utils'
 
 const CabinetUser = ({ items = [], total }) => {
-    const { toCabinetCoursesAdd } = useNavigate()
+    const { toCabinetItemsAdd } = useNavigate()
 
     return (
         <>
@@ -15,10 +15,10 @@ const CabinetUser = ({ items = [], total }) => {
                     <div>
                         <h1 className='cabinet-page__group-title'>Мои курсы</h1>
                         <div className='cabinet-page__nav-title'>
-                            {total} {declOfNum(total, getDeclOfArray['course'])}
+                            {total} {declOfNum(total, getDeclOfArray['courses'])}
                         </div>
                     </div>
-                    <Button className='lkt-courses__add' onClick={toCabinetCoursesAdd} outline>
+                    <Button className='lkt-courses__add' onClick={toCabinetItemsAdd} outline>
                         <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
                             <path d='M8.02858 2.66675V13.3334' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
                             <path d='M13.3347 8.02548H2.66797' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />

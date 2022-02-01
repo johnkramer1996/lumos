@@ -1,36 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, changeField, changeModuleField, modules, moduls = [] }) => {
-    const [nameValue, setName] = useState(name)
-    const [widthValue, setWidth] = useState(width)
-    const [price_with_saleValue, setprice_with_sale] = useState(price_with_sale || '')
-    const [priceValue, setprice] = useState(price)
-    const [textValue, setText] = useState(text)
+const AddCoursePrice = ({ index, name, width, price_with_sale, price, text, changeField, changeModuleField, modules, moduls = [] }) => {
+    const [nameState, setName] = useState('')
+    const [widthState, setWidth] = useState('')
+    const [priceWithSaleState, setPriceWithSale] = useState('')
+    const [priceState, setPrice] = useState('')
+    const [textState, setText] = useState('')
 
-    const onChangeName = (value) => {
-        setName(value)
-        changeField('name', index, value)
-    }
-    const onChangeWidth = (value) => {
-        setWidth(value)
-        changeField('width', index, value)
-    }
-    const onChangePriceSale = (value) => {
-        setprice_with_sale(value)
-        changeField('price_with_sale', index, value)
-    }
-    const onChangePrice = (value) => {
-        setprice(value)
-        changeField('price', index, value)
-    }
-    const onChangeText = (value) => {
-        setText(value)
-        changeField('text', index, value)
-    }
+    useEffect(() => {
+        name && setName(name)
+        width && setWidth(width)
+        price_with_sale && setPriceWithSale(price_with_sale)
+        price && setPrice(price)
+        text && setText(text)
+    }, [name, width, price_with_sale, price, text])
 
-    const onChangeModule = (value, checked) => {
-        changeModuleField('moduls', index, value, checked)
-    }
+    const onChangeName = (value) => (setName(value), changeField('name', index, value))
+    const onChangeWidth = (value) => (setWidth(value), changeField('width', index, value))
+    const onChangePriceSale = (value) => (setPriceWithSale(value), changeField('price_with_sale', index, value))
+    const onChangePrice = (value) => (setPrice(value), changeField('price', index, value))
+    const onChangeText = (value) => (setText(value), changeField('text', index, value))
+    const onChangeModule = (value, checked) => changeModuleField('moduls', index, value, checked)
 
     return (
         <div className='create-price__group'>
@@ -59,19 +49,19 @@ const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, 
             <div className='create-price__grid'>
                 <div className='create-price__form-group form-group'>
                     <label>Название</label>
-                    <input type='text' value={nameValue} onChange={(e) => onChangeName(e.target.value)} />
+                    <input type='text' value={nameState} onChange={(e) => onChangeName(e.target.value)} />
                 </div>
                 <div className='create-price__form-group form-group'>
                     <label>Длительность обучения</label>
-                    <input type='text' value={widthValue} onChange={(e) => onChangeWidth(e.target.value)} />
+                    <input type='text' value={widthState} onChange={(e) => onChangeWidth(e.target.value)} />
                 </div>
                 <div className='create-price__form-group form-group'>
                     <label>Стоимость без скидки (в рублях)</label>
-                    <input type='text' value={price_with_saleValue} onChange={(e) => onChangePriceSale(e.target.value)} />
+                    <input type='text' value={priceWithSaleState} onChange={(e) => onChangePriceSale(e.target.value)} />
                 </div>
                 <div className='create-price__form-group form-group'>
                     <label>Стоимость со скидкой (в рублях)</label>
-                    <input type='text' value={priceValue} onChange={(e) => onChangePrice(e.target.value)} />
+                    <input type='text' value={priceState} onChange={(e) => onChangePrice(e.target.value)} />
                 </div>
             </div>
             <div className='create-price__checks'>
@@ -94,10 +84,10 @@ const AddCourseTab3Price = ({ index, name, width, price_with_sale, price, text, 
                     <span>Описание (новый пункт через Enter)</span>
                     <span>335/600</span>
                 </label>
-                <textarea value={textValue} onChange={(e) => onChangeText(e.target.value)}></textarea>
+                <textarea value={textState} onChange={(e) => onChangeText(e.target.value)}></textarea>
             </div>
         </div>
     )
 }
 
-export default AddCourseTab3Price
+export default AddCoursePrice

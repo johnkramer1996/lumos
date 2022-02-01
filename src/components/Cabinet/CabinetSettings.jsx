@@ -1,42 +1,127 @@
-import React from 'react'
-import { useDispatch } from 'hooks/'
-import { getImgUrl } from 'utils'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useDispatch, useRequest, useInput } from 'hooks/'
+import { deleteImg, getDate, getImgUrl, uploadImg } from 'utils'
+import { Button } from 'components/ui'
 
 const CabinetSettings = () => {
-    const { email, avatar, phone, first_name, last_name, created_at } = useSelector(({ auth }) => auth.user)
-    const { logout } = useDispatch()
+    const { logout, settings } = useDispatch()
+    // const { email, avatar, phone, first_name, last_name, created_at } = useSelector(({ user }) => user.user)
+    const user = useSelector(({ auth }) => auth.user)
+    const firstName = useInput()
+    const lastName = useInput()
+    const email = useInput()
+    const phone = useInput()
+    const createdAt = useInput()
+    const password = useInput()
+    const vocation = useInput()
+    const [avatarImg, setAvatarImg] = useState('')
+    const inputImageRef = useRef()
+
+    const settingsRequest = useRequest({ request: settings, success: (data) => console.log(data) })
+
+    useEffect(() => {
+        console.log(user)
+        firstName.setValue(user.first_name)
+        lastName.setValue(user.last_name)
+        email.setValue(user.email)
+        phone.setValue(user.phone)
+        createdAt.setValue(getDate(user.created_at))
+        // vocation.setValue(user.vocation)
+        setAvatarImg(getImgUrl(user.avatar))
+    }, [user, setAvatarImg])
+
+    const onChangeInputImg = (e) => {
+        uploadImg(e.target, setAvatarImg)
+
+        const body = new FormData()
+        body.append('avatar', inputImageRef.current?.files[0])
+        settingsRequest.call({ body })
+    }
+    const onDeleteInputImg = (e) => deleteImg(inputImageRef, setAvatarImg)
+
+    const onChange = (input) => {
+        if (input.oldValue === input.value) return
+        const { name, value } = input.ref.current
+        const body = new FormData()
+        body.append(name, value)
+        if (name === 'password') {
+            body.append('password_confirmation', value)
+        }
+        if (name === 'avatar') {
+            body.append(name, inputImageRef.current?.files[0])
+        }
+        settingsRequest.call({ body })
+
+        return
+        // body.append('new_email', 'dolor')
+        body.append('first_name', firstName.value)
+        body.append('last_name', lastName.value)
+        body.append('phone', phone.value)
+        // body.append('password', password.value)
+        // body.append('password_confirmation', password.value)
+        // body.append('name', 'quidem')
+        // body.append('vacation_start', '2022-01-27T20:18:33')
+        // body.append('vacation_end', '2022-01-27T20:18:33')
+        // body.append('phone', 'temporibus')
+        // body.append('password', '12345678')
+        // body.append('password_confirmation', '12345678')
+        // body.append('delete_avatar', '0')
+        // body.append('delete_file_passport_1', '0')
+        // body.append('delete_file_passport_2', '0')
+        // body.append('delete_file_diplom', '0')
+        // body.append('delete_file_treaty', '0')
+        // body.append('notifications[][type]', '0')
+        // body.append('notifications[][source]', '0')
+        // body.append('notifications[][status]', '0')
+        // body.append('avatar', inputImageRef.current?.files[0])
+    }
+
+    const onChangeInput = (input) => {
+        input.ref.current.removeAttribute('disabled')
+        input.ref.current.focus()
+    }
 
     return (
         <div className='account-settings'>
             <h1 className='account-settings__title display-3'>Настройки аккаунта</h1>
             <div className='account-settings__group card-bg'>
                 <h3 className='account-settings__subtitle display-4'>Аккаунт</h3>
+                <button onClick={onChange}>Сохранить</button>
                 <div className='account-settings__photo'>
                     <div className='account-settings__photo-title'>Фото</div>
                     <div className='account-settings__photo-wrap'>
                         <div className='account-settings__photo-img'>
-                            <img src={getImgUrl(avatar)} alt='' />
+                            <img src={avatarImg} alt='' />
                         </div>
                         <div className='account-settings__photo-buttons'>
-                            <button className='account-settings__photo-save btn btn-blue'>Загрузить новое</button>
-                            <button className='account-settings__photo-delete btn btn-outline'>Удалить</button>
+                            <Button className='account-settings__photo-save btn--uploadfile'>
+                                <input ref={inputImageRef} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={onChangeInputImg} />
+                                Загрузить {avatarImg ? 'новое' : 'изображение'}
+                            </Button>
+                            <Button className='account-settings__photo-delete' onClick={onDeleteInputImg} outline>
+                                Удалить
+                            </Button>
                         </div>
                     </div>
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>E-mail</span>
-                        <button className='account-settings__item-btn'>Изменить</button>
+                        <button className='account-settings__item-btn' onClick={() => onChangeInput(email)}>
+                            Изменить
+                        </button>
                     </div>
-                    <input className='account-settings__item-input' disabled type='email' value={email} />
+                    <input className='account-settings__item-input' type='email' name='new_email' onBlur={() => onChange(email)} {...email.bind} disabled />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Пароль</span>
-                        <button className='account-settings__item-btn'>Изменить пароль</button>
+                        <button className='account-settings__item-btn' onClick={() => onChangeInput(password)}>
+                            Изменить пароль
+                        </button>
                     </div>
-                    <input className='account-settings__item-input' disabled type='password' value='password' />
+                    <input className='account-settings__item-input' type='password' name='password' onBlur={() => onChange(password)} {...password.bind} disabled />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
@@ -106,13 +191,13 @@ const CabinetSettings = () => {
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Отпуск</span>
                     </div>
-                    <input className='account-settings__item-input' disabled type='text' value='С 20 декабря по 20 января' />
+                    <input className='account-settings__item-input' type='text' name='vocation' onBlur={() => onChange(vocation)} {...vocation.bind} />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Дата регистрации</span>
                     </div>
-                    <input className='account-settings__item-input' disabled type='text' value={created_at} />
+                    <input className='account-settings__item-input' type='text' name='created_at' onBlur={() => onChange(createdAt)} {...createdAt.bind} />
                 </div>
                 <button className='account-settings__logout btn btn-light-red' onClick={logout}>
                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -135,20 +220,22 @@ const CabinetSettings = () => {
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Имя</span>
                     </div>
-                    <input className='account-settings__item-input' disabled type='text' value={first_name} />
+                    <input className='account-settings__item-input' type='text' name='first_name' onBlur={() => onChange(firstName)} {...firstName.bind} />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Фамилия</span>
                     </div>
-                    <input className='account-settings__item-input' disabled type='text' value={last_name} />
+                    <input className='account-settings__item-input' type='text' name='last_name' onBlur={() => onChange(lastName)} {...lastName.bind} />
                 </div>
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Номер телефона</span>
-                        <button className='account-settings__item-btn'>Изменить</button>
+                        <button className='account-settings__item-btn' onClick={onChangeInput}>
+                            Изменить
+                        </button>
                     </div>
-                    <input className='account-settings__item-input' disabled type='tel' value={phone} />
+                    <input className='account-settings__item-input' type='tel' name='phone' onBlur={() => onChange(phone)} {...phone.bind} />
                 </div>
             </div>
             <div className='account-settings__group card-bg'>
@@ -283,7 +370,9 @@ const CabinetSettings = () => {
                 <div className='account-settings__item'>
                     <div className='account-settings__item-top'>
                         <span className='account-settings__item-title'>Название документа</span>
-                        <button className='account-settings__item-btn'>Изменить</button>
+                        <button className='account-settings__item-btn' onClick={onChangeInput}>
+                            Изменить
+                        </button>
                     </div>
                     <div className='account-settings__item-doc'>
                         <img src='/assets/img/document2.jpg' alt='' />

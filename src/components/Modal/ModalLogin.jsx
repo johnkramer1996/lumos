@@ -5,10 +5,13 @@ import ModalLoginBottom from './ModalLoginBottom'
 import ModalLoginForm from './ModalLoginForm'
 
 const ModalLogin = () => {
-    const { checkEmail, login, register, restore, setShowModal, setUser, setToken, setIsAuth } = useDispatch()
+    const { checkEmail, login, register, restore, setShowModal } = useDispatch()
     const showModal = useSelector((state) => state.auth?.showModal)
     const [step, setStep] = useState('CHECK_EMAIL')
 
+    const checkEmailRequest = useRequest({ request: checkEmail, success: ({ dispatch, response, data }) => (data.exists === 1 ? setStep('LOGIN') : setStep('REGISTER')) })
+    const loginRequest = useRequest({ request: login })
+    const registerRequest = useRequest({ request: register, success: ({ dispatch, response, data }) => setStep('LOGIN') })
     const restoreRequest = useRequest({ request: restore, success: ({ dispatch, response, data }) => setStep('LOGIN') })
 
     const steps = useMemo(
@@ -17,38 +20,25 @@ const ModalLogin = () => {
                 title: 'Вход или регистрация',
                 btn: 'Продолжить',
                 onPrev: () => {},
-                onNext: (data) =>
-                    checkEmail({
-                        data,
-                        success: ({ dispatch, response, data }) => (data.exists === 1 ? setStep('LOGIN') : setStep('REGISTER')),
-                    }),
+                onNext: checkEmailRequest.call,
             },
             LOGIN: {
                 title: 'Вход',
                 btn: 'Войти',
                 onPrev: () => setStep('CHECK_EMAIL'),
-                onNext: ({ email, password }) =>
-                    login({
-                        data: { email, password },
-                    }),
+                onNext: loginRequest.call,
             },
             REGISTER: {
                 title: 'Регистрация',
                 btn: 'Создать аккаунт',
                 onPrev: () => setStep('CHECK_EMAIL'),
-                onNext: (data) =>
-                    register({
-                        data: data,
-                    }),
+                onNext: registerRequest.call,
             },
             RESTORE: {
                 title: 'Забыли пароль',
                 btn: 'Отправить',
                 onPrev: () => setStep('LOGIN'),
-                onNext: (data) => {
-                    console.log(data)
-                    restoreRequest.call(data)
-                },
+                onNext: restoreRequest.call,
             },
         }),
         [],

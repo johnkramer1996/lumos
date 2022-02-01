@@ -7,16 +7,18 @@ const useDispatch = () => {
 
     return useMemo(
         () => ({
-            toCourse: () => navigate(RouteNames.COURSES),
+            toItems: ({ type }) => navigate(getTypeItems(type)),
             toCabinet: () => navigate(RouteNames.CABINET),
-            toCabinetCourses: () => navigate(RouteNames.CABINET_COURSES),
-            toCabinetCoursesAdd: () => navigate(RouteNames.CABINET_COURSES_ADD),
-            toCabinetCoursesEdit: ({ courseId }) => navigate(`${RouteNames.CABINET_COURSES}/${courseId}/edit`),
-            toCabinetCoursesItem: ({ courseId }) => navigate(`${RouteNames.CABINET_COURSES}/${courseId}`),
+            toCabinetItems: ({ type }) => navigate(getTypeItems(type)),
+            toCabinetItemsAdd: ({ type }) => navigate(`${getTypeItems(type)}/add`),
+            toCabinetItemsEdit: ({ courseId, type }) => navigate(`${getTypeItems(type)}/${courseId}/edit`),
+            toCabinetItemsItem: ({ courseId, type }) => navigate(`${getTypeItems(type)}/${courseId}`),
             toError: () => navigate(RouteNames.ERROR),
         }),
         [],
     )
 }
+
+const getTypeItems = (type = 'courses') => (type === 'courses' ? RouteNames.CABINET_COURSES : RouteNames.CABINET_EVENTS)
 
 export default useDispatch

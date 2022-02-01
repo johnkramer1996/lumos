@@ -12,6 +12,7 @@ export const authURL = {
     REGISTER: '/auth/register',
     AUTHORIZATION: '/cabinet/user',
     SETTINGS: '/cabinet/user/setting',
+    CHANE_EMAIL: '/cabinet/user/change_email',
 }
 export const trainerCoursesURL = {
     FETCH_COURSES: '/cabinet/courses',
@@ -42,4 +43,22 @@ export const trainerCoursesLessonsURL = {
     UPLOAD_FILE: ({ courseId, lessonId }) => `/cabinet/courses/${courseId}/lessons/${lessonId}/upload_file`,
     PUT_LESSON: ({ courseId }) => `/cabinet/courses/${courseId}/lessons`,
     PATCH_LESSON: ({ courseId }) => `/cabinet/courses/${courseId}/lessons`,
+}
+export const trainerEventsURL = {
+    FETCH_EVENTS: '/cabinet/events',
+    CABINET_EVENTS_ADD: '/cabinet/events',
+    FETCH_EVENT: ({ eventId }) => `/cabinet/events/${eventId}`,
+    PUT_EVENT: ({ eventId }) => `/cabinet/events/${eventId}`,
+    PATCH_EVENT: ({ eventId }) => `/cabinet/events/${eventId}`,
+    DELETE_EVENT: ({ eventId }) => `/cabinet/events/${eventId}`,
+}
+export const userCoursesURL = {
+    ADD_USER: '/cabinet/courses/add_user',
+    GET_COURSES: '/cabinet/courses',
+}
+export const userEventsURL = {
+    ADD_USER: '/cabinet/events/add_user',
+}
+export const adminURL = {
+    ADD_USER: '/admin/users/set_role',
 }

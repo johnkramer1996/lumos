@@ -1,56 +1,46 @@
-import { CoursesService } from 'api'
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { Button } from 'components/ui'
-import { useDispatch, useFetching, useRequest } from 'hooks'
-import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
 import AddCourseLesson from './AddCourseLesson'
 import AddCourseModule from './AddCourseModule'
 
-const AddCourseTab2 = React.forwardRef((_, ref) => {
+const AddCourseTab2 = (_, ref) => {
     const modules = useSelector(({ courses }) => courses.modules)
     const info = useSelector(({ courses }) => courses.info)
     const [shortDescr, setShortDescr] = useState('')
     const [hidden_id, sethidden_id] = useState('')
     const [modulesState, setModules] = useState([])
 
-    useEffect(() => {
-        modules.data?.length && setModules([...modules.data.reverse()])
-    }, [modules])
+    useEffect(() => modules.data?.length && setModules([...modules.data.reverse()]), [modules])
+    useEffect(() => info.course?.description && setShortDescr(info.course?.description), [info.course])
 
-    useEffect(() => {
-        info.course?.description && setShortDescr(info.course?.description)
-    }, [info.course])
-
-    ref.current = () => {
-        return {
-            isError: false,
-            body: {
-                short_desc: shortDescr || 'Описание 100',
-                moduls: modulesState.map((mod) => ({ ...mod, name: mod.name || 'Название модуля', lessons: mod.lessonsshort?.map((l) => ({ ...l, name: l.name || 'Название урока' })) })),
-                // test_lesson_id: +hidden_id || 0,
-            },
-        }
-    }
+    useImperativeHandle(ref, () => ({
+        getData: () => {
+            return {
+                isError: false,
+                body: {
+                    short_desc: shortDescr,
+                    moduls: modulesState.map((mod) => ({ ...mod, name: mod.name || 'Название модуля', lessons: mod.lessonsshort?.map((l) => ({ ...l, name: l.name || 'Название урока' })) })),
+                    // test_lesson_id: +hidden_id || 0,
+                },
+            }
+        },
+    }))
 
     const onAddModule = () => {
         setModules([...modulesState, { name: '', lessonsshort: [{ name: '' }] }])
     }
-
     const onDeleteModule = (index) => {
         setModules(modulesState.filter((item, inx) => inx !== index))
     }
-
     const setModuleName = (index, name) => {
         setModules(modulesState.map((item, inx) => (inx === index ? { ...item, name } : item)))
     }
-
     const onAddLesson = (index) => {
         const newModules = [...modulesState]
         newModules[index].lessonsshort.push({ name: '' })
         setModules([...newModules])
     }
-
     const setLessonName = (index, indexLesson, value) => {
         const newModules = [...modulesState]
         newModules[index].lessonsshort[indexLesson].name = value
@@ -117,6 +107,6 @@ const AddCourseTab2 = React.forwardRef((_, ref) => {
             </div>
         </>
     )
-})
+}
 
-export default AddCourseTab2
+export default forwardRef(AddCourseTab2)

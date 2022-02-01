@@ -10122,14 +10122,19 @@ body {
 .blog-page__text {
     overflow: hidden;
 }
-.cabinet-page__items4 {
-    grid-template-columns: calc(25% - 16px) calc(25% - 16px) calc(25% - 16px) calc(25% - 16px);
+/* @media screen and (min-width: 1023px) {
+    .cabinet-page__items4 {
+        grid-template-columns: calc(33.33% - 16px) calc(33.33% - 16px) calc(33.33% - 16px);
+    }
+} */
+@media screen and (min-width: 1023px) {
+    .cabinet-page__items4 {
+        grid-template-columns: calc(25% - 16px) calc(25% - 16px) calc(25% - 16px) calc(25% - 16px);
+    }
 }
-.course-edit__form-upload-btn,
 .btn--uploadfile {
     position: relative;
 }
-.course-edit__form-upload-btn input,
 .btn--uploadfile input {
     position: absolute;
     top: 0;
@@ -10151,4 +10156,7 @@ body {
 }
 .modal__title {
     cursor: auto;
+}
+.account-settings__item-input {
+    width: 100%;
 }

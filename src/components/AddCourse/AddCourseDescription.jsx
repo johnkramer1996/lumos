@@ -1,49 +1,23 @@
 import { Button } from 'components/ui'
-import { useSelector } from 'hooks'
 import React, { useEffect, useRef, useState } from 'react'
-import { getImgUrl } from 'utils'
+import { deleteImg, getImgUrl, uploadImg } from 'utils'
 
-const AddCourseTab3Descr = ({ index, image, name, text, changeField }) => {
-    const [nameValue, setName] = useState(name)
-    const [textValue, setText] = useState(text)
-    const [dataImg, setDataImg] = useState(getImgUrl(image, false) || '')
+const AddCourseDescription = ({ index, image, name, text, changeField }) => {
+    const [nameState, setName] = useState('')
+    const [textState, setText] = useState('')
+    const [dataImg, setDataImg] = useState('')
+    const inputImgRef = useRef()
 
-    const onChangeName = (value) => {
-        setName(value)
-        changeField('name', index, value)
-    }
-    const onChangeText = (value) => {
-        setText(value)
-        changeField('text', index, value)
-    }
+    useEffect(() => {
+        name && setName(name)
+        text && setText(text)
+        image && setDataImg(getImgUrl(image, false))
+    }, [name, text, image])
 
-    const inputImage = useRef()
-    const imgRef = useRef()
-
-    const uploadImg = (e) => {
-        const file = e.target.files[0]
-        if (!file) return
-
-        const size = file.size || 0
-
-        if (size > 5 * 1024 * 1024) {
-            inputImage.current.value = ''
-            alert('*Слишком большой файл')
-
-            return
-        }
-
-        changeField('image', index, file)
-
-        const reader = new FileReader()
-        reader.onload = (e) => setDataImg(e.target.result)
-        reader.readAsDataURL(file)
-    }
-
-    const deleteImg = (e) => {
-        inputImage.current.value = ''
-        setDataImg('')
-    }
+    const onChangeName = (value) => (setName(value), changeField('name', index, value))
+    const onChangeText = (value) => (setText(value), changeField('text', index, value))
+    const onChangeInputImg = (e) => uploadImg(e.target, setDataImg)
+    const onDeleteInputImg = (e) => deleteImg(inputImgRef, setDataImg)
 
     return (
         <div className='create-whom__group'>
@@ -70,7 +44,7 @@ const AddCourseTab3Descr = ({ index, image, name, text, changeField }) => {
                 </button>
             </div>
             <div className='create-whom__uploaded'>
-                <div className='create-whom__img'>{dataImg && <img ref={imgRef} src={dataImg} alt='' />}</div>
+                <div className='create-whom__img'>{dataImg && <img src={dataImg} alt='' />}</div>
                 <div className='create-whom__uploaded-right'>
                     <div className='create-whom__hint'>
                         Соотношение сторон: 1:1 (рекомендуемое разрешение: 248x248) <br />
@@ -78,10 +52,10 @@ const AddCourseTab3Descr = ({ index, image, name, text, changeField }) => {
                     </div>
                     <div className='create-whom__buttons'>
                         <Button className='create-whom__new btn--uploadfile'>
-                            <input ref={inputImage} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={uploadImg} />
+                            <input ref={inputImgRef} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={onChangeInputImg} />
                             Загрузить {dataImg ? 'новое' : 'изображение'}
                         </Button>
-                        <Button className='create-whom__remove-img' onClick={deleteImg} outline>
+                        <Button className='create-whom__remove-img' onClick={onDeleteInputImg} outline>
                             Удалить
                         </Button>
                     </div>
@@ -89,17 +63,17 @@ const AddCourseTab3Descr = ({ index, image, name, text, changeField }) => {
             </div>
             <div className='create-whom__form-group form-group'>
                 <label>Заголовок</label>
-                <input type='text' value={nameValue} onChange={(e) => onChangeName(e.target.value)} />
+                <input type='text' value={nameState} onChange={(e) => onChangeName(e.target.value)} />
             </div>
             <div className='create-whom__form-group form-group'>
                 <label>
                     <span>Описание</span>
                     <span>335/600</span>
                 </label>
-                <textarea value={textValue} onChange={(e) => onChangeText(e.target.value)}></textarea>
+                <textarea value={textState} onChange={(e) => onChangeText(e.target.value)}></textarea>
             </div>
         </div>
     )
 }
 
-export default AddCourseTab3Descr
+export default AddCourseDescription

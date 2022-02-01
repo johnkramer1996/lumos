@@ -1,8 +1,9 @@
+import { Button } from 'components/ui'
 import React, { useState } from 'react'
 
 const ModalLoginForm = ({ step, steps = {} }) => {
     const [email, setEmail] = useState('vitaliczinoviev@gmail.com')
-    const [password, setPassword] = useState('dtPUtGMy')
+    const [password, setPassword] = useState('EtmAraHk')
     const [name, setName] = useState('Имя')
     const [phone, setPhone] = useState('12345')
 
@@ -35,7 +36,7 @@ const ModalLoginForm = ({ step, steps = {} }) => {
                     </div>
                 </>
             )}
-            <button className='modal__form-btn btn btn-blue'>{steps[step]?.btn}</button>
+            <Button className='modal__form-btn'>{steps[step]?.btn}</Button>
         </form>
     )
 }

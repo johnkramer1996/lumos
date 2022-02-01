@@ -5,12 +5,12 @@ export const declOfNum = (number, words = []) => {
 }
 
 export const getDeclOfArray = {
-    course: ['курс', 'курса', 'курсов'],
-    event: ['мероприятие', 'мероприятия', 'мероприятий'],
-    lesson: ['урок', 'крока', 'уроков'],
+    courses: ['курс', 'курса', 'курсов'],
+    events: ['мероприятие', 'мероприятия', 'мероприятий'],
+    lessons: ['урок', 'урока', 'уроков'],
 }
 
-export const getImgUrl = (src, defaultSrc = '/assets/img/avatar2.jpg') => (src ? `${SITE_URL}/${src}` : defaultSrc)
+export const getImgUrl = (src, defaultSrc = '/assets/img/course2.jpg') => (src ? `${SITE_URL}/${src}` : defaultSrc)
 
 export const eventBus = {
     on(event, callback) {
@@ -24,8 +24,8 @@ export const eventBus = {
     },
 }
 
-const timeout = () => {
-    return new Promise((res) => setTimeout(() => res(true), 0))
+const timeout = (time) => {
+    return new Promise((res) => setTimeout(() => res(true), time))
 }
 
 export const asyncAction =
@@ -37,26 +37,27 @@ export const asyncAction =
         error = () => {},
         after = () => {},
         getData = () => {},
-        before2 = () => {},
-        success2 = () => {},
-        error2 = () => {},
-        after2 = () => {},
+        beforeTwo = () => {},
+        successTwo = () => {},
+        errorTwo = () => {},
+        afterTwo = () => {},
     } = {}) =>
     async (dispatch) => {
         try {
             before({ dispatch })
-            before2({ dispatch })
-            await timeout()
+            beforeTwo({ dispatch })
+            await timeout(100)
             const response = await request(data)
-            if (response.status === 200) success({ response, data: getData(response), dispatch })
-            if (response.status === 200) success2({ response, data: getData(response), dispatch })
+            const successArgs = { dispatch, response, data: getData(response) }
+            if (response.status === 200) success(successArgs)
+            if (response.status === 200) successTwo(successArgs)
         } catch (e) {
-            console.log(e)
+            console.log(e.response || e.message || 'Unknown error')
             error({ dispatch, error: e.response || e.message || 'Unknown error' })
-            error2({ dispatch, error: e.response || e.message || 'Unknown error' })
+            errorTwo({ dispatch, error: e.response || e.message || 'Unknown error' })
         } finally {
             after({ dispatch })
-            after2({ dispatch })
+            afterTwo({ dispatch })
         }
     }
 
@@ -84,4 +85,36 @@ export const crateHandles = (Service) => {
 
 export const crateActionCreator = (Service) => {
     return Object.getOwnPropertyNames(Service).reduce((prev, val) => ((prev[val] = asyncAction), prev), {})
+}
+
+export const getDate = (date) => {
+    const namesMonth = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Ноября', 'Декабря']
+    const dateObj = new Date(date)
+    const day = dateObj.getUTCDate()
+    const month = dateObj.getUTCMonth() //months from 1-12
+    const year = dateObj.getUTCFullYear()
+    return `${day} ${namesMonth[month]} ${year}`
+}
+
+export const uploadImg = (inputFile, setDataImg) => {
+    const file = inputFile.files[0]
+    if (!file) return
+
+    const size = file.size || 0
+
+    if (size > 5 * 1024 * 1024) {
+        inputFile.current.value = ''
+        alert('*Слишком большой файл')
+
+        return
+    }
+
+    const reader = new FileReader()
+    reader.onload = (e) => setDataImg(e.target.result)
+    reader.readAsDataURL(file)
+}
+
+export const deleteImg = (inputFile, setDataImg) => {
+    inputFile.current.value = ''
+    setDataImg('')
 }

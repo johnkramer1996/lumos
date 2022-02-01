@@ -1,7 +1,6 @@
 export { default as useDispatch } from './useDispatch'
-export { default as useSelector } from './useSelector'
 export { default as useSwiper } from './useSwiper'
 export { default as useNavigate } from './useNavigate'
 export { default as useEvent } from './useEvent'
-export { default as useFetching } from './useFetching'
 export { default as useRequest } from './useRequest'
+export { default as useInput } from './useInput'

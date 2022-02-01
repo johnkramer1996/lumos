@@ -9,7 +9,7 @@ const AddCourseLesson = ({ index, name, onAdd, setName, lessons }) => {
             <div className='create-module__top'>
                 <h3 className='create-module__title display-4'>{name || 'Модуль ' + (index + 1)}</h3>
                 <div className='create-module__num'>
-                    {lessons?.length} {declOfNum(lessons?.length, getDeclOfArray['lesson'])}
+                    {lessons?.length} {declOfNum(lessons?.length, getDeclOfArray['lessons'])}
                 </div>
             </div>
             <div className='create-module__items'>

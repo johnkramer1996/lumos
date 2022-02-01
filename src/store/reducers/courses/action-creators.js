@@ -28,7 +28,7 @@ export const courseHandlers = {
         ...defaultHandlers.addCourse,
         success: ({ dispatch, response, data }) => {
             dispatch(ModalsActionCreators.setIsShow(true))
-            dispatch(ModalsActionCreators.setContent({ title: 'Курс добавлен' }))
+            dispatch(ModalsActionCreators.setContent({ title: 'Основная информация о курсе  - добавлена,', descr: 'теперь заполните Уроки' }))
         },
     },
     putCourse: {
@@ -51,7 +51,7 @@ export const courseHandlers = {
         success: ({ dispatch, response, data }) => {
             console.log(data)
             dispatch(ModalsActionCreators.setIsShow(true))
-            dispatch(ModalsActionCreators.setContent({ title: 'Информация добавлена' }))
+            dispatch(ModalsActionCreators.setContent({ title: 'Информация добавлена', descr: 'Ваш курс отправлен на модерацию.' }))
         },
     },
     // deleteInfo
@@ -66,7 +66,7 @@ export const courseHandlers = {
         ...defaultHandlers.addModulesMass,
         success: ({ dispatch, response, data }) => {
             dispatch(ModalsActionCreators.setIsShow(true))
-            dispatch(ModalsActionCreators.setContent({ title: 'Модули добавлены' }))
+            dispatch(ModalsActionCreators.setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' }))
         },
     },
     // addModule

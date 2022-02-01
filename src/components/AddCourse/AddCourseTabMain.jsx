@@ -1,22 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { Button } from 'components/ui'
-import { getImgUrl } from 'utils'
+import { deleteImg, getImgUrl, uploadImg } from 'utils'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'hooks'
 
-const AddCourseTab1 = React.forwardRef((_, ref) => {
+const AddCourseTab1 = (_, ref) => {
     const { setContent, setIsShow } = useDispatch()
     const course = useSelector(({ courses }) => courses.course)
     const { themes = [], type_study: typeStudy = [], format = [] } = useSelector(({ system }) => system.references)
-    const [name, setName] = useState(course.name || 'Название курса')
-    const [category_id, setCategoryId] = useState(course.category_id || 1)
-    const [type_study, setTypeStudy] = useState(course.type_study || 1)
-    const [format_study, setFormatStudy] = useState(course.format_study || 1)
-    const [sale_subscribe, setSubscribe] = useState(course.sale_subscribe || true)
-    const [width, setWidth] = useState(course.width || 'Длительность')
-    const [dataImg, setDataImg] = useState(getImgUrl(course.image, false) || '')
-    const inputImageRef = useRef()
-    const imgRef = useRef()
+    const [name, setName] = useState('Название курса')
+    const [category_id, setCategoryId] = useState(1)
+    const [type_study, setTypeStudy] = useState(1)
+    const [format_study, setFormatStudy] = useState(1)
+    const [sale_subscribe, setSubscribe] = useState(true)
+    const [width, setWidth] = useState('Длительность')
+    const [dataImg, setDataImg] = useState('')
+    const inputImgRef = useRef()
 
     useEffect(() => {
         course.name && setName(course.name)
@@ -28,52 +27,34 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
         course.image && setDataImg(getImgUrl(course.image, false))
     }, [course])
 
-    ref.current = () => {
-        const body = new FormData()
-        body.append('name', name)
-        body.append('category_id', category_id)
-        body.append('type_study', type_study)
-        body.append('format_study', format_study)
-        body.append('sale_subscribe', '1')
-        body.append('width', width)
-        body.append('image', inputImageRef.current?.files[0])
+    useImperativeHandle(ref, () => ({
+        getData: () => {
+            const body = new FormData()
+            body.append('name', name)
+            body.append('category_id', category_id)
+            body.append('type_study', type_study)
+            body.append('format_study', format_study)
+            body.append('sale_subscribe', '1')
+            body.append('width', width)
+            body.append('image', inputImgRef.current?.files[0])
 
-        const errors = []
-        for (const [key, value] of body.entries()) if (value === '' || value === 'undefined' || value === '0') errors.push(key)
-        const isError = errors.length
-        if (isError) {
-            setIsShow(true)
-            setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
-        }
+            const errors = []
+            for (const [key, value] of body.entries()) if (value === '' || value === 'undefined' || value === '0') errors.push(key)
+            const isError = errors.length
+            if (isError) {
+                setIsShow(true)
+                setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
+            }
 
-        return {
-            isError,
-            body,
-        }
-    }
+            return {
+                isError,
+                body,
+            }
+        },
+    }))
 
-    const uploadImg = (e) => {
-        const file = e.target.files[0]
-        if (!file) return
-
-        const size = file.size || 0
-
-        if (size > 5 * 1024 * 1024) {
-            inputImageRef.current.value = ''
-            alert('*Слишком большой файл')
-
-            return
-        }
-
-        const reader = new FileReader()
-        reader.onload = (e) => setDataImg(e.target.result)
-        reader.readAsDataURL(file)
-    }
-
-    const deleteImg = (e) => {
-        inputImageRef.current.value = ''
-        setDataImg('')
-    }
+    const onChangeInputImg = (e) => uploadImg(e.target, setDataImg)
+    const onDeleteInputImg = (e) => deleteImg(inputImgRef, setDataImg)
 
     return (
         <div className='course-edit__form'>
@@ -147,13 +128,13 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
                     Соотношение сторон: 16:9 (рекомендуемое разрешение: 1280x720) <br /> PNG, JPG до 5 MБ
                 </div>
                 <div className='course-edit__form-upload-wrap'>
-                    <div className='course-edit__form-upload-img'>{dataImg && <img ref={imgRef} src={dataImg} alt='' />}</div>
+                    <div className='course-edit__form-upload-img'>{dataImg && <img src={dataImg} alt='' />}</div>
                     <div className='course-edit__form-upload-buttons'>
-                        <Button className='course-edit__form-upload-btn'>
-                            <input ref={inputImageRef} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={uploadImg} />
+                        <Button className='course-edit__form-upload-btn btn--uploadfile'>
+                            <input ref={inputImgRef} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={onChangeInputImg} />
                             Загрузить {dataImg ? 'новое' : 'изображение'}
                         </Button>
-                        <Button className='course-edit__form-upload-delete' onClick={deleteImg} outline>
+                        <Button className='course-edit__form-upload-delete' onClick={onDeleteInputImg} outline>
                             Удалить
                         </Button>
                     </div>
@@ -161,6 +142,6 @@ const AddCourseTab1 = React.forwardRef((_, ref) => {
             </div>
         </div>
     )
-})
+}
 
-export default AddCourseTab1
+export default forwardRef(AddCourseTab1)

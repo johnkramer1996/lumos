@@ -6,7 +6,6 @@ import { RouteNames } from 'routes'
 const Cabinet = () => {
     const { cabinetId } = useParams()
     const getActiveItem = (cabinetId) => {
-        console.log(cabinetId)
         switch (`${RouteNames.CABINET}/${cabinetId}`) {
             case RouteNames.CABINET_COURSES:
                 return <CabinetCourses />

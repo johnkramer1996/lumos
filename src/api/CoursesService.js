@@ -2,7 +2,7 @@ import axios from './axios'
 import { trainerCoursesLessonsURL, trainerCoursesModulesURL, trainerCoursesURL } from './URLS'
 
 export default class CoursesService {
-    static async fetchCourses({ page = 1, limit = 10 } = {}) {
+    static async fetchCourses({ page = 1, limit = 100 } = {}) {
         return await axios.get(trainerCoursesURL.FETCH_COURSES, {
             params: { page, _limit: limit },
         })

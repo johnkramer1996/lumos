@@ -6,14 +6,16 @@ import { Button } from 'components/ui/'
 import { RouteNames } from 'routes'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'hooks/'
+import { useLocation } from 'react-router-dom'
 
 const Header = () => {
+    const { pathname } = useLocation()
     const { setShowModal } = useDispatch()
     const isAuth = useSelector((state) => state.auth.isAuth)
     const [isNavActive, setIsNavActive] = useState(false)
 
     const onToggleNav = useCallback(() => setIsNavActive((prev) => !prev), [])
-    const onShowModal = useCallback(() => setShowModal(true), [])
+    const onShowModal = useCallback(() => setShowModal(true), [setShowModal])
 
     const itemsNav = useMemo(
         () => [
@@ -26,7 +28,7 @@ const Header = () => {
     )
 
     return (
-        <header className='header header--b0'>
+        <header className={`header${pathname === '/' ? ' header--b0' : ''}`}>
             <div className='container'>
                 <div className='header__inner'>
                     <div className='header__left'>
@@ -36,7 +38,6 @@ const Header = () => {
                     </div>
                     <div className='header__right'>
                         <HeaderSearch isActive={isNavActive} />
-
                         {isAuth ? (
                             <div className='header__authed'>
                                 <HeaderNotification />

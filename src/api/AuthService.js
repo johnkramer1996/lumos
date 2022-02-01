@@ -12,13 +12,6 @@ export default class AuthService {
             headers: { 'Content-Type': 'application/json' },
         })
     }
-    static async auth() {
-        return await axios.get(authURL.AUTHORIZATION, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-    }
     static async checkEmail(body = {}) {
         return await axios.post(authURL.CHECK_EMAIL, JSON.stringify(body), {
             headers: { 'Content-Type': 'application/json' },
@@ -26,6 +19,21 @@ export default class AuthService {
     }
     static async register(body = {}) {
         return await axios.post(authURL.REGISTER, JSON.stringify(body), {
+            headers: { 'Content-Type': 'application/json' },
+        })
+    }
+    static async auth() {
+        return await axios.get(authURL.AUTHORIZATION)
+    }
+    static async settings({ body = {} } = {}) {
+        return await axios.post(authURL.SETTINGS, body, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        })
+    }
+    static async changeEmail(body = {}) {
+        return await axios.post(authURL.CHANE_EMAIL, JSON.stringify(body), {
             headers: { 'Content-Type': 'application/json' },
         })
     }

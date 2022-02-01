@@ -1,59 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { Button } from 'components/ui'
-import { useNavigate } from 'hooks'
-import { CoursesItem3 } from 'components'
-import { declOfNum, getDeclOfArray } from 'utils'
+import React from 'react'
 import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
+import CabinetTitle from './CabinetTitle'
+import { useSelector } from 'react-redux'
+import CabinetNav from './CabinetNav'
 
-const CabinetTrainer = ({ items = [], isLoading, total }) => {
-    const { toCabinetCoursesAdd } = useNavigate()
-    const [typeShow, setTypeShow] = useState('col')
-
-    const changeTypeShow = (type) => setTypeShow(type)
+const CabinetTrainer = ({ isLoading }) => {
+    const { data: courses = [] } = useSelector(({ courses }) => courses.courses)
+    const typeShow = useSelector(({ settings }) => settings.typeShow)
 
     return (
         <div className='lkt-courses'>
-            <div className='cabinet-page__top'>
-                <h1 className='lkt-courses__title display-3'>Мои курсы</h1>
-                <Button className='lkt-courses__add' onClick={toCabinetCoursesAdd} outline>
-                    <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                        <path d='M8.02858 2.66675V13.3334' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                        <path d='M13.3347 8.02548H2.66797' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                    </svg>
-                    <span>Добавить</span>
-                </Button>
-            </div>
-            <div className='cabinet-page__nav lkt-courses__nav'>
-                <div className='cabinet-page__nav-title'>
-                    {total} {declOfNum(total, getDeclOfArray['course'])}
-                </div>
-                <div className='cabinet-page__nav-wrap'>
-                    <button className={`cabinet-page__nav-item cabinet-page__nav-item--col${typeShow === 'col' ? ` cabinet-page__nav-item--active` : ''}`} onClick={() => changeTypeShow('col')}>
-                        <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                            <rect x='1' y='5' width='6' height='6' rx='2' fill='#C6D0DD' />
-                            <rect x='9' y='5' width='6' height='6' rx='2' fill='#C6D0DD' />
-                            <rect x='17' y='5' width='6' height='6' rx='2' fill='#C6D0DD' />
-                            <rect x='1' y='13' width='6' height='6' rx='2' fill='#C6D0DD' />
-                            <rect x='9' y='13' width='6' height='6' rx='2' fill='#C6D0DD' />
-                            <rect x='17' y='13' width='6' height='6' rx='2' fill='#C6D0DD' />
-                        </svg>
-                    </button>
-                    <button className={`cabinet-page__nav-item cabinet-page__nav-item--row${typeShow === 'row' ? ` cabinet-page__nav-item--active` : ''}`} onClick={() => changeTypeShow('row')}>
-                        <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                            <rect x='1' y='5' width='6' height='6' rx='2' fill='#C6D0DD' />
-                            <rect x='9' y='5' width='14' height='6' rx='2' fill='#C6D0DD' />
-                            <rect x='1' y='13' width='6' height='6' rx='2' fill='#C6D0DD' />
-                            <rect x='9' y='13' width='14' height='6' rx='2' fill='#C6D0DD' />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            <div className={`cabinet-page__items cabinet-page__items--${typeShow}`}>
-                {items.map(({ ...props }) => (
-                    <CoursesItem3 key={props.id} {...props} />
-                ))}
-            </div>
-            <CoursesItemWrapper items={items} isLoading={isLoading} />
+            <CabinetTitle title={'Мои курсы'} />
+            <CabinetNav />
+            <CoursesItemWrapper items={courses} isLoading={isLoading} className={`cabinet-page__items--${typeShow}`} />
         </div>
     )
 }

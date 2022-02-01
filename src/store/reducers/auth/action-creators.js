@@ -88,4 +88,24 @@ export const authHandlers = {
             dispatch(AuthActionCreators.setIsLoading(false))
         },
     },
+    settings: {
+        ...defaultHandlers.settings,
+        success: ({ dispatch, response, data }) => {
+            console.log(data)
+        },
+        error: ({ dispatch, error }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Произошла ошибка при сохранение данных' }))
+        },
+    },
+    changeEmail: {
+        ...defaultHandlers.changeEmail,
+        success: ({ dispatch, response, data }) => {
+            console.log(data)
+        },
+        error: ({ dispatch, error }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Произошла ошибка при сохранение данных' }))
+        },
+    },
 }

@@ -83,7 +83,7 @@ const CoursesItem = () => {
                                     <span>Статистика</span>
                                     <i></i>
                                 </div>
-                                <div class='lkt-course__tab lkt-course__tab--notification'>
+                                <div className='lkt-course__tab lkt-course__tab--notification'>
                                     <span>Уведомления</span>
                                     <i>1</i>
                                 </div>
@@ -91,17 +91,17 @@ const CoursesItem = () => {
                             <div data-tab-path='1' className='lkt-course__content lkt-course__content--active'>
                                 <div className='lessons-tab'>
                                     <div className='lessons-tab__left'>
-                                        {modules.data?.reverse().map(({ name, lessonsshort }, index) => (
+                                        {modules.data?.map(({ name, lessonsshort }, index) => (
                                             <div key={index} className='lessons-tab__module'>
                                                 <div className='lessons-tab__module-top'>
                                                     <div className='lessons-tab__module-title'>{name}</div>
                                                     <div className='lessons-tab__module-num'>
                                                         {' '}
-                                                        {lessonsshort?.length} {declOfNum(lessonsshort?.length, getDeclOfArray['lesson'])}
+                                                        {lessonsshort?.length} {declOfNum(lessonsshort?.length, getDeclOfArray['lessons'])}
                                                     </div>
                                                 </div>
                                                 <div className='lessons-tab__module-items'>
-                                                    {lessonsshort?.map(({ id, name }, index) => (
+                                                    {lessonsshort?.map(({ id, name }) => (
                                                         <div key={id} className='lessons-tab__module-item'>
                                                             <span className='lessons-tab__module-item-num'>01</span>
                                                             <span className='lessons-tab__module-item-title'>{name}</span>
@@ -644,111 +644,111 @@ const CoursesItem = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div data-tab-path='4' class='lkt-course__content'>
-                                <div class='notification-tab'>
-                                    <div class='notification-tab__top'>
-                                        <div class='notification-tab__title'>1 непрочитенное уведомление</div>
+                            <div data-tab-path='4' className='lkt-course__content'>
+                                <div className='notification-tab'>
+                                    <div className='notification-tab__top'>
+                                        <div className='notification-tab__title'>1 непрочитенное уведомление</div>
                                     </div>
-                                    <div class='notification-tab__items'>
-                                        <div class='notification-tab__item notification-tab__item--new'>
-                                            <div class='notification-tab__item-top'>
-                                                <div class='notification-tab__item-title'>
+                                    <div className='notification-tab__items'>
+                                        <div className='notification-tab__item notification-tab__item--new'>
+                                            <div className='notification-tab__item-top'>
+                                                <div className='notification-tab__item-title'>
                                                     <i></i>
                                                     <span>Заголовок уведомления</span>
                                                 </div>
-                                                <div class='notification-tab__item-date'>12 сен в 12:40</div>
+                                                <div className='notification-tab__item-date'>12 сен в 12:40</div>
                                             </div>
-                                            <div class='notification-tab__item-text'>
+                                            <div className='notification-tab__item-text'>
                                                 Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat
                                                 etiam lorem turpis?
                                             </div>
                                         </div>
-                                        <div class='notification-tab__item'>
-                                            <div class='notification-tab__item-top'>
-                                                <div class='notification-tab__item-title'>
+                                        <div className='notification-tab__item'>
+                                            <div className='notification-tab__item-top'>
+                                                <div className='notification-tab__item-title'>
                                                     <i></i>
                                                     <span>Заголовок уведомления</span>
                                                 </div>
-                                                <div class='notification-tab__item-date'>12 сен в 12:40</div>
+                                                <div className='notification-tab__item-date'>12 сен в 12:40</div>
                                             </div>
-                                            <div class='notification-tab__item-text'>
+                                            <div className='notification-tab__item-text'>
                                                 Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat
                                                 etiam lorem turpis?
                                             </div>
                                         </div>
-                                        <div class='notification-tab__item'>
-                                            <div class='notification-tab__item-top'>
-                                                <div class='notification-tab__item-title'>
+                                        <div className='notification-tab__item'>
+                                            <div className='notification-tab__item-top'>
+                                                <div className='notification-tab__item-title'>
                                                     <i></i>
                                                     <span>Заголовок уведомления</span>
                                                 </div>
-                                                <div class='notification-tab__item-date'>12 сен в 12:40</div>
+                                                <div className='notification-tab__item-date'>12 сен в 12:40</div>
                                             </div>
-                                            <div class='notification-tab__item-text'>
+                                            <div className='notification-tab__item-text'>
                                                 Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat
                                                 etiam lorem turpis?
                                             </div>
                                         </div>
-                                        <div class='notification-tab__item'>
-                                            <div class='notification-tab__item-top'>
-                                                <div class='notification-tab__item-title'>
+                                        <div className='notification-tab__item'>
+                                            <div className='notification-tab__item-top'>
+                                                <div className='notification-tab__item-title'>
                                                     <i></i>
                                                     <span>Заголовок уведомления</span>
                                                 </div>
-                                                <div class='notification-tab__item-date'>12 сен в 12:40</div>
+                                                <div className='notification-tab__item-date'>12 сен в 12:40</div>
                                             </div>
-                                            <div class='notification-tab__item-text'>
+                                            <div className='notification-tab__item-text'>
                                                 Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat
                                                 etiam lorem turpis?
                                             </div>
                                         </div>
-                                        <div class='notification-tab__item'>
-                                            <div class='notification-tab__item-top'>
-                                                <div class='notification-tab__item-title'>
+                                        <div className='notification-tab__item'>
+                                            <div className='notification-tab__item-top'>
+                                                <div className='notification-tab__item-title'>
                                                     <i></i>
                                                     <span>Заголовок уведомления</span>
                                                 </div>
-                                                <div class='notification-tab__item-date'>12 сен в 12:40</div>
+                                                <div className='notification-tab__item-date'>12 сен в 12:40</div>
                                             </div>
-                                            <div class='notification-tab__item-text'>
+                                            <div className='notification-tab__item-text'>
                                                 Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat
                                                 etiam lorem turpis?
                                             </div>
                                         </div>
-                                        <div class='notification-tab__item'>
-                                            <div class='notification-tab__item-top'>
-                                                <div class='notification-tab__item-title'>
+                                        <div className='notification-tab__item'>
+                                            <div className='notification-tab__item-top'>
+                                                <div className='notification-tab__item-title'>
                                                     <i></i>
                                                     <span>Заголовок уведомления</span>
                                                 </div>
-                                                <div class='notification-tab__item-date'>12 сен в 12:40</div>
+                                                <div className='notification-tab__item-date'>12 сен в 12:40</div>
                                             </div>
-                                            <div class='notification-tab__item-text'>
+                                            <div className='notification-tab__item-text'>
                                                 Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat
                                                 etiam lorem turpis?
                                             </div>
                                         </div>
-                                        <div class='notification-tab__item'>
-                                            <div class='notification-tab__item-top'>
-                                                <div class='notification-tab__item-title'>
+                                        <div className='notification-tab__item'>
+                                            <div className='notification-tab__item-top'>
+                                                <div className='notification-tab__item-title'>
                                                     <i></i>
                                                     <span>Заголовок уведомления</span>
                                                 </div>
-                                                <div class='notification-tab__item-date'>12 сен в 12:40</div>
+                                                <div className='notification-tab__item-date'>12 сен в 12:40</div>
                                             </div>
-                                            <div class='notification-tab__item-text'>
+                                            <div className='notification-tab__item-text'>
                                                 Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat
                                                 etiam lorem turpis?
                                             </div>
                                         </div>
                                     </div>
-                                    <div class='notification-tab__bottom'>
-                                        <button class='notification-tab__more btn'>
+                                    <div className='notification-tab__bottom'>
+                                        <Button className='notification-tab__more'>
                                             <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                                                <path d='M12.6673 5.66675L8.00065 10.3334L3.33398 5.66675' stroke='#7481E0' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' />
+                                                <path d='M12.6673 5.66675L8.00065 10.3334L3.33398 5.66675' stroke='#7481E0' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
                                             </svg>
                                             <span>Показать больше</span>
-                                        </button>
+                                        </Button>
                                     </div>
                                 </div>
                             </div>
