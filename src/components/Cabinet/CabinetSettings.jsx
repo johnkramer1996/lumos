@@ -38,7 +38,13 @@ const CabinetSettings = () => {
         body.append('avatar', inputImageRef.current?.files[0])
         settingsRequest.call({ body })
     }
-    const onDeleteInputImg = (e) => deleteImg(inputImageRef, setAvatarImg)
+    const onDeleteInputImg = (e) => {
+        deleteImg(inputImageRef, setAvatarImg)
+
+        const body = new FormData()
+        body.append('delete_avatar', '1')
+        settingsRequest.call({ body })
+    }
 
     const onChange = (input) => {
         if (input.oldValue === input.value) return
