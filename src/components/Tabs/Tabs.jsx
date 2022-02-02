@@ -14,7 +14,7 @@ const Tabs = ({ items, isLoading = false, classPrefix = 'course-report' }, ref) 
             changeTab: (index) => events.isAvaibleIndex(index) && events.setItemsByIndex(index),
             getItems: () => itemsState,
         }),
-        [],
+        [itemsState],
     )
 
     useImperativeHandle(ref, () => events)

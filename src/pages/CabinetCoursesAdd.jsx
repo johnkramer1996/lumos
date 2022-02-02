@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Button, Loader } from 'components/ui'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { Button } from 'components/ui'
 import { useDispatch, useNavigate, useRequest } from 'hooks/'
 import { AddCourseTabMain, AddCourseTabLesson, AddCourseTabDescription, Tabs } from 'components'
 import { useParams } from 'react-router-dom'
@@ -16,7 +16,7 @@ const CabinetAddCourse = () => {
     })
     const addCourseRequest = useRequest({
         request: addCourse,
-        success: ({ dispatch, response, data }) => (refTabs.current.nextTabItems(), toCabinetItemsEdit({ courseId: data.course.id })),
+        success: ({ dispatch, response, data }) => (refTabs.current.nextItems(), toCabinetItemsEdit({ courseId: data.course.id })),
     })
     const putCourseRequest = useRequest({
         request: putCourse,
@@ -36,7 +36,7 @@ const CabinetAddCourse = () => {
         request: addModulesMass,
         success: ({ dispatch, response, data }) => {
             fetchModulesRequest.call({ courseId })
-            refTabs.current.nextTabItems()
+            refTabs.current.nextItems()
         },
     })
     useEffect(() => {
@@ -68,7 +68,6 @@ const CabinetAddCourse = () => {
         }),
         [],
     )
-
     const onSave = useCallback(
         (e) => {
             e.preventDefault()

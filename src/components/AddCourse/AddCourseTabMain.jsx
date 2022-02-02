@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } f
 import { Button } from 'components/ui'
 import { deleteImg, getImgUrl, uploadImg } from 'utils'
 import { useSelector } from 'react-redux'
-import { useDispatch } from 'hooks'
+import { useDispatch, useInputFile } from 'hooks'
 
 const AddCourseTab1 = (_, ref) => {
     const { setContent, setIsShow } = useDispatch()
@@ -14,8 +14,10 @@ const AddCourseTab1 = (_, ref) => {
     const [format_study, setFormatStudy] = useState(1)
     const [sale_subscribe, setSubscribe] = useState(true)
     const [width, setWidth] = useState('Длительность')
-    const [dataImg, setDataImg] = useState('')
-    const inputImgRef = useRef()
+    // const [img, setImg] = useState('')
+    // const inputImgRef = useRef()
+
+    const img = useInputFile()
 
     useEffect(() => {
         course.name && setName(course.name)
@@ -24,7 +26,7 @@ const AddCourseTab1 = (_, ref) => {
         course.course && setFormatStudy(course.course)
         course.sale_subscribe && setSubscribe(course.sale_subscribe)
         course.width && setWidth(course.width)
-        course.image && setDataImg(getImgUrl(course.image, false))
+        course.image && img.setImg(getImgUrl(course.image, false))
     }, [course])
 
     useImperativeHandle(ref, () => ({
@@ -36,7 +38,7 @@ const AddCourseTab1 = (_, ref) => {
             body.append('format_study', format_study)
             body.append('sale_subscribe', '1')
             body.append('width', width)
-            body.append('image', inputImgRef.current?.files[0])
+            body.append('image', img.ref.current?.files[0])
 
             const errors = []
             for (const [key, value] of body.entries()) if (value === '' || value === 'undefined' || value === '0') errors.push(key)
@@ -52,9 +54,6 @@ const AddCourseTab1 = (_, ref) => {
             }
         },
     }))
-
-    const onChangeInputImg = (e) => uploadImg(e.target, setDataImg)
-    const onDeleteInputImg = (e) => deleteImg(inputImgRef, setDataImg)
 
     return (
         <div className='course-edit__form'>
@@ -128,13 +127,13 @@ const AddCourseTab1 = (_, ref) => {
                     Соотношение сторон: 16:9 (рекомендуемое разрешение: 1280x720) <br /> PNG, JPG до 5 MБ
                 </div>
                 <div className='course-edit__form-upload-wrap'>
-                    <div className='course-edit__form-upload-img'>{dataImg && <img src={dataImg} alt='' />}</div>
+                    <div className='course-edit__form-upload-img'>{img.img && <img src={img.img} alt='' />}</div>
                     <div className='course-edit__form-upload-buttons'>
                         <Button className='course-edit__form-upload-btn btn--uploadfile'>
-                            <input ref={inputImgRef} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={onChangeInputImg} />
-                            Загрузить {dataImg ? 'новое' : 'изображение'}
+                            <input ref={img.ref} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={img.onChange} />
+                            Загрузить {img ? 'новое' : 'изображение'}
                         </Button>
-                        <Button className='course-edit__form-upload-delete' onClick={onDeleteInputImg} outline>
+                        <Button className='course-edit__form-upload-delete' onClick={img.onDelete} outline>
                             Удалить
                         </Button>
                     </div>

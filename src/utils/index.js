@@ -10,7 +10,9 @@ export const getDeclOfArray = {
     lessons: ['урок', 'урока', 'уроков'],
 }
 
-export const getImgUrl = (src, defaultSrc = '/assets/img/course2.jpg') => (src ? `${SITE_URL}/${src}` : defaultSrc)
+export const getImgUrl = (src, isDefault = false, defaultSrc = '/assets/img/course2.jpg') => {
+    return src ? `${SITE_URL}/${src}` : isDefault ? defaultSrc : ''
+}
 
 export const eventBus = {
     on(event, callback) {
@@ -96,25 +98,20 @@ export const getDate = (date) => {
     return `${day} ${namesMonth[month]} ${year}`
 }
 
-export const uploadImg = (inputFile, setDataImg) => {
-    const file = inputFile.files[0]
+export const uploadImg = (inputRef, setImg) => {
+    const file = inputRef.current.files[0]
     if (!file) return
-
     const size = file.size || 0
-
     if (size > 5 * 1024 * 1024) {
-        inputFile.current.value = ''
-        alert('*Слишком большой файл')
-
-        return
+        inputRef.current.value = ''
+        return alert('*Слишком большой файл')
     }
-
     const reader = new FileReader()
-    reader.onload = (e) => setDataImg(e.target.result)
+    reader.onload = (e) => setImg(e.target.result)
     reader.readAsDataURL(file)
 }
 
-export const deleteImg = (inputFile, setDataImg) => {
-    inputFile.current.value = ''
-    setDataImg('')
+export const deleteImg = (inputFileRef, setImg) => {
+    inputFileRef.current.value = ''
+    setImg('')
 }
