@@ -2,15 +2,15 @@ import { useMemo, useRef, useState } from 'react'
 import { deleteImg, uploadImg } from 'utils'
 
 const useInputFile = (initialValue = '') => {
-    const [img, setImg] = useState(initialValue)
+    const [value, setValue] = useState(initialValue)
     const ref = useRef()
 
-    const onChange = useMemo(() => uploadImg.bind(null, ref, setImg), [])
-    const onDelete = useMemo(() => deleteImg.bind(null, ref, setImg), [])
+    const onChange = useMemo(() => uploadImg.bind(null, ref, setValue), [])
+    const onDelete = useMemo(() => deleteImg.bind(null, ref, setValue), [])
 
     return {
-        img,
-        setImg,
+        value,
+        setValue,
         ref,
         onChange,
         onDelete,

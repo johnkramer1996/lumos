@@ -20,8 +20,12 @@ const AddCourseTabLesson = (_, ref) => {
                 isError: false,
                 body: {
                     short_desc: shortDescr,
-                    moduls: modulesState.map((mod) => ({ ...mod, name: mod.name || 'Название модуля', lessons: mod.lessonsshort?.map((l) => ({ ...l, name: l.name || 'Название урока' })) })),
-                    // test_lesson_id: +hidden_id || 0,
+                    moduls: modulesState.map((mod) => ({
+                        ...mod,
+                        name: mod.name || 'Название модуля',
+                        lessons: mod.lessonsshort?.map((l, index) => ({ ...l, name: l.name || 'Название урока', number: index })),
+                    })),
+                    // test_lesson_id: hidden_id || '0',
                 },
             }
         },
@@ -44,8 +48,8 @@ const AddCourseTabLesson = (_, ref) => {
     const setLessonName = (index, indexLesson, value) => {
         const newModules = [...modulesState]
         newModules[index].lessonsshort[indexLesson].name = value
-        newModules[index].lessonsshort[indexLesson].number = index
-        newModules[index].lessonsshort[indexLesson].hidden_id = new Date().getTime()
+        newModules[index].lessonsshort[indexLesson].hidden_id = +new Date().getTime()
+        console.log(newModules)
         setModules([...newModules])
     }
 

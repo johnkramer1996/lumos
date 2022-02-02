@@ -89,13 +89,13 @@ export const crateActionCreator = (Service) => {
     return Object.getOwnPropertyNames(Service).reduce((prev, val) => ((prev[val] = asyncAction), prev), {})
 }
 
-export const getDate = (date) => {
+export const getDate = (date, monthNames = false) => {
+    date = new Date(date)
     const namesMonth = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Ноября', 'Декабря']
-    const dateObj = new Date(date)
-    const day = dateObj.getUTCDate()
-    const month = dateObj.getUTCMonth() //months from 1-12
-    const year = dateObj.getUTCFullYear()
-    return `${day} ${namesMonth[month]} ${year}`
+    const year = date.getFullYear()
+    const month = monthNames ? namesMonth[date.getMonth()] : addZerro(date.getMonth() + 1)
+    const day = addZerro(date.getDate())
+    return `${year}-${month}-${day}`
 }
 
 export const uploadImg = (inputRef, setImg) => {
@@ -115,3 +115,5 @@ export const deleteImg = (inputFileRef, setImg) => {
     inputFileRef.current.value = ''
     setImg('')
 }
+
+export const addZerro = (number) => (number <= 9 ? '0' : '') + number

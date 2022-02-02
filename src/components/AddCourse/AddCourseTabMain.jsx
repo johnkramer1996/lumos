@@ -1,8 +1,8 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { Button } from 'components/ui'
-import { deleteImg, getImgUrl, uploadImg } from 'utils'
+import { deleteImg, getDate, getImgUrl, uploadImg } from 'utils'
 import { useSelector } from 'react-redux'
-import { useDispatch, useInputFile } from 'hooks'
+import { useDispatch, useInput, useInputFile } from 'hooks'
 
 const AddCourseTab1 = (_, ref) => {
     const { setContent, setIsShow } = useDispatch()
@@ -13,8 +13,8 @@ const AddCourseTab1 = (_, ref) => {
     const [type_study, setTypeStudy] = useState(1)
     const [format_study, setFormatStudy] = useState(1)
     const [sale_subscribe, setSubscribe] = useState(true)
-    const [timing, setTiming] = useState()
-    const [anytime, setAnytime] = useState(true)
+    const timing = useInput({ initialValue: getDate(new Date()) })
+    const [anytime, setAnytime] = useState(false)
     const [width, setWidth] = useState('Длительность')
     const img = useInputFile()
 
@@ -25,7 +25,7 @@ const AddCourseTab1 = (_, ref) => {
         course.course && setFormatStudy(course.course)
         course.sale_subscribe && setSubscribe(course.sale_subscribe)
         course.width && setWidth(course.width)
-        course.image && img.setImg(getImgUrl(course.image, false))
+        course.image && img.setValue(getImgUrl(course.image, false))
     }, [course])
 
     useImperativeHandle(ref, () => ({
@@ -36,8 +36,8 @@ const AddCourseTab1 = (_, ref) => {
             body.append('type_study', type_study)
             body.append('format_study', format_study)
             body.append('sale_subscribe', +sale_subscribe)
-            // body.append('timing', timing)
-            // body.append('anytime', anytime)
+            body.append('timing', timing.value)
+            body.append('anytime', +anytime)
             body.append('width', width)
             body.append('image', img.ref.current?.files[0])
 
@@ -105,7 +105,7 @@ const AddCourseTab1 = (_, ref) => {
                 </div>
                 <div className='course-edit__form-group form-group'>
                     <label>Старт курса</label>
-                    <input type='text' placeholder='Дата' value={timing} onChange={(e) => setTiming(e.target.value)} />
+                    <input type='text' placeholder='Дата' {...timing.bind} />
                     <div className='course-edit__form-checkbox checkbox'>
                         <input type='checkbox' className='checkbox' id='anytime' checked={anytime} onChange={(e) => setAnytime(e.target.checked)} />
                         <label htmlFor='anytime'>В любое время</label>
@@ -126,7 +126,7 @@ const AddCourseTab1 = (_, ref) => {
                     Соотношение сторон: 16:9 (рекомендуемое разрешение: 1280x720) <br /> PNG, JPG до 5 MБ
                 </div>
                 <div className='course-edit__form-upload-wrap'>
-                    <div className='course-edit__form-upload-img'>{img.img && <img src={img.img} alt='' />}</div>
+                    <div className='course-edit__form-upload-img'>{img.value && <img src={img.value} alt='' />}</div>
                     <div className='course-edit__form-upload-buttons'>
                         <Button className='course-edit__form-upload-btn btn--uploadfile'>
                             <input ref={img.ref} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={img.onChange} />

@@ -4,9 +4,10 @@ import { IMG_URL } from 'api/URLS'
 import { RouteNames } from 'routes'
 import { getImgUrl } from 'utils'
 
-const CoursesItem3 = ({ id = 1, image, name, user = {}, status, students }) => {
+const CoursesItem3 = ({ id = 1, image, name, user = {}, status, students, ...rest }) => {
     return (
         <Link to={`${RouteNames.CABINET_COURSES}/${id}`} className='course-card3'>
+            {console.log(rest)}
             <div className='course-card3__img'>
                 <img src={getImgUrl(image)} alt='' />
             </div>

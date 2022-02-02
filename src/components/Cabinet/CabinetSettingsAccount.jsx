@@ -12,34 +12,16 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
     const email = useInput({ isDisabled: true })
     const createdAt = useInput()
     const password = useInput({ initialValue: 'password', isDisabled: true })
-    const vacationStart = useInput()
-    const vacationEnd = useInput()
+    const vacationStart = useInput({ isDate: true })
+    const vacationEnd = useInput({ isDate: true })
 
     useEffect(() => {
-        user.avatar && avatar.setImg(getImgUrl(user.avatar))
+        user.avatar && avatar.setValue(getImgUrl(user.avatar))
         user.email && email.setValue(user.email)
         user.created_at && createdAt.setValue(getDate(user.created_at))
         user.vacation[0] && vacationStart.setValue(user.vacation[0])
         user.vacation[1] && vacationEnd.setValue(user.vacation[1])
     }, [user])
-
-    useEffect(() => {
-        const maskDate = (e) => {
-            if (e.keyCode < 47 || e.keyCode > 57) e.preventDefault()
-            const len = e.target.value.length
-            if (len !== 1 || len !== 3) if (e.keyCode === 47) e.preventDefault()
-            if (len === 4) e.target.value += '-'
-            if (len === 7) e.target.value += '-'
-        }
-
-        vacationStart.ref.current?.addEventListener('keypress', maskDate)
-        vacationEnd.ref.current?.addEventListener('keypress', maskDate)
-
-        return () => {
-            vacationStart.ref.current?.removeEventListener('keypress', maskDate)
-            vacationEnd.ref.current?.removeEventListener('keypress', maskDate)
-        }
-    }, [])
 
     return (
         <div className='account-settings__group card-bg'>
@@ -48,12 +30,12 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
                 <div className='account-settings__photo-title'>Фото</div>
                 <div className='account-settings__photo-wrap'>
                     <div className='account-settings__photo-img'>
-                        <img src={avatar.img} alt='' />
+                        <img src={avatar.value} alt='' />
                     </div>
                     <div className='account-settings__photo-buttons'>
                         <Button className='account-settings__photo-save btn--uploadfile'>
                             <input ref={avatar.ref} type='file' accept='image/png, image/gif, image/jpeg' onChange={onChange.bind(null, avatar)} name='avatar' />
-                            Загрузить {avatar.img ? 'новое' : 'изображение'}
+                            Загрузить {avatar.value ? 'новое' : 'изображение'}
                         </Button>
                         <Button className='account-settings__photo-delete' onClick={onDelete.bind(null, avatar)} outline>
                             Удалить

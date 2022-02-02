@@ -94,6 +94,9 @@ const CabinetAddCourse = () => {
             ]
 
             const { body = {}, isError } = tabHandlers[tabItems.indexActive]?.ref?.current.getData() || {}
+            console.log(body)
+            // for (const item of body.entries()) console.log(item)
+            // return
             if (isError) return
             tabHandlers[tabItems.indexActive]?.call(body)
         },

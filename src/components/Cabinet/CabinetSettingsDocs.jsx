@@ -12,10 +12,10 @@ const CabinetSettingsDocs = ({ onChange, onDelete }) => {
     const treaty = useInputFile()
 
     useEffect(() => {
-        user.docs.file_passport_1 && passportFirst.setImg(getImgUrl(user.docs.file_passport_1))
-        user.docs.file_passport_2 && passportSecond.setImg(getImgUrl(user.docs.file_passport_2))
-        user.docs.file_diplom && diplom.setImg(getImgUrl(user.docs.file_diplom))
-        user.docs.file_treaty && treaty.setImg(getImgUrl(user.docs.file_treaty))
+        user.docs.file_passport_1 && passportFirst.setValue(getImgUrl(user.docs.file_passport_1))
+        user.docs.file_passport_2 && passportSecond.setValue(getImgUrl(user.docs.file_passport_2))
+        user.docs.file_diplom && diplom.setValue(getImgUrl(user.docs.file_diplom))
+        user.docs.file_treaty && treaty.setValue(getImgUrl(user.docs.file_treaty))
     }, [user])
 
     return (
@@ -23,16 +23,16 @@ const CabinetSettingsDocs = ({ onChange, onDelete }) => {
             <h3 className='account-settings__subtitle display-4'>Документы</h3>
             <div className='account-settings__desc'>Фото должны быть четкими, а текст на документах хорошо считываться</div>
 
-            <div className={`account-settings__item ${passportFirst.img ? 'account-settings__item--active' : ''}`}>
+            <div className={`account-settings__item ${passportFirst.value ? 'account-settings__item--active' : ''}`}>
                 <div className='account-settings__item-top'>
                     <span className='account-settings__item-title'>Файл паспорта 1</span>
-                    {passportFirst.img && (
+                    {passportFirst.value && (
                         <button className='account-settings__item-btn' onClick={onDelete.bind(null, passportFirst)}>
                             Изменить
                         </button>
                     )}
                 </div>
-                <div className='account-settings__item-doc'>{passportFirst.img && <img src={passportFirst.img} alt='' />}</div>
+                <div className='account-settings__item-doc'>{passportFirst.value && <img src={passportFirst.value} alt='' />}</div>
                 <div className='account-settings__upload'>
                     <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
@@ -59,16 +59,16 @@ const CabinetSettingsDocs = ({ onChange, onDelete }) => {
                 </div>
             </div>
 
-            <div className={`account-settings__item ${passportSecond.img ? 'account-settings__item--active' : ''}`}>
+            <div className={`account-settings__item ${passportSecond.value ? 'account-settings__item--active' : ''}`}>
                 <div className='account-settings__item-top'>
                     <span className='account-settings__item-title'>Файл паспорта 2</span>
-                    {passportFirst.img && (
+                    {passportFirst.value && (
                         <button className='account-settings__item-btn' onClick={onDelete.bind(null, passportSecond)}>
                             Изменить
                         </button>
                     )}
                 </div>
-                <div className='account-settings__item-doc'>{passportSecond.img && <img src={passportSecond.img} alt='' />}</div>
+                <div className='account-settings__item-doc'>{passportSecond.value && <img src={passportSecond.value} alt='' />}</div>
                 <div className='account-settings__upload'>
                     <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
@@ -95,16 +95,16 @@ const CabinetSettingsDocs = ({ onChange, onDelete }) => {
                 </div>
             </div>
 
-            <div className={`account-settings__item ${diplom.img ? 'account-settings__item--active' : ''}`}>
+            <div className={`account-settings__item ${diplom.value ? 'account-settings__item--active' : ''}`}>
                 <div className='account-settings__item-top'>
                     <span className='account-settings__item-title'>Файл диплома</span>
-                    {passportFirst.img && (
+                    {passportFirst.value && (
                         <button className='account-settings__item-btn' onClick={onDelete.bind(null, diplom)}>
                             Изменить
                         </button>
                     )}
                 </div>
-                <div className='account-settings__item-doc'>{diplom.img && <img src={diplom.img} alt='' />}</div>
+                <div className='account-settings__item-doc'>{diplom.value && <img src={diplom.value} alt='' />}</div>
                 <div className='account-settings__upload'>
                     <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
@@ -131,16 +131,16 @@ const CabinetSettingsDocs = ({ onChange, onDelete }) => {
                 </div>
             </div>
 
-            <div className={`account-settings__item ${treaty.img ? 'account-settings__item--active' : ''}`}>
+            <div className={`account-settings__item ${treaty.value ? 'account-settings__item--active' : ''}`}>
                 <div className='account-settings__item-top'>
                     <span className='account-settings__item-title'>Файл договора</span>
-                    {passportFirst.img && (
+                    {passportFirst.value && (
                         <button className='account-settings__item-btn' onClick={onDelete.bind(null, treaty)}>
                             Изменить
                         </button>
                     )}
                 </div>
-                <div className='account-settings__item-doc'>{treaty.img && <img src={treaty.img} alt='' />}</div>
+                <div className='account-settings__item-doc'>{treaty.value && <img src={treaty.value} alt='' />}</div>
                 <div className='account-settings__upload'>
                     <svg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
