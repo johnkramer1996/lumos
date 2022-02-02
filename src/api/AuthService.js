@@ -33,7 +33,7 @@ export default class AuthService {
         })
     }
     static async changeEmail(body = {}) {
-        return await axios.post(authURL.CHANE_EMAIL, JSON.stringify(body), {
+        return await axios.post(authURL.CHANGE_EMAIL, JSON.stringify(body), {
             headers: { 'Content-Type': 'application/json' },
         })
     }

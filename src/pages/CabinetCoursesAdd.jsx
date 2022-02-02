@@ -16,7 +16,10 @@ const CabinetAddCourse = () => {
     })
     const addCourseRequest = useRequest({
         request: addCourse,
-        success: ({ dispatch, response, data }) => (refTabs.current.nextItems(), toCabinetItemsEdit({ courseId: data.course.id })),
+        success: ({ dispatch, response, data }) => {
+            refTabs.current.nextItems()
+            toCabinetItemsEdit({ courseId: data.course.id })
+        },
     })
     const putCourseRequest = useRequest({
         request: putCourse,
@@ -35,8 +38,8 @@ const CabinetAddCourse = () => {
     const addModulesMassRequest = useRequest({
         request: addModulesMass,
         success: ({ dispatch, response, data }) => {
-            fetchModulesRequest.call({ courseId })
             refTabs.current.nextItems()
+            fetchModulesRequest.call({ courseId })
         },
     })
     useEffect(() => {

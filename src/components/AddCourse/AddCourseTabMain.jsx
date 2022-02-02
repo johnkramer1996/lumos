@@ -13,10 +13,9 @@ const AddCourseTab1 = (_, ref) => {
     const [type_study, setTypeStudy] = useState(1)
     const [format_study, setFormatStudy] = useState(1)
     const [sale_subscribe, setSubscribe] = useState(true)
+    const [timing, setTiming] = useState()
+    const [anytime, setAnytime] = useState(true)
     const [width, setWidth] = useState('Длительность')
-    // const [img, setImg] = useState('')
-    // const inputImgRef = useRef()
-
     const img = useInputFile()
 
     useEffect(() => {
@@ -36,12 +35,14 @@ const AddCourseTab1 = (_, ref) => {
             body.append('category_id', category_id)
             body.append('type_study', type_study)
             body.append('format_study', format_study)
-            body.append('sale_subscribe', '1')
+            body.append('sale_subscribe', +sale_subscribe)
+            // body.append('timing', timing)
+            // body.append('anytime', anytime)
             body.append('width', width)
             body.append('image', img.ref.current?.files[0])
 
             const errors = []
-            for (const [key, value] of body.entries()) if (value === '' || value === 'undefined' || value === '0') errors.push(key)
+            for (const [key, value] of body.entries()) if (value === '' || value === 'undefined') errors.push(key)
             const isError = errors.length
             if (isError) {
                 setIsShow(true)
@@ -104,13 +105,11 @@ const AddCourseTab1 = (_, ref) => {
                 </div>
                 <div className='course-edit__form-group form-group'>
                     <label>Старт курса</label>
-                    <select>
-                        <option defaultValue hidden>
-                            Старт курса
-                        </option>
-                        <option value=''>В любое время</option>
-                        <option value=''>В любое время 2</option>
-                    </select>
+                    <input type='text' placeholder='Дата' value={timing} onChange={(e) => setTiming(e.target.value)} />
+                    <div className='course-edit__form-checkbox checkbox'>
+                        <input type='checkbox' className='checkbox' id='anytime' checked={anytime} onChange={(e) => setAnytime(e.target.checked)} />
+                        <label htmlFor='anytime'>В любое время</label>
+                    </div>
                 </div>
                 <div className='course-edit__form-group form-group'>
                     <label>Длительность</label>

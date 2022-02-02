@@ -12,7 +12,7 @@ export const authURL = {
     REGISTER: '/auth/register',
     AUTHORIZATION: '/cabinet/user',
     SETTINGS: '/cabinet/user/setting',
-    CHANE_EMAIL: '/cabinet/user/change_email',
+    CHANGE_EMAIL: '/cabinet/user/change_email',
 }
 export const trainerCoursesURL = {
     FETCH_COURSES: '/cabinet/courses',

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import AddCourseLesson from './AddCourseLesson'
 import AddCourseModule from './AddCourseModule'
 
-const AddCourseTab2 = (_, ref) => {
+const AddCourseTabLesson = (_, ref) => {
     const modules = useSelector(({ courses }) => courses.modules)
     const info = useSelector(({ courses }) => courses.info)
     const [shortDescr, setShortDescr] = useState('')
@@ -44,6 +44,7 @@ const AddCourseTab2 = (_, ref) => {
     const setLessonName = (index, indexLesson, value) => {
         const newModules = [...modulesState]
         newModules[index].lessonsshort[indexLesson].name = value
+        newModules[index].lessonsshort[indexLesson].number = index
         newModules[index].lessonsshort[indexLesson].hidden_id = new Date().getTime()
         setModules([...newModules])
     }
@@ -109,4 +110,4 @@ const AddCourseTab2 = (_, ref) => {
     )
 }
 
-export default forwardRef(AddCourseTab2)
+export default forwardRef(AddCourseTabLesson)

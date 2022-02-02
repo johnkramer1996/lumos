@@ -21,7 +21,7 @@ const CabinetStatistics = () => {
         <>
             <div className='course-report'>
                 <h1 className='course-report__title display-3'>Отчет по тренеру</h1>
-                <Tabs items={tabItems} />
+                <Tabs items={tabItems} classPrefix='course-report' />
             </div>
         </>
     )

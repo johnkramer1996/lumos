@@ -1,29 +1,31 @@
-import { useInput } from 'hooks'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 
-const CabinetSettingsNotifications = () => {
-    const novifications = useInput({ initialValue: [] })
-
+const CabinetSettingsNotifications = ({ onChange }) => {
     const user = useSelector(({ auth }) => auth.user)
-    const notificationsArray = {
-        '0_0': novifications.value.find(({ type, source }) => type === 0 && source === 0),
-        '0_1': novifications.value.find(({ type, source }) => type === 0 && source === 1),
-        '0_2': novifications.value.find(({ type, source }) => type === 0 && source === 2),
+    const [novifications, setNovifications] = useState([])
 
-        '1_0': novifications.value.find(({ type, source }) => type === 1 && source === 0),
-        '1_1': novifications.value.find(({ type, source }) => type === 1 && source === 1),
-        '1_2': novifications.value.find(({ type, source }) => type === 1 && source === 2),
+    const notificationsTypes = ['Системные', 'От поддержки', 'Комментарии от клиентов']
+    const notificationsSource = ['Электронная почта', 'На сайте', 'Телеграм']
 
-        '2_0': novifications.value.find(({ type, source }) => type === 2 && source === 0),
-        '2_1': novifications.value.find(({ type, source }) => type === 2 && source === 1),
-        '2_2': novifications.value.find(({ type, source }) => type === 2 && source === 2),
+    const createNotifications = (notifications) => {
+        return new Array(notificationsTypes.length)
+            .fill(0)
+            .map((_) => new Array(notificationsSource.length).fill(0))
+            .map((row, indexRow) => ({
+                type: notificationsTypes[indexRow],
+                sources: row.map((col, indexCol) => ({
+                    source: notificationsSource[indexCol],
+                    status: !!notifications?.find(({ type, source }) => type === indexRow && source === indexCol),
+                })),
+            }))
     }
+
     useEffect(() => {
-        user.notifications && novifications.setValue(user.notifications)
+        setNovifications(createNotifications(user.notifications))
     }, [user])
 
-    const checkbox1 = useInput(true)
     return (
         <div className='account-settings__group card-bg'>
             <h3 className='account-settings__subtitle display-4'>Уведомления</h3>
@@ -42,6 +44,38 @@ const CabinetSettingsNotifications = () => {
                     </div>
                 </div>
             </div>
+            {novifications.map(({ type, sources }, indexType) => (
+                <div key={indexType} className='account-settings__item'>
+                    <span className='account-settings__item-title'>{type}</span>
+                    <span className='account-settings__item-desc'>Оповещения о добавлении новых курсов или их редактировании</span>
+
+                    <div className='account-settings__switches'>
+                        {sources.map(({ source, status }, indexSource) => (
+                            <div key={indexSource} className='account-settings__switch'>
+                                {status}
+                                <div className='account-settings__switch-title'>{source}</div>
+                                <div className='account-settings__switch-input switch'>
+                                    <input
+                                        type='checkbox'
+                                        className='checkbox'
+                                        id={`switch${indexType}-${indexSource}`}
+                                        defaultChecked={status}
+                                        onChange={(e) => onChange(indexType, indexSource, e.target.checked)}
+                                    />
+                                    <label htmlFor={`switch${indexType}-${indexSource}`}></label>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            ))}
+            {/* <div className='account-settings__item'>
+                <span className='account-settings__item-title'>Системные</span>
+                <span className='account-settings__item-desc'>Оповещения о добавлении новых курсов или их редактировании</span>
+
+                <div className='account-settings__switches'></div>
+            </div>
+
             <div className='account-settings__item'>
                 <span className='account-settings__item-title'>Системные</span>
                 <span className='account-settings__item-desc'>Оповещения о добавлении новых курсов или их редактировании</span>
@@ -122,9 +156,13 @@ const CabinetSettingsNotifications = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
+}
+
+CabinetSettingsNotifications.propTypes = {
+    onChange: PropTypes.func.isRequired,
 }
 
 export default CabinetSettingsNotifications

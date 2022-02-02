@@ -6,6 +6,32 @@ const Modal = () => {
     const { setIsShow } = useDispatch()
 
     return (
+        <div className={`modal${isShow ? ' modal--show' : ''}`} style={{ textAlign: 'center' }}>
+            <div className='modal__bg' onClick={() => setIsShow(false)}></div>
+            <div className='modal-dialog'>
+                <div className='modal__content'>
+                    <button className='modal__close' onClick={() => setIsShow(false)}>
+                        <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                            <path d='M13.3327 2.66602L2.66602 13.3327' stroke='#1B2C3E' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
+                            <path d='M13.3327 13.3327L2.66602 2.66602' stroke='#1B2C3E' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
+                        </svg>
+                    </button>
+                    <div className='modal-result__title display-3'>{title}</div>
+                    {descr && (
+                        <div className='modal__content'>
+                            <div className='modal__desc'>{descr}</div>
+                        </div>
+                    )}
+
+                    <button className='modal-result__next btn btn-blue' onClick={() => setIsShow(false)}>
+                        Продолжить
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+
+    return (
         <div className={`modal${isShow ? ' modal--show' : ''}`}>
             <div className='modal__bg' onClick={() => setIsShow(false)}></div>
             <div className='modal-dialog'>
@@ -22,9 +48,7 @@ const Modal = () => {
                 </div>
                 {descr && (
                     <div className='modal__content'>
-                        <div className='modal__desc'>
-                            <span>{descr}</span>
-                        </div>
+                        <div className='modal__desc'>{descr}</div>
                     </div>
                 )}
             </div>
