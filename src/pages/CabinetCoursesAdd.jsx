@@ -30,7 +30,6 @@ const CabinetAddCourse = () => {
     const editInfoRequest = useRequest({
         request: editInfo,
         success: ({ dispatch, response, data }) => toCabinetItems(),
-        error: (data) => console.log(data),
     })
     const fetchModulesRequest = useRequest({
         request: fetchModules,
@@ -94,7 +93,6 @@ const CabinetAddCourse = () => {
             ]
 
             const { body = {}, isError } = tabHandlers[tabItems.indexActive]?.ref?.current.getData() || {}
-            console.log(body)
             // for (const item of body.entries()) console.log(item)
             // return
             if (isError) return

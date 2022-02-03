@@ -54,6 +54,7 @@ export const asyncAction =
             if (response.status === 200) success(successArgs)
             if (response.status === 200) successTwo(successArgs)
         } catch (e) {
+            console.log(e)
             console.log(e.response || e.message || 'Unknown error')
             error({ dispatch, error: e.response || e.message || 'Unknown error' })
             errorTwo({ dispatch, error: e.response || e.message || 'Unknown error' })

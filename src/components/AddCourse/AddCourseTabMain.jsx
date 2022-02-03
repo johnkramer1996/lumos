@@ -9,10 +9,10 @@ const AddCourseTab1 = (_, ref) => {
     const course = useSelector(({ courses }) => courses.course)
     const { themes = [], type_study: typeStudy = [], format = [] } = useSelector(({ system }) => system.references)
     const [name, setName] = useState('Название курса')
-    const [category_id, setCategoryId] = useState(1)
-    const [type_study, setTypeStudy] = useState(1)
-    const [format_study, setFormatStudy] = useState(1)
-    const [sale_subscribe, setSubscribe] = useState(true)
+    const [category_id, setCategoryId] = useState(-1)
+    const [type_study, setTypeStudy] = useState(-1)
+    const [format_study, setFormatStudy] = useState(-1)
+    const [sale_subscribe, setSubscribe] = useState(false)
     const timing = useInput({ initialValue: getDate(new Date()) })
     const [anytime, setAnytime] = useState(false)
     const [width, setWidth] = useState('Длительность')
@@ -22,8 +22,9 @@ const AddCourseTab1 = (_, ref) => {
         course.name && setName(course.name)
         course.category_id && setCategoryId(course.category_id)
         course.type_study && setTypeStudy(course.type_study)
-        course.course && setFormatStudy(course.course)
+        course.format_study && setFormatStudy(course.format_study)
         course.sale_subscribe && setSubscribe(course.sale_subscribe)
+        course.anytime && setAnytime(course.anytime)
         course.width && setWidth(course.width)
         course.image && img.setValue(getImgUrl(course.image, false))
     }, [course])
@@ -36,18 +37,23 @@ const AddCourseTab1 = (_, ref) => {
             body.append('type_study', type_study)
             body.append('format_study', format_study)
             body.append('sale_subscribe', +sale_subscribe)
-            body.append('timing', timing.value)
+            // body.append('timing', timing.value)
             body.append('anytime', +anytime)
             body.append('width', width)
-            body.append('image', img.ref.current?.files[0])
+            img.ref.current?.files[0] && body.append('image', img.ref.current?.files[0])
+            body.append('dataimg', img.value)
 
             const errors = []
-            for (const [key, value] of body.entries()) if (value === '' || value === 'undefined') errors.push(key)
+            for (const [key, value] of body.entries()) {
+                if (key !== 'image' && (value === '' || value === '-1' || value === 'undefined')) errors.push(key)
+            }
             const isError = errors.length
             if (isError) {
                 setIsShow(true)
                 setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
             }
+
+            for (const item of body.entries()) console.log(item)
 
             return {
                 isError,

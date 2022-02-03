@@ -1,23 +1,25 @@
 import { Button } from 'components/ui'
-import React, { useEffect, useRef, useState } from 'react'
-import { deleteImg, getImgUrl, uploadImg } from 'utils'
+import { useInputFile } from 'hooks'
+import React, { useEffect, useState } from 'react'
+import { getImgUrl } from 'utils'
 
 const AddCourseDescription = ({ index, image, name, text, changeField }) => {
     const [nameState, setName] = useState('')
     const [textState, setText] = useState('')
-    const [dataImg, setDataImg] = useState('')
-    const inputImgRef = useRef()
+    const img = useInputFile()
 
     useEffect(() => {
         name && setName(name)
         text && setText(text)
-        image && setDataImg(getImgUrl(image, false))
+        image && typeof image === 'string' && img.setValue(getImgUrl(image, false))
     }, [name, text, image])
 
     const onChangeName = (value) => (setName(value), changeField('name', index, value))
     const onChangeText = (value) => (setText(value), changeField('text', index, value))
-    const onChangeInputImg = (e) => uploadImg(e.target, setDataImg)
-    const onDeleteInputImg = (e) => deleteImg(inputImgRef, setDataImg)
+    const onChangeImage = () => {
+        img.onChange()
+        changeField('image', index, img.ref.current?.files[0])
+    }
 
     return (
         <div className='create-whom__group'>
@@ -44,7 +46,7 @@ const AddCourseDescription = ({ index, image, name, text, changeField }) => {
                 </button>
             </div>
             <div className='create-whom__uploaded'>
-                <div className='create-whom__img'>{dataImg && <img src={dataImg} alt='' />}</div>
+                <div className='create-whom__img'>{img.value && <img src={img.value} alt='' />}</div>
                 <div className='create-whom__uploaded-right'>
                     <div className='create-whom__hint'>
                         Соотношение сторон: 1:1 (рекомендуемое разрешение: 248x248) <br />
@@ -52,10 +54,10 @@ const AddCourseDescription = ({ index, image, name, text, changeField }) => {
                     </div>
                     <div className='create-whom__buttons'>
                         <Button className='create-whom__new btn--uploadfile'>
-                            <input ref={inputImgRef} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={onChangeInputImg} />
-                            Загрузить {dataImg ? 'новое' : 'изображение'}
+                            <input ref={img.ref} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={(e) => onChangeImage(e.target)} />
+                            Загрузить {img.value ? 'новое' : 'изображение'}
                         </Button>
-                        <Button className='create-whom__remove-img' onClick={onDeleteInputImg} outline>
+                        <Button className='create-whom__remove-img' onClick={img.onDelete} outline>
                             Удалить
                         </Button>
                     </div>

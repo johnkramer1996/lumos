@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
-const useRequest = ({ before = () => {}, request = () => {}, success = () => {}, error = () => {}, after = () => {}, getData = () => {} } = {}) => {
+const useRequest = ({ before = () => {}, request = () => {}, success = () => {}, error = () => {}, after = () => {}, isLoadingDefault = false } = {}) => {
     let isMounted = true
     const [state, setState] = useState({})
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(isLoadingDefault)
     const [errorText, setErrorText] = useState('')
 
     const call = (args) => {

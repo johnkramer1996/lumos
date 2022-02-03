@@ -3,30 +3,60 @@ import { Button } from 'components/ui'
 import { useSelector } from 'react-redux'
 import AddCourseLesson from './AddCourseLesson'
 import AddCourseModule from './AddCourseModule'
+import { useDispatch } from 'hooks'
 
 const AddCourseTabLesson = (_, ref) => {
+    const { setContent, setIsShow } = useDispatch()
+    const course = useSelector(({ courses }) => courses.course)
     const modules = useSelector(({ courses }) => courses.modules)
     const info = useSelector(({ courses }) => courses.info)
     const [shortDescr, setShortDescr] = useState('')
     const [hidden_id, sethidden_id] = useState('')
+    const [testLessonId, setTestLessonId] = useState('')
     const [modulesState, setModules] = useState([])
 
     useEffect(() => modules.data?.length && setModules([...modules.data.reverse()]), [modules])
-    useEffect(() => info.course?.description && setShortDescr(info.course?.description), [info.course])
+    useEffect(() => {
+        // info.course?.test_lesson_id && sethidden_id(info.course?.test_lesson_id)
+        let id
+        modules.data?.forEach((mod) => (id = mod.lessonsshort?.find((l) => l.id === info.course?.test_lesson_id)))
+        sethidden_id(id?.hidden_id || 0)
+        console.log(testLessonId)
+        info.course?.short_desc && setShortDescr(info.course?.short_desc)
+    }, [info.course])
 
     useImperativeHandle(ref, () => ({
         getData: () => {
+            const body = {
+                name: course?.name,
+                short_desc: shortDescr,
+                format_study: course?.format_study,
+                type_study: course?.type_study,
+                category_id: course?.category_id,
+                moduls: modulesState.map((mod) => ({
+                    ...mod,
+                    name: mod.name || 'Название модуля',
+                    lessons: mod.lessonsshort?.map((l, index) => ({ ...l, name: l.name || 'Название урока', number: index })),
+                })),
+            }
+            if (hidden_id && hidden_id !== '0') {
+                body.test_lesson_id = +hidden_id
+            }
+
+            const errors = []
+            if (!modulesState.length) errors.push('moduls')
+            if (hidden_id === '') errors.push('hidden_id')
+            const isError = errors.length
+            if (isError) {
+                setIsShow(true)
+                setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
+            }
+
+            console.log(body)
+
             return {
-                isError: false,
-                body: {
-                    short_desc: shortDescr,
-                    moduls: modulesState.map((mod) => ({
-                        ...mod,
-                        name: mod.name || 'Название модуля',
-                        lessons: mod.lessonsshort?.map((l, index) => ({ ...l, name: l.name || 'Название урока', number: index })),
-                    })),
-                    // test_lesson_id: hidden_id || '0',
-                },
+                isError,
+                body,
             }
         },
     }))
@@ -49,7 +79,6 @@ const AddCourseTabLesson = (_, ref) => {
         const newModules = [...modulesState]
         newModules[index].lessonsshort[indexLesson].name = value
         newModules[index].lessonsshort[indexLesson].hidden_id = +new Date().getTime()
-        console.log(newModules)
         setModules([...newModules])
     }
 
@@ -84,6 +113,9 @@ const AddCourseTabLesson = (_, ref) => {
                 <AddCourseLesson key={index} {...props} lessons={props.lessonsshort} index={index} setName={setLessonName} onAdd={onAddLesson} />
             ))}
 
+            {/* {console.log(hidden_id)} */}
+            {/* {console.log(modules)} */}
+
             <div className='create-module card-bg'>
                 <div className='create-module__top'>
                     <h3 className='create-module__title display-4'>Тестовый урок</h3>
@@ -91,16 +123,15 @@ const AddCourseTabLesson = (_, ref) => {
                 <div className='create-module__items'>
                     <div className='create-module__item form-group'>
                         <label htmlFor=''>Выберите тестовый урок</label>
-
-                        <select onChange={(e) => sethidden_id(e.target.value)}>
+                        <select value={hidden_id} onChange={(e) => sethidden_id(e.target.value)}>
                             <option defaultValue hidden>
                                 Выберите тестовый урок
                             </option>
-                            <option>Без тестового урока</option>
+                            <option value='0'>Без тестового урока</option>
                             {modulesState.map((item, index) =>
                                 item?.lessonsshort
                                     ?.filter(({ name }) => name !== '')
-                                    .map(({ name, hidden_id }, indexLesson) => (
+                                    .map(({ id, name, hidden_id }, indexLesson) => (
                                         <option key={index + '' + indexLesson} value={hidden_id}>
                                             {name}
                                         </option>

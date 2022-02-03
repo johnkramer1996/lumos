@@ -7,12 +7,12 @@ const useDispatch = () => {
 
     return useMemo(
         () => ({
-            toItems: ({ type }) => navigate(getTypeItems(type)),
+            toItems: ({ type } = {}) => navigate(getTypeItems(type)),
             toCabinet: () => navigate(RouteNames.CABINET),
-            toCabinetItems: ({ type }) => navigate(getTypeItems(type)),
-            toCabinetItemsAdd: ({ type }) => navigate(`${getTypeItems(type)}/add`),
-            toCabinetItemsEdit: ({ courseId, type }) => navigate(`${getTypeItems(type)}/${courseId}/edit`),
-            toCabinetItemsItem: ({ courseId, type }) => navigate(`${getTypeItems(type)}/${courseId}`),
+            toCabinetItems: ({ type } = {}) => navigate(getTypeItems(type)),
+            toCabinetItemsAdd: ({ type } = {}) => navigate(`${getTypeItems(type)}/add`),
+            toCabinetItemsEdit: ({ courseId, type } = {}) => navigate(`${getTypeItems(type)}/${courseId}/edit`),
+            toCabinetItemsItem: ({ courseId, type } = {}) => navigate(`${getTypeItems(type)}/${courseId}`),
             toError: () => navigate(RouteNames.ERROR),
         }),
         [],

@@ -1,10 +1,12 @@
 import { Button } from 'components/ui'
+import { useDispatch } from 'hooks'
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { useSelector } from 'react-redux'
 import AddCourseDescription from './AddCourseDescription'
 import AddCoursePrice from './AddCoursePrice'
 
 const AddCourseTab3 = (_, ref) => {
+    const { setContent, setIsShow } = useDispatch()
     const info = useSelector(({ courses }) => courses.info)
     const modules = useSelector(({ courses }) => courses.modules)
     const [courseDescription, setCourseDescription] = useState('')
@@ -18,6 +20,7 @@ const AddCourseTab3 = (_, ref) => {
     useImperativeHandle(ref, () => ({
         getData: () => {
             const body = new FormData()
+            const errors = []
             body.append('course_description', courseDescription)
             descriptions.forEach(({ id, name, text, image }, index) => {
                 const createId = id !== undefined ? id : 'new_' + index
@@ -32,17 +35,27 @@ const AddCourseTab3 = (_, ref) => {
                 body.append(`prices[${createId}][price_with_sale]`, price_with_sale || 'Текст')
                 body.append(`prices[${createId}][price]`, price || 'Текст')
                 body.append(`prices[${createId}][text]`, text || 'Текст')
-                for (const item of Object.keys(moduls)) moduls[item] && body.append(`prices[${createId}][moduls][]`, item)
+                for (const item of Object.keys(moduls)) {
+                    moduls[item] && body.append(`prices[${createId}][moduls][]`, item)
+                }
+                if (!Object.keys(moduls).length) errors.push('moduls')
             })
+            if (!descriptions.length) errors.push('descriptions')
+            if (!prices.length) errors.push('prices')
+            const isError = errors.length
+            if (isError) {
+                setIsShow(true)
+                setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
+            }
             return {
-                isError: false,
+                isError,
                 body,
             }
         },
     }))
 
     const onAddDescr = () => {
-        setDescriptions([...descriptions, { name: '', text: '' }])
+        setDescriptions([...descriptions, { name: '', text: '', image: '' }])
     }
     const onAddPrices = () => {
         setPrices([...prices, { name: '', width: '', price_with_sale: '', price: '', text: '' }])
@@ -50,6 +63,7 @@ const AddCourseTab3 = (_, ref) => {
     const changeDescrField = (field, index, value) => {
         const newDescription = [...descriptions]
         newDescription[index][field] = value
+        console.log(newDescription)
         setDescriptions([...newDescription])
     }
     const changePricesField = (field, index, value) => {

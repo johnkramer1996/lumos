@@ -4,13 +4,12 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import { privateRoutes, publicRoutes, RouteNames } from 'routes'
 import { useDispatch, useRequest } from 'hooks'
 import { Loader } from './ui'
-import ModalLogin from './Modal/ModalLogin'
 
 const AppRouter = () => {
     const { auth } = useDispatch()
     const isAuth = useSelector((state) => state.auth.isAuth)
 
-    const authRequest = useRequest({ request: auth })
+    const authRequest = useRequest({ request: auth, isLoadingDefault: true })
 
     useEffect(() => {
         localStorage.getItem('token') && authRequest.call()

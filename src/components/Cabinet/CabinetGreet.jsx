@@ -11,7 +11,7 @@ const CabinetGreet = () => {
                 <img src={getImgUrl(user?.avatar)} alt='' />
             </div>
             <div className='dashboard__greet-content'>
-                <div className='dashboard__greet-name'>Привет, {user.name}!</div>
+                <div className='dashboard__greet-name'>Привет, {user.first_name || user.name}!</div>
                 <div className='dashboard__greet-bottom'>
                     <div className='dashboard__greet-balls'>
                         <i></i>
