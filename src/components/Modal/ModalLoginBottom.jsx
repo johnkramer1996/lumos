@@ -1,9 +1,15 @@
+import { useDispatch } from 'hooks'
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { authStepTypes } from 'store/reducers/auth/types'
 
-const ModalLoginBottom = ({ step, setStep }) => {
+const ModalLoginBottom = () => {
+    const { setStep } = useDispatch()
+    const step = useSelector(({ auth }) => auth.step)
+
     return (
         <>
-            {step === 'CHECK_EMAIL' && (
+            {step === authStepTypes.CHECK_EMAIL && (
                 <>
                     <div className='modal__or'>Или</div>
                     <div className='modal__socials'>
@@ -63,14 +69,14 @@ const ModalLoginBottom = ({ step, setStep }) => {
                     </div>
                 </>
             )}
-            {step === 'LOGIN' && (
+            {step === authStepTypes.LOGIN && (
                 <>
-                    <button className='modal__forgot btn' onClick={() => setStep('RESTORE')}>
+                    <button className='modal__forgot btn' onClick={() => setStep(authStepTypes.RESTORE)}>
                         Забыли пароль?
                     </button>
                 </>
             )}
-            {step === 'REGISTER' && (
+            {step === authStepTypes.REGISTER && (
                 <>
                     <div className='modal__hint'>
                         Нажимая на «Создать аккаунт», вы соглашаетесь с <a href=''>Политикой обработки данных</a>

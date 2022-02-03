@@ -2,22 +2,23 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { privateRoutes, publicRoutes, RouteNames } from 'routes'
-import { useDispatch } from 'hooks'
+import { useDispatch, useRequest } from 'hooks'
 import { Loader } from './ui'
 import ModalLogin from './Modal/ModalLogin'
 
 const AppRouter = () => {
-    const { auth, setIsLoading } = useDispatch()
+    const { auth } = useDispatch()
     const isAuth = useSelector((state) => state.auth.isAuth)
-    const isLoading = useSelector((state) => state.auth.isLoading)
+
+    const authRequest = useRequest({ request: auth })
 
     useEffect(() => {
-        localStorage.getItem('token') ? auth() : setIsLoading(false)
+        localStorage.getItem('token') && authRequest.call()
     }, [])
 
     return (
         <div className='content'>
-            {isLoading ? (
+            {authRequest.isLoading ? (
                 <Loader />
             ) : isAuth ? (
                 <>
@@ -36,7 +37,7 @@ const AppRouter = () => {
                         ))}
                         <Route path='*' element={<Navigate to={RouteNames.ERROR} />} />
                     </Routes>
-                    <ModalLogin />
+                    {/* <ModalLogin /> */}
                 </>
             )}
         </div>

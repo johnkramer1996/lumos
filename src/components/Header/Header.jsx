@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-
+import React, { useCallback, useMemo, useState } from 'react'
 import { HeaderBurger, HeaderLK, HeaderLogo, HeaderNotification, HeaderSearch } from './'
 import { Nav } from 'components/'
 import { Button } from 'components/ui/'
@@ -10,12 +9,16 @@ import { useLocation } from 'react-router-dom'
 
 const Header = () => {
     const { pathname } = useLocation()
-    const { setShowModal } = useDispatch()
+    const { setShowModal, setIsShow, setContent, setType } = useDispatch()
     const isAuth = useSelector((state) => state.auth.isAuth)
     const [isNavActive, setIsNavActive] = useState(false)
 
     const onToggleNav = useCallback(() => setIsNavActive((prev) => !prev), [])
-    const onShowModal = useCallback(() => setShowModal(true), [setShowModal])
+    const onShowModal = useCallback(() => {
+        setIsShow(true)
+        setType('LOGIN')
+        // setContent({ title: 'Недействительные учетные данные' })
+    }, [setIsShow, setType])
 
     const itemsNav = useMemo(
         () => [
