@@ -10,9 +10,9 @@ const CabinetTrainer = ({ isLoading }) => {
 
     return (
         <div className='lkt-courses'>
-            <CabinetTitle title={'Мои курсы'} />
+            <CabinetTitle title={'Мои курсы'} isBtnAll={false} />
             <CabinetNav />
-            <CoursesItemWrapper items={courses} isLoading={isLoading} className={`cabinet-page__items--${typeShow}`} />
+            <CoursesItemWrapper items={courses} isLoading={isLoading} numberComponent={2} className={`cabinet-page__items cabinet-page__items--${typeShow}`} />
         </div>
     )
 }

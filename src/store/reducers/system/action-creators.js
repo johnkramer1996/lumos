@@ -1,29 +1,23 @@
 import SystemService from 'api/SystemService'
+import { crateActionCreator, crateHandles } from 'utils'
 import { systemTypes } from './types'
 
 export const SystemActionCreators = {
     setReferences: (payload) => ({ type: systemTypes.SET_REFERENCES, payload }),
     setSocUrls: (payload) => ({ type: systemTypes.SET_SOC_URLS, payload }),
-    fetchReferences: () => async (dispatch) => {
-        try {
-            const response = await SystemService.fetchReferences()
+    ...crateActionCreator(SystemService),
+}
 
-            if (response.status === 200) {
-                dispatch(SystemActionCreators.setReferences(response.data))
-            }
-        } catch (e) {
-            console.log(e.response)
-        }
+export const defaultHandlers = crateHandles(SystemService)
+
+export const systemHandlers = {
+    ...defaultHandlers,
+    fetchReferences: {
+        ...defaultHandlers.fetchReferences,
+        success: ({ dispatch, response, data }) => dispatch(SystemActionCreators.setReferences(data)),
     },
-    fetchSocUrls: () => async (dispatch) => {
-        try {
-            const response = await SystemService.fetchSocUrls()
-
-            if (response.status === 200) {
-                dispatch(SystemActionCreators.setSocUrls(response.data))
-            }
-        } catch (e) {
-            console.log(e.response)
-        }
+    fetchSocUrls: {
+        ...defaultHandlers.fetchSocUrls,
+        success: ({ dispatch, response, data }) => dispatch(SystemActionCreators.setSocUrls(data)),
     },
 }

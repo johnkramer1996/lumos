@@ -1,14 +1,19 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import AppRouter from './components/AppRouter'
 import { Header, Footer, Modal } from 'components/'
-import { useDispatch } from 'hooks'
+import { useDispatch, useRequest } from 'hooks'
 
 const App = () => {
-    const { fetchReferences, fetchSocUrls } = useDispatch()
+    const { fetchReferences, fetchSocUrls, fetchFrontCourses } = useDispatch()
+
+    const fetchReferencesRequest = useRequest({ request: fetchReferences })
+    const fetchSocUrlsRequest = useRequest({ request: fetchSocUrls })
+    const fetchFrontCoursesRequest = useRequest({ request: fetchFrontCourses })
 
     useEffect(() => {
-        fetchReferences()
-        fetchSocUrls()
+        fetchReferencesRequest.call()
+        fetchSocUrlsRequest.call()
+        fetchFrontCoursesRequest.call()
     }, [])
 
     return (

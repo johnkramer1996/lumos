@@ -19,12 +19,11 @@ export default class CoursesService {
     }
     static async putCourse({ courseId = 1, body = {} } = {}) {
         body.append('_method', 'PUT')
-        const data = await axios.post(trainerCoursesURL.PUT_COURSE({ courseId }), body, {
+        return await axios.post(trainerCoursesURL.PUT_COURSE({ courseId }), body, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         })
-        return data
     }
     static async patchCourse({ courseId = 1, body = {} } = {}) {
         body.append('_method', 'PATCH')

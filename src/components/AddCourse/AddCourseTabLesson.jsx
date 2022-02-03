@@ -12,16 +12,13 @@ const AddCourseTabLesson = (_, ref) => {
     const info = useSelector(({ courses }) => courses.info)
     const [shortDescr, setShortDescr] = useState('')
     const [hidden_id, sethidden_id] = useState('')
-    const [testLessonId, setTestLessonId] = useState('')
     const [modulesState, setModules] = useState([])
 
     useEffect(() => modules.data?.length && setModules([...modules.data.reverse()]), [modules])
     useEffect(() => {
-        // info.course?.test_lesson_id && sethidden_id(info.course?.test_lesson_id)
         let id
         modules.data?.forEach((mod) => (id = mod.lessonsshort?.find((l) => l.id === info.course?.test_lesson_id)))
         sethidden_id(id?.hidden_id || 0)
-        console.log(testLessonId)
         info.course?.short_desc && setShortDescr(info.course?.short_desc)
     }, [info.course])
 
@@ -51,8 +48,6 @@ const AddCourseTabLesson = (_, ref) => {
                 setIsShow(true)
                 setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
             }
-
-            console.log(body)
 
             return {
                 isError,
@@ -112,9 +107,6 @@ const AddCourseTabLesson = (_, ref) => {
             {modulesState.map((props, index) => (
                 <AddCourseLesson key={index} {...props} lessons={props.lessonsshort} index={index} setName={setLessonName} onAdd={onAddLesson} />
             ))}
-
-            {/* {console.log(hidden_id)} */}
-            {/* {console.log(modules)} */}
 
             <div className='create-module card-bg'>
                 <div className='create-module__top'>

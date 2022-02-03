@@ -11,9 +11,9 @@ const CabinetEvents = ({ isLoading }) => {
 
     return (
         <div className='cabinet-page__group'>
-            <CabinetTitle title={'Мои мероприятия'} type={'events'} visibleBtn={false} />
+            <CabinetTitle title={'Мои мероприятия'} type={'events'} isVisibleBtn={false} />
             <CabinetNav type={'events'} />
-            <CoursesItemWrapper items={courses} isLoading={isLoading} className={`cabinet-page__items--${typeShow}`} />
+            <CoursesItemWrapper items={courses} isLoading={isLoading} className={`cabinet-page__items cabinet-page__items--${typeShow}`} />
             <div className='cabinet-page__items'>
                 {courses.map((props) => (
                     <EventsItem2 key={props.id} {...props} />

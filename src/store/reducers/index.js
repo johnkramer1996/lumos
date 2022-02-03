@@ -3,6 +3,7 @@ import courses from './courses'
 import system from './system'
 import modals from './modals'
 import settings from './settings'
+import frontCourses from './frontCourses'
 
 export default {
     auth,
@@ -10,4 +11,5 @@ export default {
     system,
     modals,
     settings,
+    frontCourses,
 }

@@ -62,3 +62,7 @@ export const userEventsURL = {
 export const adminURL = {
     ADD_USER: '/admin/users/set_role',
 }
+export const frontCoursesURL = {
+    FETCH_COURSES: '/front/courses',
+    FETCH_COURSE: ({ courseId }) => `/front/courses/${courseId}`,
+}

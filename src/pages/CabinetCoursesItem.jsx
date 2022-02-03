@@ -20,7 +20,12 @@ const CoursesItem = () => {
 
     const fetchCourseRequest = useRequest({
         request: fetchCourse,
-        // error: ({ error }) => error.status === 404 && toError(),
+        error: ({ error }) => {
+            console.log('2')
+            return
+
+            error.status === 404 && toError()
+        },
     })
     const fetchInfoRequest = useRequest({
         request: fetchInfo,

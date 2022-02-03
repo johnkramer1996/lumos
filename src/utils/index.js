@@ -8,6 +8,7 @@ export const getDeclOfArray = {
     courses: ['курс', 'курса', 'курсов'],
     events: ['мероприятие', 'мероприятия', 'мероприятий'],
     lessons: ['урок', 'урока', 'уроков'],
+    users: ['ученик', 'ученика', 'учеников'],
 }
 
 export const getImgUrl = (src, isDefault = false, defaultSrc = '/assets/img/course2.jpg') => {
@@ -118,3 +119,7 @@ export const deleteImg = (inputFileRef, setImg) => {
 }
 
 export const addZerro = (number) => (number <= 9 ? '0' : '') + number
+
+export const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2)
+
+export const isActiveClass = (condition, className) => (condition ? ` ${className}` : '')

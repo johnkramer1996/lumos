@@ -66,7 +66,7 @@ export const courseHandlers = {
     addModulesMass: {
         ...defaultHandlers.addModulesMass,
         success: ({ dispatch, response, data }) => {
-            console.log(response)
+            console.log(data)
             dispatch(ModalsActionCreators.setIsShow(true))
             dispatch(ModalsActionCreators.setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' }))
         },
