@@ -9,7 +9,6 @@ import CabinetTitle from 'components/Cabinet/CabinetTitle'
 const Courses = () => {
     const { fetchFrontCourses, fetchCourses } = useDispatch()
     const { data: allFrontCourses = [] } = useSelector(({ frontCourses }) => frontCourses.courses)
-    const { data: allCourses = [] } = useSelector(({ courses }) => courses.courses)
     const filter = useSelector(({ settings }) => settings.filter)
 
     const fetchFrontCoursesRequest = useRequest({
@@ -20,7 +19,7 @@ const Courses = () => {
 
     const filteredCourses = useMemo(
         () =>
-            allCourses.filter(({ category_id, type_study, format_study, difficulty_level }) => {
+            allFrontCourses.filter(({ category_id, type_study, format_study, difficulty_level }) => {
                 const filter1 = filter.themes.length ? filter.themes.find((id) => +id === +category_id) : true
                 const filter2 = filter.type_study.length ? filter.type_study.find((id) => +id === +type_study) : true
                 const filter3 = filter.format_study.length ? filter.format_study.find((id) => +id === +format_study) : true

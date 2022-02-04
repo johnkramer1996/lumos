@@ -1,7 +1,7 @@
 import { systemTypes } from './types'
 
 const initialState = {
-    references: { themes: [], type_study: [], difficulty: [], foramt: [], event_types: [] },
+    references: { themes: [], type_study: [], difficulty: [], format: [], event_types: [] },
     socUrls: {},
 }
 

@@ -13,7 +13,7 @@ const Filter = () => {
     const filter = useSelector(({ settings }) => settings.filter)
     const { themes, type_study, difficulty, format, event_types } = useSelector(({ system }) => system.references)
 
-    console.log(filter)
+    console.log(themes, type_study, difficulty, format)
 
     const filtersItems = useMemo(
         () => [
@@ -47,7 +47,6 @@ const Filter = () => {
         navigate({
             pathname: location.pathname,
             search: `?${createSearchParams(newfilter)}`,
-            // search: '?themes=' + newThemes.join(','),
         })
         setFilter(newfilter)
     }
