@@ -13,18 +13,24 @@ const Filter = () => {
     const filter = useSelector(({ settings }) => settings.filter)
     const { themes, type_study, difficulty, format, event_types } = useSelector(({ system }) => system.references)
 
+    console.log(filter)
+
     const filtersItems = useMemo(
         () => [
             { paramName: 'themes', title: 'Категория', items: themes, activeParams: filter.themes },
-            { paramName: 'type_study', title: 'Тип обучения', items: type_study, active: filter.type_study },
-            { paramName: 'difficulty', title: 'Сложность', items: difficulty, active: filter.difficulty },
-            { paramName: 'format_study', title: 'Формат', items: format, active: filter.format_study },
+            { paramName: 'type_study', title: 'Тип обучения', items: type_study, activeParams: filter.type_study },
+            { paramName: 'difficulty', title: 'Сложность', items: difficulty, activeParams: filter.difficulty },
+            { paramName: 'format_study', title: 'Формат', items: format, activeParams: filter.format_study },
         ],
-        [filter],
+        [filter, themes, type_study, difficulty, format],
     )
 
     useEffect(() => {
-        setFilter({ ...filter, themes: query.getAll('themes') ?? [] })
+        const themes = query.getAll('themes') ?? []
+        const type_study = query.getAll('type_study') ?? []
+        const difficulty = query.getAll('difficulty') ?? []
+        const format_study = query.getAll('format_study') ?? []
+        setFilter({ ...filter, themes, type_study, difficulty, format_study })
     }, [location])
 
     const onChangeFilter = (name, value, checked) => {
