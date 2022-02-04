@@ -84,7 +84,8 @@ const AddCourseTabLesson = (_, ref) => {
         setModules([...newModules])
     }
     const onDeleteLesson = (lessonId, indexModule, indexLesson) => {
-        deleteLessonRequest.call({ courseId, lessonId })
+        console.log(lessonId)
+        lessonId && deleteLessonRequest.call({ courseId, lessonId })
         const newModules = modulesState.map((m, inxModule) =>
             inxModule !== indexModule
                 ? m
