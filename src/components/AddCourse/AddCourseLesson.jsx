@@ -3,7 +3,7 @@ import React from 'react'
 import AddCourseLessonItem from './AddCourseLessonItem'
 import { declOfNum, getDeclOfArray } from 'utils'
 
-const AddCourseLesson = ({ index, name, onAdd, setName, lessons }) => {
+const AddCourseLesson = ({ id, hidden_id, index, name, onAdd, setName, lessons, onDelete }) => {
     return (
         <div className='create-module card-bg'>
             <div className='create-module__top'>
@@ -14,7 +14,7 @@ const AddCourseLesson = ({ index, name, onAdd, setName, lessons }) => {
             </div>
             <div className='create-module__items'>
                 {lessons?.map((props, indexLesson) => (
-                    <AddCourseLessonItem key={indexLesson} {...props} indexLesson={indexLesson} index={index} setName={setName} />
+                    <AddCourseLessonItem key={props.id ?? props.hidden_id} {...props} index={indexLesson} indexModule={index} setName={setName} onDelete={onDelete} />
                 ))}
             </div>
             <Button className='create-module__add' onClick={() => onAdd(index)} outline>

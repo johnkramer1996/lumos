@@ -35,6 +35,7 @@ export const courseHandlers = {
     putCourse: {
         ...defaultHandlers.putCourse,
         success: ({ dispatch, response, data }) => {
+            console.log(data)
             dispatch(CoursesActionCreators.setCourse(data?.course))
             dispatch(ModalsActionCreators.setIsShow(true))
             dispatch(ModalsActionCreators.setContent({ title: 'Курс Обновлен' }))
@@ -66,7 +67,6 @@ export const courseHandlers = {
     addModulesMass: {
         ...defaultHandlers.addModulesMass,
         success: ({ dispatch, response, data }) => {
-            console.log(data)
             dispatch(ModalsActionCreators.setIsShow(true))
             dispatch(ModalsActionCreators.setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' }))
         },
@@ -75,6 +75,24 @@ export const courseHandlers = {
     // fetchModule
     // putModule
     // patchModule
-    // deleteModule
+    deleteModule: {
+        ...defaultHandlers.deleteModule,
+        success: ({ dispatch, response, data }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Модуль удален удалены,', descr: '' }))
+        },
+    },
     // fetchLessons
+    // deleteFile
+    // fetchLesson
+    deleteLesson: {
+        ...defaultHandlers.deleteLesson,
+        success: ({ dispatch, response, data }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Урок удален', descr: '.' }))
+        },
+    },
+    // addFile
+    // putLesson
+    // putchLesson
 }

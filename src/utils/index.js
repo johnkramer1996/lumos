@@ -122,3 +122,5 @@ export const addZerro = (number) => (number <= 9 ? '0' : '') + number
 export const uid = () => Date.now().toString(36) + Math.random().toString(36).substr(2)
 
 export const isActiveClass = (condition, className) => (condition ? ` ${className}` : '')
+
+export const toBoolean = (value) => (value === '0' ? false : !!value)

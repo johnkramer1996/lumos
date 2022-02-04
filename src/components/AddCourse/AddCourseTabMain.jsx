@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { Button } from 'components/ui'
-import { deleteImg, getDate, getImgUrl, uploadImg } from 'utils'
+import { deleteImg, getDate, getImgUrl, toBoolean, uploadImg } from 'utils'
 import { useSelector } from 'react-redux'
 import { useDispatch, useInput, useInputFile } from 'hooks'
 
@@ -19,6 +19,7 @@ const AddCourseTab1 = (_, ref) => {
     const img = useInputFile()
 
     useEffect(() => {
+        console.log(course.anytime)
         course.name && setName(course.name)
         course.category_id && setCategoryId(course.category_id)
         course.type_study && setTypeStudy(course.type_study)
@@ -36,17 +37,15 @@ const AddCourseTab1 = (_, ref) => {
             body.append('category_id', category_id)
             body.append('type_study', type_study)
             body.append('format_study', format_study)
-            body.append('sale_subscribe', +sale_subscribe)
             // body.append('timing', timing.value)
             body.append('anytime', +anytime)
+            body.append('sale_subscribe', +sale_subscribe)
             body.append('width', width)
             img.ref.current?.files[0] && body.append('image', img.ref.current?.files[0])
             body.append('dataimg', img.value)
 
             const errors = []
-            for (const [key, value] of body.entries()) {
-                if (key !== 'image' && (value === '' || value === '-1' || value === 'undefined')) errors.push(key)
-            }
+            for (const [key, value] of body.entries()) if (key !== 'image' && (value === '' || value === '-1' || value === 'undefined')) errors.push(key)
             const isError = errors.length
             if (isError) {
                 setIsShow(true)
@@ -113,7 +112,7 @@ const AddCourseTab1 = (_, ref) => {
                     <label>Старт курса</label>
                     <input type='text' placeholder='Дата' {...timing.bind} />
                     <div className='course-edit__form-checkbox checkbox'>
-                        <input type='checkbox' className='checkbox' id='anytime' checked={anytime} onChange={(e) => setAnytime(e.target.checked)} />
+                        <input type='checkbox' className='checkbox' id='anytime' checked={toBoolean(anytime)} onChange={(e) => setAnytime(e.target.checked)} />
                         <label htmlFor='anytime'>В любое время</label>
                     </div>
                 </div>
@@ -122,8 +121,8 @@ const AddCourseTab1 = (_, ref) => {
                     <input type='text' placeholder='Длительность' value={width} onChange={(e) => setWidth(e.target.value)} />
                 </div>
                 <div className='course-edit__form-checkbox checkbox'>
-                    <input type='checkbox' className='checkbox' id='c' checked={sale_subscribe} onChange={(e) => setSubscribe(e.target.checked)} />
-                    <label htmlFor='c'>Разрешить продавать по подписке</label>
+                    <input type='checkbox' className='checkbox' id='subscribe' checked={toBoolean(sale_subscribe)} onChange={(e) => setSubscribe(e.target.checked)} />
+                    <label htmlFor='subscribe'>Разрешить продавать по подписке</label>
                 </div>
             </div>
             <div className='course-edit__form-upload'>

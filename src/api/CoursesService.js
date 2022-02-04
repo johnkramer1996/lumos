@@ -90,8 +90,8 @@ export default class CoursesService {
             },
         })
     }
-    static async deleteModule({ courseId = 1, body = {} } = {}) {
-        return await axios.put(trainerCoursesModulesURL.DELETE_MODULE({ courseId }), body, {
+    static async deleteModule({ courseId = 1, id = 1 } = {}) {
+        return await axios.delete(trainerCoursesModulesURL.DELETE_MODULE({ courseId, id }), {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -107,7 +107,7 @@ export default class CoursesService {
         return await axios.get(trainerCoursesLessonsURL.FETCH_LESSON({ courseId, lessonId }))
     }
     static async deleteLesson({ courseId = 1, lessonId = 1 } = {}) {
-        return await axios.get(trainerCoursesLessonsURL.DELETE_LESSON({ courseId, lessonId }))
+        return await axios.delete(trainerCoursesLessonsURL.DELETE_LESSON({ courseId, lessonId }))
     }
     static async addFile({ courseId = 1, lessonId = 1, body = {} } = {}) {
         return await axios.post(trainerCoursesLessonsURL.FETCH_LESSONS({ courseId, lessonId }), body, {

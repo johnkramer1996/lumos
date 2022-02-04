@@ -13,8 +13,6 @@ const Filter = () => {
     const filter = useSelector(({ settings }) => settings.filter)
     const { themes, type_study, difficulty, format, event_types } = useSelector(({ system }) => system.references)
 
-    console.log(themes, type_study, difficulty, format)
-
     const filtersItems = useMemo(
         () => [
             { paramName: 'themes', title: 'Категория', items: themes, activeParams: filter.themes },
@@ -35,20 +33,14 @@ const Filter = () => {
 
     const onChangeFilter = (name, value, checked) => {
         let newArray = [...filter[name]]
-
-        if (checked) {
-            !newArray.includes(value) && newArray.push(value)
-        } else {
-            newArray = newArray.filter((item) => item !== value)
-        }
-
+        if (checked) !newArray.includes(value) && newArray.push(value)
+        else newArray = newArray.filter((item) => item !== value)
         const newfilter = { ...filter, [name]: newArray }
-
+        setFilter(newfilter)
         navigate({
             pathname: location.pathname,
             search: `?${createSearchParams(newfilter)}`,
         })
-        setFilter(newfilter)
     }
 
     return (

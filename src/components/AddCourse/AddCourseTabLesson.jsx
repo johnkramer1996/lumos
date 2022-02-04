@@ -3,10 +3,12 @@ import { Button } from 'components/ui'
 import { useSelector } from 'react-redux'
 import AddCourseLesson from './AddCourseLesson'
 import AddCourseModule from './AddCourseModule'
-import { useDispatch } from 'hooks'
+import { useDispatch, useRequest } from 'hooks'
+import { useParams } from 'react-router-dom'
 
-const AddCourseTabLesson = (_, ref) => {
-    const { setContent, setIsShow } = useDispatch()
+const AddCourseTabLesson = ({ onDelete }, ref) => {
+    const { courseId } = useParams()
+    const { setContent, setIsShow, deleteModule, deleteLesson } = useDispatch()
     const course = useSelector(({ courses }) => courses.course)
     const modules = useSelector(({ courses }) => courses.modules)
     const info = useSelector(({ courses }) => courses.info)
@@ -14,12 +16,23 @@ const AddCourseTabLesson = (_, ref) => {
     const [hidden_id, sethidden_id] = useState('')
     const [modulesState, setModules] = useState([])
 
+    const deleteModuleRequest = useRequest({
+        request: deleteModule,
+        success: ({ dispatch, response, data }) => {
+            console.log(data)
+        },
+    })
+    const deleteLessonRequest = useRequest({
+        request: deleteLesson,
+        success: ({ dispatch, response, data }) => {
+            console.log(data)
+        },
+    })
+
     useEffect(() => modules.data?.length && setModules([...modules.data.reverse()]), [modules])
     useEffect(() => {
-        let id
-        modules.data?.forEach((mod) => (id = mod.lessonsshort?.find((l) => l.id === info.course?.test_lesson_id)))
-        sethidden_id(id?.hidden_id || 0)
         info.course?.short_desc && setShortDescr(info.course?.short_desc)
+        info.course?.test_lesson && sethidden_id(info.course?.test_lesson.hidden_id)
     }, [info.course])
 
     useImperativeHandle(ref, () => ({
@@ -33,12 +46,11 @@ const AddCourseTabLesson = (_, ref) => {
                 moduls: modulesState.map((mod) => ({
                     ...mod,
                     name: mod.name || 'Название модуля',
-                    lessons: mod.lessonsshort?.map((l, index) => ({ ...l, name: l.name || 'Название урока', number: index })),
+                    lessons: mod.lessonsshort?.map((l, index) => ({ ...l, name: l.name || 'Название урока', number: index, is_test: l.hidden_id === hidden_id })),
                 })),
             }
-            if (hidden_id && hidden_id !== '0') {
-                body.test_lesson_id = +hidden_id
-            }
+
+            console.log(body, 'body')
 
             const errors = []
             if (!modulesState.length) errors.push('moduls')
@@ -49,6 +61,8 @@ const AddCourseTabLesson = (_, ref) => {
                 setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
             }
 
+            console.log(body)
+
             return {
                 isError,
                 body,
@@ -57,23 +71,41 @@ const AddCourseTabLesson = (_, ref) => {
     }))
 
     const onAddModule = () => {
-        setModules([...modulesState, { name: '', lessonsshort: [{ name: '' }] }])
+        setModules([...modulesState, { name: '', hidden_id: +new Date().getTime() }])
+        // setModules([...modulesState, { name: '', hidden_id: +new Date().getTime(), lessonsshort: [{ name: '' }] }])
     }
-    const onDeleteModule = (index) => {
+    const onDeleteModule = (_, id, index) => {
+        console.log(courseId, id)
         setModules(modulesState.filter((item, inx) => inx !== index))
+        id && deleteModuleRequest.call({ courseId, id })
+        return
     }
     const setModuleName = (index, name) => {
         setModules(modulesState.map((item, inx) => (inx === index ? { ...item, name } : item)))
     }
     const onAddLesson = (index) => {
         const newModules = [...modulesState]
-        newModules[index].lessonsshort.push({ name: '' })
+        newModules[index].lessonsshort.push({ name: '', hidden_id: +new Date().getTime() })
         setModules([...newModules])
     }
-    const setLessonName = (index, indexLesson, value) => {
+    const onDeleteLesson = (lessonId, indexModule, indexLesson) => {
+        // console.log(lessonId, indexModule, indexLesson, 'new')
+        deleteLessonRequest.call({ courseId, lessonId })
+        const newModules = modulesState.map((m, inxModule) =>
+            inxModule !== indexModule
+                ? m
+                : {
+                      ...m,
+                      lessonsshort: m.lessonsshort.filter((l, inxLesson) => {
+                          return inxLesson !== indexLesson
+                      }),
+                  },
+        )
+        setModules(newModules)
+    }
+    const setLessonName = (indexModule, indexLesson, value) => {
         const newModules = [...modulesState]
-        newModules[index].lessonsshort[indexLesson].name = value
-        newModules[index].lessonsshort[indexLesson].hidden_id = +new Date().getTime()
+        newModules[indexModule].lessonsshort[indexLesson].name = value
         setModules([...newModules])
     }
 
@@ -93,7 +125,9 @@ const AddCourseTabLesson = (_, ref) => {
                 <h3 className='create-module__title display-4'>Модули</h3>
                 <div className='create-module__items'>
                     {modulesState.map((props, index) => (
-                        <AddCourseModule key={index} {...props} index={index} setName={setModuleName} onDelete={onDeleteModule} />
+                        <div key={props.id ?? props.hidden_id}>
+                            <AddCourseModule {...props} index={index} setName={setModuleName} onDelete={onDeleteModule} />
+                        </div>
                     ))}
                 </div>
                 <Button className='create-module__add' onClick={() => onAddModule()} outline>
@@ -105,7 +139,7 @@ const AddCourseTabLesson = (_, ref) => {
                 </Button>
             </div>
             {modulesState.map((props, index) => (
-                <AddCourseLesson key={index} {...props} lessons={props.lessonsshort} index={index} setName={setLessonName} onAdd={onAddLesson} />
+                <AddCourseLesson key={props.id ?? props.hidden_id} {...props} lessons={props.lessonsshort} index={index} setName={setLessonName} onAdd={onAddLesson} onDelete={onDeleteLesson} />
             ))}
 
             <div className='create-module card-bg'>
@@ -115,6 +149,10 @@ const AddCourseTabLesson = (_, ref) => {
                 <div className='create-module__items'>
                     <div className='create-module__item form-group'>
                         <label htmlFor=''>Выберите тестовый урок</label>
+
+                        {console.log()}
+                        {console.log(modulesState)}
+
                         <select value={hidden_id} onChange={(e) => sethidden_id(e.target.value)}>
                             <option defaultValue hidden>
                                 Выберите тестовый урок

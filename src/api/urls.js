@@ -30,10 +30,10 @@ export const trainerCoursesModulesURL = {
     FETCH_MODULES: ({ courseId }) => `/cabinet/courses/${courseId}/moduls`,
     ADD_MODULES_MASS: ({ courseId }) => `/cabinet/courses/${courseId}/moduls/mass`,
     ADD_MODULE: ({ courseId }) => `/cabinet/courses/${courseId}/moduls`,
-    FETCH_MODULE: ({ courseId }) => `/cabinet/courses/${courseId}/moduls`,
-    PUT_MODULE: ({ courseId }) => `/cabinet/courses/${courseId}/moduls`,
-    PATCH_MODULE: ({ courseId }) => `/cabinet/courses/${courseId}/moduls`,
-    DELETE_MODULE: ({ courseId }) => `/cabinet/courses/${courseId}/moduls`,
+    FETCH_MODULE: ({ courseId, id }) => `/cabinet/courses/${courseId}/moduls/${id}`,
+    PUT_MODULE: ({ courseId, id }) => `/cabinet/courses/${courseId}/moduls/${id}`,
+    PATCH_MODULE: ({ courseId, id }) => `/cabinet/courses/${courseId}/moduls/${id}`,
+    DELETE_MODULE: ({ courseId, id }) => `/cabinet/courses/${courseId}/moduls/${id}`,
 }
 export const trainerCoursesLessonsURL = {
     FETCH_LESSONS: ({ courseId }) => `/cabinet/courses/${courseId}/lessons`,

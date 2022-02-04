@@ -8,7 +8,7 @@ const CabinetAddCourse = () => {
     const { courseId } = useParams()
     const isEditPage = !!courseId
     const { toCabinetItemsItem, toCabinetItemsEdit, toCabinetItems, toError } = useNavigate()
-    const { setCourse, setInfo, setModules, fetchCourse, addCourse, putCourse, fetchInfo, editInfo, fetchModules, addModulesMass } = useDispatch()
+    const { setCourse, setInfo, setModules, fetchCourse, addCourse, putCourse, fetchInfo, editInfo, fetchModules, addModulesMass, deleteModule } = useDispatch()
 
     const fetchCourseRequest = useRequest({
         request: fetchCourse,
@@ -59,17 +59,6 @@ const CabinetAddCourse = () => {
     const refTabLesson = useRef()
     const refTabDescription = useRef()
 
-    const tabItems = useMemo(
-        () => ({
-            items: [
-                { title: 'Основная информация', isAvaible: isEditPage, component: <AddCourseTabMain ref={refTabMain} /> },
-                { title: 'Уроки', isAvaible: isEditPage, component: <AddCourseTabLesson ref={refTabLesson} /> },
-                { title: 'Страница курса', isAvaible: isEditPage, component: <AddCourseTabDescription ref={refTabDescription} /> },
-            ],
-            indexActive: 0,
-        }),
-        [],
-    )
     const onSave = useCallback(
         (e) => {
             e.preventDefault()
@@ -100,7 +89,20 @@ const CabinetAddCourse = () => {
         },
         [courseId, addCourseRequest, addModulesMassRequest, editInfoRequest, putCourseRequest],
     )
+
     const onCancel = useCallback(() => toCabinetItemsItem({ courseId }), [courseId, toCabinetItemsItem])
+
+    const tabItems = useMemo(
+        () => ({
+            items: [
+                { title: 'Основная информация', isAvaible: isEditPage, component: <AddCourseTabMain ref={refTabMain} /> },
+                { title: 'Уроки', isAvaible: isEditPage, component: <AddCourseTabLesson ref={refTabLesson} /> },
+                { title: 'Страница курса', isAvaible: isEditPage, component: <AddCourseTabDescription ref={refTabDescription} /> },
+            ],
+            indexActive: 0,
+        }),
+        [],
+    )
 
     return (
         <section className='course-edit'>
