@@ -17,7 +17,7 @@ const AppRouter = () => {
 
     return (
         <div className='content'>
-            {authRequest.isLoading ? (
+            {localStorage.getItem('token') && authRequest.isLoading ? (
                 <Loader />
             ) : isAuth ? (
                 <>
