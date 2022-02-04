@@ -1,17 +1,26 @@
 import { Button } from 'components/ui'
-import { useDispatch } from 'hooks'
+import { useDispatch, useRequest } from 'hooks'
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 import AddCourseDescription from './AddCourseDescription'
 import AddCoursePrice from './AddCoursePrice'
 
 const AddCourseTab3 = (_, ref) => {
-    const { setContent, setIsShow } = useDispatch()
+    const { courseId } = useParams()
+    const { setContent, setIsShow, deleteInfo } = useDispatch()
     const info = useSelector(({ courses }) => courses.info)
     const modules = useSelector(({ courses }) => courses.modules)
     const [courseDescription, setCourseDescription] = useState('')
     const [descriptions, setDescriptions] = useState([])
     const [prices, setPrices] = useState([])
+
+    const deleteInfoRequest = useRequest({
+        request: deleteInfo,
+        success: ({ dispatch, response, data }) => {
+            console.log(data)
+        },
+    })
 
     useEffect(() => info.course?.description && setCourseDescription(info.course?.description), [info.course])
     useEffect(() => info.descriptions?.length && setDescriptions([...info.descriptions]), [info.descriptions])
@@ -57,14 +66,23 @@ const AddCourseTab3 = (_, ref) => {
     const onAddDescr = () => {
         setDescriptions([...descriptions, { name: '', text: '', image: '' }])
     }
-    const onAddPrices = () => {
-        setPrices([...prices, { name: '', width: '', price_with_sale: '', price: '', text: '' }])
+    const onDeleteDescr = (id, index) => {
+        console.log(id, index)
+        id && deleteInfoRequest.call({ courseId, id, type: 'desc' })
+        setDescriptions(descriptions.filter((item, inx) => inx !== index))
     }
     const changeDescrField = (field, index, value) => {
         const newDescription = [...descriptions]
         newDescription[index][field] = value
         console.log(newDescription)
         setDescriptions([...newDescription])
+    }
+    const onAddPrices = () => {
+        setPrices([...prices, { name: '', width: '', price_with_sale: '', price: '', text: '' }])
+    }
+    const onDeletePrices = (id, index) => {
+        id && deleteInfoRequest.call({ courseId, id, type: 'price' })
+        setPrices(prices.filter((item, inx) => inx !== index))
     }
     const changePricesField = (field, index, value) => {
         const newPrices = [...prices]
@@ -76,6 +94,9 @@ const AddCourseTab3 = (_, ref) => {
         newPrices[index][field] = newPrices[index][field] ? newPrices[index][field] : {}
         newPrices[index][field][value] = checked
         setPrices([...newPrices])
+    }
+    const onDeleteImg = (id) => {
+        id && deleteInfoRequest.call({ courseId, id, type: 'image' })
     }
 
     return (
@@ -90,7 +111,7 @@ const AddCourseTab3 = (_, ref) => {
             <div className='create-whom card-bg'>
                 <h3 className='create-whom__title display-4'>О курсе</h3>
                 {descriptions.map((props, index) => (
-                    <AddCourseDescription key={index} {...props} index={index} changeField={changeDescrField} />
+                    <AddCourseDescription key={index} {...props} index={index} changeField={changeDescrField} onDelete={onDeleteDescr} onDeleteImg={onDeleteImg} />
                 ))}
 
                 <Button className='create-whom__add' onClick={() => onAddDescr()} outline>
@@ -105,7 +126,15 @@ const AddCourseTab3 = (_, ref) => {
             <div className='create-price card-bg'>
                 <h3 className='create-price__title display-4'>Стоимость</h3>
                 {prices.map((props, index) => (
-                    <AddCoursePrice key={index} {...props} index={index} changeField={changePricesField} changeModuleField={changePricesModulesField} modules={modules.data} />
+                    <AddCoursePrice
+                        key={index}
+                        {...props}
+                        index={index}
+                        changeField={changePricesField}
+                        changeModuleField={changePricesModulesField}
+                        modules={modules.data}
+                        onDelete={onDeletePrices}
+                    />
                 ))}
 
                 <Button className='create-whom__add' onClick={() => onAddPrices()} outline>

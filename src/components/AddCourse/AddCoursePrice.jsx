@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-const AddCoursePrice = ({ index, name, width, price_with_sale, price, text, changeField, changeModuleField, modules, moduls = [] }) => {
+const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, changeField, changeModuleField, modules, moduls = [], onDelete }) => {
     const [nameState, setName] = useState('')
     const [widthState, setWidth] = useState('')
     const [priceWithSaleState, setPriceWithSale] = useState('')
@@ -26,7 +26,7 @@ const AddCoursePrice = ({ index, name, width, price_with_sale, price, text, chan
         <div className='create-price__group'>
             <div className='create-price__group-top'>
                 <div className='create-price__subtitle'>Вариант участия {index + 1}</div>
-                <button className='create-price__delete'>
+                <button className='create-price__delete' onClick={() => onDelete(id, index)}>
                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
                             d='M19.3249 9.46826C19.3249 9.46826 18.7819 16.2033 18.4669 19.0403C18.3169 20.3953 17.4799 21.1893 16.1089 21.2143C13.4999 21.2613 10.8879 21.2643 8.27991 21.2093C6.96091 21.1823 6.13791 20.3783 5.99091 19.0473C5.67391 16.1853 5.13391 9.46826 5.13391 9.46826'

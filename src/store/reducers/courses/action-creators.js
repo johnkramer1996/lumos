@@ -56,7 +56,13 @@ export const courseHandlers = {
             dispatch(ModalsActionCreators.setContent({ title: 'Информация добавлена', descr: 'Ваш курс отправлен на модерацию.' }))
         },
     },
-    // deleteInfo
+    deleteInfo: {
+        ...defaultHandlers.deleteInfo,
+        success: ({ dispatch, response, data }) => {
+            dispatch(ModalsActionCreators.setIsShow(true))
+            dispatch(ModalsActionCreators.setContent({ title: 'Информация Удалена', descr: '' }))
+        },
+    },
     // fetchCourseUser
     fetchModules: {
         ...defaultHandlers.fetchModules,

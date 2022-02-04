@@ -23,7 +23,7 @@ export const trainerCoursesURL = {
     DELETE_COURSE: ({ courseId }) => `/cabinet/courses/${courseId}`,
     FETCH_INFO: ({ courseId }) => `/cabinet/courses/${courseId}/info`,
     EDIT_INFO: ({ courseId }) => `/cabinet/courses/${courseId}/info`,
-    DELETE_INFO: ({ courseId }) => `/cabinet/courses/${courseId}/info`,
+    DELETE_INFO: ({ courseId }) => `/cabinet/courses/${courseId}/info/delete`,
     FETCH_COURSE_USER: ({ courseId }) => `/cabinet/courses/${courseId}/users`,
 }
 export const trainerCoursesModulesURL = {

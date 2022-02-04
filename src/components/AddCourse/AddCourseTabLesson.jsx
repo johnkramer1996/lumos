@@ -6,7 +6,7 @@ import AddCourseModule from './AddCourseModule'
 import { useDispatch, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 
-const AddCourseTabLesson = ({ onDelete }, ref) => {
+const AddCourseTabLesson = (_, ref) => {
     const { courseId } = useParams()
     const { setContent, setIsShow, deleteModule, deleteLesson } = useDispatch()
     const course = useSelector(({ courses }) => courses.course)
@@ -61,8 +61,6 @@ const AddCourseTabLesson = ({ onDelete }, ref) => {
                 setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
             }
 
-            console.log(body)
-
             return {
                 isError,
                 body,
@@ -72,13 +70,10 @@ const AddCourseTabLesson = ({ onDelete }, ref) => {
 
     const onAddModule = () => {
         setModules([...modulesState, { name: '', hidden_id: +new Date().getTime() }])
-        // setModules([...modulesState, { name: '', hidden_id: +new Date().getTime(), lessonsshort: [{ name: '' }] }])
     }
-    const onDeleteModule = (_, id, index) => {
-        console.log(courseId, id)
-        setModules(modulesState.filter((item, inx) => inx !== index))
+    const onDeleteModule = (id, index) => {
         id && deleteModuleRequest.call({ courseId, id })
-        return
+        setModules(modulesState.filter((item, inx) => inx !== index))
     }
     const setModuleName = (index, name) => {
         setModules(modulesState.map((item, inx) => (inx === index ? { ...item, name } : item)))
@@ -89,7 +84,6 @@ const AddCourseTabLesson = ({ onDelete }, ref) => {
         setModules([...newModules])
     }
     const onDeleteLesson = (lessonId, indexModule, indexLesson) => {
-        // console.log(lessonId, indexModule, indexLesson, 'new')
         deleteLessonRequest.call({ courseId, lessonId })
         const newModules = modulesState.map((m, inxModule) =>
             inxModule !== indexModule

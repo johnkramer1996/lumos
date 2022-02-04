@@ -3,7 +3,7 @@ import { useInputFile } from 'hooks'
 import React, { useEffect, useState } from 'react'
 import { getImgUrl } from 'utils'
 
-const AddCourseDescription = ({ index, image, name, text, changeField }) => {
+const AddCourseDescription = ({ id, index, image, name, text, changeField, onDelete, onDeleteImg }) => {
     const [nameState, setName] = useState('')
     const [textState, setText] = useState('')
     const img = useInputFile()
@@ -25,7 +25,7 @@ const AddCourseDescription = ({ index, image, name, text, changeField }) => {
         <div className='create-whom__group'>
             <div className='create-whom__group-top'>
                 <div className='create-whom__subtitle'>Описание {index + 1}</div>
-                <button className='create-whom__delete'>
+                <button className='create-whom__delete' onClick={() => onDelete(id, index)}>
                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
                             d='M19.3249 9.46826C19.3249 9.46826 18.7819 16.2033 18.4669 19.0403C18.3169 20.3953 17.4799 21.1893 16.1089 21.2143C13.4999 21.2613 10.8879 21.2643 8.27991 21.2093C6.96091 21.1823 6.13791 20.3783 5.99091 19.0473C5.67391 16.1853 5.13391 9.46826 5.13391 9.46826'
@@ -57,7 +57,7 @@ const AddCourseDescription = ({ index, image, name, text, changeField }) => {
                             <input ref={img.ref} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={(e) => onChangeImage(e.target)} />
                             Загрузить {img.value ? 'новое' : 'изображение'}
                         </Button>
-                        <Button className='create-whom__remove-img' onClick={img.onDelete} outline>
+                        <Button className='create-whom__remove-img' onClick={() => (img.onDelete(), onDeleteImg(id))} outline>
                             Удалить
                         </Button>
                     </div>

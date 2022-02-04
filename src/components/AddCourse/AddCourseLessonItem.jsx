@@ -27,7 +27,7 @@ const AddCourseLessonItem = ({ id, hidden_id, indexModule, name, index, setName,
                     </svg>
                 </button>
                 <input type='text' placeholder='Название урока' value={state} onChange={(e) => onChange(e.target.value)} />
-                <button className='create-module__delete' onClick={() => onDelete(id, indexModule, index)}>
+                <button className='create-module__delete' onClick={() => onDelete(indexModule, index)}>
                     <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                         <path
                             d='M19.325 9.46826C19.325 9.46826 18.782 16.2033 18.467 19.0403C18.317 20.3953 17.48 21.1893 16.109 21.2143C13.5 21.2613 10.888 21.2643 8.28003 21.2093C6.96103 21.1823 6.13803 20.3783 5.99103 19.0473C5.67403 16.1853 5.13403 9.46826 5.13403 9.46826'

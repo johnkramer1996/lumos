@@ -46,8 +46,12 @@ export default class CoursesService {
             },
         })
     }
-    static async deleteInfo({ courseId = 1 } = {}) {
-        return await axios.delete(trainerCoursesURL.DELETE_INFO({ courseId }))
+    static async deleteInfo({ courseId = 1, ...body } = {}) {
+        return await axios.post(trainerCoursesURL.DELETE_INFO({ courseId }), body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
     }
     static async fetchCourseUser({ courseId = 1 } = {}) {
         return await axios.get(trainerCoursesURL.FETCH_COURSE_USER({ courseId }))
