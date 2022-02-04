@@ -14,6 +14,7 @@ const AddCourseTab3 = (_, ref) => {
     const [courseDescription, setCourseDescription] = useState('')
     const [descriptions, setDescriptions] = useState([])
     const [prices, setPrices] = useState([])
+    const [result_learn_text, setResult_learn_text] = useState('')
 
     const deleteInfoRequest = useRequest({
         request: deleteInfo,
@@ -22,7 +23,10 @@ const AddCourseTab3 = (_, ref) => {
         },
     })
 
-    useEffect(() => info.course?.description && setCourseDescription(info.course?.description), [info.course])
+    useEffect(() => {
+        info.course?.description && setCourseDescription(info.course?.description)
+        info.course?.result_learn_text && setResult_learn_text(info.course?.result_learn_text)
+    }, [info.course])
     useEffect(() => info.descriptions?.length && setDescriptions([...info.descriptions]), [info.descriptions])
     useEffect(() => info.prices?.length && setPrices([...info.prices]), [info.prices])
 
@@ -31,6 +35,7 @@ const AddCourseTab3 = (_, ref) => {
             const body = new FormData()
             const errors = []
             body.append('course_description', courseDescription)
+            body.append('result_learn_text', result_learn_text)
             descriptions.forEach(({ id, name, text, image }, index) => {
                 const createId = id !== undefined ? id : 'new_' + index
                 body.append(`descriptions[${createId}][image]`, image)
@@ -121,6 +126,14 @@ const AddCourseTab3 = (_, ref) => {
                     </svg>
                     <span>Добавить описание</span>
                 </Button>
+            </div>
+
+            <div className='create-price card-bg'>
+                <div className='course-edit__form-group form-group'>
+                    <h3 className='create-price__title display-4'>Результаты обучения</h3>
+                    <br />
+                    <input type='text' placeholder='Результаты обучения' value={result_learn_text} onChange={(e) => setResult_learn_text(e.target.value)} />
+                </div>
             </div>
 
             <div className='create-price card-bg'>

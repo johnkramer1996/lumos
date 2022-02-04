@@ -19,7 +19,6 @@ const AddCourseTab1 = (_, ref) => {
     const img = useInputFile()
 
     useEffect(() => {
-        console.log(course.anytime)
         course.name && setName(course.name)
         course.category_id && setCategoryId(course.category_id)
         course.type_study && setTypeStudy(course.type_study)
