@@ -144,9 +144,6 @@ const AddCourseTabLesson = (_, ref) => {
                     <div className='create-module__item form-group'>
                         <label htmlFor=''>Выберите тестовый урок</label>
 
-                        {console.log()}
-                        {console.log(modulesState)}
-
                         <select value={hidden_id} onChange={(e) => sethidden_id(e.target.value)}>
                             <option defaultValue hidden>
                                 Выберите тестовый урок
