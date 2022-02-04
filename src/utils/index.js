@@ -49,14 +49,13 @@ export const asyncAction =
         try {
             before({ dispatch })
             beforeTwo({ dispatch })
-            await timeout(100)
+            // await timeout(100)
             const response = await request(data)
             const successArgs = { dispatch, response, data: getData(response) }
             if (response.status === 200) success(successArgs)
             if (response.status === 200) successTwo(successArgs)
         } catch (e) {
-            console.log(e)
-            console.log(e.response || e.message || 'Unknown error')
+            console.log(e, e.response || e.message || 'Unknown error')
             error({ dispatch, error: e.response || e.message || 'Unknown error' })
             errorTwo({ dispatch, error: e.response || e.message || 'Unknown error' })
         } finally {

@@ -1,23 +1,57 @@
-import React from 'react'
+import { useDispatch } from 'hooks'
+import useQuery from 'hooks/useQuery'
+import React, { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { useLocation, useNavigate, createSearchParams } from 'react-router-dom'
 import FilterItems from './FilterItems'
 
 const Filter = () => {
+    const query = useQuery()
+    const location = useLocation()
+    const navigate = useNavigate()
+    const { setFilter } = useDispatch()
+    const filter = useSelector(({ settings }) => settings.filter)
     const { themes, type_study, difficulty, format, event_types } = useSelector(({ system }) => system.references)
 
-    const filtersItems = [
-        { title: 'Категория', items: themes },
-        { title: 'Тип обучения', items: type_study },
-        { title: 'Сложность', items: difficulty },
-        { title: 'Формат', items: format },
-    ]
+    const filtersItems = useMemo(
+        () => [
+            { paramName: 'themes', title: 'Категория', items: themes, activeParams: filter.themes },
+            { paramName: 'type_study', title: 'Тип обучения', items: type_study, active: filter.type_study },
+            { paramName: 'difficulty', title: 'Сложность', items: difficulty, active: filter.difficulty },
+            { paramName: 'format_study', title: 'Формат', items: format, active: filter.format_study },
+        ],
+        [filter],
+    )
+
+    useEffect(() => {
+        setFilter({ ...filter, themes: query.getAll('themes') ?? [] })
+    }, [location])
+
+    const onChangeFilter = (name, value, checked) => {
+        let newArray = [...filter[name]]
+
+        if (checked) {
+            !newArray.includes(value) && newArray.push(value)
+        } else {
+            newArray = newArray.filter((item) => item !== value)
+        }
+
+        const newfilter = { ...filter, [name]: newArray }
+
+        navigate({
+            pathname: location.pathname,
+            search: `?${createSearchParams(newfilter)}`,
+            // search: '?themes=' + newThemes.join(','),
+        })
+        setFilter(newfilter)
+    }
 
     return (
         <>
             <div className='filter'>
                 <div className='filter__inner'>
                     {filtersItems.map((props, index) => (
-                        <FilterItems key={index} {...props} items={props.items || []} />
+                        <FilterItems key={index} {...props} items={props.items} onChange={onChangeFilter} />
                     ))}
                     <button className='filter__save btn btn-blue'>Применить</button>
                 </div>

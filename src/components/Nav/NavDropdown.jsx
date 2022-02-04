@@ -17,7 +17,7 @@ const NavDropdown = ({ items = [] }) => {
             </div>
             <div className='nav__dropdown-hidden'>
                 {items.map(({ id, name }) => (
-                    <Link key={id} to={`${RouteNames.COURSES}/${id}`} className='nav__dropdown-link' onClick={() => setIsActive(false)}>
+                    <Link key={id} to={`${RouteNames.COURSES}?themes=${id}`} className='nav__dropdown-link' onClick={() => setIsActive(false)}>
                         {name}
                     </Link>
                 ))}
