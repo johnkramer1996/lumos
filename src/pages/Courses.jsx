@@ -7,15 +7,17 @@ import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 import CabinetTitle from 'components/Cabinet/CabinetTitle'
 
 const Courses = () => {
-    const { fetchFrontCourses, fetchCourses } = useDispatch()
+    const { fetchFrontCourses } = useDispatch()
     const { data: allFrontCourses = [] } = useSelector(({ frontCourses }) => frontCourses.courses)
     const filter = useSelector(({ settings }) => settings.filter)
 
     const fetchFrontCoursesRequest = useRequest({
         request: fetchFrontCourses,
+        isLoadingDefault: true,
     })
     useEffect(() => fetchFrontCoursesRequest.call(), [])
-    useEffect(() => fetchCourses.call(), [])
+
+    console.log(fetchFrontCoursesRequest)
 
     const filteredCourses = useMemo(
         () =>
@@ -26,7 +28,7 @@ const Courses = () => {
                 const filter4 = filter.difficulty.length ? filter.difficulty.find((id) => +id === +difficulty_level) : true
                 return filter1 && filter2 && filter3 && filter4
             }),
-        [filter],
+        [filter, allFrontCourses],
     )
 
     return (
@@ -41,7 +43,7 @@ const Courses = () => {
                             <div className='courses'>
                                 <CabinetTitle title={'Популярные курсы'} btnHref={'/'} />
 
-                                <CoursesItemWrapper items={filteredCourses} isLoading={fetchCourses.isLoading} numberComponent={1} className={'courses__items'} />
+                                <CoursesItemWrapper items={filteredCourses} isLoading={fetchFrontCoursesRequest.isLoading} numberComponent={1} className={'courses__items'} />
                             </div>
                         </main>
                     </div>

@@ -9,11 +9,11 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
     const { logout } = useDispatch()
     const user = useSelector(({ auth }) => auth.user)
     const avatar = useInputFile()
-    const email = useInput({ isDisabled: true })
-    const createdAt = useInput()
-    const password = useInput({ initialValue: 'password', isDisabled: true })
-    const vacationStart = useInput({ isDate: true })
-    const vacationEnd = useInput({ isDate: true })
+    const email = useInput({ bind: { className: 'account-settings__item-input' }, is: { isDisabled: true } })
+    const createdAt = useInput({ bind: { className: 'account-settings__item-input' } })
+    const password = useInput({ initialValue: 'password', bind: { className: 'account-settings__item-input' }, is: { isDisabled: true } })
+    const vacationStart = useInput({ bind: { className: 'account-settings__item-input' }, is: { isDate: true } })
+    const vacationEnd = useInput({ bind: { className: 'account-settings__item-input' }, is: { isDate: true } })
 
     useEffect(() => {
         user.avatar && avatar.setValue(getImgUrl(user.avatar))

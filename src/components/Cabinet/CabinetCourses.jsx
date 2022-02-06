@@ -5,13 +5,15 @@ import { useSelector } from 'react-redux'
 
 const CabinetCourses = () => {
     const { fetchCourses } = useDispatch()
-    const roles = useSelector(({ auth }) => auth.user.roles)
+    const roles = useSelector(({ auth }) => auth.user?.roles)
+    const activeRole = (roles[0]?.pivot?.role_id || 1) - 1
     const fetchCoursesRequest = useRequest({
         request: fetchCourses,
+        isLoadingDefault: true,
     })
     useEffect(() => fetchCoursesRequest.call({ page: 1, limit: 1000 }), [])
 
-    const ActivePage = [CabinetCoursesUser, CabinetCoursesTrainer, CabinetCoursesEmployee][(roles[0]?.pivot?.role_id || 1) - 1]
+    const ActivePage = [CabinetCoursesUser, CabinetCoursesTrainer, CabinetCoursesEmployee][activeRole]
 
     return React.createElement(ActivePage, { isLoading: fetchCoursesRequest.isLoading }, null)
 }

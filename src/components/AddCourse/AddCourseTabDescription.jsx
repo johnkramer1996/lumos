@@ -1,20 +1,29 @@
-import { Button } from 'components/ui'
-import { useDispatch, useRequest } from 'hooks'
+import { Button, Input } from 'components/ui'
+import { useDispatch, useInput, useNavigate, useRequest } from 'hooks'
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import AddCourseDescription from './AddCourseDescription'
 import AddCoursePrice from './AddCoursePrice'
+import { ReactComponent as AddSvg } from 'svg/add.svg'
 
-const AddCourseTab3 = (_, ref) => {
+const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
     const { courseId } = useParams()
-    const { setContent, setIsShow, deleteInfo } = useDispatch()
-    const info = useSelector(({ courses }) => courses.info)
+    const { toCabinetItems } = useNavigate()
+    const { setIsShow, setContent, fetchInfo, editInfo, deleteInfo } = useDispatch()
+    const course = useSelector(({ courses }) => courses.course)
     const modules = useSelector(({ courses }) => courses.modules)
-    const [courseDescription, setCourseDescription] = useState('')
+    const info = useSelector(({ courses }) => courses.info)
+    const hasCourse = !(Object.keys(course).length === 0)
+    const hasModuls = !(Object.keys(modules).length === 0)
+    const hasInfo = !(Object.keys(info).length === 0)
+
+    const courseDescription = useInput({ bind: { name: 'courseDescription' }, callbackHandler: inputCallbackHandler, is: { isRequired: true, isTextarea: true } })
+    const result_learn_text = useInput({ bind: { name: 'result_learn_text' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
+
+    // const [courseDescription, setCourseDescription] = useState('')
     const [descriptions, setDescriptions] = useState([])
     const [prices, setPrices] = useState([])
-    const [result_learn_text, setResult_learn_text] = useState('')
 
     const deleteInfoRequest = useRequest({
         request: deleteInfo,
@@ -22,20 +31,35 @@ const AddCourseTab3 = (_, ref) => {
             console.log(data)
         },
     })
+    const editInfoRequest = useRequest({
+        request: editInfo,
+        success: ({ response, data }) => {
+            setIsShow(true)
+            setContent({ title: 'Информация о курсе обновлена' })
+            return
+            toCabinetItems()
+        },
+    })
 
     useEffect(() => {
-        info.course?.description && setCourseDescription(info.course?.description)
-        info.course?.result_learn_text && setResult_learn_text(info.course?.result_learn_text)
+        info.course?.description && courseDescription.setValue(info.course.description)
+        info.course?.result_learn_text && result_learn_text.setValue(info.course.result_learn_text)
     }, [info.course])
     useEffect(() => info.descriptions?.length && setDescriptions([...info.descriptions]), [info.descriptions])
     useEffect(() => info.prices?.length && setPrices([...info.prices]), [info.prices])
 
     useImperativeHandle(ref, () => ({
-        getData: () => {
+        check: () => {
+            const isError = [courseDescription, result_learn_text].filter((i) => i.check(i.value))
+            if (!descriptions.length) return false
+            if (!prices.length) return false
+            return !isError.length
+            // const errors = []
+        },
+        send: () => {
             const body = new FormData()
-            const errors = []
-            body.append('course_description', courseDescription)
-            body.append('result_learn_text', result_learn_text)
+            body.append('course_description', courseDescription.value)
+            body.append('result_learn_text', result_learn_text.value)
             descriptions.forEach(({ id, name, text, image }, index) => {
                 const createId = id !== undefined ? id : 'new_' + index
                 body.append(`descriptions[${createId}][image]`, image)
@@ -52,19 +76,8 @@ const AddCourseTab3 = (_, ref) => {
                 for (const item of Object.keys(moduls)) {
                     moduls[item] && body.append(`prices[${createId}][moduls][]`, item)
                 }
-                if (!Object.keys(moduls).length) errors.push('moduls')
             })
-            if (!descriptions.length) errors.push('descriptions')
-            if (!prices.length) errors.push('prices')
-            const isError = errors.length
-            if (isError) {
-                setIsShow(true)
-                setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
-            }
-            return {
-                isError,
-                body,
-            }
+            editInfoRequest.call({ courseId, body })
         },
     }))
 
@@ -79,10 +92,12 @@ const AddCourseTab3 = (_, ref) => {
     const changeDescrField = (field, index, value) => {
         const newDescription = [...descriptions]
         newDescription[index][field] = value
-        console.log(newDescription)
         setDescriptions([...newDescription])
     }
     const onAddPrices = () => {
+        const isError = prices.filter((price) => price.inputs.filter((i) => i.check(i.value)).length)
+        const isModules = prices[0].checkbox.value.find((v) => v === true)
+        if (isError.length || !isModules) return
         setPrices([...prices, { name: '', width: '', price_with_sale: '', price: '', text: '' }])
     }
     const onDeletePrices = (id, index) => {
@@ -100,42 +115,42 @@ const AddCourseTab3 = (_, ref) => {
         newPrices[index][field][value] = checked
         setPrices([...newPrices])
     }
-    const onDeleteImg = (id) => {
-        id && deleteInfoRequest.call({ courseId, id, type: 'image' })
-    }
+    const onDeleteImg = (id) => id && deleteInfoRequest.call({ courseId, id, type: 'image' })
 
     return (
         <>
             <div className='create-about card-bg'>
                 <h3 className='create-about__title display-4'>О курсе</h3>
                 <div className='create-about__editor'>
-                    <textarea value={courseDescription} onChange={(e) => setCourseDescription(e.target.value)}></textarea>
+                    <Input input={courseDescription} />
                 </div>
             </div>
-
             <div className='create-whom card-bg'>
                 <h3 className='create-whom__title display-4'>О курсе</h3>
                 {descriptions.map((props, index) => (
-                    <AddCourseDescription key={index} {...props} index={index} changeField={changeDescrField} onDelete={onDeleteDescr} onDeleteImg={onDeleteImg} />
+                    <AddCourseDescription
+                        key={index}
+                        {...props}
+                        index={index}
+                        changeField={changeDescrField}
+                        onDelete={onDeleteDescr}
+                        onDeleteImg={onDeleteImg}
+                        callbackHandler={inputCallbackHandler}
+                    />
                 ))}
-
                 <Button className='create-whom__add' onClick={() => onAddDescr()} outline>
-                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                        <path d='M12.039 4V20' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                        <path d='M20 12.038H4' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                    </svg>
+                    <AddSvg />
                     <span>Добавить описание</span>
                 </Button>
             </div>
-
             <div className='create-price card-bg'>
                 <div className='course-edit__form-group form-group'>
                     <h3 className='create-price__title display-4'>Результаты обучения</h3>
-                    <br />
-                    <input type='text' placeholder='Результаты обучения' value={result_learn_text} onChange={(e) => setResult_learn_text(e.target.value)} />
+                    <div className='create-about__editor'>
+                        <input type='text' placeholder='Результаты обучения' {...result_learn_text.bind} />
+                    </div>
                 </div>
             </div>
-
             <div className='create-price card-bg'>
                 <h3 className='create-price__title display-4'>Стоимость</h3>
                 {prices.map((props, index) => (
@@ -147,14 +162,12 @@ const AddCourseTab3 = (_, ref) => {
                         changeModuleField={changePricesModulesField}
                         modules={modules.data}
                         onDelete={onDeletePrices}
+                        callbackHandler={inputCallbackHandler}
+                        prices={prices}
                     />
                 ))}
-
                 <Button className='create-whom__add' onClick={() => onAddPrices()} outline>
-                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                        <path d='M12.039 4V20' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                        <path d='M20 12.038H4' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                    </svg>
+                    <AddSvg />
                     <span>Добавить вариант участия</span>
                 </Button>
             </div>

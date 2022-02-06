@@ -1,77 +1,101 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
-import { Button } from 'components/ui'
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { Button, Input } from 'components/ui'
 import { useSelector } from 'react-redux'
 import AddCourseLesson from './AddCourseLesson'
 import AddCourseModule from './AddCourseModule'
-import { useDispatch, useRequest } from 'hooks'
+import { useDispatch, useInput, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
+import { uid } from 'utils'
+import { ReactComponent as AddSvg } from 'svg/add.svg'
 
-const AddCourseTabLesson = (_, ref) => {
+const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
     const { courseId } = useParams()
-    const { setContent, setIsShow, deleteModule, deleteLesson } = useDispatch()
+    const { setContent, setIsShow, deleteModule, deleteLesson, addModulesMass, fetchModules } = useDispatch()
     const course = useSelector(({ courses }) => courses.course)
     const modules = useSelector(({ courses }) => courses.modules)
     const info = useSelector(({ courses }) => courses.info)
-    const [shortDescr, setShortDescr] = useState('')
-    const [hidden_id, sethidden_id] = useState('')
+    const hasCourse = !(Object.keys(course).length === 0)
+    const hasModuls = !(Object.keys(modules).length === 0)
+    const hasInfo = !(Object.keys(info).length === 0)
+
+    const shortDescr = useInput({
+        bind: { name: 'shortDescr' },
+        callbackHandler: inputCallbackHandler,
+        is: { isRequired: true, isTextarea: true },
+    })
+    const hidden_id = useInput({ bind: { name: 'hidden_id' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
     const [modulesState, setModules] = useState([])
+
+    const fetchModulesRequest = useRequest({
+        request: fetchModules,
+    })
+    const addModulesMassRequest = useRequest({
+        request: addModulesMass,
+        success: ({ response, data }) => {
+            fetchModulesRequest.call({ courseId })
+            setIsShow(true)
+            if (!hasInfo) refTabs.current.nextItems()
+            hasInfo ? setContent({ title: 'Уроки обновлены,' }) : setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' })
+        },
+    })
 
     const deleteModuleRequest = useRequest({
         request: deleteModule,
-        success: ({ dispatch, response, data }) => {
-            console.log(data)
-        },
     })
     const deleteLessonRequest = useRequest({
         request: deleteLesson,
-        success: ({ dispatch, response, data }) => {
-            console.log(data)
-        },
     })
 
-    useEffect(() => modules.data?.length && setModules([...modules.data.reverse()]), [modules])
     useEffect(() => {
-        info.course?.short_desc && setShortDescr(info.course?.short_desc)
-        info.course?.test_lesson && sethidden_id(info.course?.test_lesson.hidden_id)
+        modules.data?.length && setModules([...modules.data.reverse()])
+    }, [modules])
+    useEffect(() => {
+        info.course?.short_desc && shortDescr.setValue(info.course.short_desc)
+        info.course?.test_lesson && hidden_id.setValue(info.course.test_lesson.hidden_id)
     }, [info.course])
 
     useImperativeHandle(ref, () => ({
-        getData: () => {
+        check: () => {
+            const modulesInputs = modulesState.map(({ input, lessonsshort }) => [input, ...lessonsshort.map(({ input }) => input)]).flat()
+            const isError = [shortDescr, hidden_id, ...modulesInputs].filter((i) => i.check(i.value))
+            return !isError.length
+        },
+        send: () => {
+            if (!ref.current.check()) return
             const body = {
                 name: course?.name,
-                short_desc: shortDescr,
+                short_desc: shortDescr.value,
                 format_study: course?.format_study,
                 type_study: course?.type_study,
                 category_id: course?.category_id,
-                moduls: modulesState.map((mod) => ({
-                    ...mod,
-                    name: mod.name || 'Название модуля',
-                    lessons: mod.lessonsshort?.map((l, index) => ({ ...l, name: l.name || 'Название урока', number: index, is_test: l.hidden_id === hidden_id })),
+                moduls: modulesState.map((m) => ({
+                    id: m.id,
+                    name: m.name,
+                    lessons: m.lessonsshort?.map((l, index) => ({
+                        id: l.id,
+                        name: l.name,
+                        hidden_id: l.hidden_id,
+                        number: index,
+                        is_test: l.hidden_id === hidden_id,
+                    })),
                 })),
             }
 
-            console.log(body, 'body')
-
-            const errors = []
-            if (!modulesState.length) errors.push('moduls')
-            if (hidden_id === '') errors.push('hidden_id')
-            const isError = errors.length
-            if (isError) {
-                setIsShow(true)
-                setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
-            }
-
-            return {
-                isError,
-                body,
-            }
+            addModulesMassRequest.call({ courseId, body })
         },
     }))
 
     const onAddModule = () => {
-        setModules([...modulesState, { name: '', hidden_id: +new Date().getTime() }])
+        const isError = modulesState.filter(({ input }) => input.check(input.value))
+        if (isError.length) return
+        setModules([...modulesState, { name: '', lessonsshort: [], hidden_id: uid() }])
     }
     const onDeleteModule = (id, index) => {
+        if (modulesState[index].lessonsshort.length) {
+            setIsShow(true)
+            setContent({ title: 'У модуля есть уроки, ', descr: 'удалите уроки, потом удалите модуль' })
+            return
+        }
         id && deleteModuleRequest.call({ courseId, id })
         setModules(modulesState.filter((item, inx) => inx !== index))
     }
@@ -79,12 +103,13 @@ const AddCourseTabLesson = (_, ref) => {
         setModules(modulesState.map((item, inx) => (inx === index ? { ...item, name } : item)))
     }
     const onAddLesson = (index) => {
+        const isError = modulesState[index].lessonsshort.filter(({ input }) => input.check(input.value))
+        if (isError.length) return
         const newModules = [...modulesState]
-        newModules[index].lessonsshort.push({ name: '', hidden_id: +new Date().getTime() })
+        newModules[index].lessonsshort.push({ name: '', hidden_id: uid() })
         setModules([...newModules])
     }
     const onDeleteLesson = (lessonId, indexModule, indexLesson) => {
-        console.log(lessonId)
         lessonId && deleteLessonRequest.call({ courseId, lessonId })
         const newModules = modulesState.map((m, inxModule) =>
             inxModule !== indexModule
@@ -108,44 +133,43 @@ const AddCourseTabLesson = (_, ref) => {
         <>
             <div className='course-edit__small-desc card-bg'>
                 <div className='course-edit__small-desc-title display-4'>Короткое описание</div>
-                <div className='form-group'>
-                    <label>
-                        <span>Описание</span>
-                        <span>335/600</span>
-                    </label>
-                    <textarea placeholder='Описание' value={shortDescr} onChange={(e) => setShortDescr(e.target.value)}></textarea>
-                </div>
+                <Input className='' input={shortDescr} label='Описание' />
             </div>
             <div className='create-module card-bg'>
                 <h3 className='create-module__title display-4'>Модули</h3>
                 <div className='create-module__items'>
                     {modulesState.map((props, index) => (
                         <div key={props.id ?? props.hidden_id}>
-                            <AddCourseModule {...props} index={index} setName={setModuleName} onDelete={onDeleteModule} />
+                            <AddCourseModule {...props} index={index} modulesState={modulesState} setName={setModuleName} onDelete={onDeleteModule} callbackHandler={inputCallbackHandler} />
                         </div>
                     ))}
                 </div>
-                <Button className='create-module__add' onClick={() => onAddModule()} outline>
-                    <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                        <path d='M12.039 4V20' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                        <path d='M20 12.038H4' stroke='#1B2C3E' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                    </svg>
+                <Button className='create-module__add' onClick={onAddModule} outline>
+                    <AddSvg />
                     <span>Добавить модуль</span>
                 </Button>
             </div>
             {modulesState.map((props, index) => (
-                <AddCourseLesson key={props.id ?? props.hidden_id} {...props} lessons={props.lessonsshort} index={index} setName={setLessonName} onAdd={onAddLesson} onDelete={onDeleteLesson} />
+                <AddCourseLesson
+                    key={props.id ?? props.hidden_id}
+                    {...props}
+                    lessons={props.lessonsshort}
+                    modulesState={modulesState}
+                    index={index}
+                    setName={setLessonName}
+                    onAdd={onAddLesson}
+                    onDelete={onDeleteLesson}
+                    callbackHandler={inputCallbackHandler}
+                />
             ))}
-
             <div className='create-module card-bg'>
                 <div className='create-module__top'>
                     <h3 className='create-module__title display-4'>Тестовый урок</h3>
                 </div>
                 <div className='create-module__items'>
                     <div className='create-module__item form-group'>
-                        <label htmlFor=''>Выберите тестовый урок</label>
-
-                        <select value={hidden_id} onChange={(e) => sethidden_id(e.target.value)}>
+                        <label htmlFor='test_lesson'>Выберите тестовый урок</label>
+                        <select id='test_lesson' {...hidden_id.bind}>
                             <option defaultValue hidden>
                                 Выберите тестовый урок
                             </option>
@@ -154,7 +178,7 @@ const AddCourseTabLesson = (_, ref) => {
                                 item?.lessonsshort
                                     ?.filter(({ name }) => name !== '')
                                     .map(({ id, name, hidden_id }, indexLesson) => (
-                                        <option key={index + '' + indexLesson} value={hidden_id}>
+                                        <option key={id || hidden_id} value={hidden_id}>
                                             {name}
                                         </option>
                                     )),

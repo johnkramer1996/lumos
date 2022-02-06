@@ -7,7 +7,7 @@ const CabinetSettingsPersonalInformation = ({ onBlur }) => {
     const user = useSelector(({ auth }) => auth.user)
     const firstName = useInput()
     const lastName = useInput()
-    const phone = useInput({ isDisabled: true })
+    const phone = useInput({ is: { isDisabled: true } })
 
     useEffect(() => {
         user.first_name && firstName.setValue(user.first_name)

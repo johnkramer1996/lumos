@@ -7,7 +7,7 @@ import { declOfNum, getDeclOfArray, getImgUrl } from 'utils'
 const CoursesItem2 = ({ id = 0, image, name, all_users }) => {
     return (
         <Link to={`${RouteNames.COURSES}/${id}`} className='course-card2'>
-            <div className='course-card2__img'>
+            <div className='course-card2__img img img--cover'>
                 <img src={getImgUrl(image)} alt='' />
             </div>
             <div className='course-card2__content'>

@@ -1,46 +1,35 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from 'components/ui'
 import { useDispatch, useNavigate, useRequest } from 'hooks/'
 import { AddCourseTabMain, AddCourseTabLesson, AddCourseTabDescription, Tabs } from 'components'
 import { useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { isActiveClass } from 'utils'
 
 const CabinetAddCourse = () => {
     const { courseId } = useParams()
     const isEditPage = !!courseId
-    const { toCabinetItemsItem, toCabinetItemsEdit, toCabinetItems, toError } = useNavigate()
-    const { setCourse, setInfo, setModules, fetchCourse, addCourse, putCourse, fetchInfo, editInfo, fetchModules, addModulesMass, deleteModule } = useDispatch()
+    const { toCabinetItemsItem, toError } = useNavigate()
+    const { setIsShow, setContent, setCourse, setInfo, setModules, fetchCourse, fetchInfo, fetchModules } = useDispatch()
+    const course = useSelector(({ courses }) => courses.course)
+    const modules = useSelector(({ courses }) => courses.modules)
+    const info = useSelector(({ courses }) => courses.info)
+    const hasCourse = !(Object.keys(course).length === 0)
+    const hasModuls = !(Object.keys(modules).length === 0)
+    const hasInfo = !(Object.keys(info).length === 0)
+    const [hasSave, setHasSave] = useState(false)
 
     const fetchCourseRequest = useRequest({
         request: fetchCourse,
         error: ({ error }) => error.status === 404 && toError(),
     })
-    const addCourseRequest = useRequest({
-        request: addCourse,
-        success: ({ dispatch, response, data }) => {
-            refTabs.current.nextItems()
-            toCabinetItemsEdit({ courseId: data.course.id })
-        },
-    })
-    const putCourseRequest = useRequest({
-        request: putCourse,
+    const fetchModulesRequest = useRequest({
+        request: fetchModules,
     })
     const fetchInfoRequest = useRequest({
         request: fetchInfo,
     })
-    const editInfoRequest = useRequest({
-        request: editInfo,
-        success: ({ dispatch, response, data }) => toCabinetItems(),
-    })
-    const fetchModulesRequest = useRequest({
-        request: fetchModules,
-    })
-    const addModulesMassRequest = useRequest({
-        request: addModulesMass,
-        success: ({ dispatch, response, data }) => {
-            refTabs.current.nextItems()
-            fetchModulesRequest.call({ courseId })
-        },
-    })
+
     useEffect(() => {
         if (isEditPage) {
             fetchCourseRequest.call({ courseId })
@@ -58,51 +47,75 @@ const CabinetAddCourse = () => {
     const refTabMain = useRef()
     const refTabLesson = useRef()
     const refTabDescription = useRef()
+    const refsTab = useMemo(() => [refTabMain, refTabLesson, refTabDescription], [])
 
     const onSave = useCallback(
         (e) => {
             e.preventDefault()
-
             const tabItems = refTabs.current.getItems()
             if (!tabItems) return
-
-            const tabHandlers = [
-                {
-                    ref: refTabMain,
-                    call: (body) => (courseId ? putCourseRequest.call({ courseId, body }) : addCourseRequest.call({ body })),
-                },
-                {
-                    ref: refTabLesson,
-                    call: (body) => addModulesMassRequest.call({ courseId, body }),
-                },
-                {
-                    ref: refTabDescription,
-                    call: (body) => editInfoRequest.call({ courseId, body }),
-                },
-            ]
-
-            const { body = {}, isError } = tabHandlers[tabItems.indexActive]?.ref?.current.getData() || {}
-            // for (const item of body.entries()) console.log(item)
-            // return
-            if (isError) return
-            tabHandlers[tabItems.indexActive]?.call(body)
+            if (!refsTab[tabItems.indexActive]?.current.check()) {
+                setIsShow(true)
+                setContent({ title: 'Заполните все поля' })
+                return
+            }
+            refsTab[tabItems.indexActive]?.current.send()
+            setHasSave(false)
         },
-        [courseId, addCourseRequest, addModulesMassRequest, editInfoRequest, putCourseRequest],
+        [courseId],
     )
 
-    const onCancel = useCallback(() => toCabinetItemsItem({ courseId }), [courseId, toCabinetItemsItem])
+    const onCancel = () => {
+        setCourse({ ...course })
+        setInfo({ ...info })
+        setModules({ ...modules })
+        setHasSave(false)
+        setTimeout(() => refsTab[tabItems.indexActive]?.current.check(), 0)
+
+        // toCabinetItemsItem({ courseId })
+    }
+
+    const inputCallbackHandler = (event, payload) => {
+        if (event === 'change') setHasSave(true)
+        if (event === 'delete') setHasSave(true)
+    }
+
+    const tabsCallbackHandler = (event, payload) => {
+        if (event === 'changeTab') setHasSave(false)
+    }
 
     const tabItems = useMemo(
         () => ({
             items: [
-                { title: 'Основная информация', isAvaible: isEditPage, component: <AddCourseTabMain ref={refTabMain} /> },
-                { title: 'Уроки', isAvaible: isEditPage, component: <AddCourseTabLesson ref={refTabLesson} /> },
-                { title: 'Страница курса', isAvaible: isEditPage, component: <AddCourseTabDescription ref={refTabDescription} /> },
+                {
+                    title: 'Основная информация',
+                    isAvaible: !hasSave && true,
+                    component: <AddCourseTabMain ref={refTabMain} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
+                },
+                {
+                    title: 'Уроки',
+                    isAvaible: !hasSave && hasCourse,
+                    component: <AddCourseTabLesson ref={refTabLesson} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
+                },
+                {
+                    title: 'Страница курса',
+                    isAvaible: !hasSave && hasModuls,
+                    component: <AddCourseTabDescription ref={refTabDescription} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
+                },
             ],
             indexActive: 0,
         }),
         [],
     )
+    useEffect(() => {
+        tabItems.items.forEach((item, index) => {
+            if (index === 0) item.isAvaible = !hasSave && true
+            if (index === 1) item.isAvaible = !hasSave && hasCourse
+            if (index === 2) item.isAvaible = !hasSave && hasModuls
+        })
+    }, [hasCourse, hasModuls, hasSave])
+
+    // useEffect(() => refTabs.current.nextItems(), [])
 
     return (
         <section className='course-edit'>
@@ -112,14 +125,14 @@ const CabinetAddCourse = () => {
                         <h1 className='course-edit__title display-3'>
                             <span>{isEditPage ? 'Редактирование' : 'Добавление'} курса</span>
                         </h1>
-                        <Tabs ref={refTabs} items={tabItems} classPrefix={'course-edit'} isLoading={fetchCourseRequest.isLoading} />
+                        <Tabs ref={refTabs} items={tabItems} classPrefix={'course-edit'} isLoading={fetchCourseRequest.isLoading} callbackHandler={tabsCallbackHandler} />
                     </div>
                     <div className='course-edit__right'>
                         <div className='course-edit__hint'>
-                            <Button className='course-edit__hint-btn' onClick={onSave} color={'blue'}>
-                                {isEditPage ? 'Сохранить' : 'Добавить'}
+                            <Button className={`course-edit__hint-btn${isActiveClass(!hasSave, 'btn--disabled')}`} onClick={onSave}>
+                                {hasCourse ? 'Сохранить' : 'Добавить'}
                             </Button>
-                            {isEditPage && (
+                            {isEditPage && hasSave && (
                                 <>
                                     <Button className='course-edit__hint-cancel' onClick={onCancel} outline>
                                         Отменить

@@ -1,62 +1,83 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import { Button } from 'components/ui'
-import { deleteImg, getDate, getImgUrl, toBoolean, uploadImg } from 'utils'
+import React, { forwardRef, useEffect, useImperativeHandle } from 'react'
+import { Checkbox, ImgUpload, Input } from 'components/ui'
+import { getDate, getImgUrl } from 'utils'
 import { useSelector } from 'react-redux'
-import { useDispatch, useInput, useInputFile } from 'hooks'
+import { useDispatch, useInput, useInputFile, useNavigate, useRequest } from 'hooks'
+import { useParams } from 'react-router-dom'
 
-const AddCourseTab1 = (_, ref) => {
-    const { setContent, setIsShow } = useDispatch()
-    const course = useSelector(({ courses }) => courses.course)
+const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
+    const { courseId } = useParams()
+    const { toCabinetItemsEdit } = useNavigate()
+    const { setContent, setIsShow, setCourse, addCourse, putCourse } = useDispatch()
+    // const { _addCourse, _putCourse } = useDispatch()
     const { themes = [], type_study: typeStudy = [], format = [] } = useSelector(({ system }) => system.references)
-    const [name, setName] = useState('Название курса')
-    const [category_id, setCategoryId] = useState(-1)
-    const [type_study, setTypeStudy] = useState(-1)
-    const [format_study, setFormatStudy] = useState(-1)
-    const [sale_subscribe, setSubscribe] = useState(false)
-    const timing = useInput({ initialValue: getDate(new Date()) })
-    const [anytime, setAnytime] = useState(false)
-    const [width, setWidth] = useState('Длительность')
-    const img = useInputFile()
+    const course = useSelector(({ courses }) => courses.course)
+    const modules = useSelector(({ courses }) => courses.modules)
+    const info = useSelector(({ courses }) => courses.info)
+    const hasCourse = !(Object.keys(course).length === 0)
+    const hasModuls = !(Object.keys(modules).length === 0)
+    const hasInfo = !(Object.keys(info).length === 0)
+
+    const name = useInput({ bind: { name: 'name' }, callbackHandler: inputCallbackHandler, is: { isRequired: true, isName: true } })
+    const category_id = useInput({ bind: { name: 'category_id' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
+    const type_study = useInput({ bind: { name: 'type_study' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
+    const format_study = useInput({ bind: { name: 'format_study' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
+    const sale_subscribe = useInput({ initialValue: false, bind: { name: 'sale_subscribe' }, callbackHandler: inputCallbackHandler, is: { isCheckbox: true } })
+    const anytime = useInput({ initialValue: true, bind: { name: 'anytime' }, callbackHandler: inputCallbackHandler, is: { isCheckbox: true } })
+    const timing = useInput({ initialValue: getDate(new Date()), bind: { name: 'timing' }, callbackHandler: inputCallbackHandler, is: { date: true } })
+    const width = useInput({ bind: { name: 'width' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
+    const img = useInputFile({ callbackHandler: inputCallbackHandler })
 
     useEffect(() => {
-        course.name && setName(course.name)
-        course.category_id && setCategoryId(course.category_id)
-        course.type_study && setTypeStudy(course.type_study)
-        course.format_study && setFormatStudy(course.format_study)
-        course.sale_subscribe && setSubscribe(course.sale_subscribe)
-        course.anytime && setAnytime(course.anytime)
-        course.width && setWidth(course.width)
+        course.name && name.setValue(course.name)
+        course.category_id && category_id.setValue(course.category_id)
+        course.type_study && type_study.setValue(course.type_study)
+        course.format_study && format_study.setValue(course.format_study)
+        course.sale_subscribe && sale_subscribe.setValue(course.sale_subscribe)
+        course.anytime && anytime.setValue(course.anytime)
+        course.width && width.setValue(course.width)
         course.image && img.setValue(getImgUrl(course.image, false))
     }, [course])
 
+    const addCourseRequest = useRequest({
+        request: addCourse,
+        success: ({ response, data }) => {
+            refTabs.current.nextItems()
+            toCabinetItemsEdit({ courseId: data.course.id })
+            setCourse(data?.course)
+            setIsShow(true)
+            setContent({ title: 'Основная информация о курсе  - добавлена,', descr: 'теперь заполните Уроки' })
+        },
+    })
+    const putCourseRequest = useRequest({
+        request: putCourse,
+        success: ({ response, data }) => {
+            setCourse(data?.course)
+            setIsShow(true)
+            setContent({ title: 'Курс Обновлен' })
+        },
+    })
+
     useImperativeHandle(ref, () => ({
-        getData: () => {
+        check: () => {
+            const isError = [name, category_id, type_study, format_study, sale_subscribe, anytime, width, img].filter((i) => i.check(i.value))
+            console.log(isError.length)
+            return !isError.length
+        },
+        send: () => {
+            if (!ref.current.check()) return
             const body = new FormData()
-            body.append('name', name)
-            body.append('category_id', category_id)
-            body.append('type_study', type_study)
-            body.append('format_study', format_study)
+            body.append('name', name.value)
+            body.append('category_id', category_id.value)
+            body.append('type_study', type_study.value)
+            body.append('format_study', format_study.value)
             // body.append('timing', timing.value)
-            body.append('anytime', +anytime)
-            body.append('sale_subscribe', +sale_subscribe)
-            body.append('width', width)
+            body.append('anytime', +anytime.value)
+            body.append('sale_subscribe', +sale_subscribe.value)
+            body.append('width', width.value)
             img.ref.current?.files[0] && body.append('image', img.ref.current?.files[0])
-            body.append('dataimg', img.value)
 
-            const errors = []
-            for (const [key, value] of body.entries()) if (key !== 'image' && (value === '' || value === '-1' || value === 'undefined')) errors.push(key)
-            const isError = errors.length
-            if (isError) {
-                setIsShow(true)
-                setContent({ title: 'Обязательные поля - ' + errors.join(', ') })
-            }
-
-            for (const item of body.entries()) console.log(item)
-
-            return {
-                isError,
-                body,
-            }
+            hasCourse ? putCourseRequest.call({ courseId, body }) : addCourseRequest.call({ body })
         },
     }))
 
@@ -64,86 +85,20 @@ const AddCourseTab1 = (_, ref) => {
         <div className='course-edit__form'>
             <h3 className='course-edit__form-title'>Основная информация</h3>
             <div className='course-edit__form-grid'>
+                <Input className='course-edit__form-group' input={name} label={'Название'} />
+                <Input className='course-edit__form-group' input={category_id} label={'Категория'} list={themes} />
+                <Input className='course-edit__form-group' input={type_study} label={'Тип обучения'} list={typeStudy} />
+                <Input className='course-edit__form-group' input={format_study} label={'Формат'} list={format} />
                 <div className='course-edit__form-group form-group'>
-                    <label>Название</label>
-                    <input type='text' placeholder='Название' value={name} onChange={(e) => setName(e.target.value)} />
+                    <Input className='course-edit__form-group' input={timing} label={'Старт курса'} />
+                    <Checkbox className='course-edit__form-checkbox' input={anytime} label={'В любое время'} />
                 </div>
-                <div className='course-edit__form-group form-group'>
-                    <label>Категория</label>
-                    <select value={category_id} onChange={(e) => setCategoryId(e.target.value)}>
-                        <option defaultValue hidden>
-                            Категория
-                        </option>
-                        {themes.map(({ id, name }) => (
-                            <option key={id} value={id}>
-                                {name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className='course-edit__form-group form-group'>
-                    <label>Тип обучения</label>
-                    <select value={type_study} onChange={(e) => setTypeStudy(e.target.value)}>
-                        <option defaultValue hidden>
-                            Тип обучения
-                        </option>
-                        {typeStudy.map(({ id, name }) => (
-                            <option key={id} value={id}>
-                                {name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className='course-edit__form-group form-group'>
-                    <label>Формат</label>
-                    <select value={format_study} onChange={(e) => setFormatStudy(e.target.value)}>
-                        <option defaultValue hidden>
-                            Формат
-                        </option>
-                        {format.map(({ id, name }) => (
-                            <option key={id} value={id}>
-                                {name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div className='course-edit__form-group form-group'>
-                    <label>Старт курса</label>
-                    <input type='text' placeholder='Дата' {...timing.bind} />
-                    <div className='course-edit__form-checkbox checkbox'>
-                        <input type='checkbox' className='checkbox' id='anytime' checked={toBoolean(anytime)} onChange={(e) => setAnytime(e.target.checked)} />
-                        <label htmlFor='anytime'>В любое время</label>
-                    </div>
-                </div>
-                <div className='course-edit__form-group form-group'>
-                    <label>Длительность</label>
-                    <input type='text' placeholder='Длительность' value={width} onChange={(e) => setWidth(e.target.value)} />
-                </div>
-                <div className='course-edit__form-checkbox checkbox'>
-                    <input type='checkbox' className='checkbox' id='subscribe' checked={toBoolean(sale_subscribe)} onChange={(e) => setSubscribe(e.target.checked)} />
-                    <label htmlFor='subscribe'>Разрешить продавать по подписке</label>
-                </div>
+                <Input className='course-edit__form-group' input={width} label={'Длительность'} />
+                <Checkbox className='course-edit__form-checkbox' input={sale_subscribe} label={'Разрешить продавать по подписке'} />
             </div>
-            <div className='course-edit__form-upload'>
-                <div className='course-edit__form-upload-title'>Изображение</div>
-                <div className='course-edit__form-upload-desc'>
-                    Соотношение сторон: 16:9 (рекомендуемое разрешение: 1280x720) <br /> PNG, JPG до 5 MБ
-                </div>
-                <div className='course-edit__form-upload-wrap'>
-                    <div className='course-edit__form-upload-img'>{img.value && <img src={img.value} alt='' />}</div>
-                    <div className='course-edit__form-upload-buttons'>
-                        <Button className='course-edit__form-upload-btn btn--uploadfile'>
-                            <input ref={img.ref} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={img.onChange} />
-                            Загрузить {img ? 'новое' : 'изображение'}
-                        </Button>
-                        <Button className='course-edit__form-upload-delete' onClick={img.onDelete} outline>
-                            Удалить
-                        </Button>
-                    </div>
-                </div>
-            </div>
+            <ImgUpload img={img} title={'Изображение'} />
         </div>
     )
 }
 
-export default forwardRef(AddCourseTab1)
+export default forwardRef(AddCourseTabMain)

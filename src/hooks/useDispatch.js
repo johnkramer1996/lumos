@@ -8,8 +8,14 @@ const useDispatch = () => {
         () =>
             Object.keys(allActionCreators).reduce(
                 (obj, item) => (
-                    (obj[item] = (...props) => {
-                        !!allActionHandlers[item] ? dispatch(allActionCreators[item]({ ...(allActionHandlers[item] || {}), ...props[0] })) : dispatch(allActionCreators[item](...props))
+                    (obj[item] = (payload) => {
+                        if (!!allActionHandlers[item]) {
+                            //async
+                            dispatch(allActionCreators[item]({ ...(allActionHandlers[item] || {}), ...payload }))
+                        } else {
+                            //sync
+                            dispatch(allActionCreators[item](payload))
+                        }
                     }),
                     obj
                 ),

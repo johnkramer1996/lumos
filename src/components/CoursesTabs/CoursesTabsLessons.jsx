@@ -6,8 +6,6 @@ const CoursesTabsLessons = () => {
     const course = useSelector(({ courses }) => courses.course)
     const modules = useSelector(({ courses }) => courses.modules)
 
-    console.log(modules)
-
     return (
         <div className='lessons-tab'>
             <div className='lessons-tab__left'>

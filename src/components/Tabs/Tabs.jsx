@@ -1,17 +1,20 @@
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import PropTypes from 'prop-types'
 import { Loader } from 'components/ui'
-import React, { forwardRef, useImperativeHandle, useState } from 'react'
 
-const Tabs = ({ items, isLoading = false, classPrefix = 'course-report' }, ref) => {
+const Tabs = ({ items, isLoading = false, classPrefix = 'course-report', callbackHandler = () => {} }, ref) => {
     const [itemsState, setItems] = useState(items)
 
-    // useEffect(() => setItems({ ...items }), [items])
+    useEffect(() => setItems({ ...items }), [items])
 
     const events = {
         isAvaibleIndex: (index) => itemsState.items.find(({ isAvaible }, indexItems) => indexItems === index && isAvaible),
-        setItemsByIndex: (indexActive) => setItems({ ...itemsState, indexActive }),
-        nextItems: () => {
-            events.setItemsByIndex(itemsState.indexActive + 1 >= itemsState.items.length ? 0 : itemsState.indexActive + 1)
+        setItemsByIndex: (indexActive) => {
+            const newItems = { items: [...itemsState.items.map((i, index) => ({ ...i, isAvaible: i.isAvaible ? true : index <= indexActive }))], indexActive }
+            callbackHandler('changeTab', newItems)
+            setItems(newItems)
         },
+        nextItems: () => events.setItemsByIndex(itemsState.indexActive + 1 >= itemsState.items.length ? 0 : itemsState.indexActive + 1),
         changeTab: (index) => events.isAvaibleIndex(index) && events.setItemsByIndex(index),
         getItems: () => itemsState,
     }

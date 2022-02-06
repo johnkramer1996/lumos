@@ -31,40 +31,7 @@ const timeout = (time) => {
     return new Promise((res) => setTimeout(() => res(true), time))
 }
 
-export const asyncAction =
-    ({
-        data,
-        before = () => {},
-        request = () => {},
-        success = () => {},
-        error = () => {},
-        after = () => {},
-        getData = () => {},
-        beforeTwo = () => {},
-        successTwo = () => {},
-        errorTwo = () => {},
-        afterTwo = () => {},
-    } = {}) =>
-    async (dispatch) => {
-        try {
-            before({ dispatch })
-            beforeTwo({ dispatch })
-            // await timeout(100)
-            const response = await request(data)
-            const successArgs = { dispatch, response, data: getData(response) }
-            if (response.status === 200) success(successArgs)
-            if (response.status === 200) successTwo(successArgs)
-        } catch (e) {
-            console.log(e, e.response || e.message || 'Unknown error')
-            error({ dispatch, error: e.response || e.message || 'Unknown error' })
-            errorTwo({ dispatch, error: e.response || e.message || 'Unknown error' })
-        } finally {
-            after({ dispatch })
-            afterTwo({ dispatch })
-        }
-    }
-
-const getData = (response) => {
+export const getData = (response) => {
     let data = response.data
     while (data.data !== undefined) {
         data = data.data
@@ -73,13 +40,32 @@ const getData = (response) => {
     return data
 }
 
+// before/request/success/error/after - action-creators
+// dispatchEvent - useRequest
+
+export const asyncAction =
+    ({ data, dispatchEvent, request, success = () => {}, error = () => {} } = {}) =>
+    async (dispatch) => {
+        try {
+            // await timeout(100)
+            dispatchEvent('before', { dispatch })
+            const response = await request(data)
+            const successArgs = { response, data: getData(response) }
+            if (response.status === 200) success({ dispatch, ...successArgs })
+            if (response.status === 200) dispatchEvent('success', successArgs)
+        } catch (e) {
+            console.log(e, e.response || e.message || 'Unknown error')
+            error({ dispatch, error: e.response || e.message || 'Unknown error' })
+            dispatchEvent('error', { dispatch, error: e.response || e.message || 'Unknown error' })
+        } finally {
+            dispatchEvent('finnally', { dispatch })
+        }
+    }
+
 export const createhandle = (Service, method) => ({
-    before: () => {},
     request: async (data) => await Service[method](data),
     success: (response) => response,
     error: (error) => error,
-    getData,
-    after: () => {},
 })
 
 export const crateHandles = (Service) => {
@@ -124,3 +110,20 @@ export const uid = () => Date.now().toString(36) + Math.random().toString(36).su
 export const isActiveClass = (condition, className) => (condition ? ` ${className}` : '')
 
 export const toBoolean = (value) => (value === '0' ? false : !!value)
+
+export const isCheckbox = (input) => input.type === 'radio' || input.type === 'checkbox'
+
+export const maskDate = (e) => {
+    if (e.keyCode < 47 || e.keyCode > 57) e.preventDefault()
+    const len = e.target.value.length
+    if (len !== 1 || len !== 3) if (e.keyCode === 47) e.preventDefault()
+    if (len === 4) e.target.value += '-'
+    if (len === 7) e.target.value += '-'
+    if (len > 9) e.preventDefault()
+}
+
+export const validateName = (value) => /^[a-zа-яёїієґ ,.'-]+$/i.test(value)
+
+export const validatePhone = (value) => !value.includes('_')
+
+export const validateEmail = (value) => /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value)

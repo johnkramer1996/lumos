@@ -1,56 +1,88 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { maskDate, toBoolean, validateEmail, validateName, validatePhone } from 'utils'
 
-const useInput = ({ initialValue = '', isDisabled = false, isDate = false } = {}) => {
+const useInput = ({ initialValue = '', label = '', bind = {}, callbackHandler = () => {}, is: { isRequired, isDisabled, isDate, isCheckbox, isName, isPhone, isEmail, isTextarea } = {} } = {}) => {
     const [value, setValue] = useState(initialValue)
-    const [prevValue, setPrevValue] = useState(initialValue)
-    const ref = useRef()
+    const [error, setError] = useState('')
+    const prevValueRef = useRef(initialValue)
+    const propertyRef = useRef()
+    const inputRef = useRef()
 
-    const onChange = (e) => setValue(e.target.value)
-    const onFocus = (e) => setPrevValue(e.target.value)
-    const onBlur = (e) => isDisabled && ref.current.setAttribute('disabled', isDisabled)
+    const onChange = useCallback((e) => {
+        const newValue = !isCheckbox ? e.target.value : e.target.checked
+        check(newValue)
+        setValue(newValue)
+        callbackHandler('change', { event: e, property: propertyRef.current })
+        return true
+    }, [])
+    const onFocus = useCallback((e) => {
+        prevValueRef.current = !isCheckbox ? e.target.value : e.target.checked
+        callbackHandler('focus', { event: e, property: propertyRef.current })
+    }, [])
+    const onBlur = useCallback((e) => {
+        isDisabled && inputRef.current.setAttribute('disabled', isDisabled)
+        callbackHandler('blur', { event: e, property: propertyRef.current })
+    }, [])
     const onDisabledRemove = useCallback(() => {
-        if (isDisabled) ref.current.removeAttribute('disabled')
-        ref.current.focus()
-        const prevValue = ref.current.value
-        ref.current.value = ''
-        setTimeout(() => (ref.current.value = prevValue), 0)
+        inputRef.current.removeAttribute('disabled')
+        inputRef.current.focus()
+        inputRef.current.value = ''
+        setTimeout(() => (inputRef.current.value = prevValueRef.current), 0)
     }, [])
-    const clear = () => setValue('')
-
+    const clear = useCallback(() => setValue(''), [])
+    const check = useCallback((value) => {
+        if (!isRequired) return
+        const error = hasError(value)
+        setError(error)
+        return error
+    }, [])
+    const hasError = useCallback((value) => {
+        if (value === '') return 'Обязательное поле'
+        if (isName && !validateName(value)) return 'Некорректное имя'
+        if (isPhone && !validatePhone(value)) return 'Некорректный телефон'
+        if (isEmail && !validateEmail(value)) return 'Некорректный E-mail'
+        return ''
+    }, [])
+    const isNewValue = () => prevValueRef.current !== value
     useEffect(() => {
-        const maskDate = (e) => {
-            if (e.keyCode < 47 || e.keyCode > 57) e.preventDefault()
-            const len = e.target.value.length
-            if (len !== 1 || len !== 3) if (e.keyCode === 47) e.preventDefault()
-            if (len === 4) e.target.value += '-'
-            if (len === 7) e.target.value += '-'
-            if (len > 9) e.preventDefault()
+        const handlers = {}
+        if (isDate) {
+            handlers.maskDate = maskDate
+            isDate && inputRef.current?.addEventListener('keypress', handlers.maskDate)
         }
-
-        ref.current?.addEventListener('keypress', maskDate)
-
         return () => {
-            ref.current?.removeEventListener('keypress', maskDate)
+            isDate && inputRef.current?.removeEventListener('keypress', handlers.maskDate)
         }
     }, [])
 
-    return {
+    propertyRef.current = {
         value,
-        prevValue,
+        prevValueRef,
         setValue,
         clear,
-        ref,
+        ref: inputRef,
         isDisabled,
         onDisabledRemove,
         onBlur,
+        error,
+        check,
+        label,
+        isTextarea,
+        isCheckbox,
+        isNewValue,
         bind: {
-            ref,
+            ref: inputRef,
             value,
             onChange,
             onFocus,
             onBlur,
-            disabled: isDisabled,
+            disabled: isDisabled || false,
+            className: error ? (bind.className || '') + ' input-error' : bind.className,
+            ...bind,
         },
     }
+
+    if (isCheckbox) propertyRef.current.bind.checked = toBoolean(value)
+    return propertyRef.current
 }
 export default useInput

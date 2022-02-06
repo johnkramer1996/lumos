@@ -1,18 +1,36 @@
 import { useEffect, useState } from 'react'
 
-const useRequest = ({ before = () => {}, request = () => {}, success = () => {}, error = () => {}, after = () => {}, isLoadingDefault = false } = {}) => {
+const useRequest = ({ request = () => {}, success = () => {}, error = () => {}, isLoadingDefault = false } = {}) => {
     let isMounted = true
     const [state, setState] = useState({})
     const [isLoading, setIsLoading] = useState(isLoadingDefault)
     const [errorText, setErrorText] = useState('')
 
-    const call = (args) => {
+    const call = (data) => {
         request({
-            data: { ...args },
-            beforeTwo: () => isMounted && (before(), setIsLoading(true)),
-            successTwo: (data) => isMounted && (success(data), setState(data.data)),
-            errorTwo: (data) => isMounted && (error(data), setErrorText(data.error)),
-            afterTwo: () => isMounted && (after(), setIsLoading(false)),
+            data,
+            dispatchEvent: (type, data) => {
+                if (!isMounted) return
+                switch (type) {
+                    case 'before':
+                        isLoadingDefault && setIsLoading(true)
+                        break
+                    case 'success':
+                        success(data)
+                        setState(data.data)
+                        break
+                    case 'error':
+                        error(data)
+                        setErrorText(data.data)
+                        break
+                    case 'finnally':
+                        setIsLoading(false)
+                        break
+
+                    default:
+                        break
+                }
+            },
         })
     }
 

@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { store } from './store'
 
 import './index.css'
+import './index.custom.css'
 
 ReactDOM.render(
     <Provider store={store}>

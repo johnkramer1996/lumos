@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import React from 'react'
 import { useDispatch, useRequest, useInput } from 'hooks/'
-import { getDate, getImgUrl } from 'utils'
 import CabinetSettingsDocs from './CabinetSettingsDocs'
 import CabinetSettingsAccount from './CabinetSettingsAccount'
 import CabinetSettingsPersonalInformation from './CabinetSettingsPersonalInformation'
@@ -20,7 +18,7 @@ const CabinetSettings = () => {
     }
     const onBlurInput = (input) => {
         input.onBlur()
-        if (input.prevValue === input.value) return
+        if (!input.isNewValue()) return
         const { name, value } = input.ref.current
         createRequest(name, value)
     }
