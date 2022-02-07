@@ -48,11 +48,12 @@ const Tabs = ({ items, isLoading = false, classPrefix = 'course-report', callbac
             {isLoading ? (
                 <Loader />
             ) : (
-                itemsState.items.map(({ component }, index) => (
-                    <div key={index} className={`${classPrefix}__content${itemsState.indexActive === index ? ` ${classPrefix}__content--active` : ''}`}>
-                        {component}
-                    </div>
-                ))
+                <div className={`${classPrefix}__content  ${classPrefix}__content--active`}>{itemsState.items[itemsState.indexActive].component}</div>
+                // itemsState.items.map(({ component }, index) => (
+                //     <div key={index} className={`${classPrefix}__content${itemsState.indexActive === index ? ` ${classPrefix}__content--active` : ''}`}>
+                //         {component}
+                //     </div>
+                // ))
             )}
         </>
     )

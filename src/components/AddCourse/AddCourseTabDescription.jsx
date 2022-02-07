@@ -101,9 +101,11 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
         setDescriptions([...newDescription])
     }
     const onAddPrices = () => {
+        console.log()
         const isError = prices.filter((price) => price.inputs.filter((i) => i.check(i.value)).length)
-        const isModules = prices[0].checkbox.value.find((v) => v === true)
-        if (isError.length || !isModules) return
+        const isModules = prices.filter((price) => price.checkbox.value.find((v) => v === true))
+        console.log(isModules)
+        if (prices.length && (isError.length || !isModules)) return
         setPrices([...prices, { name: '', width: '', price_with_sale: '', price: '', text: '' }])
     }
     const onDeletePrices = (id, index) => {

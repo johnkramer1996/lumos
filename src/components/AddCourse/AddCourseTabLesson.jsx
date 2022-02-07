@@ -33,7 +33,6 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
     useEffect(() => {
         course && shortDescr.setValue(course?.short_desc ?? '')
         course.test_lesson && hidden_id.setValue(course?.test_lesson.hidden_id ?? '')
-        console.log('update')
     }, [course])
 
     const getAllInputs = useCallback(() => {

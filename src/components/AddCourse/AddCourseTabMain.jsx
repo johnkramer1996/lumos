@@ -4,6 +4,7 @@ import { getDate, getImgUrl } from 'utils'
 import { useSelector } from 'react-redux'
 import { useDispatch, useInput, useInputFile, useNavigate, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
+import { useCallback } from 'react'
 
 const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
     const { courseId } = useParams()
@@ -28,7 +29,10 @@ const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }
     const width = useInput({ bind: { name: 'width' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
     const img = useInputFile({ callbackHandler: inputCallbackHandler })
 
-    const allInputs = useMemo(() => [name, category_id, type_study, format_study, sale_subscribe, anytime, width, img], [])
+    const getAllInputs = useCallback(
+        () => [name, category_id, type_study, format_study, sale_subscribe, anytime, width, img],
+        [name, category_id, type_study, format_study, sale_subscribe, anytime, width, img],
+    )
 
     useEffect(() => {
         name.setValue(course.name || '')
@@ -62,11 +66,10 @@ const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }
 
     useImperativeHandle(ref, () => ({
         update: () => {
-            allInputs.filter((i) => i.update())
+            getAllInputs().filter((i) => i.update())
         },
         check: () => {
-            const isError = allInputs.filter((i) => i.check(i.value))
-            console.log(isError)
+            const isError = getAllInputs().filter((i) => i.check(i.value))
             return !isError.length
         },
         send: () => {
