@@ -44,7 +44,7 @@ export const RouteNames = {
     ERROR: '/error',
     FAQ: '/faq',
     EVENTS: '/events',
-    EVENTS_ITEM: '/events/:eventsId',
+    EVENTS_ITEM: '/events/:eventId',
     HOME: '/',
     NEWS: '/news',
     NEWS_ITEM: '/news/:id',

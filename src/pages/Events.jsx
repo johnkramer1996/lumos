@@ -17,8 +17,6 @@ const Events = () => {
     })
     useEffect(() => fetchFrontEventsRequest.call(), [])
 
-    console.log(allFrontEvents)
-
     return (
         <section className='events'>
             <div className='container'>
