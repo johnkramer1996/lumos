@@ -9,7 +9,7 @@ const useRequest = ({ request = () => {}, success = () => {}, error = () => {}, 
     const call = (data) => {
         request({
             data,
-            dispatchEvent: (type, data) => {
+            callbackHandler: (type, data) => {
                 if (!isMounted) return
                 switch (type) {
                     case 'before':

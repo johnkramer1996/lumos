@@ -16,7 +16,7 @@ export const authURL = {
 }
 export const trainerCoursesURL = {
     FETCH_COURSES: '/cabinet/courses',
-    CABINET_COURSES_ADD: '/cabinet/courses',
+    ADD_COURSE: '/cabinet/courses',
     FETCH_COURSE: ({ courseId }) => `/cabinet/courses/${courseId}`,
     PUT_COURSE: ({ courseId }) => `/cabinet/courses/${courseId}`,
     PATCH_COURSE: ({ courseId }) => `/cabinet/courses/${courseId}`,
@@ -46,7 +46,7 @@ export const trainerCoursesLessonsURL = {
 }
 export const trainerEventsURL = {
     FETCH_EVENTS: '/cabinet/events',
-    CABINET_EVENTS_ADD: '/cabinet/events',
+    ADD_EVENT: '/cabinet/events',
     FETCH_EVENT: ({ eventId }) => `/cabinet/events/${eventId}`,
     PUT_EVENT: ({ eventId }) => `/cabinet/events/${eventId}`,
     PATCH_EVENT: ({ eventId }) => `/cabinet/events/${eventId}`,

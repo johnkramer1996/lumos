@@ -112,6 +112,9 @@
     border-color: #db422c !important;
     color: #db422c;
 }
+.input-error::placeholder {
+    color: #db422c !important;
+}
 
 .header__logo svg {
     width: 100%;
@@ -186,6 +189,9 @@
 }
 .course-edit__form-upload--sm .course-edit__form-upload-right .course-edit__form-upload-desc {
     display: block;
+}
+.course-edit__form-upload--md .course-edit__form-upload-img {
+    max-width: 200px;
 }
 
 .btn--disabled {

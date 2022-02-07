@@ -3,10 +3,9 @@ import { useDispatch } from 'hooks'
 import { useSelector } from 'react-redux'
 import { declOfNum, getDeclOfArray } from 'utils'
 
-const CabinetNav = ({ visibleTypeShow = true, type = 'courses' }) => {
+const CabinetNav = ({ visibleTypeShow = true, type = 'courses', total = 0 }) => {
     const { setTypeShow } = useDispatch()
     const typeShow = useSelector(({ settings }) => settings.typeShow)
-    const { total } = useSelector(({ courses }) => courses.courses)
 
     return (
         <div className='cabinet-page__nav lkt-courses__nav'>

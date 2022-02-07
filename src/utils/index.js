@@ -9,6 +9,7 @@ export const getDeclOfArray = {
     events: ['мероприятие', 'мероприятия', 'мероприятий'],
     lessons: ['урок', 'урока', 'уроков'],
     users: ['ученик', 'ученика', 'учеников'],
+    members: ['учасник', 'учасника', 'учасников'],
 }
 
 export const getImgUrl = (src, isDefault = false, defaultSrc = '/assets/img/course2.jpg') => {
@@ -40,25 +41,26 @@ export const getData = (response) => {
     return data
 }
 
-// before/request/success/error/after - action-creators
+// TODO
+// request/success/error - action-creators
 // dispatchEvent - useRequest
 
 export const asyncAction =
-    ({ data, dispatchEvent, request, success = () => {}, error = () => {} } = {}) =>
+    ({ data, callbackHandler, request, success = () => {}, error = () => {} } = {}) =>
     async (dispatch) => {
         try {
             // await timeout(100)
-            dispatchEvent('before', { dispatch })
+            callbackHandler('before', { dispatch })
             const response = await request(data)
             const successArgs = { response, data: getData(response) }
             if (response.status === 200) success({ dispatch, ...successArgs })
-            if (response.status === 200) dispatchEvent('success', successArgs)
+            if (response.status === 200) callbackHandler('success', successArgs)
         } catch (e) {
             console.log(e, e.response || e.message || 'Unknown error')
             error({ dispatch, error: e.response || e.message || 'Unknown error' })
-            dispatchEvent('error', { dispatch, error: e.response || e.message || 'Unknown error' })
+            callbackHandler('error', { dispatch, error: e.response || e.message || 'Unknown error' })
         } finally {
-            dispatchEvent('finnally', { dispatch })
+            callbackHandler('finnally', { dispatch })
         }
     }
 
@@ -82,7 +84,7 @@ export const getDate = (date, monthNames = false) => {
     const year = date.getFullYear()
     const month = monthNames ? namesMonth[date.getMonth()] : addZerro(date.getMonth() + 1)
     const day = addZerro(date.getDate())
-    return `${year}-${month}-${day}`
+    return monthNames ? `${day} ${month} ${year}` : `${year}-${month}-${day}`
 }
 
 export const uploadImg = (inputRef, setImg) => {

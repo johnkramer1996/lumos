@@ -48,7 +48,7 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
         request: addModulesMass,
         success: ({ response, data }) => {
             //TODO RETURN COURSE OBJECT FROM SERVER
-            // fetchModulesRequest.call({ courseId })
+            fetchModulesRequest.call({ courseId })
             setIsShow(true)
             !hasModules && !hasInfo
                 ? setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' })

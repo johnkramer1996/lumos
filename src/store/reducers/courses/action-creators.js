@@ -22,10 +22,7 @@ export const courseHandlers = {
     },
     fetchCourse: {
         ...defaultHandlers.fetchCourse,
-        success: ({ dispatch, response, data }) => {
-            console.log(data)
-            dispatch(CoursesActionCreators.setCourse(data))
-        },
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setCourse(data)),
     },
     addCourse: {
         ...defaultHandlers.addCourse,
@@ -83,7 +80,6 @@ export const courseHandlers = {
             dispatch(ModalsActionCreators.setIsShow(true))
             dispatch(ModalsActionCreators.setContent({ title: 'Модуль удален удалены,', descr: '' }))
         },
-        error: ({ dispatch, error }) => {},
     },
     // fetchLessons
     // deleteFile

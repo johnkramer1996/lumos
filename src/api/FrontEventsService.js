@@ -9,7 +9,7 @@ export default class FrontEventsService {
             },
         })
     }
-    static async fetchFrontEvents({ courseId = 1 } = {}) {
-        return await axios.get(frontEventsURL.FETCH_EVENT({ courseId }))
+    static async fetchFrontEvent({ eventId = 1 } = {}) {
+        return await axios.get(frontEventsURL.FETCH_EVENT({ eventId }))
     }
 }

@@ -9,7 +9,7 @@ import { isActiveClass } from 'utils'
 const CabinetAddCourse = () => {
     const { courseId } = useParams()
     const isEditPage = !!courseId
-    const { toCabinetItemsItem, toError } = useNavigate()
+    const { toError } = useNavigate()
     const { setIsShow, setContent, setCourse, setInfo, setModules, fetchCourse, fetchInfo, fetchModules } = useDispatch()
     const course = useSelector(({ courses }) => courses.course)
     const modules = useSelector(({ courses }) => courses.modules)
