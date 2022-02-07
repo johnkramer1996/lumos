@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useRequest } from 'hooks'
-import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { CoursesItemFeedback, CoursesItemInfo, CoursesItemInfo2, CoursesItemPopular, CoursesItemSeo, CoursesItemTop, CoursesItemVariants } from 'components'
 import { Loader } from 'components/ui'

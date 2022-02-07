@@ -18,7 +18,12 @@ const CabinetEventsAdd = () => {
     const inputEDate = useInput({ initialValue: getDate(new Date(2022, 11, 31)), bind: { name: 'edate' }, is: { isRequired: true, date: true } })
     const inputETime = useInput({ initialValue: '12:00:00', bind: { name: 'etime' }, is: { isRequired: true, date: true } })
     const inputTiming = useInput({ initialValue: 'test', bind: { name: 'timing' }, is: { isRequired: true } })
-    const inputText = useInput({ initialValue: 'test', bind: { name: 'text' }, is: { isRequired: true, isTextarea: true } })
+    const inputText = useInput({
+        initialValue:
+            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet ad at et voluptates soluta, quibusdam ea unde iure velit odit labore molestiae a quis laboriosam nisi voluptas, sunt itaque cum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet ad at et voluptates soluta, quibusdam ea unde iure velit odit labore molestiae a quis laboriosam nisi voluptas, sunt itaque cum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet ad at et voluptates soluta, quibusdam ea unde iure velit odit labore molestiae a quis laboriosam nisi voluptas, sunt itaque cum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet ad at et voluptates soluta, quibusdam ea unde iure velit odit labore molestiae a quis laboriosam nisi voluptas, sunt itaque cum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet ad at et voluptates soluta, quibusdam ea unde iure velit odit labore molestiae a quis laboriosam nisi voluptas, sunt itaque cum. Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet ad at et voluptates soluta, quibusdam ea unde iure velit odit labore molestiae a quis laboriosam nisi voluptas, sunt itaque cum.',
+        bind: { name: 'text' },
+        is: { isRequired: true, isTextarea: true },
+    })
     const inputKey = useInput({ initialValue: 'test', bind: { name: 'key' }, is: { isRequired: true } })
     const img = useInputFile()
 

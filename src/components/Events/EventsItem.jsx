@@ -13,7 +13,7 @@ const EventsItem = ({ id, image, edate = '', etime = '', name = '', all_users = 
                     <div className='event-card__day'>{date.getDate()}</div>
                     <div className='event-card__month'>{namesMonth[date.getMonth()]}</div>
                     <div className='event-card__year'>{date.getFullYear()}</div>
-                    <div className='event-card__time'>{etime}</div>
+                    <div className='event-card__time'>в {etime}</div>
                 </div>
                 <div className='event-card__img img img--cover'>
                     <img src={getImgUrl(image)} alt='' />
