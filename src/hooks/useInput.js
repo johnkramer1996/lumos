@@ -34,7 +34,7 @@ const useInput = ({ initialValue = '', label = '', bind = {}, callbackHandler = 
         if (!isRequired) return
         const error = hasError(value)
         setError(error)
-        return error
+        return !!error
     }, [])
     const hasError = useCallback((value) => {
         if (value === '') return 'Обязательное поле'

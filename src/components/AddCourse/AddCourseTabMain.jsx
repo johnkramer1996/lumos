@@ -61,7 +61,7 @@ const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }
     useImperativeHandle(ref, () => ({
         check: () => {
             const isError = [name, category_id, type_study, format_study, sale_subscribe, anytime, width, img].filter((i) => i.check(i.value))
-            console.log(isError.length)
+            console.log(isError)
             return !isError.length
         },
         send: () => {

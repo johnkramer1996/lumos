@@ -113,7 +113,7 @@ const CabinetAddCourse = () => {
             if (index === 1) item.isAvaible = !hasSave && hasCourse
             if (index === 2) item.isAvaible = !hasSave && hasModuls
         })
-    }, [hasCourse, hasModuls, hasSave])
+    }, [hasCourse, hasModuls, hasSave, tabItems])
 
     // useEffect(() => refTabs.current.nextItems(), [])
 

@@ -15,9 +15,10 @@ const useInputFile = ({ initialValue = '', callbackHandler = () => {} } = {}) =>
         deleteImg(ref, setValue)
         callbackHandler('delete', ref)
     }, [])
-    const check = useCallback(() => {
+    const check = useCallback((value) => {
         const isError = !value
         setIsError(isError)
+        console.log(value)
         return isError
     }, [])
     const onOpen = useCallback(() => ref.current.click(), [])
