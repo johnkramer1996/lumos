@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { getImgUrl } from 'utils'
 
 const CoursesItemInfo = () => {
-    const { descriptions = [], description, result_learn_text = [] } = useSelector(({ frontCourses }) => frontCourses.course)
+    const { descriptions = [], description, result_learn_text } = useSelector(({ frontCourses }) => frontCourses.course)
     const course = useSelector(({ frontCourses }) => frontCourses.course)
     const { themes = [], type_study = [], difficulty = [], format = [], event_types = [] } = useSelector(({ system }) => system.references)
     // const { name: typeName } = type_study[typeStudy] || {}
@@ -108,7 +108,7 @@ const CoursesItemInfo = () => {
                         <div className='course-result course-info2__group'>
                             <h3 className='course-info2__title'>Результаты обучения</h3>
                             <div className='course-result__wrap'>
-                                {[...new Array(6).fill(...result_learn_text)].map((item, index) => (
+                                {[...new Array(6).fill(...(result_learn_text || []))].map((item, index) => (
                                     <div key={index} className='course-result__item'>
                                         <i></i>
                                         <span>{item}</span>
