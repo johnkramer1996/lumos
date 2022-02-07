@@ -4,6 +4,7 @@ import system from './system'
 import modals from './modals'
 import settings from './settings'
 import frontCourses from './frontCourses'
+import frontEvents from './frontEvents'
 
 export default {
     auth,
@@ -12,4 +13,5 @@ export default {
     modals,
     settings,
     frontCourses,
+    frontEvents,
 }

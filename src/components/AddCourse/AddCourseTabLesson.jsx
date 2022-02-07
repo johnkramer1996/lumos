@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { Button, Input } from 'components/ui'
 import { useSelector } from 'react-redux'
 import AddCourseLesson from './AddCourseLesson'
@@ -8,16 +8,17 @@ import { useParams } from 'react-router-dom'
 import { uid } from 'utils'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 import { useCallback } from 'react'
+import { coursesSelectors } from 'store/selectors/'
 
 const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
     const { courseId } = useParams()
     const { setContent, setIsShow, deleteModule, deleteLesson, addModulesMass, fetchModules } = useDispatch()
-    const course = useSelector(({ courses }) => courses.course)
-    const modules = useSelector(({ courses }) => courses.modules)
-    const info = useSelector(({ courses }) => courses.info)
+    const course = useSelector(coursesSelectors.getCourse)
+    const modules = useSelector(coursesSelectors.getModules)
+    const info = useSelector(coursesSelectors.getInfo)
     const hasCourse = !(Object.keys(course).length === 0)
-    const hasModuls = !(Object.keys(modules).length === 0)
-    const hasInfo = !(Object.keys(info).length === 0)
+    const hasModules = modules?.data && !(Object.keys(modules.data).length === 0)
+    const hasInfo = info?.descriptions && info?.prices && !(Object.keys(info.descriptions).length === 0 && Object.keys(info.prices).length === 0)
 
     const shortDescr = useInput({
         bind: { name: 'shortDescr' },
@@ -30,7 +31,7 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
     const getAllInputs = useCallback(() => {
         const modulesInputs = modulesState.map(({ input, lessonsshort }) => [input, ...lessonsshort.map(({ input }) => input)]).flat()
         return [shortDescr, hidden_id, ...modulesInputs]
-    }, [modulesState])
+    }, [shortDescr, hidden_id, modulesState])
 
     useEffect(() => {
         modules.data && setModules([...modules.data.reverse()])
@@ -46,10 +47,15 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
     const addModulesMassRequest = useRequest({
         request: addModulesMass,
         success: ({ response, data }) => {
-            fetchModulesRequest.call({ courseId })
+            //TODO RETURN COURSE OBJECT FROM SERVER
+            // fetchModulesRequest.call({ courseId })
             setIsShow(true)
-            if (!hasInfo) refTabs.current.nextItems()
-            hasInfo ? setContent({ title: 'Уроки обновлены,' }) : setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' })
+            !hasModules && !hasInfo
+                ? setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' })
+                : !hasInfo
+                ? setContent({ title: 'Уроки обновлены,', descr: 'Заполните описание курса и его стоимость.' })
+                : setContent({ title: 'Уроки обновлены,' })
+            refTabs.current.nextItems()
         },
     })
 
@@ -66,7 +72,6 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
         },
         check: () => {
             const isError = getAllInputs().filter((i) => i.check(i.value))
-            console.log(isError)
             return !isError.length
         },
         send: () => {
@@ -89,8 +94,6 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
                     })),
                 })),
             }
-
-            console.log(body)
 
             addModulesMassRequest.call({ courseId, body })
         },

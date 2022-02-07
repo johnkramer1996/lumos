@@ -15,8 +15,9 @@ const CabinetAddCourse = () => {
     const modules = useSelector(({ courses }) => courses.modules)
     const info = useSelector(({ courses }) => courses.info)
     const hasCourse = !(Object.keys(course).length === 0)
-    const hasModuls = modules?.data && !(Object.keys(modules.data).length === 0)
-    const hasInfo = !(Object.keys(info).length === 0)
+    const hasModules = modules?.data && !(Object.keys(modules.data).length === 0)
+    const hasInfo = info?.descriptions && info?.prices && !(Object.keys(info.descriptions).length === 0 && Object.keys(info.prices).length === 0)
+
     const [hasSave, setHasSave] = useState(false)
 
     const fetchCourseRequest = useRequest({
@@ -49,20 +50,22 @@ const CabinetAddCourse = () => {
     const refTabDescription = useRef()
     const refsTab = useMemo(() => [refTabMain, refTabLesson, refTabDescription], [])
 
-    const onSave = useCallback(
-        (e) => {
-            e?.preventDefault()
-            const indexActive = refTabs.current.getIndex()
-            if (!refsTab[indexActive]?.current.check()) {
-                setIsShow(true)
-                setContent({ title: 'Заполните все поля' })
-                return
-            }
-            refsTab[indexActive]?.current.send()
-            setHasSave(false)
-        },
-        [courseId],
-    )
+    const onSave = (e) => {
+        e?.preventDefault()
+        save()
+    }
+
+    const save = () => {
+        const indexActive = refTabs.current.getIndex()
+        if (!refsTab[indexActive]?.current.check()) {
+            setIsShow(true)
+            setContent({ title: 'Заполните все поля' })
+            return false
+        }
+        refsTab[indexActive]?.current.send()
+        setHasSave(false)
+        return true
+    }
 
     const onCancel = () => {
         setCourse({ ...course })
@@ -71,14 +74,13 @@ const CabinetAddCourse = () => {
         setHasSave(false)
         const indexActive = refTabs.current.getIndex()
         setTimeout(() => refsTab[indexActive]?.current.update(), 0)
-        // toCabinetItemsItem({ courseId })
     }
 
     const inputCallbackHandler = (event, payload) => {
         if (event === 'change') setHasSave(true)
         if (event === 'delete') setHasSave(true)
     }
-    const [tabItems, setTabItems] = useState(
+    const tabItems = useMemo(
         () => [
             {
                 title: 'Основная информация',
@@ -104,26 +106,20 @@ const CabinetAddCourse = () => {
     }
 
     const isAvaibleTabIndex = (index) => {
-        // console.log(hasModuls)
-        // console.log(modules)
-        console.log(Object.keys(modules).length)
-        console.log(Object.keys(modules).length === 0)
-        if (hasSave) onSave()
-        if (index === 0 && !hasSave && true) return true
-        if (index === 1 && !hasSave && hasCourse) return true
-        if (index === 2 && !hasSave && hasModuls) return true
-        return false
+        if (hasSave) return save()
+        if (index === 0) return true
+        if (index === 1 && !hasCourse) {
+            setIsShow(true)
+            setContent({ title: 'Заполните курс' })
+            return
+        }
+        if (index === 2 && !hasModules) {
+            setIsShow(true)
+            setContent({ title: 'Заполните уроки' })
+            return
+        }
+        return true
     }
-
-    // useEffect(() => {
-    //     tabItems.items.forEach((item, index) => {
-    //         if (index === 0) item.isAvaible = !hasSave && true
-    //         if (index === 1) item.isAvaible = !hasSave && hasCourse
-    //         if (index === 2) item.isAvaible = !hasSave && hasModuls
-    //     })
-    // }, [hasCourse, hasModuls, hasSave, tabItems])
-
-    // useEffect(() => refTabs.current.nextItems(), [])
 
     return (
         <section className='course-edit'>
@@ -145,7 +141,7 @@ const CabinetAddCourse = () => {
                     <div className='course-edit__right'>
                         <div className='course-edit__hint'>
                             <Button className={`course-edit__hint-btn${isActiveClass(!hasSave, 'btn--disabled')}`} onClick={onSave}>
-                                {hasCourse ? 'Сохранить' : 'Добавить'}
+                                {isEditPage || hasCourse ? 'Сохранить' : 'Добавить'}
                             </Button>
                             {isEditPage && hasSave && (
                                 <>

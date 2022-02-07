@@ -66,3 +66,7 @@ export const frontCoursesURL = {
     FETCH_COURSES: '/front/courses',
     FETCH_COURSE: ({ courseId }) => `/front/courses/${courseId}`,
 }
+export const frontEventsURL = {
+    FETCH_EVENTS: '/front/events',
+    FETCH_EVENT: ({ eventId }) => `/front/events/${eventId}`,
+}

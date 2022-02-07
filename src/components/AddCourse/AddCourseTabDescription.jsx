@@ -6,14 +6,15 @@ import { useParams } from 'react-router-dom'
 import AddCourseDescription from './AddCourseDescription'
 import AddCoursePrice from './AddCoursePrice'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
+import { coursesSelectors } from 'store/selectors'
 
 const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
     const { courseId } = useParams()
     const { toCabinetItems } = useNavigate()
     const { setIsShow, setContent, fetchInfo, editInfo, deleteInfo } = useDispatch()
-    const course = useSelector(({ courses }) => courses.course)
-    const modules = useSelector(({ courses }) => courses.modules)
-    const info = useSelector(({ courses }) => courses.info)
+    const course = useSelector(coursesSelectors.getCourse)
+    const modules = useSelector(coursesSelectors.getModules)
+    const info = useSelector(coursesSelectors.getInfo)
     const hasCourse = !(Object.keys(course).length === 0)
     const hasModuls = !(Object.keys(modules).length === 0)
     const hasInfo = !(Object.keys(info).length === 0)

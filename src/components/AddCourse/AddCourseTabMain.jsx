@@ -5,16 +5,16 @@ import { useSelector } from 'react-redux'
 import { useDispatch, useInput, useInputFile, useNavigate, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 import { useCallback } from 'react'
+import { coursesSelectors } from 'store/selectors'
 
 const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
     const { courseId } = useParams()
     const { toCabinetItemsEdit } = useNavigate()
     const { setContent, setIsShow, setCourse, addCourse, putCourse } = useDispatch()
-    // const { _addCourse, _putCourse } = useDispatch()
     const { themes = [], type_study: typeStudy = [], format = [] } = useSelector(({ system }) => system.references)
-    const course = useSelector(({ courses }) => courses.course)
-    const modules = useSelector(({ courses }) => courses.modules)
-    const info = useSelector(({ courses }) => courses.info)
+    const course = useSelector(coursesSelectors.getCourse)
+    const modules = useSelector(coursesSelectors.getModules)
+    const info = useSelector(coursesSelectors.getInfo)
     const hasCourse = !(Object.keys(course).length === 0)
     const hasModuls = !(Object.keys(modules).length === 0)
     const hasInfo = !(Object.keys(info).length === 0)

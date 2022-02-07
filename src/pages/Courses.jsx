@@ -17,8 +17,6 @@ const Courses = () => {
     })
     useEffect(() => fetchFrontCoursesRequest.call(), [])
 
-    console.log(fetchFrontCoursesRequest)
-
     const filteredCourses = useMemo(
         () =>
             allFrontCourses.filter(({ category_id, type_study, format_study, difficulty_level }) => {

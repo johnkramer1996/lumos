@@ -1,6 +1,7 @@
 import { AuthActionCreators, authHandlers } from './auth/action-creators'
 import { courseHandlers, CoursesActionCreators } from './courses/action-creators'
 import { FrontCoursesActionCreators, frontCoursesHandlers } from './frontCourses/action-creators'
+import { FrontEventsActionCreators, frontEventsHandlers } from './frontEvents/action-creators'
 import { MockActionCreators, mockHandlers } from './mock/action-creators'
 import { ModalsActionCreators } from './modals/action-creators'
 import { SettingsActionCreators } from './settings/action-creators'
@@ -13,6 +14,7 @@ export const allActionCreators = {
     ...ModalsActionCreators,
     ...SettingsActionCreators,
     ...FrontCoursesActionCreators,
+    ...FrontEventsActionCreators,
     ...MockActionCreators,
 }
 
@@ -21,5 +23,6 @@ export const allActionHandlers = {
     ...courseHandlers,
     ...systemHandlers,
     ...frontCoursesHandlers,
+    ...frontEventsHandlers,
     ...mockHandlers,
 }

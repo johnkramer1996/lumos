@@ -6,14 +6,14 @@ const Tabs = ({ items, isLoading = false, classPrefix = 'course-report', callbac
     const [itemsState, setItems] = useState(items)
     const [activeIndex, setAtiveIndex] = useState(0)
 
-    useEffect(() => setItems([...items]), [items])
+    // useEffect(() => setItems([...items]), [items])
 
     const events = {
         setItemsByIndex: (activeIndex) => {
             setAtiveIndex(activeIndex)
             callbackHandler('changeIndex', activeIndex)
         },
-        nextItems: () => events.setItemsByIndex(itemsState.activeIndex + 1 >= itemsState.items.length ? 0 : itemsState.activeIndex + 1),
+        nextItems: () => events.setItemsByIndex(activeIndex + 1 >= itemsState.length ? 0 : activeIndex + 1),
         changeTab: (index) => isAvaibleIndex(index) && events.setItemsByIndex(index),
         getIndex: () => activeIndex,
     }
