@@ -6,15 +6,14 @@ import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 
 const AddCourseDescription = ({ id, index, image, name, text, changeField, onDelete, onDeleteImg, callbackHandler }) => {
     const inputName = useInput({ callbackHandler, bind: { name: 'name' }, is: { isRequired: true } })
-    const inputText = useInput({ callbackHandler, bind: { name: 'text' }, is: { isRequired: true } })
+    const inputText = useInput({ callbackHandler, bind: { name: 'text' }, is: { isRequired: true, isTextarea: true } })
     const img = useInputFile({ callbackHandler })
 
     useEffect(() => {
         name && inputName.setValue(name)
         text && inputText.setValue(text)
         image && typeof image === 'string' && img.setValue(getImgUrl(image, false))
-        console.log(image)
-    }, [name, text, image])
+    }, [])
 
     const onChange = (e, input) => changeField(input.bind.name, index, input.value)
 
@@ -31,7 +30,7 @@ const AddCourseDescription = ({ id, index, image, name, text, changeField, onDel
                 </button>
             </div>
             <ImgUpload img={img} size={'sm'} callbackHandler={imgCallbackHandler} title={''} imgClass={'img--md'} ratio={'1/1'} recommend={'248x248'} max={'1 МБ'} />
-            <Input className='create-price__form-group' input={inputName} label={'Заголовок'} onChange={onChange} />
+            <Input className='create-whom__form-group' input={inputName} label={'Заголовок'} onChange={onChange} />
             <Input className='create-price__text' input={inputText} label={'Описание (новый пункт через Enter)'} onChange={onChange} />
             {/* <div className='create-whom__uploaded'>
                 <div className='create-whom__img'>{img.value && <img src={img.value} alt='' />}</div>

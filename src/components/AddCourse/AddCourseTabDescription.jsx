@@ -25,7 +25,7 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     const [descriptions, setDescriptions] = useState([])
     const [prices, setPrices] = useState([])
 
-    const allInputs = useMemo(() => [courseDescription, result_learn_text], [])
+    const allInputs = useMemo(() => [courseDescription, result_learn_text], [courseDescription, result_learn_text])
 
     const deleteInfoRequest = useRequest({
         request: deleteInfo,
@@ -46,6 +46,7 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     useEffect(() => {
         info?.course && courseDescription.setValue(info.course.description || '')
         info?.course && result_learn_text.setValue(info.course.result_learn_text || '')
+        console.log('update')
     }, [info])
     useEffect(() => info.descriptions?.length && setDescriptions([...info.descriptions]), [info.descriptions])
     useEffect(() => info.prices?.length && setPrices([...info.prices]), [info.prices])
@@ -56,6 +57,7 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
         },
         check: () => {
             const isError = allInputs.filter((i) => i.check(i.value))
+            console.log(isError)
             if (!descriptions.length) return false
             if (!prices.length) return false
             return !isError.length
