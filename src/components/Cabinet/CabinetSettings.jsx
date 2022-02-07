@@ -24,7 +24,7 @@ const CabinetSettings = () => {
     }
     const onChangeInputImg = (input) => {
         input.onChange()
-        createRequest(input.ref.current.name, input.ref.current.files[0])
+        input.ref.current.files[0] && createRequest(input.ref.current.name, input.ref.current.files[0])
     }
     const onDeleteInputImg = (input) => {
         input.onDelete()

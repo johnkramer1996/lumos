@@ -70,9 +70,7 @@ const CabinetAddCourse = () => {
         setModules({ ...modules })
         setHasSave(false)
         const indexActive = refTabs.current.getIndex()
-        setTimeout(() => {
-            refsTab[indexActive]?.current.update()
-        }, 0)
+        setTimeout(() => refsTab[indexActive]?.current.update(), 0)
         // toCabinetItemsItem({ courseId })
     }
 

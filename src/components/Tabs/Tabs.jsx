@@ -2,7 +2,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'rea
 import PropTypes from 'prop-types'
 import { Loader } from 'components/ui'
 
-const Tabs = ({ items, isLoading = false, classPrefix = 'course-report', callbackHandler = () => {}, isAvaibleIndex = () => {} }, ref) => {
+const Tabs = ({ items, isLoading = false, classPrefix = 'course-report', callbackHandler = () => {}, isAvaibleIndex = () => true }, ref) => {
     const [itemsState, setItems] = useState(items)
     const [activeIndex, setAtiveIndex] = useState(0)
 
@@ -10,8 +10,6 @@ const Tabs = ({ items, isLoading = false, classPrefix = 'course-report', callbac
 
     const events = {
         setItemsByIndex: (activeIndex) => {
-            // const newItems = [...itemsState.items]
-            // setItems(newItems)
             setAtiveIndex(activeIndex)
             callbackHandler('changeIndex', activeIndex)
         },

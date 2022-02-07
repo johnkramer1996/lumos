@@ -9,6 +9,7 @@ import CoursesTabsLessons from 'components/CoursesTabs/CoursesTabsLessons'
 import CoursesTabsStudents from 'components/CoursesTabs/CoursesTabsStudents'
 import CoursesTabsReport from 'components/CoursesTabs/CoursesTabsReport'
 import CoursesTabsNotifications from 'components/CoursesTabs/CoursesTabsNotifications'
+import { useMemo } from 'react'
 
 const CoursesItem = () => {
     const { courseId } = useParams()
@@ -44,15 +45,15 @@ const CoursesItem = () => {
         }
     }, [])
 
-    const tabItems = {
-        items: [
-            { title: 'Уроки', notifications: 0, isAvaible: true, component: <CoursesTabsLessons /> },
-            { title: 'Ученики', notifications: 0, isAvaible: true, component: <CoursesTabsStudents /> },
-            { title: 'Статистика', notifications: 0, isAvaible: true, component: <CoursesTabsReport /> },
-            { title: 'Уведомления', notifications: 1, isAvaible: true, component: <CoursesTabsNotifications /> },
+    const tabItems = useMemo(
+        () => [
+            { title: 'Уроки', notifications: 0, component: <CoursesTabsLessons /> },
+            { title: 'Ученики', notifications: 0, component: <CoursesTabsStudents /> },
+            { title: 'Статистика', notifications: 0, component: <CoursesTabsReport /> },
+            { title: 'Уведомления', notifications: 1, component: <CoursesTabsNotifications /> },
         ],
-        indexActive: 0,
-    }
+        [],
+    )
 
     return (
         <>

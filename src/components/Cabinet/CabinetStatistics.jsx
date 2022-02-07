@@ -6,14 +6,11 @@ import CabinetStatisticsTab3 from './CabinetStatisticsTab3'
 
 const CabinetStatistics = () => {
     const tabItems = useMemo(
-        () => ({
-            items: [
-                { title: 'Отчет по тренеру', isAvaible: true, component: <CabinetStatisticsTab1 /> },
-                { title: 'Выплаты', isAvaible: true, component: <CabinetStatisticsTab2 /> },
-                { title: 'Транзакции', isAvaible: true, component: <CabinetStatisticsTab3 /> },
-            ],
-            indexActive: 0,
-        }),
+        () => [
+            { title: 'Отчет по тренеру', isAvaible: true, component: <CabinetStatisticsTab1 /> },
+            { title: 'Выплаты', isAvaible: true, component: <CabinetStatisticsTab2 /> },
+            { title: 'Транзакции', isAvaible: true, component: <CabinetStatisticsTab3 /> },
+        ],
         [],
     )
 
