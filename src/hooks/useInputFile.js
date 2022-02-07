@@ -18,7 +18,6 @@ const useInputFile = ({ initialValue = '', callbackHandler = () => {} } = {}) =>
     const check = useCallback((value) => {
         const isError = !value
         setIsError(isError)
-        console.log(value)
         return isError
     }, [])
     const onOpen = useCallback(() => ref.current.click(), [])

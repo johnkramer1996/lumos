@@ -1,6 +1,6 @@
 import { Button, Input } from 'components/ui'
 import { useDispatch, useInput, useNavigate, useRequest } from 'hooks'
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import AddCourseDescription from './AddCourseDescription'
@@ -25,7 +25,22 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     const [descriptions, setDescriptions] = useState([])
     const [prices, setPrices] = useState([])
 
-    const allInputs = useMemo(() => [courseDescription, result_learn_text], [courseDescription, result_learn_text])
+    const getAllInputs = useCallback(() => {
+        const descriptionsInputs = descriptions.map(({ inputs }) => inputs).flat()
+        const pricesInputs = prices.map(({ inputs }) => inputs).flat()
+        console.log([courseDescription, result_learn_text, descriptionsInputs])
+        return [courseDescription, result_learn_text, ...descriptionsInputs, ...pricesInputs]
+    }, [courseDescription, result_learn_text, descriptions, prices])
+
+    useEffect(() => {
+        info?.course && courseDescription.setValue(info.course.description || '')
+        info?.course && result_learn_text.setValue(info.course.result_learn_text || '')
+        console.log('update')
+    }, [info])
+    useEffect(() => {
+        info.descriptions?.length && setDescriptions([...info.descriptions])
+        info.prices?.length && setPrices([...info.prices])
+    }, [info])
 
     const deleteInfoRequest = useRequest({
         request: deleteInfo,
@@ -43,20 +58,12 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
         },
     })
 
-    useEffect(() => {
-        info?.course && courseDescription.setValue(info.course.description || '')
-        info?.course && result_learn_text.setValue(info.course.result_learn_text || '')
-        console.log('update')
-    }, [info])
-    useEffect(() => info.descriptions?.length && setDescriptions([...info.descriptions]), [info.descriptions])
-    useEffect(() => info.prices?.length && setPrices([...info.prices]), [info.prices])
-
     useImperativeHandle(ref, () => ({
         update: () => {
-            allInputs.filter((i) => i.update())
+            getAllInputs().filter((i) => i.update())
         },
         check: () => {
-            const isError = allInputs.filter((i) => i.check(i.value))
+            const isError = getAllInputs().filter((i) => i.check(i.value))
             console.log(isError)
             if (!descriptions.length) return false
             if (!prices.length) return false
@@ -88,6 +95,8 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     }))
 
     const onAddDescr = () => {
+        const isError = descriptions.filter((descr) => descr.inputs.filter((i) => i.check(i.value)).length)
+        if (descriptions.length && isError.length) return
         setDescriptions([...descriptions, { name: '', text: '', image: '' }])
     }
     const onDeleteDescr = (id, index) => {
@@ -101,10 +110,8 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
         setDescriptions([...newDescription])
     }
     const onAddPrices = () => {
-        console.log()
         const isError = prices.filter((price) => price.inputs.filter((i) => i.check(i.value)).length)
         const isModules = prices.filter((price) => price.checkbox.value.find((v) => v === true))
-        console.log(isModules)
         if (prices.length && (isError.length || !isModules)) return
         setPrices([...prices, { name: '', width: '', price_with_sale: '', price: '', text: '' }])
     }
@@ -144,6 +151,7 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
                         onDelete={onDeleteDescr}
                         onDeleteImg={onDeleteImg}
                         callbackHandler={inputCallbackHandler}
+                        descriptions={descriptions}
                     />
                 ))}
                 <Button className='create-whom__add' onClick={() => onAddDescr()} outline>

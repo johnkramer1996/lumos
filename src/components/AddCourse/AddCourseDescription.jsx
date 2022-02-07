@@ -4,10 +4,12 @@ import React, { useEffect, useState } from 'react'
 import { getImgUrl } from 'utils'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 
-const AddCourseDescription = ({ id, index, image, name, text, changeField, onDelete, onDeleteImg, callbackHandler }) => {
+const AddCourseDescription = ({ id, index, image, name, text, changeField, onDelete, onDeleteImg, callbackHandler, descriptions }) => {
     const inputName = useInput({ callbackHandler, bind: { name: 'name' }, is: { isRequired: true } })
     const inputText = useInput({ callbackHandler, bind: { name: 'text' }, is: { isRequired: true, isTextarea: true } })
     const img = useInputFile({ callbackHandler })
+
+    descriptions[index].inputs = [inputName, inputText, img]
 
     useEffect(() => {
         name && inputName.setValue(name)

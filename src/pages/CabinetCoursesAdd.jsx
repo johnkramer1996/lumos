@@ -15,7 +15,7 @@ const CabinetAddCourse = () => {
     const modules = useSelector(({ courses }) => courses.modules)
     const info = useSelector(({ courses }) => courses.info)
     const hasCourse = !(Object.keys(course).length === 0)
-    const hasModuls = !(Object.keys(modules).length === 0)
+    const hasModuls = modules?.data && !(Object.keys(modules.data).length === 0)
     const hasInfo = !(Object.keys(info).length === 0)
     const [hasSave, setHasSave] = useState(false)
 
@@ -51,15 +51,14 @@ const CabinetAddCourse = () => {
 
     const onSave = useCallback(
         (e) => {
-            e.preventDefault()
-            const tabItems = refTabs.current.getItems()
-            if (!tabItems) return
-            if (!refsTab[tabItems.indexActive]?.current.check()) {
+            e?.preventDefault()
+            const indexActive = refTabs.current.getIndex()
+            if (!refsTab[indexActive]?.current.check()) {
                 setIsShow(true)
                 setContent({ title: 'Заполните все поля' })
                 return
             }
-            refsTab[tabItems.indexActive]?.current.send()
+            refsTab[indexActive]?.current.send()
             setHasSave(false)
         },
         [courseId],
@@ -70,9 +69,9 @@ const CabinetAddCourse = () => {
         setInfo({ ...info })
         setModules({ ...modules })
         setHasSave(false)
-        console.log(tabItems)
+        const indexActive = refTabs.current.getIndex()
         setTimeout(() => {
-            refsTab[tabItems.indexActive]?.current.update()
+            refsTab[indexActive]?.current.update()
         }, 0)
         // toCabinetItemsItem({ courseId })
     }
@@ -82,43 +81,49 @@ const CabinetAddCourse = () => {
         if (event === 'delete') setHasSave(true)
     }
     const [tabItems, setTabItems] = useState(
-        () => ({
-            items: [
-                {
-                    title: 'Основная информация',
-                    isAvaible: !hasSave && true,
-                    component: <AddCourseTabMain ref={refTabMain} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
-                },
-                {
-                    title: 'Уроки',
-                    isAvaible: !hasSave && hasCourse,
-                    component: <AddCourseTabLesson ref={refTabLesson} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
-                },
-                {
-                    title: 'Страница курса',
-                    isAvaible: !hasSave && hasModuls,
-                    component: <AddCourseTabDescription ref={refTabDescription} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
-                },
-            ],
-            indexActive: 0,
-        }),
+        () => [
+            {
+                title: 'Основная информация',
+                component: <AddCourseTabMain ref={refTabMain} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
+            },
+            {
+                title: 'Уроки',
+                component: <AddCourseTabLesson ref={refTabLesson} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
+            },
+            {
+                title: 'Страница курса',
+                component: <AddCourseTabDescription ref={refTabDescription} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
+            },
+        ],
         [],
     )
 
     const tabsCallbackHandler = (event, payload) => {
         if (event === 'changeTab') {
             setHasSave(false)
-            setTabItems(payload)
+            // setTabItems(payload)
         }
     }
 
-    useEffect(() => {
-        tabItems.items.forEach((item, index) => {
-            if (index === 0) item.isAvaible = !hasSave && true
-            if (index === 1) item.isAvaible = !hasSave && hasCourse
-            if (index === 2) item.isAvaible = !hasSave && hasModuls
-        })
-    }, [hasCourse, hasModuls, hasSave, tabItems])
+    const isAvaibleTabIndex = (index) => {
+        // console.log(hasModuls)
+        // console.log(modules)
+        console.log(Object.keys(modules).length)
+        console.log(Object.keys(modules).length === 0)
+        if (hasSave) onSave()
+        if (index === 0 && !hasSave && true) return true
+        if (index === 1 && !hasSave && hasCourse) return true
+        if (index === 2 && !hasSave && hasModuls) return true
+        return false
+    }
+
+    // useEffect(() => {
+    //     tabItems.items.forEach((item, index) => {
+    //         if (index === 0) item.isAvaible = !hasSave && true
+    //         if (index === 1) item.isAvaible = !hasSave && hasCourse
+    //         if (index === 2) item.isAvaible = !hasSave && hasModuls
+    //     })
+    // }, [hasCourse, hasModuls, hasSave, tabItems])
 
     // useEffect(() => refTabs.current.nextItems(), [])
 
@@ -130,7 +135,14 @@ const CabinetAddCourse = () => {
                         <h1 className='course-edit__title display-3'>
                             <span>{isEditPage ? 'Редактирование' : 'Добавление'} курса</span>
                         </h1>
-                        <Tabs ref={refTabs} items={tabItems} classPrefix={'course-edit'} isLoading={fetchCourseRequest.isLoading} callbackHandler={tabsCallbackHandler} />
+                        <Tabs
+                            ref={refTabs}
+                            items={tabItems}
+                            classPrefix={'course-edit'}
+                            isLoading={fetchCourseRequest.isLoading}
+                            callbackHandler={tabsCallbackHandler}
+                            isAvaibleIndex={isAvaibleTabIndex}
+                        />
                     </div>
                     <div className='course-edit__right'>
                         <div className='course-edit__hint'>

@@ -27,6 +27,11 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
     const hidden_id = useInput({ bind: { name: 'hidden_id' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
     const [modulesState, setModules] = useState([])
 
+    const getAllInputs = useCallback(() => {
+        const modulesInputs = modulesState.map(({ input, lessonsshort }) => [input, ...lessonsshort.map(({ input }) => input)]).flat()
+        return [shortDescr, hidden_id, ...modulesInputs]
+    }, [modulesState])
+
     useEffect(() => {
         modules.data && setModules([...modules.data.reverse()])
     }, [modules])
@@ -34,11 +39,6 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
         course && shortDescr.setValue(course?.short_desc ?? '')
         course.test_lesson && hidden_id.setValue(course?.test_lesson.hidden_id ?? '')
     }, [course])
-
-    const getAllInputs = useCallback(() => {
-        const modulesInputs = modulesState.map(({ input, lessonsshort }) => [input, ...lessonsshort.map(({ input }) => input)]).flat()
-        return [shortDescr, hidden_id, ...modulesInputs]
-    }, [modulesState])
 
     const fetchModulesRequest = useRequest({
         request: fetchModules,
