@@ -26,21 +26,20 @@ export const courseHandlers = {
     },
     addCourse: {
         ...defaultHandlers.addCourse,
-        success: ({ dispatch, response, data }) => {},
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setCourse(data?.course || {})),
     },
     putCourse: {
         ...defaultHandlers.putCourse,
-        success: ({ dispatch, response, data }) => {
-            console.log(data)
-        },
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setCourse(data?.course || {})),
     },
     // patchCourse
-    // deleteCourse
+    deleteCourse: {
+        ...defaultHandlers.deleteEvent,
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setCourse({})),
+    },
     fetchInfo: {
         ...defaultHandlers.fetchInfo,
-        success: ({ dispatch, response, data }) => {
-            dispatch(CoursesActionCreators.setInfo(data))
-        },
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setInfo(data)),
     },
     editInfo: {
         ...defaultHandlers.editInfo,
@@ -59,9 +58,7 @@ export const courseHandlers = {
     // fetchCourseUser
     fetchModules: {
         ...defaultHandlers.fetchModules,
-        success: ({ dispatch, response, data }) => {
-            dispatch(CoursesActionCreators.setModules(data))
-        },
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setModules(data)),
     },
     addModulesMass: {
         ...defaultHandlers.addModulesMass,
@@ -78,7 +75,7 @@ export const courseHandlers = {
         ...defaultHandlers.deleteModule,
         success: ({ dispatch, response, data }) => {
             dispatch(ModalsActionCreators.setIsShow(true))
-            dispatch(ModalsActionCreators.setContent({ title: 'Модуль удален удалены,', descr: '' }))
+            dispatch(ModalsActionCreators.setContent({ title: 'Модуль удален,', descr: '' }))
         },
     },
     // fetchLessons

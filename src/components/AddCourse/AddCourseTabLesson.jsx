@@ -37,7 +37,7 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
         modules.data && setModules([...modules.data.reverse()])
     }, [modules])
     useEffect(() => {
-        course && shortDescr.setValue(course?.short_desc ?? '')
+        course && shortDescr.setValue(course.short_desc ?? '')
         course.test_lesson && hidden_id.setValue(course?.test_lesson.hidden_id ?? '')
     }, [course])
 
@@ -68,13 +68,8 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
     })
 
     useImperativeHandle(ref, () => ({
-        update: () => {
-            getAllInputs().filter((i) => i.update())
-        },
-        check: () => {
-            const isError = getAllInputs().filter((i) => i.check(i.value))
-            return !isError.length
-        },
+        update: () => getAllInputs().filter((i) => i.update()),
+        check: () => !getAllInputs().filter((i) => i.check(i.value)).length,
         send: () => {
             if (!ref.current.check()) return
             const body = {

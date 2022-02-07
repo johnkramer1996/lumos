@@ -48,30 +48,23 @@ const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }
     const addCourseRequest = useRequest({
         request: addCourse,
         success: ({ response, data }) => {
-            refTabs.current.nextItems()
-            toCabinetItemsEdit({ courseId: data.course.id })
-            setCourse(data?.course)
             setIsShow(true)
             setContent({ title: 'Основная информация о курсе  - добавлена,', descr: 'теперь заполните Уроки' })
+            refTabs.current.nextItems()
+            toCabinetItemsEdit({ courseId: data.course.id })
         },
     })
     const putCourseRequest = useRequest({
         request: putCourse,
         success: ({ response, data }) => {
-            setCourse(data?.course)
             setIsShow(true)
             setContent({ title: 'Курс Обновлен' })
         },
     })
 
     useImperativeHandle(ref, () => ({
-        update: () => {
-            getAllInputs().filter((i) => i.update())
-        },
-        check: () => {
-            const isError = getAllInputs().filter((i) => i.check(i.value))
-            return !isError.length
-        },
+        update: () => getAllInputs().filter((i) => i.update()),
+        check: () => !getAllInputs().filter((i) => i.check(i.value)).length,
         send: () => {
             if (!ref.current.check()) return
             const body = new FormData()

@@ -6,11 +6,11 @@ import { Button } from '..'
 const ImgUpload = ({ callbackHandler = () => {}, img, imgClass, title, size = 'md', ratio = '16:9', recommend = '1280x720', max = '5 MБ' }) => {
     const onDelete = useCallback(() => {
         img.onDelete()
-        callbackHandler('delete', img.ref)
+        callbackHandler('delete', img.ref.current?.files[0])
     }, [])
     const onChange = () => {
         img.onChange()
-        callbackHandler('change', img.ref)
+        callbackHandler('change', img.ref.current?.files[0])
     }
     const descr = useMemo(() => ['Соотношение сторон: ', ratio, ' (рекомендуемое разрешение: ', recommend, <br />, 'PNG, JPG до ', max].map((s, index) => <Fragment key={index}>{s}</Fragment>), [])
     return (

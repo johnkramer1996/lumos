@@ -22,7 +22,6 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     const courseDescription = useInput({ bind: { name: 'courseDescription' }, callbackHandler: inputCallbackHandler, is: { isRequired: true, isTextarea: true } })
     const result_learn_text = useInput({ bind: { name: 'result_learn_text' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
 
-    // const [courseDescription, setCourseDescription] = useState('')
     const [descriptions, setDescriptions] = useState([])
     const [prices, setPrices] = useState([])
 
@@ -60,15 +59,11 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     })
 
     useImperativeHandle(ref, () => ({
-        update: () => {
-            getAllInputs().filter((i) => i.update())
-        },
+        update: () => getAllInputs().filter((i) => i.update()),
         check: () => {
-            const isError = getAllInputs().filter((i) => i.check(i.value))
-            console.log(isError)
-            if (!descriptions.length) return false
-            if (!prices.length) return false
-            return !isError.length
+            // TODO OPMIZE CODE
+            if (!descriptions.length || !prices.length) return false
+            return !getAllInputs().filter((i) => i.check(i.value)).length
         },
         send: () => {
             const body = new FormData()
@@ -91,6 +86,10 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
                     moduls[item] && body.append(`prices[${createId}][moduls][]`, item)
                 }
             })
+
+            console.log(descriptions)
+            console.log(body)
+
             editInfoRequest.call({ courseId, body })
         },
     }))
@@ -108,6 +107,8 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     const changeDescrField = (field, index, value) => {
         const newDescription = [...descriptions]
         newDescription[index][field] = value
+        console.log(field, index, value)
+        console.log(newDescription)
         setDescriptions([...newDescription])
     }
     const onAddPrices = () => {
@@ -164,7 +165,8 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
                 <div className='course-edit__form-group form-group'>
                     <h3 className='create-price__title display-4'>Результаты обучения</h3>
                     <div className='create-about__editor'>
-                        <input type='text' placeholder='Результаты обучения' {...result_learn_text.bind} />
+                        <Input input={result_learn_text} label={'Результаты обучения'} />
+                        {/* <input type='text' placeholder='Результаты обучения' {...result_learn_text.bind} /> */}
                     </div>
                 </div>
             </div>
