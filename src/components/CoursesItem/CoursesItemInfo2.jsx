@@ -1,12 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { getImgUrl } from 'utils'
 
 const CoursesItemInfo = () => {
-    const {} = useSelector(({ frontCourses }) => frontCourses.course)
+    const { descriptions = [], description, result_learn_text = [] } = useSelector(({ frontCourses }) => frontCourses.course)
     const course = useSelector(({ frontCourses }) => frontCourses.course)
     const { themes = [], type_study = [], difficulty = [], format = [], event_types = [] } = useSelector(({ system }) => system.references)
-    const { name: typeName } = type_study[typeStudy] || {}
-    const { name: foramtName } = format[format_study] || {}
+    // const { name: typeName } = type_study[typeStudy] || {}
+    // const { name: foramtName } = format[format_study] || {}
     console.log(course)
 
     return (
@@ -18,33 +19,21 @@ const CoursesItemInfo = () => {
                             <div className='course-info2__group-show'>
                                 <h3 className='course-info2__title'>О курсе</h3>
                                 <div className='course-about__desc'>
-                                    {course.description}
-                                    <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pharetra nullam id tincidunt vestibulum quisque. Urna etiam nunc aliquam dolor, vitae faucibus ut.
-                                        Proin pharetra, amet elementum etiam faucibus nunc purus placerat ut. Metus aliquam eu consectetur sed commodo imperdiet quam. Lacinia tortor id neque ornare
-                                        consectetur habitant. Dui quam tortor ut sit. A, eget ut tempus eu.{' '}
-                                    </p>
-                                    <p>
-                                        Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem
-                                        turpis. Gravida dictum faucibus duis in odio tempus amet. Malesuada purus elit nunc senectus porta tortor molestie.{' '}
-                                    </p>
+                                    <p>{description}</p>
                                 </div>
                             </div>
-                            <div className='course-info2__group-hidden'>
-                                <div className='course-about__img'>
-                                    <img src='/assets/img/about.jpg' alt='' />
+                            {descriptions.map(({ name, text, image }, index) => (
+                                <div className='course-info2__group-hidden'>
+                                    <h3 className='course-info2__title'>{name}</h3>
+                                    <div className='course-about__img'>
+                                        <img src={getImgUrl(image)} alt='' />
+                                    </div>
+                                    <div className='course-about__desc'>
+                                        <p>{text}</p>
+                                    </div>
                                 </div>
-                                <div className='course-about__desc'>
-                                    <p>
-                                        Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem
-                                        turpis. Gravida dictum faucibus duis in odio tempus amet. Malesuada purus elit nunc senectus porta tortor molestie.{' '}
-                                    </p>
-                                    <p>
-                                        Turpis arcu nibh habitant feugiat dictumst adipiscing suspendisse. Quis eu congue vulputate vel in tellus morbi arcu tortor. Magnis imperdiet sed orci vitae
-                                        nisi, pellentesque. Praesent elementum a, augue sed cursus sem enim eni...
-                                    </p>
-                                </div>
-                            </div>
+                            ))}
+
                             <button className='course-info2__show'>
                                 <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                                     <path d='M19 8.5L12 15.5L5 8.5' stroke='#9FADBF' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
@@ -119,34 +108,12 @@ const CoursesItemInfo = () => {
                         <div className='course-result course-info2__group'>
                             <h3 className='course-info2__title'>Результаты обучения</h3>
                             <div className='course-result__wrap'>
-                                <div className='course-result__item'>
-                                    <i></i>
-                                    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                                </div>
-                                <div className='course-result__item'>
-                                    <i></i>
-                                    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                                </div>
-                                <div className='course-result__item'>
-                                    <i></i>
-                                    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                                </div>
-                                <div className='course-result__item'>
-                                    <i></i>
-                                    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                                </div>
-                                <div className='course-result__item'>
-                                    <i></i>
-                                    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                                </div>
-                                <div className='course-result__item'>
-                                    <i></i>
-                                    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                                </div>
-                                <div className='course-result__item'>
-                                    <i></i>
-                                    <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                                </div>
+                                {[...new Array(6).fill(...result_learn_text)].map((item, index) => (
+                                    <div key={index} className='course-result__item'>
+                                        <i></i>
+                                        <span>{item}</span>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                         <div className='course-programm course-info2__group'>

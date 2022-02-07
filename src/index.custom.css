@@ -193,6 +193,10 @@
     max-width: 200px;
 }
 
+.course-info2__group-hidden {
+	margin-top: 30px;
+}
+
 .btn--disabled {
     background-color: #ddd;
     color: rgba(0, 0, 0, 0.3);

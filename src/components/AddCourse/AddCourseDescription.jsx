@@ -17,7 +17,7 @@ const AddCourseDescription = ({ id, index, image, name, text, changeField, onDel
         image && typeof image === 'string' && img.setValue(getImgUrl(image, false))
     }, [])
 
-    const onChange = (e, input) => changeField(input.bind.name, index, input.value)
+    const onChange = (e, input) => changeField(input.bind.name, index, e.target.value)
 
     const imgCallbackHandler = (type, payload) => {
         if (type === 'delete') return onDeleteImg(id)
