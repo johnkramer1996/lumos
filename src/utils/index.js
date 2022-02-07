@@ -78,9 +78,11 @@ export const crateActionCreator = (Service) => {
     return Object.getOwnPropertyNames(Service).reduce((prev, val) => ((prev[val] = asyncAction), prev), {})
 }
 
+export const namesMonth = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря']
+
 export const getDate = (date, monthNames = false) => {
     date = new Date(date)
-    const namesMonth = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Ноября', 'Декабря']
+
     const year = date.getFullYear()
     const month = monthNames ? namesMonth[date.getMonth()] : addZerro(date.getMonth() + 1)
     const day = addZerro(date.getDate())

@@ -5,13 +5,13 @@ import { useSelector } from 'react-redux'
 import CabinetNav from './CabinetNav'
 
 const CabinetTrainer = ({ isLoading }) => {
-    const { data: courses = [] } = useSelector(({ courses }) => courses.courses)
+    const { data: courses = [], total = 0 } = useSelector(({ courses }) => courses.courses)
     const typeShow = useSelector(({ settings }) => settings.typeShow)
 
     return (
         <div className='lkt-courses'>
             <CabinetTitle title={'Мои курсы'} isBtnAll={false} />
-            <CabinetNav />
+            <CabinetNav total={total} />
             <CoursesItemWrapper items={courses} isLoading={isLoading} numberComponent={2} className={`cabinet-page__items cabinet-page__items--${typeShow}`} />
         </div>
     )

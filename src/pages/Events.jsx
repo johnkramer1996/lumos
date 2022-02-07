@@ -17,48 +17,7 @@ const Events = () => {
     })
     useEffect(() => fetchFrontEventsRequest.call(), [])
 
-    const items = [
-        {
-            id: 1,
-            day: '18',
-            month: 'декабря',
-            year: '2021',
-            time: 'в 20:00',
-            img: '/assets/img/event1.jpg',
-            name: 'Длинное название мероприятия минимум в две строки текста',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam commodo dictum hendrerit. Suspendisse diam libero, blandit sit amet lacinia at, scelerisque sed est. Ut eleifend nulla tortor, ut porta quam aliquet vel. Ut eleifend nulla tortor, ut porta quam aliquet Integer ero. Aliquam commodo dictum hendrerit. Suspendisse diam libero,	blandit sit amet lacinia at, scelerisque sed est. Ut eleifend nulla tortor, ut porta.',
-        },
-        {
-            id: 2,
-            day: '18',
-            month: 'декабря',
-            year: '2021',
-            time: 'в 20:00',
-            img: '/assets/img/event1.jpg',
-            name: 'Длинное название мероприятия минимум в две строки текста',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam commodo dictum hendrerit. Suspendisse diam libero, blandit sit amet lacinia at, scelerisque sed est. Ut eleifend nulla tortor, ut porta quam aliquet vel. Ut eleifend nulla tortor, ut porta quam aliquet Integer ero. Aliquam commodo dictum hendrerit. Suspendisse diam libero,	blandit sit amet lacinia at, scelerisque sed est. Ut eleifend nulla tortor, ut porta.',
-        },
-        {
-            id: 3,
-            day: '18',
-            month: 'декабря',
-            year: '2021',
-            time: 'в 20:00',
-            img: '/assets/img/event1.jpg',
-            name: 'Длинное название мероприятия минимум в две строки текста',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam commodo dictum hendrerit. Suspendisse diam libero, blandit sit amet lacinia at, scelerisque sed est. Ut eleifend nulla tortor, ut porta quam aliquet vel. Ut eleifend nulla tortor, ut porta quam aliquet Integer ero. Aliquam commodo dictum hendrerit. Suspendisse diam libero,	blandit sit amet lacinia at, scelerisque sed est. Ut eleifend nulla tortor, ut porta.',
-        },
-        {
-            id: 4,
-            day: '18',
-            month: 'декабря',
-            year: '2021',
-            time: 'в 20:00',
-            img: '/assets/img/event1.jpg',
-            name: 'Длинное название мероприятия минимум в две строки текста',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam commodo dictum hendrerit. Suspendisse diam libero, blandit sit amet lacinia at, scelerisque sed est. Ut eleifend nulla tortor, ut porta quam aliquet vel. Ut eleifend nulla tortor, ut porta quam aliquet Integer ero. Aliquam commodo dictum hendrerit. Suspendisse diam libero,	blandit sit amet lacinia at, scelerisque sed est. Ut eleifend nulla tortor, ut porta.',
-        },
-    ]
+    console.log(allFrontEvents)
 
     return (
         <section className='events'>
@@ -86,11 +45,7 @@ const Events = () => {
                         ))}
                     </div>
                 ) : (
-                    <div className='events__items'>
-                        {items.map((props) => (
-                            <EventsItem key={props.id} {...props} />
-                        ))}
-                    </div>
+                    <CoursesEmpty />
                 )}
                 <div className='events__items'></div>
                 <button className='events__all btn btn-outline'>Показать больше</button>

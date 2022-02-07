@@ -1,25 +1,28 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
+import { getImgUrl, namesMonth } from 'utils'
 
-const EventsItem = ({ id, day, month, year, time, img, name, descr }) => {
+const EventsItem = ({ id, image, edate = '', etime = '', name = '', all_users = 0, new_users = 0, text }) => {
+    const date = new Date(edate)
+
     return (
         <div className='events__item'>
             <div className='event-card'>
                 <div className='event-card__left'>
-                    <div className='event-card__day'>{day}</div>
-                    <div className='event-card__month'>{month}</div>
-                    <div className='event-card__year'>{year}</div>
-                    <div className='event-card__time'>{time}</div>
+                    <div className='event-card__day'>{date.getDate()}</div>
+                    <div className='event-card__month'>{namesMonth[date.getMonth()]}</div>
+                    <div className='event-card__year'>{date.getFullYear()}</div>
+                    <div className='event-card__time'>{etime}</div>
                 </div>
-                <div className='event-card__img'>
-                    <img src={img} alt='' />
+                <div className='event-card__img img img--cover'>
+                    <img src={getImgUrl(image)} alt='' />
                 </div>
                 <div className='event-card__right'>
                     <Link to={RouteNames.EVENTS + '/' + id} className='event-card__title'>
                         {name}
                     </Link>
-                    <div className='event-card__desc'>{descr}</div>
+                    <div className='event-card__desc'>{text}</div>
                 </div>
             </div>
         </div>

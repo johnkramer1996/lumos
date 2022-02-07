@@ -47,6 +47,7 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
     const addModulesMassRequest = useRequest({
         request: addModulesMass,
         success: ({ response, data }) => {
+            console.log(response, data)
             //TODO RETURN COURSE OBJECT FROM SERVER
             fetchModulesRequest.call({ courseId })
             setIsShow(true)

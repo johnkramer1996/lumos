@@ -135,13 +135,15 @@ const CabinetEventsAdd = () => {
                     <div className='edit-event__right'>
                         <div className='edit-event__nav card-bg'>
                             <Button className='edit-event__save' onClick={onSave}>
-                                Сохранить
+                                {isEditPage ? 'Сохранить' : 'Создать'}
                             </Button>
                             <div className='edit-event__hint'>Ваши изменения будут отправлены на модерацию.</div>
                         </div>
-                        <Button className='edit-event__delete' color='red' light onClick={onDelete}>
-                            Удалить мероприятие
-                        </Button>
+                        {isEditPage && (
+                            <Button className='edit-event__delete' color='red' light onClick={onDelete}>
+                                Удалить мероприятие
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>

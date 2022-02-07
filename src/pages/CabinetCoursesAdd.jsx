@@ -108,7 +108,7 @@ const CabinetAddCourse = () => {
     const isAvaibleTabIndex = (index) => {
         if (hasSave) return save()
         if (index === 0) return true
-        if (index === 1 && !hasCourse) {
+        if ((index === 1 || index === 2) && !hasCourse) {
             setIsShow(true)
             setContent({ title: 'Заполните курс' })
             return
