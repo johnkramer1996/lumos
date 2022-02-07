@@ -6,12 +6,9 @@ import { ReactComponent as ShareSvg } from 'svg/share.svg'
 import { ReactComponent as FavoriteSvg } from 'svg/favorite.svg'
 
 const CoursesItemTop = () => {
-    const { name, category_id, trainer: { avatar, last_name, name: trainerName, first_name, all_users = 0 } = {} } = useSelector(({ frontCourses }) => frontCourses.course)
-    const course = useSelector(({ frontCourses }) => frontCourses.course)
+    const { name, category_id, trainer: { avatar, last_name, name: trainerName, first_name, all_users = 0, count_likes = 0 } = {} } = useSelector(({ frontCourses }) => frontCourses.course)
     const { themes = [] } = useSelector(({ system }) => system.references)
-    const { name: categoryName } = (themes && themes[category_id]) || {}
-
-    console.log(course)
+    const { name: categoryName } = themes[category_id] || {}
 
     return (
         <section className='course-top'>
@@ -34,7 +31,7 @@ const CoursesItemTop = () => {
                         <div className='course-top__nav'>
                             <button className='course-top__nav-item course-top__like'>
                                 <LikeSvg />
-                                <span>129</span>
+                                <span>{count_likes}</span>
                             </button>
                             <button className='course-top__nav-item'>
                                 <ShareSvg />

@@ -11,7 +11,7 @@ const Filter = () => {
     const navigate = useNavigate()
     const { setFilter } = useDispatch()
     const filter = useSelector(({ settings }) => settings.filter)
-    const { themes, type_study, difficulty, format, event_types } = useSelector(({ system }) => system.references)
+    const { themes = [], type_study = [], difficulty = [], format = [], event_types = [] } = useSelector(({ system }) => system.references)
 
     const filtersItems = useMemo(
         () => [

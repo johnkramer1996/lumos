@@ -2,7 +2,12 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 const CoursesItemInfo = () => {
+    const {} = useSelector(({ frontCourses }) => frontCourses.course)
     const course = useSelector(({ frontCourses }) => frontCourses.course)
+    const { themes = [], type_study = [], difficulty = [], format = [], event_types = [] } = useSelector(({ system }) => system.references)
+    const { name: typeName } = type_study[typeStudy] || {}
+    const { name: foramtName } = format[format_study] || {}
+    console.log(course)
 
     return (
         <section className='course-info2'>

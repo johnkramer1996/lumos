@@ -6,12 +6,18 @@ import { Loader } from 'components/ui'
 
 const CoursesItem = () => {
     const { courseId } = useParams()
-    const { fetchFrontCourse } = useDispatch()
+    const { setFrontCourse, fetchFrontCourse } = useDispatch()
 
     const fetchFrontCourseRequest = useRequest({
         request: fetchFrontCourse,
     })
-    useEffect(() => fetchFrontCourseRequest.call({ courseId }), [])
+    useEffect(() => {
+        fetchFrontCourseRequest.call({ courseId })
+
+        return () => {
+            setFrontCourse({})
+        }
+    }, [])
 
     return (
         <>
