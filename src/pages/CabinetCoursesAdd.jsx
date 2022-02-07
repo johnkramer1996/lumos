@@ -70,8 +70,10 @@ const CabinetAddCourse = () => {
         setInfo({ ...info })
         setModules({ ...modules })
         setHasSave(false)
-        setTimeout(() => refsTab[tabItems.indexActive]?.current.check(), 0)
-
+        console.log(tabItems)
+        setTimeout(() => {
+            refsTab[tabItems.indexActive]?.current.update()
+        }, 0)
         // toCabinetItemsItem({ courseId })
     }
 
@@ -79,12 +81,7 @@ const CabinetAddCourse = () => {
         if (event === 'change') setHasSave(true)
         if (event === 'delete') setHasSave(true)
     }
-
-    const tabsCallbackHandler = (event, payload) => {
-        if (event === 'changeTab') setHasSave(false)
-    }
-
-    const tabItems = useMemo(
+    const [tabItems, setTabItems] = useState(
         () => ({
             items: [
                 {
@@ -107,6 +104,14 @@ const CabinetAddCourse = () => {
         }),
         [],
     )
+
+    const tabsCallbackHandler = (event, payload) => {
+        if (event === 'changeTab') {
+            setHasSave(false)
+            setTabItems(payload)
+        }
+    }
+
     useEffect(() => {
         tabItems.items.forEach((item, index) => {
             if (index === 0) item.isAvaible = !hasSave && true

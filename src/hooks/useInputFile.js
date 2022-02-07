@@ -22,6 +22,7 @@ const useInputFile = ({ initialValue = '', callbackHandler = () => {} } = {}) =>
         return isError
     }, [])
     const onOpen = useCallback(() => ref.current.click(), [])
+    const update = () => setIsError(false)
 
     return {
         value,
@@ -32,6 +33,7 @@ const useInputFile = ({ initialValue = '', callbackHandler = () => {} } = {}) =>
         onOpen,
         check,
         isError,
+        update,
     }
 }
 export default useInputFile

@@ -1,6 +1,6 @@
 import { Button, Input } from 'components/ui'
 import { useDispatch, useInput, useNavigate, useRequest } from 'hooks'
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import AddCourseDescription from './AddCourseDescription'
@@ -25,6 +25,8 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     const [descriptions, setDescriptions] = useState([])
     const [prices, setPrices] = useState([])
 
+    const allInputs = useMemo(() => [courseDescription, result_learn_text], [])
+
     const deleteInfoRequest = useRequest({
         request: deleteInfo,
         success: ({ dispatch, response, data }) => {
@@ -42,19 +44,21 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     })
 
     useEffect(() => {
-        info.course?.description && courseDescription.setValue(info.course.description)
-        info.course?.result_learn_text && result_learn_text.setValue(info.course.result_learn_text)
-    }, [info.course])
+        info?.course && courseDescription.setValue(info.course.description || '')
+        info?.course && result_learn_text.setValue(info.course.result_learn_text || '')
+    }, [info])
     useEffect(() => info.descriptions?.length && setDescriptions([...info.descriptions]), [info.descriptions])
     useEffect(() => info.prices?.length && setPrices([...info.prices]), [info.prices])
 
     useImperativeHandle(ref, () => ({
+        update: () => {
+            allInputs.filter((i) => i.update())
+        },
         check: () => {
-            const isError = [courseDescription, result_learn_text].filter((i) => i.check(i.value))
+            const isError = allInputs.filter((i) => i.check(i.value))
             if (!descriptions.length) return false
             if (!prices.length) return false
             return !isError.length
-            // const errors = []
         },
         send: () => {
             const body = new FormData()

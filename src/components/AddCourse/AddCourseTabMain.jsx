@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle } from 'react'
+import React, { forwardRef, useEffect, useImperativeHandle, useMemo } from 'react'
 import { Checkbox, ImgUpload, Input } from 'components/ui'
 import { getDate, getImgUrl } from 'utils'
 import { useSelector } from 'react-redux'
@@ -28,15 +28,17 @@ const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }
     const width = useInput({ bind: { name: 'width' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
     const img = useInputFile({ callbackHandler: inputCallbackHandler })
 
+    const allInputs = useMemo(() => [name, category_id, type_study, format_study, sale_subscribe, anytime, width, img], [])
+
     useEffect(() => {
-        course.name && name.setValue(course.name)
-        course.category_id && category_id.setValue(course.category_id)
-        course.type_study && type_study.setValue(course.type_study)
-        course.format_study && format_study.setValue(course.format_study)
-        course.sale_subscribe && sale_subscribe.setValue(course.sale_subscribe)
-        course.anytime && anytime.setValue(course.anytime)
-        course.width && width.setValue(course.width)
-        course.image && img.setValue(getImgUrl(course.image, false))
+        name.setValue(course.name || '')
+        category_id.setValue(course.category_id || '')
+        type_study.setValue(course.type_study || '')
+        format_study.setValue(course.format_study || '')
+        sale_subscribe.setValue(course.sale_subscribe || '')
+        anytime.setValue(course.anytime || '')
+        width.setValue(course.width || '')
+        img.setValue(getImgUrl(course.image, false) || '')
     }, [course])
 
     const addCourseRequest = useRequest({
@@ -59,8 +61,11 @@ const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }
     })
 
     useImperativeHandle(ref, () => ({
+        update: () => {
+            allInputs.filter((i) => i.update())
+        },
         check: () => {
-            const isError = [name, category_id, type_study, format_study, sale_subscribe, anytime, width, img].filter((i) => i.check(i.value))
+            const isError = allInputs.filter((i) => i.check(i.value))
             console.log(isError)
             return !isError.length
         },

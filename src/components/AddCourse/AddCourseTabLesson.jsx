@@ -7,6 +7,7 @@ import { useDispatch, useInput, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 import { uid } from 'utils'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
+import { useCallback } from 'react'
 
 const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
     const { courseId } = useParams()
@@ -25,6 +26,20 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
     })
     const hidden_id = useInput({ bind: { name: 'hidden_id' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
     const [modulesState, setModules] = useState([])
+
+    useEffect(() => {
+        modules.data && setModules([...modules.data.reverse()])
+    }, [modules])
+    useEffect(() => {
+        course && shortDescr.setValue(course?.short_desc ?? '')
+        course.test_lesson && hidden_id.setValue(course?.test_lesson.hidden_id ?? '')
+        console.log('update')
+    }, [course])
+
+    const getAllInputs = useCallback(() => {
+        const modulesInputs = modulesState.map(({ input, lessonsshort }) => [input, ...lessonsshort.map(({ input }) => input)]).flat()
+        return [shortDescr, hidden_id, ...modulesInputs]
+    }, [modulesState])
 
     const fetchModulesRequest = useRequest({
         request: fetchModules,
@@ -46,18 +61,13 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
         request: deleteLesson,
     })
 
-    useEffect(() => {
-        modules.data?.length && setModules([...modules.data.reverse()])
-    }, [modules])
-    useEffect(() => {
-        info.course?.short_desc && shortDescr.setValue(info.course.short_desc)
-        info.course?.test_lesson && hidden_id.setValue(info.course.test_lesson.hidden_id)
-    }, [info.course])
-
     useImperativeHandle(ref, () => ({
+        update: () => {
+            getAllInputs().filter((i) => i.update())
+        },
         check: () => {
-            const modulesInputs = modulesState.map(({ input, lessonsshort }) => [input, ...lessonsshort.map(({ input }) => input)]).flat()
-            const isError = [shortDescr, hidden_id, ...modulesInputs].filter((i) => i.check(i.value))
+            const isError = getAllInputs().filter((i) => i.check(i.value))
+            console.log(isError)
             return !isError.length
         },
         send: () => {
@@ -76,10 +86,12 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
                         name: l.name,
                         hidden_id: l.hidden_id,
                         number: index,
-                        is_test: l.hidden_id === hidden_id,
+                        is_test: l.hidden_id === hidden_id.value,
                     })),
                 })),
             }
+
+            console.log(body)
 
             addModulesMassRequest.call({ courseId, body })
         },

@@ -43,6 +43,7 @@ const useInput = ({ initialValue = '', label = '', bind = {}, callbackHandler = 
         if (isEmail && !validateEmail(value)) return 'Некорректный E-mail'
         return ''
     }, [])
+    const update = () => setError('')
     const isNewValue = () => prevValueRef.current !== value
     useEffect(() => {
         const handlers = {}
@@ -59,6 +60,7 @@ const useInput = ({ initialValue = '', label = '', bind = {}, callbackHandler = 
         value,
         prevValueRef,
         setValue,
+        update,
         clear,
         ref: inputRef,
         isDisabled,
