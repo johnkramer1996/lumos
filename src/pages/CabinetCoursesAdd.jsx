@@ -5,30 +5,36 @@ import { AddCourseTabMain, AddCourseTabLesson, AddCourseTabDescription, Tabs } f
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { isActiveClass } from 'utils'
+import { coursesSelectors } from 'store/selectors'
+import AddCourseLessonEdit from 'components/AddCourse/AddCourseLessonEdit'
 
 const CabinetAddCourse = () => {
-    const { courseId } = useParams()
+    const { courseId, lessonId } = useParams()
     const isEditPage = !!courseId
+    const isLessonPage = !!lessonId
     const { toError } = useNavigate()
     const { setIsShow, setContent, setCourse, setInfo, setModules, fetchCourse, fetchInfo, fetchModules } = useDispatch()
-    const course = useSelector(({ courses }) => courses.course)
-    const modules = useSelector(({ courses }) => courses.modules)
-    const info = useSelector(({ courses }) => courses.info)
+    const course = useSelector(coursesSelectors.getCourse)
+    const modules = useSelector(coursesSelectors.getModules)
+    const info = useSelector(coursesSelectors.getInfo)
     const hasCourse = !(Object.keys(course).length === 0)
-    const hasModules = modules?.data && !(Object.keys(modules.data).length === 0)
+    const hasModules = modules && !(Object.keys(modules).length === 0)
     const hasInfo = info?.descriptions && info?.prices && !(Object.keys(info.descriptions).length === 0 && Object.keys(info.prices).length === 0)
 
     const [hasSave, setHasSave] = useState(false)
 
     const fetchCourseRequest = useRequest({
         request: fetchCourse,
+        isLoadingDefault: isEditPage,
         error: ({ error }) => error.status === 404 && toError(),
     })
     const fetchModulesRequest = useRequest({
         request: fetchModules,
+        isLoadingDefault: isEditPage,
     })
     const fetchInfoRequest = useRequest({
         request: fetchInfo,
+        isLoadingDefault: isEditPage,
     })
 
     useEffect(() => {
@@ -60,53 +66,63 @@ const CabinetAddCourse = () => {
         if (!refsTab[indexActive]?.current.check()) {
             setIsShow(true)
             setContent({ title: 'Заполните все поля' })
-            return false
+            return
         }
         refsTab[indexActive]?.current.send()
         setHasSave(false)
-        return true
     }
 
     const onCancel = () => {
         setCourse({ ...course })
         setInfo({ ...info })
-        setModules({ ...modules })
+        setModules([...modules])
         setHasSave(false)
         const indexActive = refTabs.current.getIndex()
-        setTimeout(() => refsTab[indexActive]?.current.update(), 0)
+        // TODO SETTIMEOUT
+        refsTab[indexActive]?.current.update()
+        onUpdateListener(-1)
     }
 
-    const inputCallbackHandler = (event, payload) => {
-        if (event === 'change') setHasSave(true)
-        if (event === 'delete') setHasSave(true)
-    }
-    const tabItems = useMemo(
-        () => [
-            {
-                title: 'Основная информация',
-                component: <AddCourseTabMain ref={refTabMain} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
-            },
-            {
-                title: 'Уроки',
-                component: <AddCourseTabLesson ref={refTabLesson} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
-            },
-            {
-                title: 'Страница курса',
-                component: <AddCourseTabDescription ref={refTabDescription} callbackHandler={{ inputCallbackHandler }} refTabs={refTabs} />,
-            },
-        ],
+    const onUpdateListener = useCallback(
+        (() => {
+            let count = 0
+            return (val = 1) => {
+                count += val
+                if (count > 0) {
+                    setHasSave(true)
+                    count = 0
+                }
+            }
+        })(),
         [],
     )
 
-    const tabsCallbackHandler = (event, payload) => {
-        if (event === 'changeTab') {
-            setHasSave(false)
-            // setTabItems(payload)
-        }
+    const tabItems = [
+        {
+            title: 'Основная информация',
+            component: <AddCourseTabMain ref={refTabMain} onUpdateListener={onUpdateListener} refTabs={refTabs} />,
+        },
+        {
+            title: 'Уроки',
+            component: <AddCourseTabLesson ref={refTabLesson} onUpdateListener={onUpdateListener} refTabs={refTabs} />,
+        },
+        {
+            title: 'Страница курса',
+            component: <AddCourseTabDescription ref={refTabDescription} onUpdateListener={onUpdateListener} refTabs={refTabs} />,
+        },
+    ]
+
+    const onChangeTabsListener = (activeIndex) => {
+        setHasSave(false)
+        // onUpdateListener(-1)
     }
 
     const isAvaibleTabIndex = (index) => {
-        if (hasSave) return save()
+        if (hasSave) {
+            setIsShow(true)
+            setContent({ title: 'Сохраните или Отмените' })
+            return false
+        }
         if (index === 0) return true
         if ((index === 1 || index === 2) && !hasCourse) {
             setIsShow(true)
@@ -118,6 +134,7 @@ const CabinetAddCourse = () => {
             setContent({ title: 'Заполните уроки' })
             return
         }
+        setHasSave(false)
         return true
     }
 
@@ -126,17 +143,23 @@ const CabinetAddCourse = () => {
             <div className='container'>
                 <div className='course-edit__inner'>
                     <div className='course-edit__left'>
-                        <h1 className='course-edit__title display-3'>
-                            <span>{isEditPage ? 'Редактирование' : 'Добавление'} курса</span>
-                        </h1>
-                        <Tabs
-                            ref={refTabs}
-                            items={tabItems}
-                            classPrefix={'course-edit'}
-                            isLoading={fetchCourseRequest.isLoading}
-                            callbackHandler={tabsCallbackHandler}
-                            isAvaibleIndex={isAvaibleTabIndex}
-                        />
+                        {isLessonPage ? (
+                            <AddCourseLessonEdit />
+                        ) : (
+                            <>
+                                <h1 className='course-edit__title display-3'>
+                                    <span>{isEditPage ? 'Редактирование' : 'Добавление'} курса</span>
+                                </h1>
+                                <Tabs
+                                    ref={refTabs}
+                                    items={tabItems}
+                                    classPrefix={'course-edit'}
+                                    isLoading={fetchCourseRequest.isLoading || fetchModulesRequest.isLoading || fetchInfoRequest.isLoading}
+                                    onChangeListener={onChangeTabsListener}
+                                    isAvaibleIndex={isAvaibleTabIndex}
+                                />
+                            </>
+                        )}
                     </div>
                     <div className='course-edit__right'>
                         <div className='course-edit__hint'>

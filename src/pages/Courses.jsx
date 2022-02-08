@@ -13,7 +13,6 @@ const Courses = () => {
 
     const fetchFrontCoursesRequest = useRequest({
         request: fetchFrontCourses,
-        isLoadingDefault: true,
     })
     useEffect(() => fetchFrontCoursesRequest.call(), [])
 

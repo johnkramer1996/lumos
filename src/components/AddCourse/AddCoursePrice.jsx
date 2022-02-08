@@ -4,15 +4,15 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 
-const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, changeField, changeModuleField, moduls = [], onDelete, callbackHandler, prices }) => {
+const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, changeField, changeModuleField, moduls = [], onDelete, prices }) => {
     const modules = useSelector(({ courses }) => courses.modules)
 
-    const inputName = useInput({ callbackHandler, bind: { name: 'name' }, is: { isRequired: true } })
-    const inputWidth = useInput({ callbackHandler, bind: { name: 'width' }, is: { isRequired: true } })
-    const inputPriceWithSale = useInput({ callbackHandler, bind: { name: 'price_with_sale' }, is: { isRequired: true } })
-    const inputPrice = useInput({ callbackHandler, bind: { name: 'price' }, is: { isRequired: true } })
-    const inputText = useInput({ callbackHandler, bind: { name: 'text' }, is: { isRequired: true, isTextarea: true } })
-    const inputModuls = useInput({ callbackHandler, bind: { name: 'moduls' }, is: { isRequired: true } })
+    const inputName = useInput({ bind: { name: 'name' }, is: { isRequired: true } })
+    const inputWidth = useInput({ bind: { name: 'width' }, is: { isRequired: true } })
+    const inputPriceWithSale = useInput({ bind: { name: 'price_with_sale' }, is: { isRequired: true } })
+    const inputPrice = useInput({ bind: { name: 'price' }, is: { isRequired: true } })
+    const inputText = useInput({ bind: { name: 'text' }, is: { isRequired: true, isTextarea: true } })
+    const inputModuls = useInput({ bind: { name: 'moduls' }, is: { isRequired: true } })
 
     prices[index].inputs = [inputName, inputWidth, inputPriceWithSale, inputPrice, inputText]
     prices[index].checkbox = inputModuls
@@ -26,11 +26,10 @@ const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, 
         moduls && inputModuls.setValue(moduls)
     }, [])
 
-    const onChange = (e, input) => changeField(input.bind.name, index, input.value)
+    const onChange = (e, input) => changeField(input.bind.name, index, e.target.value)
     const onChangeModule = (value, checked) => {
         inputModuls.setValue(moduls.map((m, index) => (index === value ? checked : m)))
         changeModuleField('moduls', index, value, checked)
-        callbackHandler('change')
     }
 
     return (

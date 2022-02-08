@@ -9,62 +9,73 @@ import { uid } from 'utils'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 import { useCallback } from 'react'
 import { coursesSelectors } from 'store/selectors/'
+import AddCourseLessonEdit from './AddCourseLessonEdit'
 
-const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
+const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
     const { courseId } = useParams()
-    const { setContent, setIsShow, deleteModule, deleteLesson, addModulesMass, fetchModules } = useDispatch()
+    const { setContent, setIsShow, deleteModule, deleteLesson, addModulesMass } = useDispatch()
     const course = useSelector(coursesSelectors.getCourse)
     const modules = useSelector(coursesSelectors.getModules)
     const info = useSelector(coursesSelectors.getInfo)
     const hasCourse = !(Object.keys(course).length === 0)
-    const hasModules = modules?.data && !(Object.keys(modules.data).length === 0)
+    const hasModules = modules && !(Object.keys(modules).length === 0)
     const hasInfo = info?.descriptions && info?.prices && !(Object.keys(info.descriptions).length === 0 && Object.keys(info.prices).length === 0)
 
     const shortDescr = useInput({
         bind: { name: 'shortDescr' },
-        callbackHandler: inputCallbackHandler,
         is: { isRequired: true, isTextarea: true },
     })
-    const hidden_id = useInput({ bind: { name: 'hidden_id' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
+    const hidden_id = useInput({ bind: { name: 'hidden_id' }, is: { isRequired: true } })
     const [modulesState, setModules] = useState([])
 
     const getAllInputs = useCallback(() => {
-        const modulesInputs = modulesState.map(({ input, lessonsshort }) => [input, ...lessonsshort.map(({ input }) => input)]).flat()
+        const modulesInputs = modulesState.map(({ input = {}, name, lessonsshort }) => [{ ...input, value: name }, ...lessonsshort.map(({ input = {}, name }) => ({ ...input, value: name }))]).flat()
+        console.log(modulesInputs)
         return [shortDescr, hidden_id, ...modulesInputs]
     }, [shortDescr, hidden_id, modulesState])
 
+    useEffect(() => onUpdateListener(-2), [])
+    useEffect(() => onUpdateListener(1), [getAllInputs().reduce((prev, { value }) => prev + String(value), '')])
+
     useEffect(() => {
-        modules.data && setModules([...modules.data.reverse()])
+        console.log(modules)
+        modules && setModules([...modules.reverse()])
     }, [modules])
     useEffect(() => {
         course && shortDescr.setValue(course.short_desc ?? '')
         course.test_lesson && hidden_id.setValue(course?.test_lesson.hidden_id ?? '')
     }, [course])
 
-    const fetchModulesRequest = useRequest({
-        request: fetchModules,
-    })
     const addModulesMassRequest = useRequest({
         request: addModulesMass,
         success: ({ response, data }) => {
             console.log(response, data)
             //TODO RETURN COURSE OBJECT FROM SERVER
-            fetchModulesRequest.call({ courseId })
+            // fetchModulesRequest.call({ courseId })
             setIsShow(true)
             !hasModules && !hasInfo
                 ? setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' })
                 : !hasInfo
                 ? setContent({ title: 'Уроки обновлены,', descr: 'Заполните описание курса и его стоимость.' })
-                : setContent({ title: 'Уроки обновлены,' })
-            refTabs.current.nextItems()
+                : setContent({ title: 'Уроки обновлены,', descr: '' })
+
+            !hasInfo && refTabs.current.nextItems()
         },
     })
 
     const deleteModuleRequest = useRequest({
         request: deleteModule,
+        success: ({ response, data }) => {
+            setIsShow(true)
+            setContent({ title: 'Модуль удален,', descr: '' })
+        },
     })
     const deleteLessonRequest = useRequest({
         request: deleteLesson,
+        success: ({ response, data }) => {
+            setIsShow(true)
+            setContent({ title: 'Урок удален', descr: '' })
+        },
     })
 
     useImperativeHandle(ref, () => ({
@@ -138,7 +149,6 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
         newModules[indexModule].lessonsshort[indexLesson].name = value
         setModules([...newModules])
     }
-
     return (
         <>
             <div className='course-edit__small-desc card-bg'>
@@ -150,7 +160,7 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
                 <div className='create-module__items'>
                     {modulesState.map((props, index) => (
                         <div key={props.id ?? props.hidden_id}>
-                            <AddCourseModule {...props} index={index} modulesState={modulesState} setName={setModuleName} onDelete={onDeleteModule} callbackHandler={inputCallbackHandler} />
+                            <AddCourseModule {...props} index={index} modulesState={modulesState} setName={setModuleName} onDelete={onDeleteModule} />
                         </div>
                     ))}
                 </div>
@@ -169,7 +179,6 @@ const AddCourseTabLesson = ({ callbackHandler: { inputCallbackHandler }, refTabs
                     setName={setLessonName}
                     onAdd={onAddLesson}
                     onDelete={onDeleteLesson}
-                    callbackHandler={inputCallbackHandler}
                 />
             ))}
             <div className='create-module card-bg'>

@@ -22,8 +22,9 @@ const CoursesItemInfo = () => {
                                     <p>{description}</p>
                                 </div>
                             </div>
+                            {/* // TODO MODILE VERSION */}
                             {descriptions.map(({ name, text, image }, index) => (
-                                <div className='course-info2__group-hidden'>
+                                <div key={index} className='course-info2__group-hidden'>
                                     <h3 className='course-info2__title'>{name}</h3>
                                     <div className='course-about__img'>
                                         <img src={getImgUrl(image)} alt='' />
@@ -33,7 +34,6 @@ const CoursesItemInfo = () => {
                                     </div>
                                 </div>
                             ))}
-
                             <button className='course-info2__show'>
                                 <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                                     <path d='M19 8.5L12 15.5L5 8.5' stroke='#9FADBF' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
@@ -43,60 +43,21 @@ const CoursesItemInfo = () => {
                             </button>
                         </div>
                         <div className='course-whom course-info2__group'>
-                            <div className='course-info2__group-show'>
-                                <h3 className='course-info2__title'>Кому подойдет этот курс</h3>
-                                <div className='course-whom__item'>
-                                    <div className='course-whom__item-img'>
-                                        <img src='/assets/img/whom.jpg' alt='' />
-                                    </div>
-                                    <div className='course-whom__item-content'>
-                                        <div className='course-whom__item-title truncate'>Новичкам</div>
-                                        <div className='course-whom__item-desc'>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pharetra nullam id tincidunt vestibulum quisque. Urna etiam nunc aliquam dolor, vitae faucibus ut
-                                            dolor sit amet.
+                            <h3 className='course-info2__title'>Кому подойдет курс</h3>
+                            {/* // TODO MODILE VERSION */}
+                            {descriptions.map(({ name, text, image }, index) => (
+                                <div key={index} className='course-info2__group-hidden'>
+                                    <div className='course-whom__item'>
+                                        <div className='course-whom__item-img'>
+                                            <img src={getImgUrl(image)} alt='' />
+                                        </div>
+                                        <div className='course-whom__item-content'>
+                                            <div className='course-whom__item-title truncate'>{name}</div>
+                                            <div className='course-whom__item-desc'>{text}</div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className='course-info2__group-hidden'>
-                                <div className='course-whom__item'>
-                                    <div className='course-whom__item-img'>
-                                        <img src='/assets/img/whom2.jpg' alt='' />
-                                    </div>
-                                    <div className='course-whom__item-content'>
-                                        <div className='course-whom__item-title truncate'>Начинающим иллюстраторам</div>
-                                        <div className='course-whom__item-desc'>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pharetra nullam id tincidunt vestibulum quisque. Urna etiam nunc aliquam dolor, vitae faucibus ut.
-                                            Proin pharetra, amet elementum etiam faucibus nunc purus placerat ut. Metus aliquam eu consectetur sed commodo imperdiet quam. Metus aliquam eu consectetur
-                                            sed commodo imperdiet quam.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='course-whom__item'>
-                                    <div className='course-whom__item-img'>
-                                        <img src='/assets/img/whom3.jpg' alt='' />
-                                    </div>
-                                    <div className='course-whom__item-content'>
-                                        <div className='course-whom__item-title truncate'>Начинающим 3D-дизайнерам</div>
-                                        <div className='course-whom__item-desc'>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pharetra nullam id tincidunt vestibulum quisque. Urna etiam nunc aliquam dolor, vitae faucibus ut.
-                                            Proin pharetra, amet elementum etiam faucibus nunc purus placerat ut. Metus aliquam eu consectetur sed commodo imperdiet quam.
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='course-whom__item'>
-                                    <div className='course-whom__item-img'>
-                                        <img src='/assets/img/whom4.jpg' alt='' />
-                                    </div>
-                                    <div className='course-whom__item-content'>
-                                        <div className='course-whom__item-title truncate'>Профессионалам в 3D</div>
-                                        <div className='course-whom__item-desc'>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pharetra nullam id tincidunt vestibulum quisque. Urna etiam nunc aliquam dolor, vitae faucibus ut.
-                                            Proin pharetra, amet elementum etiam faucibus nunc purus placerat ut.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            ))}
                             <button className='course-info2__show'>
                                 <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                                     <path d='M19 8.5L12 15.5L5 8.5' stroke='#9FADBF' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />

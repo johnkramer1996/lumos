@@ -5,6 +5,7 @@ const initialState = {
     course: {},
     modules: [],
     lessons: [],
+    lesson: {},
     info: {},
 }
 
@@ -18,6 +19,8 @@ export default function coursesReducer(state = initialState, action) {
             return { ...state, modules: action.payload }
         case coursesTypes.SET_LESSONS:
             return { ...state, lessons: action.payload }
+        case coursesTypes.SET_LESSON:
+            return { ...state, lesson: action.payload }
         case coursesTypes.SET_INFO:
             return { ...state, info: action.payload }
         default:

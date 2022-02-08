@@ -15,7 +15,6 @@ const CabinetEventsItem = () => {
     const event = useSelector(({ events }) => events.event)
     const fetchEventRequest = useRequest({
         request: fetchEvent,
-        isLoadingDefault: true,
     })
 
     useEffect(() => {

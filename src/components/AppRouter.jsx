@@ -9,7 +9,7 @@ const AppRouter = () => {
     const { auth } = useDispatch()
     const isAuth = useSelector((state) => state.auth.isAuth)
 
-    const authRequest = useRequest({ request: auth, isLoadingDefault: true })
+    const authRequest = useRequest({ request: auth })
 
     useEffect(() => {
         localStorage.getItem('token') && authRequest.call()
@@ -25,7 +25,7 @@ const AppRouter = () => {
                         {privateRoutes.map((route) => (
                             <Route key={route.path} path={route.path} element={route.element} />
                         ))}
-                        <Route path='*' element={<Navigate to={RouteNames.ERROR} />} />
+                        {/* <Route path='*' element={<Navigate to={RouteNames.ERROR} />} /> */}
                     </Routes>
                 </>
             ) : (

@@ -44,7 +44,7 @@ const useInput = ({ initialValue = '', label = '', bind = {}, callbackHandler = 
         return ''
     }, [])
     const update = () => setError('')
-    const isNewValue = () => prevValueRef.current !== value
+    const isNewValue = (val) => prevValueRef.current !== val ?? value
     useEffect(() => {
         const handlers = {}
         if (isDate) {

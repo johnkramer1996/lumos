@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom'
 import { useCallback } from 'react'
 import { coursesSelectors } from 'store/selectors'
 
-const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
+const AddCourseTabMain = ({ refTabs, onUpdateListener }, ref) => {
     const { courseId } = useParams()
     const { toCabinetItemsEdit } = useNavigate()
     const { setContent, setIsShow, setCourse, addCourse, putCourse } = useDispatch()
@@ -19,28 +19,31 @@ const AddCourseTabMain = ({ callbackHandler: { inputCallbackHandler }, refTabs }
     const hasModuls = !(Object.keys(modules).length === 0)
     const hasInfo = !(Object.keys(info).length === 0)
 
-    const name = useInput({ bind: { name: 'name' }, callbackHandler: inputCallbackHandler, is: { isRequired: true, isName: true } })
-    const category_id = useInput({ bind: { name: 'category_id' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
-    const type_study = useInput({ bind: { name: 'type_study' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
-    const format_study = useInput({ bind: { name: 'format_study' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
-    const sale_subscribe = useInput({ initialValue: false, bind: { name: 'sale_subscribe' }, callbackHandler: inputCallbackHandler, is: { isCheckbox: true } })
-    const anytime = useInput({ initialValue: true, bind: { name: 'anytime' }, callbackHandler: inputCallbackHandler, is: { isCheckbox: true } })
-    const timing = useInput({ initialValue: getDate(new Date()), bind: { name: 'timing' }, callbackHandler: inputCallbackHandler, is: { date: true } })
-    const width = useInput({ bind: { name: 'width' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
-    const img = useInputFile({ callbackHandler: inputCallbackHandler })
+    const name = useInput({ bind: { name: 'name' }, is: { isRequired: true, isName: true } })
+    const category_id = useInput({ bind: { name: 'category_id' }, is: { isRequired: true } })
+    const type_study = useInput({ bind: { name: 'type_study' }, is: { isRequired: true } })
+    const format_study = useInput({ bind: { name: 'format_study' }, is: { isRequired: true } })
+    const anytime = useInput({ initialValue: '0', bind: { name: 'anytime' }, is: { isCheckbox: true } })
+    const sale_subscribe = useInput({ initialValue: '0', bind: { name: 'sale_subscribe' }, is: { isCheckbox: true } })
+    const timing = useInput({ initialValue: getDate(new Date()), bind: { name: 'timing' }, is: { isDate: true } })
+    const width = useInput({ bind: { name: 'width' }, is: { isRequired: true } })
+    const img = useInputFile()
 
     const getAllInputs = useCallback(
-        () => [name, category_id, type_study, format_study, sale_subscribe, anytime, width, img],
-        [name, category_id, type_study, format_study, sale_subscribe, anytime, width, img],
+        () => [name, category_id, type_study, format_study, anytime, sale_subscribe, width, img],
+        [name, category_id, type_study, format_study, anytime, sale_subscribe, width, img],
     )
+
+    useEffect(() => onUpdateListener(-2), [])
+    useEffect(() => onUpdateListener(1), [getAllInputs().reduce((prev, { value }) => prev + String(value), '')])
 
     useEffect(() => {
         name.setValue(course.name || '')
         category_id.setValue(course.category_id || '')
         type_study.setValue(course.type_study || '')
         format_study.setValue(course.format_study || '')
-        sale_subscribe.setValue(course.sale_subscribe || '')
-        anytime.setValue(course.anytime || '')
+        sale_subscribe.setValue(course.sale_subscribe || '0')
+        anytime.setValue(course.anytime || '0')
         width.setValue(course.width || '')
         img.setValue(getImgUrl(course.image, false) || '')
     }, [course])

@@ -13,7 +13,6 @@ const Events = () => {
 
     const fetchFrontEventsRequest = useRequest({
         request: fetchFrontEvents,
-        isLoadingDefault: true,
     })
     useEffect(() => fetchFrontEventsRequest.call(), [])
 

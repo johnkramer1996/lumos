@@ -9,7 +9,6 @@ const CabinetCourses = () => {
     const activeRole = (roles[0]?.pivot?.role_id ?? 1) - 1
     const fetchCoursesRequest = useRequest({
         request: fetchCourses,
-        isLoadingDefault: true,
     })
     useEffect(() => fetchCoursesRequest.call({ page: 1, limit: 1000 }), [])
 

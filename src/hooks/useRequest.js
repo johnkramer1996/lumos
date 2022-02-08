@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-const useRequest = ({ request = () => {}, success = () => {}, error = () => {}, isLoadingDefault = false } = {}) => {
+const useRequest = ({ request = () => {}, success = () => {}, error = () => {}, isLoadingDefault = true } = {}) => {
     let isMounted = true
     const [state, setState] = useState({})
     const [isLoading, setIsLoading] = useState(isLoadingDefault)

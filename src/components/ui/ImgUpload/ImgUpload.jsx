@@ -3,14 +3,14 @@ import { useCallback } from 'react'
 import { isActiveClass } from 'utils'
 import { Button } from '..'
 
-const ImgUpload = ({ callbackHandler = () => {}, img, imgClass, title, size = 'md', ratio = '16:9', recommend = '1280x720', max = '5 MБ' }) => {
-    const onDelete = useCallback(() => {
+const ImgUpload = ({ onChange = () => {}, onDelete = () => {}, img, imgClass, title, size = 'md', ratio = '16:9', recommend = '1280x720', max = '5 MБ' }) => {
+    const onDeleteHandler = useCallback(() => {
         img.onDelete()
-        callbackHandler('delete', img.ref.current?.files[0])
+        onDelete(img.ref.current?.files[0])
     }, [])
-    const onChange = () => {
+    const onChangeHandler = () => {
         img.onChange()
-        callbackHandler('change', img.ref.current?.files[0])
+        onChange(img.ref.current?.files[0])
     }
     const descr = useMemo(() => ['Соотношение сторон: ', ratio, ' (рекомендуемое разрешение: ', recommend, <br />, 'PNG, JPG до ', max].map((s, index) => <Fragment key={index}>{s}</Fragment>), [])
     return (
@@ -25,10 +25,10 @@ const ImgUpload = ({ callbackHandler = () => {}, img, imgClass, title, size = 'm
                     <div className='course-edit__form-upload-desc'>{descr}</div>
                     <div className='course-edit__form-upload-buttons'>
                         <Button className='course-edit__form-upload-btn btn--uploadfile'>
-                            <input ref={img.ref} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={onChange} />
+                            <input ref={img.ref} type='file' name='image' accept='image/png, image/gif, image/jpeg' onChange={onChangeHandler} />
                             Загрузить {img.value ? 'новое' : 'изображение'}
                         </Button>
-                        <Button className='course-edit__form-upload-delete' onClick={onDelete} outline>
+                        <Button className='course-edit__form-upload-delete' onClick={onDeleteHandler} outline>
                             Удалить
                         </Button>
                     </div>

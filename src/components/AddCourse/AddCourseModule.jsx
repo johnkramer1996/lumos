@@ -2,15 +2,15 @@ import { useInput } from 'hooks'
 import React, { useEffect } from 'react'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 
-const AddCourseModule = ({ id, index, name, setName, onDelete, callbackHandler, modulesState }) => {
-    const input = useInput({ callbackHandler, is: { isRequired: true } })
+const AddCourseModule = ({ id, index, name, setName, onDelete, modulesState }) => {
+    const input = useInput({ is: { isRequired: true } })
     modulesState[index].input = input
 
     useEffect(() => name && input.setValue(name), [])
 
     const onChange = (e) => {
         input.bind.onChange(e)
-        if (!input.isNewValue()) return
+        if (!input.isNewValue(e.target.value)) return
         setName(index, e.target.value)
     }
 

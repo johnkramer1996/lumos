@@ -8,19 +8,19 @@ import AddCoursePrice from './AddCoursePrice'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 import { coursesSelectors } from 'store/selectors'
 
-const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, ref) => {
+const AddCourseTabDescription = ({ refTabs, onUpdateListener }, ref) => {
     const { courseId } = useParams()
     const { toCabinetItems } = useNavigate()
-    const { setIsShow, setContent, fetchInfo, editInfo, deleteInfo } = useDispatch()
-    const course = useSelector(coursesSelectors.getCourse)
+    const { setIsShow, setContent, editInfo, deleteInfo } = useDispatch()
+    // const course = useSelector(coursesSelectors.getCourse)
     const modules = useSelector(coursesSelectors.getModules)
     const info = useSelector(coursesSelectors.getInfo)
-    const hasCourse = !(Object.keys(course).length === 0)
-    const hasModuls = !(Object.keys(modules).length === 0)
-    const hasInfo = !(Object.keys(info).length === 0)
+    // const hasCourse = !(Object.keys(course).length === 0)
+    const hasModules = modules && !(Object.keys(modules).length === 0)
+    const hasInfo = info?.descriptions && info?.prices && !(Object.keys(info.descriptions).length === 0 && Object.keys(info.prices).length === 0)
 
-    const courseDescription = useInput({ bind: { name: 'courseDescription' }, callbackHandler: inputCallbackHandler, is: { isRequired: true, isTextarea: true } })
-    const result_learn_text = useInput({ bind: { name: 'result_learn_text' }, callbackHandler: inputCallbackHandler, is: { isRequired: true } })
+    const courseDescription = useInput({ bind: { name: 'courseDescription' }, is: { isRequired: true, isTextarea: true } })
+    const result_learn_text = useInput({ bind: { name: 'result_learn_text' }, is: { isRequired: true } })
 
     const [descriptions, setDescriptions] = useState([])
     const [prices, setPrices] = useState([])
@@ -28,16 +28,16 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     const getAllInputs = useCallback(() => {
         const descriptionsInputs = descriptions.map(({ inputs }) => inputs).flat()
         const pricesInputs = prices.map(({ inputs }) => inputs).flat()
-        console.log([courseDescription, result_learn_text, descriptionsInputs])
         return [courseDescription, result_learn_text, ...descriptionsInputs, ...pricesInputs]
     }, [courseDescription, result_learn_text, descriptions, prices])
+
+    useEffect(() => onUpdateListener(-2), [])
+    // TODO ADD ALL INPUTS
+    useEffect(() => onUpdateListener(1), [[courseDescription, result_learn_text].reduce((prev, { value }) => prev + String(value), '')])
 
     useEffect(() => {
         info?.course && courseDescription.setValue(info.course.description || '')
         info?.course && result_learn_text.setValue(info.course.result_learn_text || '')
-        console.log('update')
-    }, [info])
-    useEffect(() => {
         info.descriptions?.length && setDescriptions([...info.descriptions])
         info.prices?.length && setPrices([...info.prices])
     }, [info])
@@ -45,16 +45,19 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     const deleteInfoRequest = useRequest({
         request: deleteInfo,
         success: ({ dispatch, response, data }) => {
-            console.log(data)
+            setIsShow(true)
+            setContent({ title: 'Информация Удалена', descr: '' })
         },
     })
     const editInfoRequest = useRequest({
         request: editInfo,
         success: ({ response, data }) => {
+            // TODO
             setIsShow(true)
             setContent({ title: 'Информация о курсе обновлена' })
-            return
-            toCabinetItems()
+
+            setIsShow(true)
+            setContent({ title: 'Информация добавлена', descr: 'Ваш курс отправлен на модерацию.' })
         },
     })
 
@@ -100,15 +103,12 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
         setDescriptions([...descriptions, { name: '', text: '', image: '' }])
     }
     const onDeleteDescr = (id, index) => {
-        console.log(id, index)
         id && deleteInfoRequest.call({ courseId, id, type: 'desc' })
         setDescriptions(descriptions.filter((item, inx) => inx !== index))
     }
     const changeDescrField = (field, index, value) => {
         const newDescription = [...descriptions]
         newDescription[index][field] = value
-        console.log(field, index, value)
-        console.log(newDescription)
         setDescriptions([...newDescription])
     }
     const onAddPrices = () => {
@@ -145,16 +145,7 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
             <div className='create-whom card-bg'>
                 <h3 className='create-whom__title display-4'>О курсе</h3>
                 {descriptions.map((props, index) => (
-                    <AddCourseDescription
-                        key={index}
-                        {...props}
-                        index={index}
-                        changeField={changeDescrField}
-                        onDelete={onDeleteDescr}
-                        onDeleteImg={onDeleteImg}
-                        callbackHandler={inputCallbackHandler}
-                        descriptions={descriptions}
-                    />
+                    <AddCourseDescription key={index} {...props} index={index} changeField={changeDescrField} onDelete={onDeleteDescr} onDeleteImg={onDeleteImg} descriptions={descriptions} />
                 ))}
                 <Button className='create-whom__add' onClick={() => onAddDescr()} outline>
                     <AddSvg />
@@ -181,7 +172,6 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
                         changeModuleField={changePricesModulesField}
                         modules={modules.data}
                         onDelete={onDeletePrices}
-                        callbackHandler={inputCallbackHandler}
                         prices={prices}
                     />
                 ))}
@@ -194,4 +184,4 @@ const AddCourseTab3 = ({ callbackHandler: { inputCallbackHandler }, refTabs }, r
     )
 }
 
-export default forwardRef(AddCourseTab3)
+export default forwardRef(AddCourseTabDescription)

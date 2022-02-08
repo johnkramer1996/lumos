@@ -194,7 +194,7 @@
 }
 
 .course-info2__group-hidden {
-	margin-top: 30px;
+    margin-top: 30px;
 }
 
 .btn--disabled {
@@ -202,4 +202,9 @@
     color: rgba(0, 0, 0, 0.3);
     background-image: none;
     pointer-events: none;
+}
+
+.create-module__link {
+    display: flex;
+    align-items: center;
 }

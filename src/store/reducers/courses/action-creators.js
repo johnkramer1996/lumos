@@ -8,6 +8,7 @@ export const CoursesActionCreators = {
     setCourse: (payload) => ({ type: coursesTypes.SET_COURSE, payload }),
     setModules: (payload) => ({ type: coursesTypes.SET_MODULES, payload }),
     setLessons: (payload) => ({ type: coursesTypes.SET_LESSONS, payload }),
+    setLesson: (payload) => ({ type: coursesTypes.SET_LESSON, payload }),
     setInfo: (payload) => ({ type: coursesTypes.SET_INFO, payload }),
     ...crateActionCreator(CoursesService),
 }
@@ -44,27 +45,27 @@ export const courseHandlers = {
     editInfo: {
         ...defaultHandlers.editInfo,
         success: ({ dispatch, response, data }) => {
-            dispatch(ModalsActionCreators.setIsShow(true))
-            dispatch(ModalsActionCreators.setContent({ title: 'Информация добавлена', descr: 'Ваш курс отправлен на модерацию.' }))
+            //TODO CHECK REQUEST
+            console.log(data)
         },
     },
     deleteInfo: {
         ...defaultHandlers.deleteInfo,
-        success: ({ dispatch, response, data }) => {
-            dispatch(ModalsActionCreators.setIsShow(true))
-            dispatch(ModalsActionCreators.setContent({ title: 'Информация Удалена', descr: '' }))
-        },
     },
     // fetchCourseUser
     fetchModules: {
         ...defaultHandlers.fetchModules,
-        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setModules(data)),
+        success: ({ dispatch, response, data }) => {
+            dispatch(CoursesActionCreators.setModules(data.data))
+        },
     },
     addModulesMass: {
         ...defaultHandlers.addModulesMass,
         success: ({ dispatch, response, data }) => {
-            dispatch(ModalsActionCreators.setIsShow(true))
-            dispatch(ModalsActionCreators.setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' }))
+            //TODO CHECK REQUEST
+            const newModules = data.moduls.map((m) => ({ ...m, lessonsshort: data.lessons.filter((l) => l.modul_id === m.id) })) || {}
+            console.log(newModules, 'newModules')
+            dispatch(CoursesActionCreators.setModules(newModules))
         },
     },
     // addModule
@@ -73,20 +74,18 @@ export const courseHandlers = {
     // patchModule
     deleteModule: {
         ...defaultHandlers.deleteModule,
-        success: ({ dispatch, response, data }) => {
-            dispatch(ModalsActionCreators.setIsShow(true))
-            dispatch(ModalsActionCreators.setContent({ title: 'Модуль удален,', descr: '' }))
-        },
     },
-    // fetchLessons
+    fetchLessons: {
+        ...defaultHandlers.fetchLessons,
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setLessons(data)),
+    },
     // deleteFile
-    // fetchLesson
+    fetchLesson: {
+        ...defaultHandlers.fetchLesson,
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setLesson(data)),
+    },
     deleteLesson: {
         ...defaultHandlers.deleteLesson,
-        success: ({ dispatch, response, data }) => {
-            dispatch(ModalsActionCreators.setIsShow(true))
-            dispatch(ModalsActionCreators.setContent({ title: 'Урок удален', descr: '' }))
-        },
     },
     // addFile
     // putLesson

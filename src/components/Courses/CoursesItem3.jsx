@@ -3,7 +3,7 @@ import React from 'react'
 import { RouteNames } from 'routes'
 import { getImgUrl } from 'utils'
 
-const CoursesItem3 = ({ id = 1, image, name, user = {}, status, students }) => {
+const CoursesItem3 = ({ id = 1, image, name, user = {}, status, students, ...rest }) => {
     return (
         <Link to={`${RouteNames.CABINET_COURSES}/${id}`} className='course-card3'>
             <div className='course-card3__img img img--cover'>
