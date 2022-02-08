@@ -12,6 +12,7 @@ const AddCourseLessonEdit = (_, ref) => {
     const { courseId, lessonId } = useParams()
     const { fetchLesson, setLesson, putLesson } = useDispatch()
     const lesson = useSelector(coursesSelectors.getLesson)
+    const questions = useSelector(coursesSelectors.getLessonQuestions)
 
     const name = useInput({ bind: { name: 'name' }, is: { isRequired: true, isName: true } })
     const can_comment = useInput({ bind: { name: 'can_comment' }, is: { isCheckbox: true } })
@@ -51,6 +52,24 @@ const AddCourseLessonEdit = (_, ref) => {
 
             body['has_text'] = true
             body['count_answers'] = 4
+            body['questions_to_delete'] = questions['questions_to_delete'] || []
+            body['ansvers_to_delete'] = questions['ansvers_to_delete'] || []
+            body['questions'] = questions.map((q, i) => {
+                return {
+                    ...q,
+                    ansvers: q.answers.map((a, i) => {
+                        return {
+                            ...a,
+                            ...a.inputs.reduce((prev, i) => ((prev[i.bind.name] = i.isCheckbox ? !!i.value : i.value), prev), {}),
+                            inputs: null,
+                            hidden_id: null,
+                        }
+                    }),
+                    amount_answers: 4,
+                    inputQuestion: null,
+                    answers: null,
+                }
+            })
 
             console.log(body)
             putLessonRequest.call({ courseId, lessonId, body })
@@ -63,6 +82,7 @@ const AddCourseLessonEdit = (_, ref) => {
                 <Loader />
             ) : (
                 <>
+                    <AddCourseLessonEditTest />
                     <div className='lesson-edit__info card-bg'>
                         <h3 className='lesson-edit__info-title display-4'>Основная информация</h3>
                         <Input input={name} label={'Название'} />
@@ -77,7 +97,6 @@ const AddCourseLessonEdit = (_, ref) => {
                     </div>
 
                     <AddCourseLessonEditFiles />
-                    <AddCourseLessonEditTest />
                 </>
             )}
         </>

@@ -26,7 +26,7 @@ export const courseHandlers = {
     },
     fetchCourse: {
         ...defaultHandlers.fetchCourse,
-        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setCourse(data)),
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setCourse(data || {})),
     },
     addCourse: {
         ...defaultHandlers.addCourse,
@@ -43,7 +43,7 @@ export const courseHandlers = {
     },
     fetchInfo: {
         ...defaultHandlers.fetchInfo,
-        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setInfo(data)),
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setInfo(data || {})),
     },
     editInfo: {
         ...defaultHandlers.editInfo,
@@ -80,15 +80,15 @@ export const courseHandlers = {
     },
     fetchLessons: {
         ...defaultHandlers.fetchLessons,
-        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setLessons(data)),
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setLessons(data || [])),
     },
     // deleteFile
     fetchLesson: {
         ...defaultHandlers.fetchLesson,
         success: ({ dispatch, response, data }) => {
-            dispatch(CoursesActionCreators.setLessonQuestions(response.data?.questions))
-            dispatch(CoursesActionCreators.setLessonFiles(data?.files))
-            dispatch(CoursesActionCreators.setLesson(data))
+            dispatch(CoursesActionCreators.setLessonQuestions(response.data?.questions || []))
+            dispatch(CoursesActionCreators.setLessonFiles(data?.files || []))
+            dispatch(CoursesActionCreators.setLesson(data || {}))
         },
     },
     deleteLesson: {
@@ -96,12 +96,14 @@ export const courseHandlers = {
     },
     uploadFile: {
         ...defaultHandlers.uploadFile,
-        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.addLessonFile(data.files)),
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.addLessonFile(data.files || {})),
     },
     putLesson: {
         ...defaultHandlers.putLesson,
         success: ({ dispatch, response, data }) => {
-            console.log(data, 'return')
+            dispatch(CoursesActionCreators.setLessonQuestions(data?.lessons[0]?.questions || []))
+            dispatch(CoursesActionCreators.setLessonFiles(data?.lessons[0]?.files || []))
+            dispatch(CoursesActionCreators.setLesson(data?.lessons[0] || {}))
         },
     },
     // putchLesson

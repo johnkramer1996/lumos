@@ -9,7 +9,7 @@ const CoursesTabsLessons = () => {
     return (
         <div className='lessons-tab'>
             <div className='lessons-tab__left'>
-                {modules.data?.map(({ name, lessonsshort }, index) => (
+                {modules?.map(({ name, lessonsshort }, index) => (
                     <div key={index} className='lessons-tab__module'>
                         <div className='lessons-tab__module-top'>
                             <div className='lessons-tab__module-title'>{name}</div>

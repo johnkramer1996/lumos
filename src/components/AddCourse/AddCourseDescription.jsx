@@ -27,7 +27,6 @@ const AddCourseDescription = ({ id, index, image, name, text, changeField, onDel
                     <DeleteSvg />
                 </button>
             </div>
-            // TODO CHECK
             <ImgUpload
                 img={img}
                 size={'sm'}

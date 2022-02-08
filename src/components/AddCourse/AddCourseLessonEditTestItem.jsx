@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
 import { uid } from 'utils'
 
-const AddCourseLessonEditTestItem = ({ index }) => {
+const AddCourseLessonEditTestItem = ({ id, index }) => {
     const { setLessonQuestions } = useDispatch()
     const questions = useSelector(coursesSelectors.getLessonQuestions)
     const { answers = [] } = questions[index]
@@ -18,13 +18,18 @@ const AddCourseLessonEditTestItem = ({ index }) => {
 
     const onDeleteItem = () => {
         const newQuestions = questions.filter((_, i) => i !== index)
+        newQuestions['questions_to_delete'] = [...(questions['questions_to_delete'] || []), id]
+        newQuestions['ansvers_to_delete'] = [...(questions['ansvers_to_delete'] || [])]
         setLessonQuestions(newQuestions)
     }
 
-    const onDelete = (answerIndex) => {
+    const onDelete = (id, answerIndex) => {
         const newAnswers = answers.filter((_, i) => i !== answerIndex)
         const newQuestions = questions.map((q, i) => (i === index ? { ...q, answers: newAnswers } : q))
+        newQuestions['ansvers_to_delete'] = [...(questions['ansvers_to_delete'] || []), id]
+        newQuestions['questions_to_delete'] = [...(questions['questions_to_delete'] || [])]
         setLessonQuestions(newQuestions)
+        console.log(newQuestions)
     }
     const onAdd = () => {
         const newAnswers = [...answers, { hidden_id: uid() }]
@@ -33,8 +38,8 @@ const AddCourseLessonEditTestItem = ({ index }) => {
     }
     const onChangeQuestion = (e) => (questions[index].question = e.target.value)
 
-    const onChangeAnswer = (index, e) => {
-        answers[index][e.target.name] = e.target.value
+    const onChangeAnswer = (id, index, e) => {
+        // answers[index][e.target.name] = e.target.value
     }
 
     return (
@@ -49,8 +54,15 @@ const AddCourseLessonEditTestItem = ({ index }) => {
             <div className='lesson-test__variants'>
                 <div className='lesson-test__variants-title'>Введите варианты ответов и выберите правильный</div>
                 <div className='lesson-test__variants-items'>
-                    {answers.map((props, index) => (
-                        <AddCourseLessonEditTestItemVariant key={props.id || props.hidden_id || index} {...props} index={index} onDelete={onDelete} onChange={onChangeAnswer} />
+                    {answers.map((props, indexAnswer) => (
+                        <AddCourseLessonEditTestItemVariant
+                            key={props.id || props.hidden_id || index}
+                            {...props}
+                            index={indexAnswer}
+                            indexQuestion={index}
+                            onDelete={onDelete}
+                            onChange={onChangeAnswer}
+                        />
                     ))}
                 </div>
                 <Button className='lesson-test__variants-add' onClick={onAdd} light>
