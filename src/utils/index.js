@@ -11,6 +11,7 @@ export const getDeclOfArray = {
     users: ['ученик', 'ученика', 'учеников'],
     members: ['учасник', 'учасника', 'учасников'],
     questions: ['вопрос', 'вопроса', 'вопросов'],
+    files: ['файл', 'файла', 'файлов'],
 }
 
 export const getImgUrl = (src, isDefault = false, defaultSrc = '/assets/img/course2.jpg') => {

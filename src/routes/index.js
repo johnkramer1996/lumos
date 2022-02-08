@@ -19,6 +19,8 @@ import {
     Error,
     CabinetEventsAdd,
     CabinetEventsItem,
+    CabinetCoursesLesson,
+    CabinetCoursesLessonTest,
 } from 'pages/'
 
 export const RouteNames = {
@@ -30,6 +32,8 @@ export const RouteNames = {
     CABINET_COURSES: '/cabinet/courses',
     ADD_COURSE: '/cabinet/courses/add',
     CABINET_COURSES_ITEM: '/cabinet/courses/:courseId',
+    CABINET_COURSES_LESSON: '/cabinet/courses/:courseId/lessons/:lessonId',
+    CABINET_COURSES_LESSON_TEST: '/cabinet/courses/:courseId/lessons/:lessonId/test',
     CABINET_COURSES_EDIT: '/cabinet/courses/:courseId/edit',
     CABINET_COURSES_EDIT_LESSON: '/cabinet/courses/:courseId/edit/lessons/:lessonId',
     CABINET_EVENTS: '/cabinet/events',
@@ -42,6 +46,7 @@ export const RouteNames = {
     CONTACTS: '/contacts',
     COURSES: '/courses',
     COURSES_ITEM: '/courses/:courseId',
+    COURSES_LESSON: '/courses/:courseId/lessons/:lessonId',
     ERROR: '/error',
     FAQ: '/faq',
     EVENTS: '/events',
@@ -59,6 +64,7 @@ export const publicRoutes = [
     { path: RouteNames.CONTACTS, element: <Contacts /> },
     { path: RouteNames.COURSES, element: <Courses /> },
     { path: RouteNames.COURSES_ITEM, element: <CoursesItem /> },
+    { path: RouteNames.COURSES_LESSON, element: <CabinetCoursesLesson /> },
     { path: RouteNames.EVENTS, element: <Events /> },
     { path: RouteNames.EVENTS_ITEM, element: <EventsItem /> },
     { path: RouteNames.FAQ, element: <Faq /> },
@@ -76,6 +82,8 @@ export const privateRoutes = [
     { path: RouteNames.CABINET_ITEM, element: <Cabinet /> },
     { path: RouteNames.ADD_COURSE, element: <CabinetCoursesAdd /> },
     { path: RouteNames.CABINET_COURSES_ITEM, element: <CabinetCoursesItem /> },
+    { path: RouteNames.CABINET_COURSES_LESSON, element: <CabinetCoursesLesson /> },
+    { path: RouteNames.CABINET_COURSES_LESSON_TEST, element: <CabinetCoursesLessonTest /> },
     { path: RouteNames.CABINET_COURSES_EDIT, element: <CabinetCoursesAdd /> },
     { path: RouteNames.CABINET_COURSES_EDIT_LESSON, element: <CabinetCoursesAdd /> },
     { path: RouteNames.CABINET_EVENTS_ADD, element: <CabinetEventsAdd /> },

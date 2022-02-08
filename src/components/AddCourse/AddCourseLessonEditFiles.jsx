@@ -3,6 +3,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { coursesSelectors } from 'store/selectors'
+import { declOfNum, getDeclOfArray } from 'utils'
 import AddCourseLessonEditFilesItem from './AddCourseLessonEditFilesItem'
 
 const AddCourseLessonEditFiles = () => {
@@ -37,7 +38,9 @@ const AddCourseLessonEditFiles = () => {
         <div className='lesson-edit__files card-bg'>
             <div className='lesson-edit__files-top'>
                 <h3 className='lesson-edit__files-title display-4'>Файлы</h3>
-                <div className='lesson-edit__files-num'>4 урока</div>
+                <div className='lesson-edit__files-num'>
+                    {files.length} {declOfNum(files.length, getDeclOfArray['files'])}
+                </div>
             </div>
             <div className='lesson-edit__files-items'>
                 {files.map((props, index) => (

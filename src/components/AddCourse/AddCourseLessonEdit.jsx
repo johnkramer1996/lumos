@@ -26,6 +26,7 @@ const AddCourseLessonEdit = (_, ref) => {
         name.setValue(lesson.name || '')
         can_comment.setValue(lesson.can_comment || '0')
         is_test.setValue(lesson.is_test || '0')
+        has_text.setValue(lesson.has_text || '0')
         description.setValue(lesson.description || '')
     }, [lesson])
 
@@ -50,33 +51,29 @@ const AddCourseLessonEdit = (_, ref) => {
         check: () => !getAllInputs().filter((i) => i.check(i.value)).length,
         send: () => {
             if (!ref.current.check()) return
-            const body = {}
-            getAllInputs().forEach((i) => (body[i.bind.name] = i.isCheckbox ? !!i.value : i.value))
-
-            body['count_answers'] = questions['count_answers'].value || 0
-            body['questions_to_delete'] = questions['questions_to_delete'] || []
-            body['ansvers_to_delete'] = questions['ansvers_to_delete'] || []
-            body['questions'] = questions.map((q, i) => {
-                const inputs =
-                    q.answers?.map((a, i) => {
-                        return {
+            const body = {
+                count_answers: questions['count_answers'].value || 0,
+                questions_to_delete: questions['questions_to_delete'] || [],
+                ansvers_to_delete: questions['ansvers_to_delete'] || [],
+                questions: questions.map((q, i) => {
+                    const inputs =
+                        q.answers?.map((a, i) => ({
                             ...a,
                             ...a.inputs.reduce((prev, i) => ((prev[i.bind.name] = i.isCheckbox ? !!i.value : i.value), prev), {}),
                             inputs: null,
                             hidden_id: null,
-                        }
-                    }) || []
-                console.log(inputs)
-                return {
-                    ...q,
-                    ansvers: inputs,
-                    amount_answers: inputs.filter((i) => i.is_true).length,
-                    inputQuestion: null,
-                    answers: null,
-                }
-            })
+                        })) || []
+                    return {
+                        ...q,
+                        ansvers: inputs,
+                        amount_answers: inputs.filter((i) => i.is_true).length,
+                        inputQuestion: null,
+                        answers: null,
+                    }
+                }),
+            }
+            getAllInputs().forEach((i) => (body[i.bind.name] = i.isCheckbox ? !!i.value : i.value))
 
-            console.log(body)
             putLessonRequest.call({ courseId, lessonId, body })
         },
     }))
@@ -87,13 +84,12 @@ const AddCourseLessonEdit = (_, ref) => {
                 <Loader />
             ) : (
                 <>
-                    <AddCourseLessonEditTest />
                     <div className='lesson-edit__info card-bg'>
                         <h3 className='lesson-edit__info-title display-4'>Основная информация</h3>
                         <Input input={name} label={'Название'} />
-                        <Checkbox className='lesson-edit__switch' input={can_comment} label={'Комментарии'} radio />
-                        <Checkbox className='lesson-edit__switch' input={is_test} label={'Тест'} radio />
-                        <Checkbox className='lesson-edit__switch' input={has_text} label={'Текст'} radio />
+                        <Checkbox className='lesson-edit__switch' input={can_comment} label={'Комментарии'} type={'switch'} />
+                        <Checkbox className='lesson-edit__switch' input={is_test} label={'Тест'} type='switch' />
+                        <Checkbox className='lesson-edit__switch' input={has_text} label={'Текст'} type='switch' />
                     </div>
                     <div className='create-about card-bg'>
                         <h3 className='create-about__title display-4'>Урок</h3>
@@ -103,6 +99,7 @@ const AddCourseLessonEdit = (_, ref) => {
                     </div>
 
                     <AddCourseLessonEditFiles />
+                    <AddCourseLessonEditTest />
                 </>
             )}
         </>

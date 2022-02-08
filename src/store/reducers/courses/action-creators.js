@@ -86,6 +86,7 @@ export const courseHandlers = {
     fetchLesson: {
         ...defaultHandlers.fetchLesson,
         success: ({ dispatch, response, data }) => {
+            console.log(response)
             dispatch(CoursesActionCreators.setLessonQuestions(response.data?.questions || []))
             dispatch(CoursesActionCreators.setLessonFiles(data?.files || []))
             dispatch(CoursesActionCreators.setLesson(data || {}))

@@ -1,10 +1,15 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Link, useParams } from 'react-router-dom'
+import { RouteNames } from 'routes'
 import { declOfNum, getDeclOfArray } from 'utils'
 
 const CoursesTabsLessons = () => {
+    const { courseId } = useParams()
     const course = useSelector(({ courses }) => courses.course)
     const modules = useSelector(({ courses }) => courses.modules)
+
+    console.log(modules)
 
     return (
         <div className='lessons-tab'>
@@ -19,11 +24,11 @@ const CoursesTabsLessons = () => {
                         </div>
                         <div className='lessons-tab__module-items'>
                             {lessonsshort?.map(({ id, name }) => (
-                                <div key={id} className='lessons-tab__module-item'>
+                                <Link key={id} to={`${RouteNames.CABINET_COURSES}/${courseId}/lessons/${id}`} className='lessons-tab__module-item'>
                                     <span className='lessons-tab__module-item-num'>01</span>
                                     <span className='lessons-tab__module-item-title'>{name}</span>
                                     {/* <span className='lessons-tab__module-item-notification'>1</span> */}
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     </div>

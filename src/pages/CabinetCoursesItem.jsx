@@ -38,7 +38,7 @@ const CoursesItem = () => {
         return () => {
             setCourse({})
             setInfo({})
-            setModules({})
+            setModules([])
         }
     }, [])
 

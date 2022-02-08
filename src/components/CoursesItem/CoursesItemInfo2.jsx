@@ -1,13 +1,14 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Link, useParams } from 'react-router-dom'
+import { RouteNames } from 'routes'
 import { getImgUrl } from 'utils'
 
 const CoursesItemInfo = () => {
-    const { descriptions = [], description, result_learn_text } = useSelector(({ frontCourses }) => frontCourses.course)
+    const { courseId } = useParams()
+    const { descriptions = [], description, result_learn_text, moduls = [], lessons = [] } = useSelector(({ frontCourses }) => frontCourses.course)
     const course = useSelector(({ frontCourses }) => frontCourses.course)
     const { themes = [], type_study = [], difficulty = [], format = [], event_types = [] } = useSelector(({ system }) => system.references)
-    // const { name: typeName } = type_study[typeStudy] || {}
-    // const { name: foramtName } = format[format_study] || {}
     console.log(course)
 
     return (
@@ -80,56 +81,21 @@ const CoursesItemInfo = () => {
                         <div className='course-programm course-info2__group'>
                             <h3 className='course-info2__title'>Программа курса</h3>
                             <div className='course-programm__wrap'>
-                                <div className='course-programm__group'>
-                                    <div className='course-programm__title'>Заголовок подблока</div>
-                                    <ol className='course-programm__list'>
-                                        <li className='course-programm__item'>Название урока</li>
-                                        <li className='course-programm__item'>Короткое название</li>
-                                        <li className='course-programm__item'>Длинное название урока из программы</li>
-                                        <li className='course-programm__item'>Длинное название урока</li>
-                                        <li className='course-programm__item'>Название урока</li>
-                                        <li className='course-programm__item'>Короткое название</li>
-                                        <li className='course-programm__item'>Длинное название урока из программы</li>
-                                        <li className='course-programm__item'>Длинное название урока</li>
-                                    </ol>
-                                </div>
-                                <div className='course-programm__group'>
-                                    <div className='course-programm__title'>Заголовок подблока 2</div>
-                                    <ol className='course-programm__list'>
-                                        <li className='course-programm__item'>Название урока</li>
-                                        <li className='course-programm__item'>Короткое название</li>
-                                        <li className='course-programm__item'>Длинное название урока из программы</li>
-                                        <li className='course-programm__item'>Длинное название урока</li>
-                                        <li className='course-programm__item'>Название урока</li>
-                                        <li className='course-programm__item'>Короткое название</li>
-                                    </ol>
-                                </div>
-                                <div className='course-programm__group'>
-                                    <div className='course-programm__title'>Заголовок подблока 3</div>
-                                    <ol className='course-programm__list'>
-                                        <li className='course-programm__item'>Название урока</li>
-                                        <li className='course-programm__item'>Короткое название</li>
-                                        <li className='course-programm__item'>Длинное название урока из программы</li>
-                                        <li className='course-programm__item'>Длинное название урока</li>
-                                        <li className='course-programm__item'>Название урока</li>
-                                        <li className='course-programm__item'>Короткое название</li>
-                                        <li className='course-programm__item'>Длинное название урока из программы</li>
-                                        <li className='course-programm__item'>Длинное название урока</li>
-                                        <li className='course-programm__item'>Название урока</li>
-                                        <li className='course-programm__item'>Короткое название</li>
-                                    </ol>
-                                </div>
-                                <div className='course-programm__group'>
-                                    <div className='course-programm__title'>Заголовок подблока 4</div>
-                                    <ol className='course-programm__list'>
-                                        <li className='course-programm__item'>Название урока</li>
-                                        <li className='course-programm__item'>Короткое название</li>
-                                        <li className='course-programm__item'>Длинное название урока из программы</li>
-                                        <li className='course-programm__item'>Длинное название урока</li>
-                                        <li className='course-programm__item'>Название урока</li>
-                                        <li className='course-programm__item'>Короткое название</li>
-                                    </ol>
-                                </div>
+                                {moduls.map(({ id, name }, index) => (
+                                    <div key={id || index} className='course-programm__group'>
+                                        <div className='course-programm__title'>{name}</div>
+                                        <ol className='course-programm__list'>
+                                            {console.log(lessons, id)}
+                                            {lessons
+                                                .filter(({ modul_id }) => modul_id === id)
+                                                .map(({ id, name }, index) => (
+                                                    <li key={id || index} className='course-programm__item'>
+                                                        <Link to={`${RouteNames.COURSES}/${courseId}/lessons/${id}`}>{name}</Link>
+                                                    </li>
+                                                ))}
+                                        </ol>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
