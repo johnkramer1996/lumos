@@ -44,9 +44,9 @@ const AddCourseTabDescription = ({ refTabs, onUpdateListener }, ref) => {
 
     const deleteInfoRequest = useRequest({
         request: deleteInfo,
-        success: ({ dispatch, response, data }) => {
+        success: ({ response, data }) => {
             setIsShow(true)
-            setContent({ title: 'Информация Удалена', descr: '' })
+            setContent({ title: 'Информация удалена', descr: '' })
         },
     })
     const editInfoRequest = useRequest({

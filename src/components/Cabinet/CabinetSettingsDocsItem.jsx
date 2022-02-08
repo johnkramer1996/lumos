@@ -2,7 +2,7 @@ import React from 'react'
 import { isActiveClass } from 'utils'
 import { ReactComponent as UploadSvg } from 'svg/upload.svg'
 
-const CabinetSettingsDocsItem = ({ input, label, onDelete, onChange }) => {
+const CabinetSettingsDocsItem = ({ input, label, name, onDelete, onChange }) => {
     return (
         <div className={`account-settings__item ${isActiveClass(input.value, 'account-settings__item--active')}`}>
             <div className='account-settings__item-top'>
@@ -23,7 +23,7 @@ const CabinetSettingsDocsItem = ({ input, label, onDelete, onChange }) => {
                     <span>или перетащите его сюда</span>
                 </div>
                 <div className='account-settings__upload-hint'>PNG, JPG до 5 MБ</div>
-                <input ref={input.ref} type='file' className='account-settings__upload-input' accept='image/png, image/gif, image/jpeg' name='file_passport_1' onChange={onChange.bind(null, input)} />
+                <input ref={input.ref} type='file' className='account-settings__upload-input' accept='image/png, image/gif, image/jpeg' onChange={onChange.bind(null, input)} name={name} />
             </div>
         </div>
     )

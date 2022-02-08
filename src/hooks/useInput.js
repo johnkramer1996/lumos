@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { maskDate, toBoolean, validateEmail, validateName, validatePhone } from 'utils'
 
-const useInput = ({ initialValue = '', label = '', bind = {}, callbackHandler = () => {}, is: { isRequired, isDisabled, isDate, isCheckbox, isName, isPhone, isEmail, isTextarea } = {} } = {}) => {
+const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, isDisabled, isDate, isCheckbox, isName, isPhone, isEmail, isTextarea } = {} } = {}) => {
     const [value, setValue] = useState(initialValue)
     const [error, setError] = useState('')
     const prevValueRef = useRef(initialValue)
@@ -12,16 +12,13 @@ const useInput = ({ initialValue = '', label = '', bind = {}, callbackHandler = 
         const newValue = !isCheckbox ? e.target.value : e.target.checked
         check(newValue)
         setValue(newValue)
-        callbackHandler('change', { event: e, property: propertyRef.current })
         return true
     }, [])
     const onFocus = useCallback((e) => {
         prevValueRef.current = !isCheckbox ? e.target.value : e.target.checked
-        callbackHandler('focus', { event: e, property: propertyRef.current })
     }, [])
     const onBlur = useCallback((e) => {
         isDisabled && inputRef.current.setAttribute('disabled', isDisabled)
-        callbackHandler('blur', { event: e, property: propertyRef.current })
     }, [])
     const onDisabledRemove = useCallback(() => {
         inputRef.current.removeAttribute('disabled')

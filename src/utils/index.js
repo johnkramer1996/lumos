@@ -10,6 +10,7 @@ export const getDeclOfArray = {
     lessons: ['урок', 'урока', 'уроков'],
     users: ['ученик', 'ученика', 'учеников'],
     members: ['учасник', 'учасника', 'учасников'],
+    questions: ['вопрос', 'вопроса', 'вопросов'],
 }
 
 export const getImgUrl = (src, isDefault = false, defaultSrc = '/assets/img/course2.jpg') => {
@@ -87,24 +88,6 @@ export const getDate = (date, monthNames = false) => {
     const month = monthNames ? namesMonth[date.getMonth()] : addZerro(date.getMonth() + 1)
     const day = addZerro(date.getDate())
     return monthNames ? `${day} ${month} ${year}` : `${year}-${month}-${day}`
-}
-
-export const uploadImg = (inputRef, setImg) => {
-    const file = inputRef.current.files[0]
-    if (!file) return
-    const size = file.size || 0
-    if (size > 5 * 1024 * 1024) {
-        inputRef.current.value = ''
-        return alert('*Слишком большой файл')
-    }
-    const reader = new FileReader()
-    reader.onload = (e) => setImg(e.target.result)
-    reader.readAsDataURL(file)
-}
-
-export const deleteImg = (inputFileRef, setImg) => {
-    inputFileRef.current.value = ''
-    setImg('')
 }
 
 export const addZerro = (number) => (number <= 9 ? '0' : '') + number

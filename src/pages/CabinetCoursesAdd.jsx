@@ -87,7 +87,8 @@ const CabinetAddCourse = () => {
         setInfo({ ...info })
         setModules([...modules])
         setHasSave(false)
-        const indexActive = refTabs.current.getIndex()
+        return
+        const indexActive = refTabs.current?.getIndex()
         // TODO SETTIMEOUT
         refsTab[indexActive]?.current.update()
         onUpdateListener(-1)

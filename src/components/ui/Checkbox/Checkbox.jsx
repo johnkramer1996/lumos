@@ -1,7 +1,7 @@
 import React from 'react'
 import { uid } from 'utils'
 
-const Checkbox = ({ className = '', input, label = '', onChange = () => {}, radio }) => {
+const Checkbox = ({ className = '', input, label = '', onChange = () => {}, type = 'checkbox' }) => {
     const onChangeHandle = (e) => {
         input.bind.onChange(e)
         onChange(e, input)
@@ -9,17 +9,10 @@ const Checkbox = ({ className = '', input, label = '', onChange = () => {}, radi
     const id = uid()
     return (
         <>
-            {radio ? (
-                <div className={`${className} switch`}>
-                    <input type='checkbox' className='checkbox' id={id} {...input.bind} onChange={onChangeHandle} />
-                    <label htmlFor={id}>{label}</label>
-                </div>
-            ) : (
-                <div className={`${className} checkbox`}>
-                    <input type='checkbox' className='checkbox' id={id} {...input.bind} onChange={onChangeHandle} />
-                    <label htmlFor={id}>{label}</label>
-                </div>
-            )}
+            <div className={`${className} ${type}`}>
+                <input type='checkbox' className='checkbox' id={id} {...input.bind} onChange={onChangeHandle} />
+                <label htmlFor={id}>{label}</label>
+            </div>
         </>
     )
 }

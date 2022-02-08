@@ -104,30 +104,35 @@ export default class CoursesService {
     static async fetchLessons({ courseId = 0 } = {}) {
         return await axios.get(trainerCoursesLessonsURL.FETCH_LESSONS({ courseId }))
     }
-    static async deleteFile({ courseId = 0, lessonId = 1 } = {}) {
-        return await axios.delete(trainerCoursesLessonsURL.FETCH_LESSONS({ courseId, lessonId }))
+    static async deleteFile({ courseId = 0, lessonId = 0, body = {} } = {}) {
+        return await axios.post(trainerCoursesLessonsURL.DELETE_FILE({ courseId, lessonId }), body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
     }
-    static async fetchLesson({ courseId = 0, lessonId = 1 } = {}) {
+    static async fetchLesson({ courseId = 0, lessonId = 0 } = {}) {
         return await axios.get(trainerCoursesLessonsURL.FETCH_LESSON({ courseId, lessonId }))
     }
-    static async deleteLesson({ courseId = 0, lessonId = 1 } = {}) {
+    static async deleteLesson({ courseId = 0, lessonId = 0 } = {}) {
         return await axios.delete(trainerCoursesLessonsURL.DELETE_LESSON({ courseId, lessonId }))
     }
-    static async addFile({ courseId = 0, lessonId = 1, body = {} } = {}) {
-        return await axios.post(trainerCoursesLessonsURL.FETCH_LESSONS({ courseId, lessonId }), body, {
+    static async uploadFile({ courseId = 0, lessonId = 0, body = {} } = {}) {
+        console.log(body)
+        return await axios.post(trainerCoursesLessonsURL.UPLOAD_FILE({ courseId, lessonId }), body, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
         })
     }
-    static async putLesson({ courseId = 0, lessonId = 1, body = {} } = {}) {
+    static async putLesson({ courseId = 0, lessonId = 0, body = {} } = {}) {
         return await axios.put(trainerCoursesLessonsURL.PUT_LESSON({ courseId, lessonId }), body, {
             headers: {
                 'Content-Type': 'application/json',
             },
         })
     }
-    static async putchLesson({ courseId = 0, lessonId = 1, body = {} } = {}) {
+    static async putchLesson({ courseId = 0, lessonId = 0, body = {} } = {}) {
         return await axios.patch(trainerCoursesLessonsURL.PATCH_LESSON({ courseId, lessonId }), body, {
             headers: {
                 'Content-Type': 'application/json',

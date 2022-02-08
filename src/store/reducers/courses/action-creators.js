@@ -9,6 +9,9 @@ export const CoursesActionCreators = {
     setModules: (payload) => ({ type: coursesTypes.SET_MODULES, payload }),
     setLessons: (payload) => ({ type: coursesTypes.SET_LESSONS, payload }),
     setLesson: (payload) => ({ type: coursesTypes.SET_LESSON, payload }),
+    setLessonQuestions: (payload) => ({ type: coursesTypes.SET_LESSON_QUESTIONS, payload }),
+    setLessonFiles: (payload) => ({ type: coursesTypes.SET_LESSON_FILES, payload }),
+    addLessonFile: (payload) => ({ type: coursesTypes.ADD_LESSON_FILE, payload }),
     setInfo: (payload) => ({ type: coursesTypes.SET_INFO, payload }),
     ...crateActionCreator(CoursesService),
 }
@@ -82,12 +85,19 @@ export const courseHandlers = {
     // deleteFile
     fetchLesson: {
         ...defaultHandlers.fetchLesson,
-        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.setLesson(data)),
+        success: ({ dispatch, response, data }) => {
+            dispatch(CoursesActionCreators.setLessonQuestions(response.data?.questions))
+            dispatch(CoursesActionCreators.setLessonFiles(data?.files))
+            dispatch(CoursesActionCreators.setLesson(data))
+        },
     },
     deleteLesson: {
         ...defaultHandlers.deleteLesson,
     },
-    // addFile
+    uploadFile: {
+        ...defaultHandlers.uploadFile,
+        success: ({ dispatch, response, data }) => dispatch(CoursesActionCreators.addLessonFile(data.files)),
+    },
     putLesson: {
         ...defaultHandlers.putLesson,
         success: ({ dispatch, response, data }) => {

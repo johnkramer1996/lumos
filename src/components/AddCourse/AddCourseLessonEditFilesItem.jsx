@@ -1,0 +1,24 @@
+import React from 'react'
+import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
+import { ReactComponent as DocumentSvg } from 'svg/document.svg'
+
+const AddCourseLessonEditFilesItem = ({ id, index, name, file_size, onDelete }) => {
+    return (
+        <>
+            <div className='lesson-edit__files-item'>
+                <i className='lesson-edit__files-item-icon'>
+                    <DocumentSvg />
+                </i>
+                <div className='lesson-edit__files-item-info'>
+                    <div className='lesson-edit__files-item-name'>{name}</div>
+                    <div className='lesson-edit__files-item-weight'>{file_size || ''}</div>
+                </div>
+                <button className='lesson-edit__files-item-delete' onClick={onDelete.bind(null, id, index)}>
+                    <DeleteSvg />
+                </button>
+            </div>
+        </>
+    )
+}
+
+export default AddCourseLessonEditFilesItem

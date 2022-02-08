@@ -22,21 +22,23 @@ const CabinetSettings = () => {
         const { name, value } = input.ref.current
         createRequest(name, value)
     }
-    const onChangeInputImg = (input) => {
-        input.onChange()
-        input.ref.current.files[0] && createRequest(input.ref.current.name, input.ref.current.files[0])
-    }
-    const onDeleteInputImg = (input) => {
-        input.onDelete()
-        input.ref.current.click()
-        createRequest(`delete_${input.ref.current.name}`, '1')
-    }
     const onChangeNovifications = (type, source, status) => {
         const body = new FormData()
         body.append(`notifications[0][type]`, type)
         body.append(`notifications[0][source]`, source)
         body.append(`notifications[0][status]`, +status)
         settingsRequest.call({ body })
+    }
+    const onChangeInputImg = (input) => {
+        input.onChange()
+        console.log(input.ref.current.name)
+        // TODO CHECK NAME
+        input.ref.current.files[0] && createRequest(input.ref.current.name, input.ref.current.files[0])
+    }
+    const onDeleteInputImg = (input) => {
+        input.onDelete()
+        input.ref.current.click()
+        createRequest(`delete_${input.ref.current.name}`, '1')
     }
 
     return (

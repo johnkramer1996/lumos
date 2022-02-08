@@ -5,6 +5,8 @@ import { useDispatch, useInput, useRequest } from 'hooks'
 import { coursesSelectors } from 'store/selectors'
 import { Checkbox, Input, Loader } from 'components/ui'
 import { forwardRef } from 'react'
+import AddCourseLessonEditFiles from './AddCourseLessonEditFiles'
+import AddCourseLessonEditTest from './AddCourseLessonEditTest'
 
 const AddCourseLessonEdit = (_, ref) => {
     const { courseId, lessonId } = useParams()
@@ -24,8 +26,6 @@ const AddCourseLessonEdit = (_, ref) => {
         is_test.setValue(lesson.is_test || '0')
         description.setValue(lesson.description || '')
     }, [lesson])
-
-    console.log(can_comment)
 
     const fetchLessonRequest = useRequest({
         request: fetchLesson,
@@ -53,7 +53,6 @@ const AddCourseLessonEdit = (_, ref) => {
             body['count_answers'] = 4
 
             console.log(body)
-
             putLessonRequest.call({ courseId, lessonId, body })
         },
     }))
@@ -76,6 +75,9 @@ const AddCourseLessonEdit = (_, ref) => {
                             <Input input={description} />
                         </div>
                     </div>
+
+                    <AddCourseLessonEditFiles />
+                    <AddCourseLessonEditTest />
                 </>
             )}
         </>
