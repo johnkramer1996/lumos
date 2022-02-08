@@ -38,7 +38,6 @@ const CabinetAddCourse = () => {
     })
 
     useEffect(() => {
-        setHasSave(true)
         if (isEditPage) {
             fetchCourseRequest.call({ courseId })
             fetchInfoRequest.call({ courseId })
@@ -50,6 +49,11 @@ const CabinetAddCourse = () => {
             setModules({})
         }
     }, [])
+
+    useEffect(() => {
+        if (isLessonPage) setHasSave(true)
+        else setHasSave(false)
+    }, [isLessonPage])
 
     const refTabs = useRef()
     const refTabMain = useRef()
@@ -64,8 +68,10 @@ const CabinetAddCourse = () => {
     }
 
     const save = () => {
-        refLesson.current.send()
-        return
+        if (isLessonPage) {
+            refLesson.current.send()
+            return
+        }
         const indexActive = refTabs.current.getIndex()
         if (!refsTab[indexActive]?.current.check()) {
             setIsShow(true)
