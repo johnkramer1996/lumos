@@ -41,8 +41,8 @@ export const trainerCoursesLessonsURL = {
     FETCH_LESSON: ({ courseId, lessonId }) => `/cabinet/courses/${courseId}/lessons/${lessonId}`,
     DELETE_LESSON: ({ courseId, lessonId }) => `/cabinet/courses/${courseId}/lessons/${lessonId}`,
     UPLOAD_FILE: ({ courseId, lessonId }) => `/cabinet/courses/${courseId}/lessons/${lessonId}/upload_file`,
-    PUT_LESSON: ({ courseId }) => `/cabinet/courses/${courseId}/lessons`,
-    PATCH_LESSON: ({ courseId }) => `/cabinet/courses/${courseId}/lessons`,
+    PUT_LESSON: ({ courseId, lessonId }) => `/cabinet/courses/${courseId}/lessons/${lessonId}`,
+    PATCH_LESSON: ({ courseId, lessonId }) => `/cabinet/courses/${courseId}/lessons/${lessonId}`,
 }
 export const trainerEventsURL = {
     FETCH_EVENTS: '/cabinet/events',

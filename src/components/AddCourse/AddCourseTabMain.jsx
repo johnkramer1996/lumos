@@ -71,6 +71,8 @@ const AddCourseTabMain = ({ refTabs, onUpdateListener }, ref) => {
         send: () => {
             if (!ref.current.check()) return
             const body = new FormData()
+            // TODO OPTIMIZE CODE
+            // getAllInputs().forEach((i) => body.append(i.bind.name, i.value))
             body.append('name', name.value)
             body.append('category_id', category_id.value)
             body.append('type_study', type_study.value)

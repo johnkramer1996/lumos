@@ -88,6 +88,11 @@ export const courseHandlers = {
         ...defaultHandlers.deleteLesson,
     },
     // addFile
-    // putLesson
+    putLesson: {
+        ...defaultHandlers.putLesson,
+        success: ({ dispatch, response, data }) => {
+            console.log(data, 'return')
+        },
+    },
     // putchLesson
 }

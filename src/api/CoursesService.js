@@ -121,14 +121,14 @@ export default class CoursesService {
         })
     }
     static async putLesson({ courseId = 0, lessonId = 1, body = {} } = {}) {
-        return await axios.get(trainerCoursesLessonsURL.PUT_LESSON({ courseId, lessonId }), body, {
+        return await axios.put(trainerCoursesLessonsURL.PUT_LESSON({ courseId, lessonId }), body, {
             headers: {
                 'Content-Type': 'application/json',
             },
         })
     }
     static async putchLesson({ courseId = 0, lessonId = 1, body = {} } = {}) {
-        return await axios.get(trainerCoursesLessonsURL.PATCH_LESSON({ courseId, lessonId }), body, {
+        return await axios.patch(trainerCoursesLessonsURL.PATCH_LESSON({ courseId, lessonId }), body, {
             headers: {
                 'Content-Type': 'application/json',
             },
