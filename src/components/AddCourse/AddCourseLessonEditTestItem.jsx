@@ -21,6 +21,7 @@ const AddCourseLessonEditTestItem = ({ id, index }) => {
         newQuestions['questions_to_delete'] = [...(questions['questions_to_delete'] || []), id]
         newQuestions['ansvers_to_delete'] = [...(questions['ansvers_to_delete'] || [])]
         setLessonQuestions(newQuestions)
+        newQuestions.count_answers = questions.count_answers
     }
 
     const onDelete = (id, answerIndex) => {
@@ -29,12 +30,13 @@ const AddCourseLessonEditTestItem = ({ id, index }) => {
         newQuestions['ansvers_to_delete'] = [...(questions['ansvers_to_delete'] || []), id]
         newQuestions['questions_to_delete'] = [...(questions['questions_to_delete'] || [])]
         setLessonQuestions(newQuestions)
-        console.log(newQuestions)
+        newQuestions.count_answers = questions.count_answers
     }
     const onAdd = () => {
         const newAnswers = [...answers, { hidden_id: uid() }]
         const newQuestions = questions.map((q, i) => (i === index ? { ...q, answers: newAnswers } : q))
         setLessonQuestions(newQuestions)
+        newQuestions.count_answers = questions.count_answers
     }
     const onChangeQuestion = (e) => (questions[index].question = e.target.value)
 

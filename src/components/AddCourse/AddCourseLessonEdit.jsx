@@ -10,16 +10,17 @@ import AddCourseLessonEditTest from './AddCourseLessonEditTest'
 
 const AddCourseLessonEdit = (_, ref) => {
     const { courseId, lessonId } = useParams()
-    const { fetchLesson, setLesson, putLesson } = useDispatch()
+    const { fetchLesson, setLesson, setLessonQuestions, setLessonFiles, putLesson } = useDispatch()
     const lesson = useSelector(coursesSelectors.getLesson)
     const questions = useSelector(coursesSelectors.getLessonQuestions)
 
     const name = useInput({ bind: { name: 'name' }, is: { isRequired: true, isName: true } })
     const can_comment = useInput({ bind: { name: 'can_comment' }, is: { isCheckbox: true } })
     const is_test = useInput({ bind: { name: 'is_test' }, is: { isCheckbox: true } })
+    const has_text = useInput({ bind: { name: 'has_text' }, is: { isCheckbox: true } })
     const description = useInput({ bind: { name: 'description' }, is: { isRequired: true, isTextarea: true } })
 
-    const getAllInputs = useCallback(() => [name, can_comment, is_test, description], [name, can_comment, is_test, description])
+    const getAllInputs = useCallback(() => [name, can_comment, is_test, has_text, description], [name, can_comment, is_test, has_text, description])
 
     useEffect(() => {
         name.setValue(lesson.name || '')
@@ -39,6 +40,8 @@ const AddCourseLessonEdit = (_, ref) => {
         fetchLessonRequest.call({ courseId, lessonId })
         return () => {
             setLesson({})
+            setLessonFiles([])
+            setLessonQuestions([])
         }
     }, [])
 
@@ -50,22 +53,24 @@ const AddCourseLessonEdit = (_, ref) => {
             const body = {}
             getAllInputs().forEach((i) => (body[i.bind.name] = i.isCheckbox ? !!i.value : i.value))
 
-            body['has_text'] = true
-            body['count_answers'] = 4
+            body['count_answers'] = questions['count_answers'].value || 0
             body['questions_to_delete'] = questions['questions_to_delete'] || []
             body['ansvers_to_delete'] = questions['ansvers_to_delete'] || []
             body['questions'] = questions.map((q, i) => {
-                return {
-                    ...q,
-                    ansvers: q.answers.map((a, i) => {
+                const inputs =
+                    q.answers?.map((a, i) => {
                         return {
                             ...a,
                             ...a.inputs.reduce((prev, i) => ((prev[i.bind.name] = i.isCheckbox ? !!i.value : i.value), prev), {}),
                             inputs: null,
                             hidden_id: null,
                         }
-                    }),
-                    amount_answers: 4,
+                    }) || []
+                console.log(inputs)
+                return {
+                    ...q,
+                    ansvers: inputs,
+                    amount_answers: inputs.filter((i) => i.is_true).length,
                     inputQuestion: null,
                     answers: null,
                 }
@@ -88,6 +93,7 @@ const AddCourseLessonEdit = (_, ref) => {
                         <Input input={name} label={'Название'} />
                         <Checkbox className='lesson-edit__switch' input={can_comment} label={'Комментарии'} radio />
                         <Checkbox className='lesson-edit__switch' input={is_test} label={'Тест'} radio />
+                        <Checkbox className='lesson-edit__switch' input={has_text} label={'Текст'} radio />
                     </div>
                     <div className='create-about card-bg'>
                         <h3 className='create-about__title display-4'>Урок</h3>
