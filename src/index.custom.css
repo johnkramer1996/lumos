@@ -208,3 +208,6 @@
     display: flex;
     align-items: center;
 }
+.course-programm__item:before {
+    height: auto;
+}

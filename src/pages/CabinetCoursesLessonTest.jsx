@@ -1,7 +1,9 @@
+import { Button } from 'components/ui'
 import { useDispatch, useRequest } from 'hooks'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { RouteNames } from 'routes'
 import { coursesSelectors } from 'store/selectors'
 import { ReactComponent as EditSvg } from 'svg/edit.svg'
 
@@ -66,13 +68,13 @@ const CabinetCoursesLessonTest = () => {
                     </div>
                     <div className='test-page__right'>
                         <div className='lesson-page__nav card-bg'>
-                            <button className='lesson-page__edit btn btn-outline'>
+                            <Button className='lesson-page__edit' outline>
                                 <EditSvg />
                                 <span>Редактировать урок</span>
-                            </button>
-                            <a href='' className='lesson-page__test btn btn-light-blue'>
+                            </Button>
+                            <Link to={`${RouteNames.CABINET_COURSES}/${courseId}/lessons/${lessonId}`} className='lesson-page__test btn btn-light-blue'>
                                 Вернуться к уроку
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

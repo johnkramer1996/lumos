@@ -10,12 +10,13 @@ import { ReactComponent as DownloadSvg } from 'svg/download.svg'
 import { ReactComponent as ArrowDownSvg } from 'svg/arrow-down.svg'
 import { ReactComponent as DocumentSvg } from 'svg/document.svg'
 import { RouteNames } from 'routes'
+import { addZerro, formatBytes, getImgUrl } from 'utils'
+import { Comments } from 'components'
 
 const CabinetCoursesLesson = () => {
     const { courseId, lessonId } = useParams()
     const { fetchLesson, setLesson, setLessonQuestions, setLessonFiles, putLesson, fetchCourse } = useDispatch()
-    const { description } = useSelector(coursesSelectors.getLesson)
-    const { id } = useSelector(coursesSelectors.getLesson)
+    const { id, course_id, number, name, description, can_comment } = useSelector(coursesSelectors.getLesson)
     const lesson = useSelector(coursesSelectors.getLesson)
     const questions = useSelector(coursesSelectors.getLessonQuestions)
     const course = useSelector(coursesSelectors.getCourse)
@@ -47,34 +48,34 @@ const CabinetCoursesLesson = () => {
         <section className='lesson-page'>
             <div className='container'>
                 <div className='breadcrumbs'>
-                    <a href='' className='breadcrumbs__item'>
+                    <Link to={`${RouteNames.CABINET_COURSES}`} className='breadcrumbs__item'>
                         Мои курсы
-                    </a>
-                    <a href='' className='breadcrumbs__item'>
-                        Название курса
-                    </a>
+                    </Link>
+                    <Link to={`${RouteNames.CABINET_COURSES}/${courseId}`} className='breadcrumbs__item'>
+                        {course_id}
+                    </Link>
                 </div>
                 <div className='lesson-page__top'>
                     <div className='lesson-page__top-left'>
-                        <a href='' className='lesson-page__top-link'>
+                        <Link to='/' className='lesson-page__top-link'>
                             Предыдущий урок
-                        </a>
+                        </Link>
                         <div className='lesson-page__top-subtitle'>
-                            <span>05</span>
-                            <strong>Название урока</strong>
+                            <span>{addZerro(number)}</span>
+                            <strong>{name} 0</strong>
                         </div>
                     </div>
                     <div className='lesson-page__top-center'>
                         <div className='lesson-page__top-title'>Название урока</div>
-                        <div className='lesson-page__top-num'>6 из 24</div>
+                        <div className='lesson-page__top-num'>{addZerro(number + 1)} из 24</div>
                     </div>
                     <div className='lesson-page__top-right'>
-                        <a href='' className='lesson-page__top-link'>
+                        <Link to={'/'} className='lesson-page__top-link'>
                             Следующий урок
-                        </a>
+                        </Link>
                         <div className='lesson-page__top-subtitle'>
-                            <span>07</span>
-                            <strong>Название урока</strong>
+                            <span>{addZerro(number + 2)}</span>
+                            <strong>{name} 2</strong>
                         </div>
                     </div>
                 </div>
@@ -104,193 +105,21 @@ const CabinetCoursesLesson = () => {
                                         </i>
                                         <div className='lesson-page__files-item-info'>
                                             <div className='lesson-page__files-item-name'>{name}</div>
-                                            <div className='lesson-page__files-item-weight'>{file_size}</div>
+                                            <div className='lesson-page__files-item-weight'>{formatBytes(file_size)}</div>
                                         </div>
                                     </div>
                                 ))}
-
-                                <div className='lesson-page__files-item'>
-                                    <i className='lesson-page__files-item-icon'>
-                                        <img src='/assets/img/document.svg' alt='' />
-                                    </i>
-                                    <div className='lesson-page__files-item-info'>
-                                        <div className='lesson-page__files-item-name'>file_name.pdf</div>
-                                        <div className='lesson-page__files-item-weight'>1.2 Мб</div>
-                                    </div>
-                                </div>
-                                <div className='lesson-page__files-item'>
-                                    <i className='lesson-page__files-item-icon'>
-                                        <img src='/assets/img/document.svg' alt='' />
-                                    </i>
-                                    <div className='lesson-page__files-item-info'>
-                                        <div className='lesson-page__files-item-name'>file_name.pdf</div>
-                                        <div className='lesson-page__files-item-weight'>1.2 Мб</div>
-                                    </div>
-                                </div>
                             </div>
+                            {console.log(files)}
                             <Button className='lesson-page__files-btn' outline>
                                 <DownloadSvg />
-                                <span>Скачать все (3.6 Мб)</span>
+                                <span>Скачать все ({formatBytes(files.reduce((pr, v) => pr + +v.file_size, 0))})</span>
                             </Button>
                         </div>
                     </div>
                 </div>
-                <div className='blog-comments'>
-                    <h2 className='blog-comments__title'>10 комментариев</h2>
-                    <div className='blog-comments__inner'>
-                        <div className='blog-comments__top'>
-                            <div className='blog-comments__avatar'>
-                                <img src='/assets/img/avatar2.jpg' alt='' />
-                            </div>
-                            <textarea placeholder='Написать комментарий или задать вопрос...'></textarea>
-                        </div>
-                        <div className='blog-comments__group'>
-                            <div className='blog-comments__main'>
-                                <div className='blog-comments__item'>
-                                    <div className='blog-comments__avatar'>
-                                        <img src='/assets/img/avatar3.jpg' alt='' />
-                                    </div>
-                                    <div className='blog-comments__item-content'>
-                                        <div className='blog-comments__item-top'>
-                                            <div className='blog-comments__item-name'>Мария Мариева</div>
-                                        </div>
-                                        <div className='blog-comments__item-text'>
-                                            Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam
-                                            lorem turpis?
-                                        </div>
-                                        <div className='blog-comments__item-bottom'>
-                                            <div className='blog-comments__item-date'>10 сен 2020</div>
-                                            <button className='blog-comments__item-btn'>Ответить</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='blog-comments__sub'>
-                                <div className='blog-comments__item'>
-                                    <div className='blog-comments__avatar'>
-                                        <img src='/assets/img/avatar4.jpg' alt='' />
-                                    </div>
-                                    <div className='blog-comments__item-content'>
-                                        <div className='blog-comments__item-top'>
-                                            <div className='blog-comments__item-name'>Мария Мариева</div>
-                                            <div className='blog-comments__item-badge'>Автор</div>
-                                        </div>
-                                        <div className='blog-comments__item-text'>
-                                            Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam
-                                            lorem turpis?
-                                        </div>
-                                        <div className='blog-comments__item-bottom'>
-                                            <div className='blog-comments__item-date'>10 сен 2020</div>
-                                            <button className='blog-comments__item-btn'>Ответить</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='blog-comments__item'>
-                                    <div className='blog-comments__avatar'>
-                                        <img src='/assets/img/avatar5.jpg' alt='' />
-                                    </div>
-                                    <div className='blog-comments__item-content'>
-                                        <div className='blog-comments__item-top'>
-                                            <div className='blog-comments__item-name'>Мария Мариева</div>
-                                        </div>
-                                        <div className='blog-comments__item-text'>
-                                            Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam
-                                            lorem turpis?
-                                        </div>
-                                        <div className='blog-comments__item-bottom'>
-                                            <div className='blog-comments__item-date'>10 сен 2020</div>
-                                            <button className='blog-comments__item-btn'>Ответить</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='blog-comments__item'>
-                                    <div className='blog-comments__avatar'>
-                                        <img src='/assets/img/avatar4.jpg' alt='' />
-                                    </div>
-                                    <div className='blog-comments__item-content'>
-                                        <div className='blog-comments__item-top'>
-                                            <div className='blog-comments__item-name'>Мария Мариева</div>
-                                            <div className='blog-comments__item-badge'>Автор</div>
-                                        </div>
-                                        <div className='blog-comments__item-text'>
-                                            Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam
-                                            lorem turpis?
-                                        </div>
-                                        <div className='blog-comments__item-bottom'>
-                                            <div className='blog-comments__item-date'>10 сен 2020</div>
-                                            <button className='blog-comments__item-btn'>Ответить</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button className='blog-comments__more'>
-                                    <ArrowDownSvg />
-                                    <span>Показать еще 4 комментария</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div className='blog-comments__group'>
-                            <div className='blog-comments__main'>
-                                <div className='blog-comments__item'>
-                                    <div className='blog-comments__avatar'>
-                                        <img src='/assets/img/avatar3.jpg' alt='' />
-                                    </div>
-                                    <div className='blog-comments__item-content'>
-                                        <div className='blog-comments__item-top'>
-                                            <div className='blog-comments__item-name'>Мария Мариева</div>
-                                        </div>
-                                        <div className='blog-comments__item-text'>
-                                            Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam
-                                            lorem turpis?
-                                        </div>
-                                        <div className='blog-comments__item-bottom'>
-                                            <div className='blog-comments__item-date'>10 сен 2020</div>
-                                            <button className='blog-comments__item-btn'>Ответить</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='blog-comments__sub'>
-                                <div className='blog-comments__item'>
-                                    <div className='blog-comments__avatar'>
-                                        <img src='/assets/img/avatar4.jpg' alt='' />
-                                    </div>
-                                    <div className='blog-comments__item-content'>
-                                        <div className='blog-comments__item-top'>
-                                            <div className='blog-comments__item-name'>Мария Мариева</div>
-                                            <div className='blog-comments__item-badge'>Автор</div>
-                                        </div>
-                                        <div className='blog-comments__item-text'>
-                                            Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam
-                                            lorem turpis?
-                                        </div>
-                                        <div className='blog-comments__item-bottom'>
-                                            <div className='blog-comments__item-date'>10 сен 2020</div>
-                                            <button className='blog-comments__item-btn'>Ответить</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='blog-comments__item'>
-                                    <div className='blog-comments__avatar'>
-                                        <img src='/assets/img/avatar5.jpg' alt='' />
-                                    </div>
-                                    <div className='blog-comments__item-content'>
-                                        <div className='blog-comments__item-top'>
-                                            <div className='blog-comments__item-name'>Мария Мариева</div>
-                                        </div>
-                                        <div className='blog-comments__item-text'>
-                                            Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam
-                                            lorem turpis?
-                                        </div>
-                                        <div className='blog-comments__item-bottom'>
-                                            <div className='blog-comments__item-date'>10 сен 2020</div>
-                                            <button className='blog-comments__item-btn'>Ответить</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+                {can_comment && <Comments />}
             </div>
         </section>
     )

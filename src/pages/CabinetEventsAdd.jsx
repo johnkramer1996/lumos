@@ -24,7 +24,7 @@ const CabinetEventsAdd = () => {
         bind: { name: 'text' },
         is: { isRequired: true, isTextarea: true },
     })
-    const inputKey = useInput({ initialValue: 'test', bind: { name: 'key' }, is: { isRequired: true } })
+    const inputKey = useInput({ initialValue: 'test', bind: { name: 'video_key' }, is: { isRequired: true } })
     const img = useInputFile()
 
     useEffect(() => {
@@ -91,7 +91,7 @@ const CabinetEventsAdd = () => {
         body.append('etime', inputETime.value)
         body.append('timing', inputTiming.value)
         body.append('text', inputText.value)
-        // body.append('key', +inputKey.value)
+        // body.append('video_key', +inputKey.value)
         img.ref.current?.files[0] && body.append('image', img.ref.current?.files[0])
 
         hasEvent ? putEventRequest.call({ eventId, body }) : addEventRequest.call({ body })

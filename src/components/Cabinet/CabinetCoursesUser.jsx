@@ -12,7 +12,7 @@ const CabinetUser = ({ isLoading }) => {
     return (
         <>
             <CabinetGreet />
-            <CoursesItemWrapper items={courses} isLoading={isLoading} className={`cabinet-page__items--${typeShow}`} />
+            <CoursesItemWrapper items={courses} isLoading={isLoading} className={`cabinet-page__items cabinet-page__items--${typeShow}`} />
         </>
     )
 }

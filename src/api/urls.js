@@ -53,11 +53,18 @@ export const trainerEventsURL = {
     DELETE_EVENT: ({ eventId }) => `/cabinet/events/${eventId}`,
 }
 export const userCoursesURL = {
-    ADD_USER: '/cabinet/courses/add_user',
-    GET_COURSES: '/cabinet/courses',
+    ADD_USER: '/users/courses/add_user',
+    FETCH_COURSES: '/users/courses',
+    FETCH_COURSE: ({ courseId }) => `/users/courses/${courseId}/lessons`,
+    FETCH_LESSON: ({ courseId, lessonId }) => `/users/courses/${courseId}/lessons/${lessonId}`,
+    FETCH_TEST: ({ courseId, lessonId }) => `/users/courses/${courseId}/lessons/${lessonId}/test`,
+    FETCH_COMMENTS: ({ courseId, lessonId }) => `/users/courses/${courseId}/lessons/${lessonId}/comments`,
+    SEND_TEST: ({ courseId, lessonId }) => `/users/courses/${courseId}/lessons/${lessonId}/test`,
+    ADD_COMMENT: ({ courseId, lessonId }) => `/users/courses/${courseId}/lessons/${lessonId}/comments`,
 }
 export const userEventsURL = {
-    ADD_USER: '/cabinet/events/add_user',
+    ADD_USER: '/users/events/add_user',
+    FETCH_EVENTS: '/users/events',
 }
 export const adminURL = {
     ADD_USER: '/admin/users/set_role',

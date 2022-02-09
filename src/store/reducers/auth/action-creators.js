@@ -27,7 +27,7 @@ export const authHandlers = {
         success: ({ dispatch, response, data }) => {
             dispatch(ModalsActionCreators.setIsShow(false))
             dispatch(AuthActionCreators.setIsAuth(true))
-            dispatch(AuthActionCreators.setUser(data?.user))
+            dispatch(AuthActionCreators.setUser(data?.user || {}))
             dispatch(AuthActionCreators.setToken(data?.token))
             localStorage.setItem('token', data?.token)
         },
@@ -53,7 +53,7 @@ export const authHandlers = {
     register: {
         ...defaultHandlers.register,
         success: ({ dispatch, response, data }) => {
-            dispatch(AuthActionCreators.setUser(data?.user))
+            dispatch(AuthActionCreators.setUser(data?.user || {}))
             dispatch(AuthActionCreators.setToken(data?.token))
             dispatch(AuthActionCreators.setIsAuth(true))
             localStorage.setItem('token', data?.token)
@@ -68,7 +68,7 @@ export const authHandlers = {
         ...defaultHandlers.auth,
         success: ({ dispatch, response, data }) => {
             dispatch(AuthActionCreators.setIsAuth(true))
-            dispatch(AuthActionCreators.setUser(data?.user))
+            dispatch(AuthActionCreators.setUser(data?.user || {}))
             dispatch(AuthActionCreators.setToken(data?.token))
             localStorage.setItem('token', data?.token)
         },
@@ -80,7 +80,7 @@ export const authHandlers = {
     settings: {
         ...defaultHandlers.settings,
         success: ({ dispatch, response, data }) => {
-            dispatch(AuthActionCreators.setUser(data?.user))
+            dispatch(AuthActionCreators.setUser(data?.user || {}))
         },
         error: ({ dispatch, error }) => {
             dispatch(ModalsActionCreators.setIsShow(true))

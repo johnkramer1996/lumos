@@ -21,6 +21,10 @@ const EventsItem = () => {
         }
     }, [])
 
+    const onEnroll = () => {
+        console.log('2')
+    }
+
     return (
         <section className='event-page'>
             <div className='container'>
@@ -30,13 +34,15 @@ const EventsItem = () => {
                             <div className='event-page__card-img img img--md'>
                                 <img src={getImgUrl(image)} alt='' />
                             </div>
-                            <Button className='event-page__card-btn'>Записаться</Button>
+                            <Button className='event-page__card-btn' onClick={onEnroll}>
+                                Записаться
+                            </Button>
                             <div className='event-page__card-hint'>Запись бесплатна</div>
                         </div>
-                        <button className='event-page__share btn btn-outline'>
+                        <Button className='event-page__share' outline>
                             <ShareSvg />
                             <span>Поделиться</span>
-                        </button>
+                        </Button>
                     </aside>
                     <div className='event-page__right'>
                         <div className='event-page__top'>
