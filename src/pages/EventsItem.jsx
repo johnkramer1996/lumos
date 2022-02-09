@@ -4,15 +4,25 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { ReactComponent as ShareSvg } from 'svg/share.svg'
-import { getDate, getImgUrl } from 'utils'
+import { getDate, getURL } from 'utils'
 
 const EventsItem = () => {
     const { eventId } = useParams()
-    const { fetchFrontEvent, setFrontEvent } = useDispatch()
-    const { image, name, All_Users, new_users, text, edate, etime, get_type: { name: typeName } = {}, timing } = useSelector(({ frontEvents }) => frontEvents.event)
+    const { fetchFrontEvent, setFrontEvent, addUserToEvent } = useDispatch()
+    const { id: user_id } = useSelector(({ auth }) => auth.user)
+    const { id, image, name, All_Users, new_users, text, edate, etime, get_type: { name: typeName } = {}, timing } = useSelector(({ frontEvents }) => frontEvents.event)
 
     const fetchFrontEventRequest = useRequest({
         request: fetchFrontEvent,
+    })
+    const addUserToEventRequest = useRequest({
+        request: addUserToEvent,
+        success: (data) => {
+            console.log(data)
+        },
+        error: (data) => {
+            console.log(data)
+        },
     })
     useEffect(() => {
         fetchFrontEventRequest.call({ eventId })
@@ -21,9 +31,7 @@ const EventsItem = () => {
         }
     }, [])
 
-    const onEnroll = () => {
-        console.log('2')
-    }
+    const onEnroll = () => addUserToEventRequest.call({ body: { user_id, event_id: id } })
 
     return (
         <section className='event-page'>
@@ -32,7 +40,7 @@ const EventsItem = () => {
                     <aside className='event-page__left'>
                         <div className='event-page__card'>
                             <div className='event-page__card-img img img--md'>
-                                <img src={getImgUrl(image)} alt='' />
+                                <img src={getURL.img(image)} alt='' />
                             </div>
                             <Button className='event-page__card-btn' onClick={onEnroll}>
                                 Записаться

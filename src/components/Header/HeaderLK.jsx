@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { cabinetLinks } from 'routes'
 import { useDispatch, useEvent } from 'hooks/'
-import { getImgUrl } from 'utils'
+import { getURL } from 'utils'
 import { useSelector } from 'react-redux'
 
 const HeaderLK = () => {
@@ -14,7 +14,7 @@ const HeaderLK = () => {
     return (
         <div className='header__lk'>
             <div className='header__lk-avatar' onClick={() => setIsActive(!isActive)}>
-                <img src={getImgUrl(user?.avatar)} alt='' />
+                <img src={getURL.img(user?.avatar)} alt='' />
             </div>
             <div className={`header__lk-dropdown${isActive ? ' header__lk-dropdown--active' : ''}`}>
                 {cabinetLinks.map(({ title, href, number }, index) => (

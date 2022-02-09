@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useInputFile } from 'hooks'
-import { getImgUrl } from 'utils'
+import { getURL } from 'utils'
 import CabinetSettingsDocsItem from './CabinetSettingsDocsItem'
 
 const CabinetSettingsDocs = ({ onChange, onDelete }) => {
@@ -13,10 +13,10 @@ const CabinetSettingsDocs = ({ onChange, onDelete }) => {
     const file_treaty = useInputFile()
 
     useEffect(() => {
-        user.docs?.file_passport_1 && file_passport_1.setValue(getImgUrl(user.docs.file_passport_1))
-        user.docs?.file_passport_2 && file_passport_2.setValue(getImgUrl(user.docs.file_passport_2))
-        user.docs?.file_diplom && file_diplom.setValue(getImgUrl(user.docs.file_diplom))
-        user.docs?.file_treaty && file_treaty.setValue(getImgUrl(user.docs.file_treaty))
+        user.docs?.file_passport_1 && file_passport_1.setValue(getURL.img(user.docs.file_passport_1))
+        user.docs?.file_passport_2 && file_passport_2.setValue(getURL.img(user.docs.file_passport_2))
+        user.docs?.file_diplom && file_diplom.setValue(getURL.img(user.docs.file_diplom))
+        user.docs?.file_treaty && file_treaty.setValue(getURL.img(user.docs.file_treaty))
     }, [user])
 
     const docs = [

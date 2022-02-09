@@ -14,10 +14,10 @@ export const systemHandlers = {
     ...defaultHandlers,
     fetchReferences: {
         ...defaultHandlers.fetchReferences,
-        success: ({ dispatch, response, data }) => dispatch(SystemActionCreators.setReferences(data)),
+        success: ({ dispatch, response, prevData, data }) => dispatch(SystemActionCreators.setReferences(data)),
     },
     fetchSocUrls: {
         ...defaultHandlers.fetchSocUrls,
-        success: ({ dispatch, response, data }) => dispatch(SystemActionCreators.setSocUrls(data)),
+        success: ({ dispatch, response, prevData, data }) => dispatch(SystemActionCreators.setSocUrls(data)),
     },
 }

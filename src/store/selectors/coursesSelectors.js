@@ -1,17 +1,13 @@
-const getCourse = ({ courses }) => courses.course
-const getModules = ({ courses }) => courses.modules
-const getInfo = ({ courses }) => courses.info
-const getLessons = ({ courses }) => courses.lessons
-const getLesson = ({ courses }) => courses.lesson
-const getLessonQuestions = ({ courses }) => courses.lessonQuestions
-const getLessonFiles = ({ courses }) => courses.lessonFiles
-
-export default {
-    getCourse,
-    getModules,
-    getInfo,
-    getLessons,
-    getLesson,
-    getLessonQuestions,
-    getLessonFiles,
+const coursesSelectors = {
+   getData: ({ courses }) => courses.data,
+   getCourses: ({ courses }) => courses.courses,
+   getCourse: ({ courses }) => courses.course,
+   getModules: ({ courses }) => courses.modules,
+   getInfo: ({ courses }) => courses.info,
+   getLessons: ({ courses }) => courses.lessons,
+   getLesson: ({ courses }) => courses.lesson,
+   getLessonQuestions: ({ courses }) => courses.lessonQuestions,
+   getLessonFiles: ({ courses }) => courses.lessonFiles,
 }
+
+export default coursesSelectors

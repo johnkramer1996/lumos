@@ -1,17 +1,22 @@
 import { eventsTypes } from './types'
 
 const initialState = {
-    events: [],
-    event: {},
+   data: {},
+   events: [],
+   event: {},
 }
 
 export default function eventsReducer(state = initialState, action) {
-    switch (action.type) {
-        case eventsTypes.SET_EVENTS:
-            return { ...state, events: action.payload }
-        case eventsTypes.SET_EVENT:
-            return { ...state, event: action.payload }
-        default:
-            return state
-    }
+   switch (action.type) {
+      case eventsTypes.SET_EVENTS_DATA:
+         return { ...state, data: action.payload }
+      case eventsTypes.SET_EVENTS:
+         return { ...state, events: action.payload }
+      case eventsTypes.SET_EVENT:
+         return { ...state, event: action.payload }
+      case eventsTypes.SET_USER_EVENTS:
+         return { ...state, userEvents: action.payload }
+      default:
+         return state
+   }
 }

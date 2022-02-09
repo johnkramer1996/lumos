@@ -3,7 +3,7 @@ import { useDispatch, useInput, useInputFile, useNavigate, useRequest } from 'ho
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { getDate, getImgUrl } from 'utils'
+import { getDate, getURL } from 'utils'
 
 const CabinetEventsAdd = () => {
     const { eventId } = useParams()
@@ -35,7 +35,7 @@ const CabinetEventsAdd = () => {
             inputETime.setValue(event.etime || '')
             inputText.setValue(event.text || '')
             inputKey.setValue(event.key || '')
-            img.setValue(getImgUrl(event.image, false) || '')
+            img.setValue(getURL.img(event.image, false) || '')
         }
     }, [event])
 

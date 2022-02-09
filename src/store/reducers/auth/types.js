@@ -2,6 +2,9 @@ export const authTypes = {
     SET_AUTH: 'SET_AUTH',
     SET_USER: 'SET_USER',
     SET_TOKEN: 'SET_TOKEN',
+    SET_ROLES: 'SET_ROLES',
+    SET_ROLE: 'SET_ROLE',
+    SET_NOTIFICATIONS: 'SET_NOTIFICATIONS',
     SET_STEP: 'SET_STEP',
 }
 

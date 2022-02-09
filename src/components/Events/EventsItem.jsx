@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
-import { getImgUrl, namesMonth } from 'utils'
+import { getURL, namesMonth } from 'utils'
 
 const EventsItem = ({ id, image, edate = '', etime = '', name = '', all_users = 0, new_users = 0, text }) => {
     const date = new Date(edate)
@@ -16,7 +16,7 @@ const EventsItem = ({ id, image, edate = '', etime = '', name = '', all_users = 
                     <div className='event-card__time'>в {etime}</div>
                 </div>
                 <div className='event-card__img img img--cover'>
-                    <img src={getImgUrl(image)} alt='' />
+                    <img src={getURL.img(image)} alt='' />
                 </div>
                 <div className='event-card__right'>
                     <Link to={RouteNames.EVENTS + '/' + id} className='event-card__title'>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { getImgUrl } from 'utils'
+import { getURL } from 'utils'
 
 const CabinetGreet = () => {
     const user = useSelector(({ auth }) => auth.user)
@@ -8,7 +8,7 @@ const CabinetGreet = () => {
     return (
         <div className='dashboard__greet card-bg'>
             <div className='dashboard__greet-img'>
-                <img src={getImgUrl(user?.avatar)} alt='' />
+                <img src={getURL.img(user?.avatar)} alt='' />
             </div>
             <div className='dashboard__greet-content'>
                 <div className='dashboard__greet-name'>Привет, {user.first_name || user.name}!</div>

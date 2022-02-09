@@ -1,5 +1,5 @@
 import axios from './axios'
-import { trainerEventsURL } from './URLS'
+import { trainerEventsURL, userEventsURL } from './URLS'
 
 export default class EventsService {
     static async fetchEvents({ page = 1, limit = 100 } = {}) {
@@ -36,5 +36,15 @@ export default class EventsService {
     }
     static async deleteEvent({ eventId = 0 } = {}) {
         return await axios.delete(trainerEventsURL.DELETE_EVENT({ eventId }))
+    }
+    static async addUserToEvent({ body = {} } = {}) {
+        return await axios.post(userEventsURL.ADD_USER, body, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    }
+    static async fetchUserEvents() {
+        return await axios.get(userEventsURL.FETCH_EVENTS)
     }
 }

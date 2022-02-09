@@ -2,7 +2,7 @@ import { useDispatch, useRequest } from 'hooks'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { declOfNum, getDate, getDeclOfArray, getImgUrl } from 'utils'
+import { declOfNum, getDate, getDeclOfArray, getURL } from 'utils'
 import { ReactComponent as EditSvg } from 'svg/edit.svg'
 import { ReactComponent as ShareSvg } from 'svg/share.svg'
 import { RouteNames } from 'routes'
@@ -31,7 +31,7 @@ const CabinetEventsItem = () => {
                     <aside className='event-page__left'>
                         <div className='event-page__card'>
                             <div className='event-page__card-img img img--cover img--md'>
-                                <img src={getImgUrl(image)} alt='' />
+                                <img src={getURL.img(image)} alt='' />
                             </div>
                             <div className='event-page__card-num'>
                                 {All_Users} {declOfNum(All_Users, getDeclOfArray['members'])}

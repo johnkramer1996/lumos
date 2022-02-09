@@ -1,7 +1,7 @@
 import { Button, ImgUpload, Input } from 'components/ui'
 import { useInput, useInputFile } from 'hooks'
 import React, { useEffect, useState } from 'react'
-import { getImgUrl } from 'utils'
+import { getURL } from 'utils'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 
 const AddCourseDescription = ({ id, index, image, name, text, changeField, onDelete, onDeleteImg, descriptions }) => {
@@ -14,7 +14,7 @@ const AddCourseDescription = ({ id, index, image, name, text, changeField, onDel
     useEffect(() => {
         name && inputName.setValue(name)
         text && inputText.setValue(text)
-        image && typeof image === 'string' && img.setValue(getImgUrl(image, false))
+        image && typeof image === 'string' && img.setValue(getURL.img(image, false))
     }, [])
 
     const onChange = (e, input) => changeField(input.bind.name, index, e.target.value)

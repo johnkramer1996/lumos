@@ -9,10 +9,10 @@ const ModalLogin = ({ onContinue }) => {
     const { setStep, checkEmail, login, register, restore } = useDispatch()
     const step = useSelector(({ auth }) => auth.step)
 
-    const checkEmailRequest = useRequest({ request: checkEmail, success: ({ dispatch, response, data }) => (data.exists === 1 ? setStep('LOGIN') : setStep('REGISTER')) })
+    const checkEmailRequest = useRequest({ request: checkEmail, success: ({ dispatch, response, prevData, data }) => (data.exists === 1 ? setStep('LOGIN') : setStep('REGISTER')) })
     const loginRequest = useRequest({ request: login })
-    const registerRequest = useRequest({ request: register, success: ({ dispatch, response, data }) => setStep('LOGIN') })
-    const restoreRequest = useRequest({ request: restore, success: ({ dispatch, response, data }) => setStep('LOGIN') })
+    const registerRequest = useRequest({ request: register, success: ({ dispatch, response, prevData, data }) => setStep('LOGIN') })
+    const restoreRequest = useRequest({ request: restore, success: ({ dispatch, response, prevData, data }) => setStep('LOGIN') })
 
     const steps = useMemo(
         () => ({

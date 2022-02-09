@@ -2,14 +2,13 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch, useRequest } from 'hooks'
 import EventsItem from 'components/Events/EventsItem'
-import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 import { ReactComponent as CalendarSvg } from 'svg/calendar.svg'
 import CoursesItemLoader from 'components/Courses/CoursesItemLoader'
 import { CoursesEmpty } from 'components'
 
 const Events = () => {
     const { fetchFrontEvents } = useDispatch()
-    const { data: allFrontEvents = [] } = useSelector(({ frontEvents }) => frontEvents.events)
+    const events = useSelector(({ frontEvents }) => frontEvents.events)
 
     const fetchFrontEventsRequest = useRequest({
         request: fetchFrontEvents,
@@ -35,9 +34,9 @@ const Events = () => {
                                 <CoursesItemLoader key={index} />
                             ))}
                     </div>
-                ) : allFrontEvents.length ? (
+                ) : events.length ? (
                     <div className='events__items'>
-                        {allFrontEvents.map((props) => (
+                        {events.map((props) => (
                             <EventsItem key={props.id} {...props} />
                         ))}
                     </div>

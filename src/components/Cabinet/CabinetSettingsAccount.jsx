@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { Button } from 'components/ui'
-import { getDate, getImgUrl } from 'utils'
+import { getDate, getURL } from 'utils'
 import { useDispatch, useInput, useInputFile } from 'hooks'
 
 const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
@@ -16,7 +16,7 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
     const vacationEnd = useInput({ bind: { className: 'account-settings__item-input' }, is: { isDate: true } })
 
     useEffect(() => {
-        user.avatar && avatar.setValue(getImgUrl(user.avatar))
+        user.avatar && avatar.setValue(getURL.img(user.avatar))
         user.email && email.setValue(user.email)
         user.created_at && createdAt.setValue(getDate(user.created_at))
         user.vacation[0] && vacationStart.setValue(user.vacation[0])

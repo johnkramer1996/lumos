@@ -1,9 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { getImgUrl } from 'utils'
+import { getURL } from 'utils'
 import { ReactComponent as PlaySvg } from 'svg/play.svg'
+import { Button } from 'components/ui'
 
-const CoursesItemInfo = () => {
+const CoursesItemInfo = ({ onEnroll }) => {
     const { image, name, short_desc, width, type_study: typeStudy, format_study, anytime } = useSelector(({ frontCourses }) => frontCourses.course)
     const { type_study = [], format = [] } = useSelector(({ system }) => system.references)
     const { name: typeName } = type_study[typeStudy] || {}
@@ -15,7 +16,7 @@ const CoursesItemInfo = () => {
                 <div className='course-info__inner'>
                     <div className='course-info__left'>
                         <div className='course-info__img img img--lg'>
-                            <img src={getImgUrl(image)} alt='' />
+                            <img src={getURL.img(image)} alt='' />
                         </div>
                     </div>
 
@@ -51,7 +52,9 @@ const CoursesItemInfo = () => {
                                     <div className='course-info__cart-prices-old'>9 970 руб.</div>
                                 </div>
                                 <div className='course-info__cart-right'>
-                                    <button className='course-info__cart-btn btn btn-blue'>Записаться</button>
+                                    <Button className='course-info__cart-btn' onClick={onEnroll}>
+                                        Записаться
+                                    </Button>
                                     <div className='course-info__cart-places'>Осталось 12 мест</div>
                                 </div>
                             </div>
