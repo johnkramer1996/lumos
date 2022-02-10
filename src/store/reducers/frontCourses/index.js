@@ -4,6 +4,13 @@ const initialState = {
    data: {},
    courses: [],
    course: {},
+   descriptions: [],
+   prices: [],
+   interestes: [],
+   trainer: [],
+   modules: [],
+   lessons: [],
+   whoms: [],
 }
 
 export default function frontCoursesReducer(state = initialState, action) {
@@ -14,6 +21,20 @@ export default function frontCoursesReducer(state = initialState, action) {
          return { ...state, courses: action.payload }
       case frontCoursesTypes.SET_FRONT_COURSE:
          return { ...state, course: action.payload }
+      case frontCoursesTypes.SET_FRONT_DESCRIPTIONS:
+         return { ...state, descriptions: action.payload }
+      case frontCoursesTypes.SET_FRONT_PRICES:
+         return { ...state, prices: action.payload }
+      case frontCoursesTypes.SET_FRONT_INTERESTES:
+         return { ...state, interestes: action.payload }
+      case frontCoursesTypes.SET_FRONT_TRAINER:
+         return { ...state, trainer: action.payload }
+      case frontCoursesTypes.SET_FRONT_MODULES:
+         return { ...state, modules: action.payload }
+      case frontCoursesTypes.SET_FRONT_LESSONS:
+         return { ...state, lessons: action.payload }
+      case frontCoursesTypes.SET_FRONT_WHOMS:
+         return { ...state, whoms: action.payload }
       default:
          return state
    }

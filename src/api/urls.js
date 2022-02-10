@@ -61,6 +61,8 @@ export const userCoursesURL = {
    FETCH_COMMENTS: ({ courseId, lessonId }) => `/users/courses/${courseId}/lessons/${lessonId}/comments`,
    SEND_LESSON_TEST: ({ courseId, lessonId }) => `/users/courses/${courseId}/lessons/${lessonId}/test`,
    ADD_COMMENT: ({ courseId, lessonId }) => `/users/courses/${courseId}/lessons/${lessonId}/comments`,
+   ADD_LIKE: ({ courseId }) => `/users/courses/${courseId}/like`,
+   ADD_FAVORITE: ({ courseId }) => `/users/courses/${courseId}/favorite`,
 }
 export const userEventsURL = {
    ADD_USER: '/users/events/add_user',

@@ -5,7 +5,7 @@ import { authSelectors } from 'store/selectors'
 import { getURL, hasAccess } from 'utils'
 
 const CabinetSidebarUser = () => {
-   const role = useSelector(authSelectors.getRole)
+   const role = useSelector(authSelectors.getRolesId)
 
    return (
       <>

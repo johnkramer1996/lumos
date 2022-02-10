@@ -10,7 +10,7 @@ import { authSelectors } from 'store/selectors'
 const HeaderLK = () => {
    const { logout } = useDispatch()
    const user = useSelector(authSelectors.getUser)
-   const role = useSelector(authSelectors.getRole)
+   const role = useSelector(authSelectors.getRolesId)
    const [isActive, setIsActive] = useState(false)
    useEvent((e) => !e.target.closest('.header__lk') && setIsActive(false))
 

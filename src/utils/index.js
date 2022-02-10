@@ -1,4 +1,5 @@
 import { SITE_URL } from 'api/URLS'
+import { ROLES } from 'constants'
 import { RouteNames } from 'routes'
 
 export const declOfNum = (number, words = []) => {
@@ -13,27 +14,6 @@ export const getDeclOfArray = {
    members: ['учасник', 'учасника', 'учасников'],
    questions: ['вопрос', 'вопроса', 'вопросов'],
    files: ['файл', 'файла', 'файлов'],
-}
-
-const parseURL = (url = '', params = {}) => {
-   return Object.entries(params).reduce((prev, [key, value]) => prev.replace(`:${key}`, value), url)
-}
-
-const getURLRoles = (routeNames = [], role = 1, params) => parseURL(routeNames[role - 1], params) || '/'
-
-export const getURL = {
-   img: (src, isDefault = false) => (src ? `${SITE_URL}/${src}` : isDefault ? getURL.defaultImg() : ''),
-   defaultImg: () => '/assets/img/course2.jpg',
-   avatar: (src, role) => (src ? `${SITE_URL}/${src}` : getURL.defaultAvatar(role)),
-   defaultAvatar: (role = 1) => '/assets/img/' + ['avatar-user.png', 'avatar-trainer.png', 'avatar-employee.webp', 'avatar-admin.png'][role - 1],
-   courses: (params, role) => getURLRoles([RouteNames.COURSES, RouteNames.COURSES, RouteNames.COURSES], role, params),
-   coursesItem: (params, role) => getURLRoles([RouteNames.COURSES_ITEM, RouteNames.COURSES_ITEM, RouteNames.COURSES_ITEM], role, params),
-   cabinetEventsItem: (params, role) => getURLRoles([RouteNames.EVENTS_ITEM, RouteNames.CABINET_EVENTS_ITEM, RouteNames.CABINET_EVENTS_ITEM], role, params),
-   cabinetCourses: (params, role) => getURLRoles([RouteNames.CABINET_COURSES, RouteNames.CABINET_COURSES, RouteNames.CABINET_COURSES], role, params),
-   cabinetCoursesItem: (params, role) => getURLRoles([RouteNames.CABINET_COURSES_LESSONS, RouteNames.CABINET_COURSES_ITEM, RouteNames.CABINET_COURSES_ITEM], role, params),
-   cabinetCoursesLesson: (params, role) => getURLRoles([RouteNames.CABINET_COURSES_LESSON, RouteNames.CABINET_COURSES_LESSON, RouteNames.CABINET_COURSES_LESSON], role, params),
-   cabinetCoursesLessonTest: (params, role) => getURLRoles([RouteNames.CABINET_COURSES_LESSON_TEST, RouteNames.CABINET_COURSES_LESSON_TEST, RouteNames.CABINET_COURSES_LESSON_TEST], role, params),
-   cabinetCoursesEditLessonTest: (params, role) => getURLRoles([RouteNames.CABINET_COURSES_EDIT_LESSON, RouteNames.CABINET_COURSES_EDIT_LESSON, RouteNames.CABINET_COURSES_EDIT_LESSON], role, params),
 }
 
 export const eventBus = {
@@ -56,7 +36,7 @@ export const getData = (response, prev = false) => {
    let data = response.data
    while (data.data !== undefined) {
       // TODO CHECK IT
-      if (prev && (Object.getOwnPropertyNames(data.data).length > 1 || !data.data?.data)) return data.data
+      if (prev && !data.data?.data) return data
       data = data.data
    }
    return data
@@ -147,6 +127,30 @@ export const formatBytes = (bytes, decimals = 2) => {
    return (parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) || 'Нет данных') + ' ' + (sizes[i] || '')
 }
 
-export const hasAccess = (role, availables = []) => {
-   return !!availables.find((item) => item === role)
+export const hasAccess = (rolesId, availables = []) => !![...availables, ROLES.ADMIN].find((i) => rolesId.find((id) => i === id))
+
+export const getRequest = (requests, rolesId) => {
+   const avaibleRequests = requests.filter((_, inx) => rolesId.find((id) => id === inx + 1))
+   return avaibleRequests[avaibleRequests.length - 1] || requests[0]
+}
+
+export const getURL = {
+   parseURL: (url = '', params = {}) => {
+      return Object.entries(params).reduce((prev, [key, value]) => prev.replace(`:${key}`, value), url)
+   },
+   getURLRoles: (routeNames = [], rolesId = [], params) => getURL.parseURL(routeNames[rolesId[rolesId.length - 1] - 1 || 0], params) || '/',
+   img: (src, isDefault = false) => (src ? `${SITE_URL}/${src}` : isDefault ? getURL.defaultImg() : ''),
+   defaultImg: () => '/assets/img/course2.jpg',
+   avatar: (src, rolesId) => (src ? `${SITE_URL}/${src}` : getURL.defaultAvatar(rolesId)),
+   defaultAvatar: (rolesId = []) => '/assets/img/' + ['avatar-user.png', 'avatar-trainer.png', 'avatar-employee.webp', 'avatar-admin.png'][rolesId[rolesId.length - 1] - 1 || 0],
+   courses: (params, rolesId) => getURL.getURLRoles([RouteNames.COURSES, RouteNames.COURSES, RouteNames.COURSES], rolesId, params),
+   coursesItem: (params, rolesId) => getURL.getURLRoles([RouteNames.COURSES_ITEM, RouteNames.COURSES_ITEM, RouteNames.COURSES_ITEM], rolesId, params),
+   cabinetEventsItem: (params, rolesId) => getURL.getURLRoles([RouteNames.EVENTS_ITEM, RouteNames.CABINET_EVENTS_ITEM, RouteNames.CABINET_EVENTS_ITEM], rolesId, params),
+   cabinetCourses: (params, rolesId) => getURL.getURLRoles([RouteNames.CABINET_COURSES, RouteNames.CABINET_COURSES, RouteNames.CABINET_COURSES], rolesId, params),
+   cabinetCoursesItem: (params, rolesId) => getURL.getURLRoles([RouteNames.CABINET_COURSES_LESSONS, RouteNames.CABINET_COURSES_ITEM, RouteNames.CABINET_COURSES_ITEM], rolesId, params),
+   cabinetCoursesLesson: (params, rolesId) => getURL.getURLRoles([RouteNames.CABINET_COURSES_LESSON, RouteNames.CABINET_COURSES_LESSON, RouteNames.CABINET_COURSES_LESSON], rolesId, params),
+   cabinetCoursesLessonTest: (params, rolesId) =>
+      getURL.getURLRoles([RouteNames.CABINET_COURSES_LESSON_TEST, RouteNames.CABINET_COURSES_LESSON_TEST, RouteNames.CABINET_COURSES_LESSON_TEST], rolesId, params),
+   cabinetCoursesEditLessonTest: (params, rolesId) =>
+      getURL.getURLRoles([RouteNames.CABINET_COURSES_EDIT_LESSON, RouteNames.CABINET_COURSES_EDIT_LESSON, RouteNames.CABINET_COURSES_EDIT_LESSON], rolesId, params),
 }

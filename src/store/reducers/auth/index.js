@@ -5,7 +5,7 @@ const initialState = {
    user: {},
    token: '',
    roles: [],
-   role: {},
+   rolesId: [],
    notifications: [],
    step: authStepTypes.CHECK_EMAIL,
 }
@@ -19,7 +19,7 @@ export default function authReducer(state = initialState, action) {
             ...state,
             user: action.payload,
             roles: action.payload?.roles || [],
-            role: action.payload?.roles?.[0]?.pivot.role_id || 0,
+            rolesId: action.payload?.roles.map(({ id }) => id) || [],
             notifications: action.payload?.notifications || [],
          }
       case authTypes.SET_TOKEN:

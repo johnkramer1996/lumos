@@ -2,13 +2,15 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { RouteNames } from 'routes'
+import { frontCoursesSelectors } from 'store/selectors'
 import { getURL } from 'utils'
 
 const CoursesItemInfo = () => {
    const { courseId } = useParams()
-   const { descriptions = [], description, result_learn_text, moduls = [], lessons = [] } = useSelector(({ frontCourses }) => frontCourses.course)
-   const course = useSelector(({ frontCourses }) => frontCourses.course)
-   console.log(course)
+   const { descriptions = [], description, result_learn_text, moduls = [], lessons = [] } = useSelector(frontCoursesSelectors.getCourse)
+   const modules = useSelector(frontCoursesSelectors.getModules)
+
+   console.log(modules)
 
    return (
       <section className='course-info2'>
@@ -80,17 +82,15 @@ const CoursesItemInfo = () => {
                   <div className='course-programm course-info2__group'>
                      <h3 className='course-info2__title'>Программа курса</h3>
                      <div className='course-programm__wrap'>
-                        {moduls.map(({ id, name }, index) => (
+                        {modules.map(({ id, name }, index) => (
                            <div key={id || index} className='course-programm__group'>
                               <div className='course-programm__title'>{name}</div>
                               <ol className='course-programm__list'>
-                                 {lessons
-                                    .filter(({ modul_id }) => modul_id === id)
-                                    .map(({ id, name }, index) => (
-                                       <li key={id || index} className='course-programm__item'>
-                                          <Link to={`${RouteNames.COURSES}/${courseId}/lessons/${id}`}>{name}</Link>
-                                       </li>
-                                    ))}
+                                 {lessons.map(({ id, name }, index) => (
+                                    <li key={id || index} className='course-programm__item'>
+                                       <Link to={`${RouteNames.COURSES}/${courseId}/lessons/${id}`}>{name}</Link>
+                                    </li>
+                                 ))}
                               </ol>
                            </div>
                         ))}

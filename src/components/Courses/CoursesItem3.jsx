@@ -3,12 +3,13 @@ import React from 'react'
 import { RouteNames } from 'routes'
 import { getURL } from 'utils'
 import { useSelector } from 'react-redux'
+import { authSelectors } from 'store/selectors'
 
 const CoursesItem3 = ({ id = 1, image, name, user = {}, status, students, ...rest }) => {
-   const role = useSelector(({ auth }) => auth.role)
+   const rolesId = useSelector(authSelectors.getRolesId)
 
    return (
-      <Link to={getURL.cabinetCoursesItem({ courseId: id }, role)} className='course-card3'>
+      <Link to={getURL.cabinetCoursesItem({ courseId: id }, rolesId)} className='course-card3'>
          <div className='course-card3__img img img--cover'>
             <img src={getURL.img(image)} alt='' />
          </div>

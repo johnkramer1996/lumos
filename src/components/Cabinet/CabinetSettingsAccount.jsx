@@ -14,8 +14,8 @@ import { ReactComponent as LogoutSvg } from 'svg/logout.svg'
 const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
    const { logout } = useDispatch()
    const user = useSelector(authSelectors.getUser)
-   const role = useSelector(authSelectors.getRole)
-   const avatar = useInputFile({ initialValue: getURL.avatar('', role) })
+   const rolesId = useSelector(authSelectors.getRolesId)
+   const avatar = useInputFile({ initialValue: getURL.avatar(user.avatar, rolesId) })
    const email = useInput({ bind: { className: 'account-settings__item-input' }, is: { isDisabled: true } })
    const createdAt = useInput({ bind: { className: 'account-settings__item-input' } })
    const password = useInput({ initialValue: 'password', bind: { className: 'account-settings__item-input' }, is: { isDisabled: true } })
@@ -23,7 +23,7 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
    const vacationEnd = useInput({ bind: { className: 'account-settings__item-input' }, is: { isDate: true } })
 
    useEffect(() => {
-      user.avatar && avatar.setValue(getURL.avatar(user.avatar, role))
+      avatar.setValue(getURL.avatar(user.avatar, rolesId))
       user.email && email.setValue(user.email)
       user.created_at && createdAt.setValue(getDate(user.created_at))
       user.vacation[0] && vacationStart.setValue(user.vacation[0])
@@ -36,17 +36,17 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
          <div className='account-settings__photo'>
             <div className='account-settings__photo-title'>Фото</div>
             <div className='account-settings__photo-wrap'>
-               <div className='account-settings__photo-img'>
-                  <img src={avatar.value} alt='' />
-               </div>
+               <div className='account-settings__photo-img'>{avatar.value && <img src={avatar.value} alt='' />}</div>
                <div className='account-settings__photo-buttons'>
                   <Button className='account-settings__photo-save btn--uploadfile'>
                      <input ref={avatar.ref} type='file' accept='image/png, image/gif, image/jpeg' onChange={onChange.bind(null, avatar)} name='avatar' />
-                     Загрузить {avatar.value ? 'новое' : 'изображение'}
+                     Загрузить {user.avatar ? 'новое' : 'изображение'}
                   </Button>
-                  <Button className='account-settings__photo-delete' onClick={onDelete.bind(null, avatar)} outline>
-                     Удалить
-                  </Button>
+                  {user.avatar && (
+                     <Button className='account-settings__photo-delete' onClick={onDelete.bind(null, avatar, false)} outline>
+                        Удалить
+                     </Button>
+                  )}
                </div>
             </div>
          </div>

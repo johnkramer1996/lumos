@@ -12,7 +12,7 @@ import { getURL, hasAccess } from 'utils'
 const CabinetCoursesLessonTest = () => {
    const { courseId, lessonId } = useParams()
    const { fetchLesson, fetchUserLessonTest, setLesson, setLessonQuestions, setLessonFiles, putLesson, fetchCourse } = useDispatch()
-   const role = useSelector(authSelectors.getRole)
+   const role = useSelector(authSelectors.getRolesId)
    const { name: courseName } = useSelector(coursesSelectors.getCourse)
    const lesson = useSelector(coursesSelectors.getLesson)
    const questions = useSelector(coursesSelectors.getLessonQuestions)

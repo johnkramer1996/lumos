@@ -17,7 +17,7 @@ import { ROLES } from 'constants'
 const CabinetCoursesLesson = () => {
    const { courseId, lessonId } = useParams()
    const { fetchLesson, resetCourses, fetchUserLesson } = useDispatch()
-   const role = useSelector(authSelectors.getRole)
+   const role = useSelector(authSelectors.getRolesId)
    const { prev_lesson = {}, next_lesson = {} } = useSelector(coursesSelectors.getData)
    const { name: courseName } = useSelector(coursesSelectors.getCourse)
    const lessons = useSelector(coursesSelectors.getLessons)

@@ -7,7 +7,7 @@ import { declOfNum, getDeclOfArray, getURL } from 'utils'
 
 const CoursesTabsLessons = () => {
    const { courseId } = useParams()
-   const role = useSelector(authSelectors.getRole)
+   const role = useSelector(authSelectors.getRolesId)
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
 

@@ -11,7 +11,7 @@ import { Button } from 'components/ui'
 const CabinetCoursesLessons = () => {
    const { courseId } = useParams()
    const { setCourse, setLesson, setLessons, fetchUserCourse } = useDispatch()
-   const role = useSelector(authSelectors.getRole)
+   const role = useSelector(authSelectors.getRolesId)
    const { short_desc } = useSelector(({ courses }) => courses.course)
    const course = useSelector(({ courses }) => courses.course)
    const modules = useSelector(({ courses }) => courses.modules)

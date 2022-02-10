@@ -169,6 +169,10 @@ export const courseHandlers = {
    // fetchUserLessonComments
    // sendLessonTest
    // addComment
+   addLike: {
+      ...defaultHandlers.addLike,
+   },
+   // addFavorite
 }
 
 const joinData = (arr1, arr2, id1, id2, prop1, prop2) => {

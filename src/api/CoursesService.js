@@ -169,11 +169,18 @@ export default class CoursesService {
          },
       })
    }
-   static async addComment({ body = {} } = {}) {
-      return await axios.post(userCoursesURL.ADD_COMMENT, body, {
+   static async addComment({ courseId = 0, body = {} } = {}) {
+      return await axios.post(userCoursesURL.ADD_COMMENT({ courseId }), body, {
          headers: {
             'Content-Type': 'application/json',
          },
       })
+   }
+   static async addLike({ courseId = 0 }) {
+      console.log(userCoursesURL.ADD_LIKE({ courseId }))
+      return await axios.post(userCoursesURL.ADD_LIKE({ courseId }))
+   }
+   static async addFavorite({ courseId = 0 }) {
+      return await axios.post(userCoursesURL.ADD_FAVORITE({ courseId }))
    }
 }

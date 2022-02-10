@@ -6,10 +6,11 @@ import CabinetTitle from './CabinetTitle'
 import CabinetNav from './CabinetNav'
 import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 import { authSelectors, coursesSelectors } from 'store/selectors'
+import { getRequest } from 'utils'
 
 const CabinetCourses = () => {
    const { fetchCourses, fetchUserCourses } = useDispatch()
-   const role = useSelector(authSelectors.getRole)
+   const rolesId = useSelector(authSelectors.getRolesId)
    const courses = useSelector(coursesSelectors.getCourses)
    const data = useSelector(coursesSelectors.getData)
    const typeShow = useSelector(({ settings }) => settings.typeShow)
@@ -20,15 +21,17 @@ const CabinetCourses = () => {
    const fetchCoursesRequest = useRequest({
       request: fetchCourses,
    })
-   const roleRequests = [fetchUserCoursesRequest, fetchCoursesRequest][role - 1]
+   const roleRequests = getRequest([fetchUserCoursesRequest, fetchCoursesRequest], rolesId)
+
+   console.log(roleRequests)
 
    useEffect(() => {
-      const body = [{}, { page: 1, limit: 3 }][role - 1]
+      const body = [{}, { page: 1, limit: 3 }][rolesId - 1]
       roleRequests?.call(body)
    }, [])
 
    // TODO ???
-   const ActivePage = [CabinetCoursesUser, CabinetCoursesTrainer, CabinetCoursesEmployee][role - 1]
+   //  const ActivePage = [CabinetCoursesUser, CabinetCoursesTrainer, CabinetCoursesEmployee][rolesId - 1]
 
    return (
       <>

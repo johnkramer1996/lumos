@@ -18,7 +18,7 @@ import { ROLES } from 'constants'
 const CoursesItem = () => {
    const { courseId } = useParams()
    const { resetCourses, fetchInfo } = useDispatch()
-   const role = useSelector(authSelectors.getRole)
+   const role = useSelector(authSelectors.getRolesId)
    const course = useSelector(coursesSelectors.getCourse)
    // const modules = useSelector(({ courses }) => courses.modules)
    // const info = useSelector(({ courses }) => courses.info)

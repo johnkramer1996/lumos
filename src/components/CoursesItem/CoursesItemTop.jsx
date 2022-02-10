@@ -7,15 +7,10 @@ import { declOfNum, getDeclOfArray, getURL } from 'utils'
 import CoursesItemTopNav from './CoursesItemTopNav'
 
 const CoursesItemTop = ({ className }) => {
-   const {
-      name,
-      category_id,
-      trainer: { id: trainerId, avatar, last_name, name: trainerName, first_name, all_users = 0 },
-   } = useSelector(frontCoursesSelectors.getCourse)
-   const all = useSelector(frontCoursesSelectors.getCourse)
+   const { name, category_id, all_users } = useSelector(frontCoursesSelectors.getCourse)
+   const { id: trainerId, avatar, last_name, name: trainerName, first_name } = useSelector(frontCoursesSelectors.getTrainer)
    const { themes } = useSelector(systemSelectors.getReferences)
    const { name: categoryName } = themes[category_id] || {}
-   console.log(all)
 
    return (
       <section className={`course-top ${className}`}>
