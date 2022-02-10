@@ -5,49 +5,50 @@ import { useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 import CabinetTitle from 'components/Cabinet/CabinetTitle'
+import { frontCoursesSelectors } from 'store/selectors'
 
 const Courses = () => {
-    const { fetchFrontCourses } = useDispatch()
-    const courses = useSelector(({ frontCourses }) => frontCourses.courses)
-    const filter = useSelector(({ settings }) => settings.filter)
+   const { fetchFrontCourses } = useDispatch()
+   const courses = useSelector(frontCoursesSelectors.getCourses)
+   const filter = useSelector(({ settings }) => settings.filter)
 
-    const fetchFrontCoursesRequest = useRequest({
-        request: fetchFrontCourses,
-    })
-    useEffect(() => fetchFrontCoursesRequest.call(), [])
+   const fetchFrontCoursesRequest = useRequest({
+      request: fetchFrontCourses,
+   })
+   useEffect(() => fetchFrontCoursesRequest.call(), [])
 
-    const filteredCourses = useMemo(
-        () =>
-            courses.filter(({ category_id, type_study, format_study, difficulty_level }) => {
-                const filter1 = filter.themes.length ? filter.themes.find((id) => +id === +category_id) : true
-                const filter2 = filter.type_study.length ? filter.type_study.find((id) => +id === +type_study) : true
-                const filter3 = filter.format_study.length ? filter.format_study.find((id) => +id === +format_study) : true
-                const filter4 = filter.difficulty.length ? filter.difficulty.find((id) => +id === +difficulty_level) : true
-                return filter1 && filter2 && filter3 && filter4
-            }),
-        [filter, courses],
-    )
+   const filteredCourses = useMemo(
+      () =>
+         courses.filter(({ category_id, type_study, format_study, difficulty_level }) => {
+            const filter1 = filter.themes.length ? filter.themes.find((id) => +id === +category_id) : true
+            const filter2 = filter.type_study.length ? filter.type_study.find((id) => +id === +type_study) : true
+            const filter3 = filter.format_study.length ? filter.format_study.find((id) => +id === +format_study) : true
+            const filter4 = filter.difficulty.length ? filter.difficulty.find((id) => +id === +difficulty_level) : true
+            return filter1 && filter2 && filter3 && filter4
+         }),
+      [filter, courses],
+   )
 
-    return (
-        <>
-            <section className='categories-page'>
-                <div className='container'>
-                    <div className='categories-page__inner'>
-                        <aside className='categories-page__sidebar'>
-                            <Filter />
-                        </aside>
-                        <main className='categories-page__main'>
-                            <div className='courses'>
-                                <CabinetTitle title={'Популярные курсы'} btnHref={'/'} />
+   return (
+      <>
+         <section className='categories-page'>
+            <div className='container'>
+               <div className='categories-page__inner'>
+                  <aside className='categories-page__sidebar'>
+                     <Filter />
+                  </aside>
+                  <main className='categories-page__main'>
+                     <div className='courses'>
+                        <CabinetTitle title={'Популярные курсы'} btnHref={'/'} />
 
-                                <CoursesItemWrapper items={filteredCourses} isLoading={fetchFrontCoursesRequest.isLoading} numberComponent={1} className={'courses__items'} />
-                            </div>
-                        </main>
-                    </div>
-                </div>
-            </section>
-        </>
-    )
+                        <CoursesItemWrapper items={filteredCourses} isLoading={fetchFrontCoursesRequest.isLoading} numberComponent={1} className={'courses__items'} />
+                     </div>
+                  </main>
+               </div>
+            </div>
+         </section>
+      </>
+   )
 }
 
 export default Courses
