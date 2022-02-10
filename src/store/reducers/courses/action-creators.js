@@ -1,5 +1,5 @@
 import CoursesService from 'api/CoursesService'
-import { crateActionCreator, crateHandles } from 'utils'
+import { crateActionCreator, crateHandles, joinData } from 'utils'
 import { coursesTypes } from './types'
 
 export const CoursesActionCreators = {
@@ -15,7 +15,6 @@ export const CoursesActionCreators = {
    setLessonQuestions: (payload) => ({ type: coursesTypes.SET_LESSON_QUESTIONS, payload }),
    setLessonFiles: (payload) => ({ type: coursesTypes.SET_LESSON_FILES, payload }),
    addLessonFile: (payload) => ({ type: coursesTypes.ADD_LESSON_FILE, payload }),
-   setInfo: (payload) => ({ type: coursesTypes.SET_INFO, payload }),
    ...crateActionCreator(CoursesService),
 }
 
@@ -56,7 +55,6 @@ export const courseHandlers = {
          dispatch(CoursesActionCreators.setLessons(data?.course?.lessons || []))
          dispatch(CoursesActionCreators.setDescriptions(data?.descriptions || []))
          dispatch(CoursesActionCreators.setPrices(data?.prices || []))
-         //  dispatch(CoursesActionCreators.setInfo(data || {}))
       },
    },
    editInfo: {
@@ -81,7 +79,7 @@ export const courseHandlers = {
       ...defaultHandlers.addModulesMass,
       success: ({ dispatch, response, prevData, data }) => {
          //TODO CHECK REQUEST
-         const newModules = data.moduls.map((m) => ({ ...m, lessonsshort: data.lessons.filter((l) => l.modul_id === m.id) })) || {}
+         const newModules = data.moduls.map((m) => ({ ...m, lessons: data.lessons.filter((l) => l.modul_id === m.id) })) || {}
          console.log(newModules, 'newModules')
          dispatch(CoursesActionCreators.setModules(newModules))
       },
@@ -173,14 +171,4 @@ export const courseHandlers = {
       ...defaultHandlers.addLike,
    },
    // addFavorite
-}
-
-const joinData = (arr1, arr2, id1, id2, prop1, prop2) => {
-   arr1.forEach(
-      (m) =>
-         (m[prop1] = arr2.filter((l) => {
-            if (l[id2] === m[id1]) l[prop2] = m
-            return l[id2] === m[id1]
-         })),
-   )
 }

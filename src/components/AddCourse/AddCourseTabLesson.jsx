@@ -9,29 +9,23 @@ import { uid } from 'utils'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 import { useCallback } from 'react'
 import { coursesSelectors } from 'store/selectors/'
-import AddCourseLessonEdit from './AddCourseLessonEdit'
 
 const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
    const { courseId } = useParams()
    const { setContent, setIsShow, deleteModule, deleteLesson, addModulesMass } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
-   const info = useSelector(coursesSelectors.getInfo)
-   const hasCourse = !(Object.keys(course).length === 0)
+   const descriptions = useSelector(coursesSelectors.getDescriptions)
+   const prices = useSelector(coursesSelectors.getPrices)
    const hasModules = modules && !(Object.keys(modules).length === 0)
-   const hasInfo = info?.descriptions && info?.prices && !(Object.keys(info.descriptions).length === 0 && Object.keys(info.prices).length === 0)
+   const hasInfo = !(Object.keys(descriptions).length === 0 && Object.keys(prices).length === 0)
 
-   const shortDescr = useInput({
-      bind: { name: 'shortDescr' },
-      is: { isRequired: true, isTextarea: true },
-   })
+   const shortDescr = useInput({ bind: { name: 'shortDescr' }, is: { isRequired: true, isTextarea: true } })
    const hidden_id = useInput({ bind: { name: 'hidden_id' }, is: { isRequired: true } })
    const [modulesState, setModules] = useState([])
 
    const getAllInputs = useCallback(() => {
-      const modulesInputs = modulesState
-         .map(({ input = {}, name, lessonsshort }) => [{ ...input, value: name }, ...(lessonsshort?.map(({ input = {}, name }) => ({ ...input, value: name })) || [])])
-         .flat()
+      const modulesInputs = modulesState.map(({ input = {}, name, lessons }) => [{ ...input, value: name }, ...(lessons?.map(({ input = {}, name }) => ({ ...input, value: name })) || [])]).flat()
       return [shortDescr, hidden_id, ...modulesInputs]
    }, [shortDescr, hidden_id, modulesState])
 
@@ -92,7 +86,7 @@ const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
             moduls: modulesState.map((m) => ({
                id: m.id,
                name: m.name,
-               lessons: m.lessonsshort?.map((l, index) => ({
+               lessons: m.lessons.map((l, index) => ({
                   id: l.id,
                   name: l.name,
                   hidden_id: l.hidden_id,
@@ -109,10 +103,10 @@ const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
    const onAddModule = () => {
       const isError = modulesState.filter(({ input }) => input.check(input.value))
       if (isError.length) return
-      setModules([...modulesState, { name: '', lessonsshort: [], hidden_id: uid() }])
+      setModules([...modulesState, { name: '', lessons: [], hidden_id: uid() }])
    }
    const onDeleteModule = (id, index) => {
-      if (modulesState[index].lessonsshort.length) {
+      if (modulesState[index].lessons.length) {
          setIsShow(true)
          setContent({ title: 'У модуля есть уроки, ', descr: 'удалите уроки, потом удалите модуль' })
          return
@@ -124,10 +118,10 @@ const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
       setModules(modulesState.map((item, inx) => (inx === index ? { ...item, name } : item)))
    }
    const onAddLesson = (index) => {
-      const isError = modulesState[index].lessonsshort.filter(({ input }) => input.check(input.value))
+      const isError = modulesState[index].lessons.filter(({ input }) => input.check(input.value))
       if (isError.length) return
       const newModules = [...modulesState]
-      newModules[index].lessonsshort.push({ name: '', hidden_id: uid() })
+      newModules[index].lessons.push({ name: '', hidden_id: uid() })
       setModules([...newModules])
    }
    const onDeleteLesson = (lessonId, indexModule, indexLesson) => {
@@ -137,7 +131,7 @@ const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
             ? m
             : {
                  ...m,
-                 lessonsshort: m.lessonsshort.filter((l, inxLesson) => {
+                 lessons: m.lessons.filter((l, inxLesson) => {
                     return inxLesson !== indexLesson
                  }),
               },
@@ -146,7 +140,7 @@ const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
    }
    const setLessonName = (indexModule, indexLesson, value) => {
       const newModules = [...modulesState]
-      newModules[indexModule].lessonsshort[indexLesson].name = value
+      newModules[indexModule].lessons[indexLesson].name = value
       setModules([...newModules])
    }
    return (
@@ -173,7 +167,7 @@ const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
             <AddCourseLesson
                key={props.id ?? props.hidden_id}
                {...props}
-               lessons={props.lessonsshort}
+               lessons={props.lessons}
                modulesState={modulesState}
                index={index}
                setName={setLessonName}
@@ -194,7 +188,7 @@ const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
                      </option>
                      <option value='0'>Без тестового урока</option>
                      {modulesState.map((item, index) =>
-                        item?.lessonsshort
+                        item?.lessons
                            ?.filter(({ name }) => name !== '')
                            .map(({ id, name, hidden_id }, indexLesson) => (
                               <option key={id || hidden_id} value={hidden_id}>

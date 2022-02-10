@@ -13,11 +13,7 @@ const AddCourseTabMain = ({ refTabs, onUpdateListener }, ref) => {
    const { setContent, setIsShow, setCourse, addCourse, putCourse } = useDispatch()
    const { themes = [], type_study: typeStudy = [], format = [] } = useSelector(({ system }) => system.references)
    const course = useSelector(coursesSelectors.getCourse)
-   const modules = useSelector(coursesSelectors.getModules)
-   const info = useSelector(coursesSelectors.getInfo)
    const hasCourse = !(Object.keys(course).length === 0)
-   const hasModules = !(Object.keys(modules).length === 0)
-   const hasInfo = !(Object.keys(info).length === 0)
 
    const name = useInput({ bind: { name: 'name' }, is: { isRequired: true, isName: true } })
    const category_id = useInput({ bind: { name: 'category_id' }, is: { isRequired: true } })

@@ -9,46 +9,47 @@ import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
 
 const AddCourseLessonEditTest = () => {
-    const { setLessonQuestions } = useDispatch()
-    const questions = useSelector(coursesSelectors.getLessonQuestions)
-    const count_answers = useInput({ bind: { name: 'count_answers' }, is: { isRequired: true } })
-    const count_answersList = new Array(questions.length).fill(0).map((_, i) => ({ name: i + 1 }))
+   const { setLessonQuestions } = useDispatch()
+   const lesson = useSelector(coursesSelectors.getLesson)
+   const questions = useSelector(coursesSelectors.getLessonQuestions)
+   const count_answers = useInput({ initialValue: lesson.count_answers, bind: { name: 'count_answers' }, is: { isRequired: true } })
+   const count_answersList = new Array(questions.length).fill(0).map((_, i) => ({ name: i + 1 }))
 
-    questions.count_answers = count_answers
+   questions.count_answers = count_answers
 
-    const onAdd = () => {
-        const newQuestions = [...questions, { hidden_id: uid(), answers: [{}] }]
-        setLessonQuestions(newQuestions)
-        newQuestions.count_answers = questions.count_answers
-    }
+   const onAdd = () => {
+      const newQuestions = [...questions, { hidden_id: uid(), answers: [{}] }]
+      setLessonQuestions(newQuestions)
+      newQuestions.count_answers = questions.count_answers
+   }
 
-    return (
-        <div className='lesson-test card-bg'>
-            <div className='lesson-test__top'>
-                <h3 className='lesson-test__title display-4'>Тест</h3>
-                <div className='lesson-test__num'>
-                    {questions.length} {declOfNum(questions.length, getDeclOfArray['questions'])}
-                </div>
+   return (
+      <div className='lesson-test card-bg'>
+         <div className='lesson-test__top'>
+            <h3 className='lesson-test__title display-4'>Тест</h3>
+            <div className='lesson-test__num'>
+               {questions.length} {declOfNum(questions.length, getDeclOfArray['questions'])}
             </div>
+         </div>
 
-            {questions.map((props, index) => (
-                <AddCourseLessonEditTestItem key={props.id || props.hidden_id || index} {...props} index={index} />
-            ))}
+         {questions.map((props, index) => (
+            <AddCourseLessonEditTestItem key={props.id || props.hidden_id || index} {...props} index={index} />
+         ))}
 
-            <Button className='lesson-test__add' onClick={onAdd} outline>
-                <AddSvg />
-                <span>Добавить вопрос</span>
-            </Button>
+         <Button className='lesson-test__add' onClick={onAdd} outline>
+            <AddSvg />
+            <span>Добавить вопрос</span>
+         </Button>
 
-            {!!count_answersList.length && (
-                <div className='lesson-test__bottom'>
-                    <div className='lesson-test__subtitle'>Условие прохождения</div>
+         {!!count_answersList.length && (
+            <div className='lesson-test__bottom'>
+               <div className='lesson-test__subtitle'>Условие прохождения</div>
 
-                    <Input input={count_answers} label={'Количество правильных ответов для успешного прохождения'} list={count_answersList} />
-                </div>
-            )}
-        </div>
-    )
+               <Input input={count_answers} label={'Количество правильных ответов для успешного прохождения'} list={count_answersList} />
+            </div>
+         )}
+      </div>
+   )
 }
 
 export default AddCourseLessonEditTest

@@ -154,3 +154,13 @@ export const getURL = {
    cabinetCoursesEditLessonTest: (params, rolesId) =>
       getURL.getURLRoles([RouteNames.CABINET_COURSES_EDIT_LESSON, RouteNames.CABINET_COURSES_EDIT_LESSON, RouteNames.CABINET_COURSES_EDIT_LESSON], rolesId, params),
 }
+
+export const joinData = (arr1, arr2, id1, id2, prop1, prop2) => {
+   arr1.forEach(
+      (m) =>
+         (m[prop1] = arr2.filter((l) => {
+            if (l[id2] === m[id1]) l[prop2] = m
+            return l[id2] === m[id1]
+         })),
+   )
+}

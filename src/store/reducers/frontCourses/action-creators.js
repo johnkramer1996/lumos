@@ -1,5 +1,5 @@
 import FrontCoursesService from 'api/FrontCoursesService'
-import { crateActionCreator, crateHandles } from 'utils'
+import { crateActionCreator, crateHandles, joinData } from 'utils'
 import { frontCoursesTypes } from './types'
 
 export const FrontCoursesActionCreators = {
@@ -30,9 +30,10 @@ export const frontCoursesHandlers = {
    fetchFrontCourse: {
       ...defaultHandlers.fetchFrontCourse,
       success: ({ dispatch, response, prevData, data }) => {
-         console.log(data)
          const { interestes = [] } = prevData || {}
          const { descriptions = [], prices = [], trainer = [], moduls = [], lessons = [], whoms = [] } = data || {}
+
+         joinData(moduls, lessons, 'id', 'modul_id', 'lessons', 'module')
 
          dispatch(FrontCoursesActionCreators.setFrontCourse(data || {}))
          dispatch(FrontCoursesActionCreators.setFrontInterestes(interestes))

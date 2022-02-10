@@ -8,9 +8,10 @@ import { getURL } from 'utils'
 const CoursesItemInfo = () => {
    const { courseId } = useParams()
    const { descriptions = [], description, result_learn_text, moduls = [], lessons = [] } = useSelector(frontCoursesSelectors.getCourse)
+   const course = useSelector(frontCoursesSelectors.getCourse)
    const modules = useSelector(frontCoursesSelectors.getModules)
 
-   console.log(modules)
+   console.log(course)
 
    return (
       <section className='course-info2'>
@@ -82,7 +83,7 @@ const CoursesItemInfo = () => {
                   <div className='course-programm course-info2__group'>
                      <h3 className='course-info2__title'>Программа курса</h3>
                      <div className='course-programm__wrap'>
-                        {modules.map(({ id, name }, index) => (
+                        {modules.map(({ id, name, lessons }, index) => (
                            <div key={id || index} className='course-programm__group'>
                               <div className='course-programm__title'>{name}</div>
                               <ol className='course-programm__list'>

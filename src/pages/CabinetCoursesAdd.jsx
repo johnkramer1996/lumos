@@ -13,26 +13,15 @@ const CabinetAddCourse = () => {
    const isEditPage = !!courseId
    const isLessonPage = !!lessonId
    const { toError } = useNavigate()
-   const { setIsShow, setContent, setCourse, setInfo, setModules, fetchCourse, fetchInfo, fetchModules } = useDispatch()
+   const { resetCourses, setIsShow, setContent, setCourse, setModules, fetchInfo } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
-   const info = useSelector(coursesSelectors.getInfo)
    console.log(modules)
    const hasCourse = !(Object.keys(course).length === 0)
    const hasModules = !(Object.keys(modules).length === 0)
-   const hasInfo = info?.descriptions && info?.prices && !(Object.keys(info.descriptions).length === 0 && Object.keys(info.prices).length === 0)
 
    const [hasSave, setHasSave] = useState(false)
 
-   const fetchCourseRequest = useRequest({
-      request: fetchCourse,
-      isLoadingDefault: isEditPage,
-      error: ({ error }) => error.status === 404 && toError(),
-   })
-   const fetchModulesRequest = useRequest({
-      request: fetchModules,
-      isLoadingDefault: isEditPage,
-   })
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
       isLoadingDefault: isEditPage,
@@ -40,14 +29,12 @@ const CabinetAddCourse = () => {
 
    useEffect(() => {
       if (isEditPage) {
-         fetchCourseRequest.call({ courseId })
+         //  fetchCourseRequest.call({ courseId })
+         //  fetchModulesRequest.call({ courseId })
          fetchInfoRequest.call({ courseId })
-         fetchModulesRequest.call({ courseId })
       }
       return () => {
-         setCourse({})
-         setInfo({})
-         setModules({})
+         resetCourses({})
       }
    }, [])
 
@@ -86,7 +73,6 @@ const CabinetAddCourse = () => {
    const onCancel = () => {
       return
       setCourse({ ...course })
-      setInfo({ ...info })
       setModules([...modules])
       setHasSave(false)
       return
@@ -167,7 +153,7 @@ const CabinetAddCourse = () => {
                            ref={refTabs}
                            items={tabItems}
                            classPrefix={'course-edit'}
-                           isLoading={fetchCourseRequest.isLoading || fetchModulesRequest.isLoading || fetchInfoRequest.isLoading}
+                           isLoading={fetchInfoRequest.isLoading}
                            onChangeListener={onChangeTabsListener}
                            isAvaibleIndex={isAvaibleTabIndex}
                         />

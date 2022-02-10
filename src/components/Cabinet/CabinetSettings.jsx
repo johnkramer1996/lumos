@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDispatch, useRequest, useInput } from 'hooks/'
+import { useDispatch, useRequest } from 'hooks/'
 import CabinetSettingsDocs from './CabinetSettingsDocs'
 import CabinetSettingsAccount from './CabinetSettingsAccount'
 import CabinetSettingsPersonalInformation from './CabinetSettingsPersonalInformation'
