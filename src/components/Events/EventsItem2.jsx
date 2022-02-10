@@ -2,13 +2,14 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
+import { authSelectors } from 'store/selectors'
 import { declOfNum, getDeclOfArray, getURL } from 'utils'
 
 const EventsItem2 = ({ id, image, edate = '', etime = '', name = '', all_users = 0, new_users = 0 }) => {
-   const role = useSelector(({ auth }) => auth.role)
+   const rolesId = useSelector(authSelectors.getRolesId)
 
    return (
-      <Link to={getURL.cabinetEventsItem({ eventsId: id }, role)} className='event-card2'>
+      <Link to={getURL.cabinetEventsItem({ eventId: id }, rolesId)} className='event-card2'>
          <div className='event-card2__img img img--md img-cover'>
             <img src={getURL.img(image)} alt='' />
          </div>

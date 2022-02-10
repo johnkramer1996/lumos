@@ -1,18 +1,26 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { getURL } from 'utils'
+import { getURL, timer } from 'utils'
 import { ReactComponent as PlaySvg } from 'svg/play.svg'
 import { Button } from 'components/ui'
 import { frontCoursesSelectors, systemSelectors } from 'store/selectors'
+import { useEffect } from 'react'
 
 const CoursesItemInfo = ({ onEnroll }) => {
-   const { image, name, short_desc, width, type_study: typeStudy, format_study, anytime, ...rest } = useSelector(frontCoursesSelectors.getCourse)
    const course = useSelector(frontCoursesSelectors.getCourse)
    const prices = useSelector(frontCoursesSelectors.getPrices)
-	 const {price, price_with_sale} = prices[0] || {}
+   const { image, name, short_desc, width, type_study: typeStudy, format_study, anytime } = course
+   const { price, price_with_sale } = prices[0] || {}
    const { type_study = [], format = [] } = useSelector(systemSelectors.getReferences)
-   const { name: typeName } = type_study.find(({id})=>id===typeStudy) || {}
-   const { name: foramtName } = format.find(({id})=>id===format_study) || {}
+   const { name: typeName } = type_study.find(({ id }) => id === typeStudy) || {}
+   const { name: foramtName } = format.find(({ id }) => id === format_study) || {}
+   const where = anytime === 1 ? 'В любое время' : '01.01.2001'
+
+   const days = useRef()
+   const hours = useRef()
+   const minutes = useRef()
+   const seconds = useRef()
+   useEffect(() => timer(days, hours, minutes, seconds), [])
 
    return (
       <section className='course-info'>
@@ -42,7 +50,7 @@ const CoursesItemInfo = ({ onEnroll }) => {
                      </div>
                      <div className='course-info__badge'>
                         <span>Когда</span>
-                        <strong>{anytime === 1 ? 'В любое время' : '01.01.2001'}</strong>
+                        <strong>{where}</strong>
                      </div>
                   </div>
                   <button className='course-info__btn btn btn-outline'>
@@ -65,11 +73,21 @@ const CoursesItemInfo = ({ onEnroll }) => {
                      <div className='course-info__timer'>
                         <div className='course-info__timer-title'>Скидка исчезнет через</div>
                         <div className='course-info__timer-wrap'>
-                           <div className='course-info__timer-item'>11</div>
+                           <div ref={days} className='course-info__timer-item'>
+                              11
+                           </div>
                            <div className='course-info__timer-separate'>:</div>
-                           <div className='course-info__timer-item'>29</div>
+                           <div ref={hours} className='course-info__timer-item'>
+                              11
+                           </div>
                            <div className='course-info__timer-separate'>:</div>
-                           <div className='course-info__timer-item course-info__timer-item--sek'>59</div>
+                           <div ref={minutes} className='course-info__timer-item'>
+                              29
+                           </div>
+                           <div className='course-info__timer-separate'>:</div>
+                           <div ref={seconds} className='course-info__timer-item course-info__timer-item--sek'>
+                              59
+                           </div>
                         </div>
                      </div>
                   </div>

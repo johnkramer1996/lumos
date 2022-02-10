@@ -6,11 +6,11 @@ import CoursesItem2 from './CoursesItem2'
 import CoursesItem3 from './CoursesItem3'
 import CoursesItemLoader from './CoursesItemLoader'
 
-const CoursesItemWrapper = ({ items = [], isLoading = false, className = '', numberComponent = 0 }) => {
+const CoursesItemWrapper = ({ items = [], amount = items.length, isLoading = false, className = '', numberComponent = 0 }) => {
    const ActiveComponent = useMemo(() => [CoursesItem, CoursesItem2, CoursesItem3][numberComponent], [numberComponent])
 
    return (
-      <div>
+      <>
          {isLoading ? (
             <div className={`${className}`}>
                {Array(8)
@@ -20,11 +20,11 @@ const CoursesItemWrapper = ({ items = [], isLoading = false, className = '', num
                   ))}
             </div>
          ) : items.length ? (
-            <div className={`${className}`}>{items.map(({ ...props }) => React.createElement(ActiveComponent, { key: props.id, ...props }, null))}</div>
+            <div className={`${className}`}>{items.slice(0, amount).map(({ ...props }) => React.createElement(ActiveComponent, { key: props.id, ...props }, null))}</div>
          ) : (
             <CoursesEmpty />
          )}
-      </div>
+      </>
    )
 }
 

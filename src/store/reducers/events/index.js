@@ -8,6 +8,8 @@ const initialState = {
 
 export default function eventsReducer(state = initialState, action) {
    switch (action.type) {
+      case eventsTypes.RESET_EVENTS:
+         return { ...initialState }
       case eventsTypes.SET_EVENTS_DATA:
          return { ...state, data: action.payload }
       case eventsTypes.SET_EVENTS:

@@ -216,3 +216,7 @@
 .account-settings__item-doc {
    cursor: pointer;
 }
+
+.course-variants__pag {
+   display: none;
+}

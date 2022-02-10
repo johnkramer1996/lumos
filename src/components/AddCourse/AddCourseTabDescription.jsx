@@ -16,6 +16,8 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
    const descriptions1 = useSelector(coursesSelectors.getDescriptions)
    const prices1 = useSelector(coursesSelectors.getPrices)
 
+   console.log(prices1)
+
    const courseDescription = useInput({ bind: { name: 'courseDescription' }, is: { isRequired: true, isTextarea: true } })
    const result_learn_text = useInput({ bind: { name: 'result_learn_text' }, is: { isRequired: true } })
 
@@ -75,26 +77,22 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
             body.append(`descriptions[${createId}][name]`, name || 'Текст')
             body.append(`descriptions[${createId}][text]`, text || 'Текст')
          })
-         prices.forEach(({ id, name, text, width, price_with_sale, price, moduls = [] }, index) => {
+         prices.forEach(({ id, name, text, width, price_with_sale, price, moduls = [], avaiblemodules }, index) => {
             const createId = id !== undefined ? id : 'new_' + index
             body.append(`prices[${createId}][name]`, name || 'Текст')
             body.append(`prices[${createId}][width]`, width || 'Текст')
             body.append(`prices[${createId}][price_with_sale]`, price_with_sale || 'Текст')
             body.append(`prices[${createId}][price]`, price || 'Текст')
             body.append(`prices[${createId}][text]`, text || 'Текст')
-            for (const item of Object.keys(moduls)) {
-               moduls[item] && body.append(`prices[${createId}][moduls][]`, item)
-            }
+            moduls.forEach((item) => body.append(`prices[${createId}][moduls][]`, item))
          })
-
-         console.log(descriptions)
-         console.log(body)
+         //  for (const [key, value] of body.entries()) console.log(key, value)
 
          editInfoRequest.call({ courseId, body })
       },
    }))
 
-   const onAddDescr = () => {
+   const onAddDescription = () => {
       const isError = descriptions.filter((descr) => descr.inputs.filter((i) => i.check(i.value)).length)
       if (descriptions.length && isError.length) return
       setDescriptions([...descriptions, { name: '', text: '', image: '' }])
@@ -125,8 +123,8 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
    }
    const changePricesModulesField = (field, index, value, checked) => {
       const newPrices = [...prices]
-      newPrices[index][field] = newPrices[index][field] ? newPrices[index][field] : {}
-      newPrices[index][field][value] = checked
+      newPrices[index][field] = newPrices[index][field] ? newPrices[index][field] : []
+      checked ? newPrices[index][field].push(value) : (newPrices[index][field] = newPrices[index][field].filter((item) => item !== value))
       setPrices([...newPrices])
    }
    const onDeleteImg = (id) => id && deleteInfoRequest.call({ courseId, id, type: 'image' })
@@ -144,7 +142,7 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
             {descriptions.map((props, index) => (
                <AddCourseDescription key={index} {...props} index={index} changeField={changeDescrField} onDelete={onDeleteDescr} onDeleteImg={onDeleteImg} descriptions={descriptions} />
             ))}
-            <Button className='create-whom__add' onClick={() => onAddDescr()} outline>
+            <Button className='create-whom__add' onClick={() => onAddDescription()} outline>
                <AddSvg />
                <span>Добавить описание</span>
             </Button>
@@ -160,6 +158,7 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
          </div>
          <div className='create-price card-bg'>
             <h3 className='create-price__title display-4'>Стоимость</h3>
+            {console.log(prices)}
             {prices.map((props, index) => (
                <AddCoursePrice
                   key={index}
@@ -167,7 +166,7 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
                   index={index}
                   changeField={changePricesField}
                   changeModuleField={changePricesModulesField}
-                  modules={modules.data}
+                  modules={modules}
                   onDelete={onDeletePrices}
                   prices={prices}
                />

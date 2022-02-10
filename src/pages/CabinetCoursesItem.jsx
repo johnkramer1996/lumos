@@ -20,17 +20,13 @@ const CoursesItem = () => {
    const { resetCourses, fetchInfo } = useDispatch()
    const role = useSelector(authSelectors.getRolesId)
    const course = useSelector(coursesSelectors.getCourse)
-   // const modules = useSelector(({ courses }) => courses.modules)
-   // const info = useSelector(({ courses }) => courses.info)
 
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
    })
    useEffect(() => {
       fetchInfoRequest.call({ courseId })
-      return () => {
-         resetCourses({})
-      }
+      return () => resetCourses()
    }, [])
 
    const tabItems = useMemo(

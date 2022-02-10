@@ -10,19 +10,19 @@ import { ReactComponent as DownloadSvg } from 'svg/download.svg'
 import { ReactComponent as ArrowDownSvg } from 'svg/arrow-down.svg'
 import { ReactComponent as DocumentSvg } from 'svg/document.svg'
 import { RouteNames } from 'routes'
-import { addZerro, formatBytes, getURL, hasAccess } from 'utils'
+import { addZerro, formatBytes, getRequest, getURL, hasAccess } from 'utils'
 import { Comments } from 'components'
 import { ROLES } from 'constants'
 
 const CabinetCoursesLesson = () => {
    const { courseId, lessonId } = useParams()
    const { fetchLesson, resetCourses, fetchUserLesson } = useDispatch()
-   const role = useSelector(authSelectors.getRolesId)
+   const rolesId = useSelector(authSelectors.getRolesId)
    const { prev_lesson = {}, next_lesson = {} } = useSelector(coursesSelectors.getData)
    const { name: courseName } = useSelector(coursesSelectors.getCourse)
    const lessons = useSelector(coursesSelectors.getLessons)
    const lesson = useSelector(coursesSelectors.getLesson)
-   const { id, number, name, description, can_comment, is_test } = useSelector(coursesSelectors.getLesson)
+   const { id, number, name, description, can_comment, is_test } = lesson
    const questions = useSelector(coursesSelectors.getLessonQuestions)
    const files = useSelector(coursesSelectors.getLessonFiles)
 
@@ -32,23 +32,23 @@ const CabinetCoursesLesson = () => {
    const fetchLessonRequest = useRequest({
       request: fetchLesson,
    })
-   const roleRequests = [fetchUserLessonRequest, fetchLessonRequest][role - 1] || fetchLessonRequest
+   const roleRequests = getRequest([fetchUserLessonRequest, fetchLessonRequest], rolesId)
 
    useEffect(() => {
       roleRequests.call({ courseId, lessonId })
       return () => {
          resetCourses([])
       }
-   }, [lessonId])
+   }, [courseId, lessonId])
 
    return (
       <section className='lesson-page'>
          <div className='container'>
             <div className='breadcrumbs'>
-               <Link to={getURL.cabinetCourses({}, role)} className='breadcrumbs__item'>
+               <Link to={getURL.cabinetCourses({}, rolesId)} className='breadcrumbs__item'>
                   Мои курсы
                </Link>
-               <Link to={getURL.cabinetCoursesItem({ courseId }, role)} className='breadcrumbs__item'>
+               <Link to={getURL.cabinetCoursesItem({ courseId }, rolesId)} className='breadcrumbs__item'>
                   {courseName}
                </Link>
             </div>
@@ -59,7 +59,7 @@ const CabinetCoursesLesson = () => {
                   <div className='lesson-page__top'>
                      <div className='lesson-page__top-left'>
                         {prev_lesson.id && (
-                           <Link to={getURL.cabinetCoursesLesson({ courseId, lessonId: next_lesson.id }, role)}>
+                           <Link to={getURL.cabinetCoursesLesson({ courseId, lessonId: prev_lesson.id }, rolesId)}>
                               <span className='lesson-page__top-link'> Предыдущий урок</span>
                               <div className='lesson-page__top-subtitle'>
                                  <span>{addZerro(prev_lesson?.number)}</span>
@@ -76,7 +76,7 @@ const CabinetCoursesLesson = () => {
                      </div>
                      <div className='lesson-page__top-right'>
                         {next_lesson.id && (
-                           <Link to={getURL.cabinetCoursesLesson({ courseId, lessonId: next_lesson.id }, role)}>
+                           <Link to={getURL.cabinetCoursesLesson({ courseId, lessonId: next_lesson.id }, rolesId)}>
                               <span className='lesson-page__top-link'>Следующий урок</span>
                               <div className='lesson-page__top-subtitle'>
                                  <span>{addZerro(next_lesson?.number)}</span>
@@ -93,14 +93,14 @@ const CabinetCoursesLesson = () => {
                         </div>
                      </div>
                      <div className='lesson-page__right'>
-                        {console.log(hasAccess(role, [ROLES.TRAINER]))}
-                        {hasAccess(role, [ROLES.TRAINER]) && (
+                        {console.log(hasAccess(rolesId, [ROLES.TRAINER]))}
+                        {hasAccess(rolesId, [ROLES.TRAINER]) && (
                            <div className='lesson-page__nav card-bg'>
-                              <Button to={getURL.cabinetCoursesEditLessonTest({ courseId, lessonId }, role)} className='lesson-page__edit' outline link>
+                              <Button to={getURL.cabinetCoursesEditLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__edit' outline link>
                                  <EditSvg />
                                  <span>Редактировать урок</span>
                               </Button>
-                              <Button to={getURL.cabinetCoursesLessonTest({ courseId, lessonId }, role)} className='lesson-page__test' link>
+                              <Button to={getURL.cabinetCoursesLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__test' link>
                                  Страница теста
                               </Button>
                            </div>
@@ -108,7 +108,7 @@ const CabinetCoursesLesson = () => {
                         <div className='lesson-page__files card-bg'>
                            {files.length === 0 ? (
                               <>
-                                 <div className='lesson-page__files-title display-4'>Файлы не найдены</div>
+                                 <div className='lesson-page__files-title display-4'>Файлы не добавлены</div>
                               </>
                            ) : (
                               <div className='lesson-page__files-items'>
@@ -131,18 +131,18 @@ const CabinetCoursesLesson = () => {
                               </div>
                            )}
                         </div>
-                        {hasAccess(role, [ROLES.USER]) &&
+                        {hasAccess(rolesId, [ROLES.USER]) &&
                            (is_test ? (
                               <div className='lesson-page__test card-bg'>
                                  <div className='lesson-page__test-title display-4'>Тест</div>
                                  <div className='lesson-page__test-desc'>Для того, чтобы открыть следующий урок необходимо пройти тест для закрепления ваших знаний.</div>
-                                 <Button to={getURL.cabinetCoursesLessonTest({ courseId, lessonId }, role)} className='lesson-page__test-btn' link>
+                                 <Button to={getURL.cabinetCoursesLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__test-btn' link>
                                     Пройти тест
                                  </Button>
                               </div>
                            ) : (
                               <div className='lesson-page__test card-bg'>
-                                 <Button to={getURL.cabinetCoursesItem({ courseId, lessonId }, role)} className='lesson-page__test-btn' link>
+                                 <Button to={getURL.cabinetCoursesItem({ courseId, lessonId }, rolesId)} className='lesson-page__test-btn' link>
                                     Вернуться к урокам
                                  </Button>
                               </div>

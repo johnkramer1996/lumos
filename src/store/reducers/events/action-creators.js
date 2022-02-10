@@ -3,6 +3,7 @@ import { crateActionCreator, crateHandles } from 'utils'
 import { eventsTypes } from './types'
 
 export const EventsActionCreators = {
+   resetEvents: (payload) => ({ type: eventsTypes.RESET_EVENTS, payload }),
    setEventsData: (payload) => ({ type: eventsTypes.SET_EVENTS_DATA, payload }),
    setEvents: (payload) => ({ type: eventsTypes.SET_EVENTS, payload }),
    setEvent: (payload) => ({ type: eventsTypes.SET_EVENT, payload }),

@@ -15,6 +15,8 @@ const initialState = {
 
 export default function frontCoursesReducer(state = initialState, action) {
    switch (action.type) {
+      case frontCoursesTypes.RESET_FRONT_COURSES:
+         return { ...initialState }
       case frontCoursesTypes.SET_FRONT_COURSES_DATA:
          return { ...state, data: action.payload }
       case frontCoursesTypes.SET_FRONT_COURSES:

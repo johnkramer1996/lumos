@@ -1,5 +1,7 @@
 export { default as authSelectors } from './authSelectors'
 export { default as systemSelectors } from './systemSelectors'
+export { default as settingsSelectors } from './settingsSelectors'
 export { default as coursesSelectors } from './coursesSelectors'
-export { default as frontCoursesSelectors } from './frontCoursesSelectors'
 export { default as eventsSelectors } from './eventsSelectors'
+export { default as frontCoursesSelectors } from './frontCoursesSelectors'
+export { default as frontEventsSelectors } from './frontEventsSelectors'

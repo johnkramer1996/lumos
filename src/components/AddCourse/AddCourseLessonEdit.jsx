@@ -16,18 +16,16 @@ const AddCourseLessonEdit = (_, ref) => {
 
    const name = useInput({ bind: { name: 'name' }, is: { isRequired: true, isName: true } })
    const can_comment = useInput({ bind: { name: 'can_comment' }, is: { isCheckbox: true } })
-   const is_test = useInput({ bind: { name: 'is_test' }, is: { isCheckbox: true } })
    const has_text = useInput({ bind: { name: 'has_text' }, is: { isCheckbox: true } })
    const description = useInput({ bind: { name: 'description' }, is: { isRequired: true, isTextarea: true } })
 
-   const getAllInputs = useCallback(() => [name, can_comment, is_test, has_text, description], [name, can_comment, is_test, has_text, description])
+   const getAllInputs = useCallback(() => [name, can_comment, has_text, description], [name, can_comment, has_text, description])
 
    useEffect(() => {
-      name.setValue(lesson.name || '')
-      can_comment.setValue(lesson.can_comment || '0')
-      is_test.setValue(lesson.is_test || '0')
-      has_text.setValue(lesson.has_text || '0')
-      description.setValue(lesson.description || '')
+      name.setValue(lesson.name ?? '')
+      can_comment.setValue(lesson.can_comment ?? '0')
+      has_text.setValue(lesson.has_text ?? '0')
+      description.setValue(lesson.description ?? '')
    }, [lesson])
 
    const fetchLessonRequest = useRequest({
@@ -89,8 +87,7 @@ const AddCourseLessonEdit = (_, ref) => {
                   <h3 className='lesson-edit__info-title display-4'>Основная информация</h3>
                   <Input input={name} label={'Название'} />
                   <Checkbox className='lesson-edit__switch' input={can_comment} label={'Комментарии'} type={'switch'} />
-                  <Checkbox className='lesson-edit__switch' input={is_test} label={'Тест'} type='switch' />
-                  <Checkbox className='lesson-edit__switch' input={has_text} label={'Текст'} type='switch' />
+                  <Checkbox className='lesson-edit__switch' input={has_text} label={'Тест'} type='switch' />
                </div>
                <div className='create-about card-bg'>
                   <h3 className='create-about__title display-4'>Урок</h3>

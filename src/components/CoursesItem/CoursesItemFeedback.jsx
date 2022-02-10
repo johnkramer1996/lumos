@@ -2,11 +2,11 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 const CoursesItemFeedback = () => {
-    const course = useSelector(({ frontCourses }) => frontCourses.course)
+   const course = useSelector(({ frontCourses }) => frontCourses.course)
 
-    return (
-        <section className='course-feedback'>
-            <div className='container'>
+   return (
+      <section className='course-feedback'>
+         {/* <div className='container'>
                 <div className='course-feedback__top'>
                     <div className='course-feedback__title display-3'>14 отзывов</div>
                     <div className='course-feedback__nav'>
@@ -104,9 +104,9 @@ const CoursesItemFeedback = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    )
+            </div> */}
+      </section>
+   )
 }
 
 export default CoursesItemFeedback

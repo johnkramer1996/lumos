@@ -1,17 +1,25 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { RouteNames } from 'routes'
 import { frontCoursesSelectors } from 'store/selectors'
-import { getURL } from 'utils'
+import { getURL, timer } from 'utils'
+import { Button } from 'components/ui'
 
-const CoursesItemInfo = () => {
+const CoursesItemInfo = ({ onEnroll }) => {
    const { courseId } = useParams()
-   const { descriptions = [], description, result_learn_text, moduls = [], lessons = [] } = useSelector(frontCoursesSelectors.getCourse)
+   const { descriptions = [], description, result_learn_text } = useSelector(frontCoursesSelectors.getCourse)
    const course = useSelector(frontCoursesSelectors.getCourse)
    const modules = useSelector(frontCoursesSelectors.getModules)
+   const prices = useSelector(frontCoursesSelectors.getPrices)
+   const { price, price_with_sale } = prices[0] || {}
+   const { id: lessonId } = course.test_lesson || {}
 
-   console.log(course)
+   const days = useRef()
+   const hours = useRef()
+   const minutes = useRef()
+   const seconds = useRef()
+   useEffect(() => timer(days, hours, minutes, seconds), [])
 
    return (
       <section className='course-info2'>
@@ -102,22 +110,36 @@ const CoursesItemInfo = () => {
                   <div className='course-info2__cart'>
                      <div className='course-info2__cart-top'>
                         <div className='course-info2__cart-prices'>
-                           <div className='course-info2__cart-prices-new'>4 970 руб.</div>
-                           <div className='course-info2__cart-prices-old'>9 970 руб.</div>
+                           <div className='course-info2__cart-prices-new'>{price} руб.</div>
+                           <div className='course-info2__cart-prices-old'>{price_with_sale} руб.</div>
                         </div>
                         <div className='course-info2__cart-buttons'>
-                           <button className='course-info2__cart-btn btn btn-blue'>Записаться</button>
-                           <button className='course-info2__cart-btn course-info2__cart-btn--free btn btn-outline'>Пройти бесплатный урок</button>
+                           <Button className='course-info2__cart-btn' onClick={onEnroll}>
+                              Записаться
+                           </Button>
+                           <Button to={getURL.cabinetCoursesLesson({ courseId, lessonId })} className='course-info2__cart-btn course-info2__cart-btn--free' outline link>
+                              Пройти бесплатный урок
+                           </Button>
                         </div>
                      </div>
                      <div className='course-info2__timer'>
                         <div className='course-info2__timer-title'>Скидка исчезнет через</div>
                         <div className='course-info2__timer-wrap'>
-                           <div className='course-info2__timer-item'>11</div>
+                           <div ref={days} className='course-info2__timer-item'>
+                              11
+                           </div>
                            <div className='course-info2__timer-separate'>:</div>
-                           <div className='course-info2__timer-item'>29</div>
+                           <div ref={hours} className='course-info2__timer-item'>
+                              11
+                           </div>
                            <div className='course-info2__timer-separate'>:</div>
-                           <div className='course-info2__timer-item course-info__timer-item--sek'>59</div>
+                           <div ref={minutes} className='course-info2__timer-item'>
+                              29
+                           </div>
+                           <div className='course-info2__timer-separate'>:</div>
+                           <div ref={seconds} className='course-info2__timer-item course-info__timer-item--sek'>
+                              59
+                           </div>
                         </div>
                      </div>
                   </div>

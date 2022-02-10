@@ -164,3 +164,29 @@ export const joinData = (arr1, arr2, id1, id2, prop1, prop2) => {
          })),
    )
 }
+
+export const getFullName = ({ first_name, last_name, name }) => `${first_name || name} ${last_name}`
+
+export const timer = (days = {}, hours = {}, minutes = {}, seconds = {}) => {
+   const end = new Date('02/19/2022 10:1 AM')
+
+   const _second = 1000
+   const _minute = _second * 60
+   const _hour = _minute * 60
+   const _day = _hour * 24
+
+   const timerId = setInterval(() => {
+      const now = new Date()
+      const distance = end - now
+      if (distance < 0) {
+         clearInterval(timerId)
+         //  countdown.current.innerHTML = 'EXPIRED!'
+         return
+      }
+
+      if (days.current) days.current.innerHTML = addZerro(Math.floor(distance / _day))
+      if (hours.current) hours.current.innerHTML = addZerro(Math.floor((distance % _day) / _hour))
+      if (minutes.current) minutes.current.innerHTML = addZerro(Math.floor((distance % _hour) / _minute))
+      if (seconds.current) seconds.current.innerHTML = addZerro(Math.floor((distance % _minute) / _second))
+   }, 1000)
+}

@@ -3,12 +3,13 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { frontCoursesSelectors, systemSelectors } from 'store/selectors'
-import { declOfNum, getDeclOfArray, getURL } from 'utils'
+import { declOfNum, getDeclOfArray, getFullName, getURL } from 'utils'
 import CoursesItemTopNav from './CoursesItemTopNav'
 
 const CoursesItemTop = ({ className }) => {
    const { name, category_id, all_users } = useSelector(frontCoursesSelectors.getCourse)
-   const { id: trainerId, avatar, last_name, name: trainerName, first_name } = useSelector(frontCoursesSelectors.getTrainer)
+   const trainer = useSelector(frontCoursesSelectors.getTrainer)
+   const { id: trainerId, avatar } = trainer
    const { themes } = useSelector(systemSelectors.getReferences)
    const { name: categoryName } = themes[category_id] || {}
 
@@ -20,9 +21,7 @@ const CoursesItemTop = ({ className }) => {
                <div className='course-top__left'>
                   <Link to={`/cabinet/trainers/${trainerId}`} className='course-top__user'>
                      <img src={getURL.avatar(avatar, ROLES.TRAINER)} alt='' />
-                     <span>
-                        {first_name || trainerName} {last_name}
-                     </span>
+                     <span>{getFullName(trainer)}</span>
                   </Link>
                   <div className='course-top__category'>{categoryName}</div>
                   <div className='course-top__student'>

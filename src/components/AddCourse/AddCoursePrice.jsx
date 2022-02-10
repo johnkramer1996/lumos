@@ -48,6 +48,7 @@ const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, 
             <Input className='create-price__form-group' input={inputPrice} label={'Стоимость со скидкой (в рублях)'} onChange={onChange} />
          </div>
          <div className='create-price__checks'>
+            {console.log(moduls)}
             {modules.map(({ name }, mIndex) => (
                <div key={mIndex} className='create-price__check checkbox'>
                   <input

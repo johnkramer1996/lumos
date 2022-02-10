@@ -3,6 +3,7 @@ import { crateActionCreator, crateHandles, joinData } from 'utils'
 import { frontCoursesTypes } from './types'
 
 export const FrontCoursesActionCreators = {
+   resetFrontCourses: (payload) => ({ type: frontCoursesTypes.RESET_FRONT_COURSES, payload }),
    setFrontCoursesData: (payload) => ({ type: frontCoursesTypes.SET_FRONT_COURSES_DATA, payload }),
    setFrontCourses: (payload) => ({ type: frontCoursesTypes.SET_FRONT_COURSES, payload }),
    setFrontCourse: (payload) => ({ type: frontCoursesTypes.SET_FRONT_COURSE, payload }),
@@ -34,6 +35,8 @@ export const frontCoursesHandlers = {
          const { descriptions = [], prices = [], trainer = [], moduls = [], lessons = [], whoms = [] } = data || {}
 
          joinData(moduls, lessons, 'id', 'modul_id', 'lessons', 'module')
+
+         console.log(data)
 
          dispatch(FrontCoursesActionCreators.setFrontCourse(data || {}))
          dispatch(FrontCoursesActionCreators.setFrontInterestes(interestes))
