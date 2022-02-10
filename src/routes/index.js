@@ -1,3 +1,4 @@
+import CabinetTrainers from 'components/Cabinet/CabinetTrainers'
 import {
    About,
    Home,
@@ -29,7 +30,8 @@ export const RouteNames = {
    ADD_LESSON: '/add',
    BLOG: '/blog',
    CABINET: '/cabinet',
-   CABINET_ITEM: '/cabinet/:cabinetId',
+   CABINET_ITEM: '/cabinet/:cabinetItem',
+   CABINET_ITEM_SUB: '/cabinet/:cabinetItem/:cabinetId',
    CABINET_COURSES: '/cabinet/courses',
    ADD_COURSE: '/cabinet/courses/add',
    CABINET_COURSES_ITEM: '/cabinet/courses/:courseId',
@@ -45,6 +47,8 @@ export const RouteNames = {
    CABINET_STATISTICS: '/cabinet/statistics',
    CABINET_SUPPORT: '/cabinet/support',
    CABINET_SETTINGS: '/cabinet/settings',
+   CABINET_TRAINERS: '/cabinet/trainers',
+   CABINET_TRAINERS_ITEM: '/cabinet/trainers/:trainerId',
    CONTACTS: '/contacts',
    COURSES: '/courses',
    COURSES_ITEM: '/courses/:courseId',
@@ -82,6 +86,9 @@ export const privateRoutes = [
    ...publicRoutes,
    { path: RouteNames.CABINET, element: <Cabinet /> },
    { path: RouteNames.CABINET_ITEM, element: <Cabinet /> },
+   { path: RouteNames.CABINET_ITEM_SUB, element: <Cabinet /> },
+   //  { path: RouteNames.CABINET_TRAINERS, element: <CabinetTrainers /> },
+   //  { path: RouteNames.CABINET_TRAINERS_ITEM, element: <Cabinet /> },
    { path: RouteNames.ADD_COURSE, element: <CabinetCoursesAdd /> },
    { path: RouteNames.CABINET_COURSES_ITEM, element: <CabinetCoursesItem /> },
    { path: RouteNames.CABINET_COURSES_LESSONS, element: <CabinetCoursesLessons /> },

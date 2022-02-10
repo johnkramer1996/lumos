@@ -3,21 +3,34 @@ import { crateActionCreator, crateHandles } from 'utils'
 import { systemTypes } from './types'
 
 export const SystemActionCreators = {
-    setReferences: (payload) => ({ type: systemTypes.SET_REFERENCES, payload }),
-    setSocUrls: (payload) => ({ type: systemTypes.SET_SOC_URLS, payload }),
-    ...crateActionCreator(SystemService),
+   setReferences: (payload) => ({ type: systemTypes.SET_REFERENCES, payload }),
+   setSocUrls: (payload) => ({ type: systemTypes.SET_SOC_URLS, payload }),
+   ...crateActionCreator(SystemService),
 }
 
 export const defaultHandlers = crateHandles(SystemService)
 
 export const systemHandlers = {
-    ...defaultHandlers,
-    fetchReferences: {
-        ...defaultHandlers.fetchReferences,
-        success: ({ dispatch, response, prevData, data }) => dispatch(SystemActionCreators.setReferences(data)),
-    },
-    fetchSocUrls: {
-        ...defaultHandlers.fetchSocUrls,
-        success: ({ dispatch, response, prevData, data }) => dispatch(SystemActionCreators.setSocUrls(data)),
-    },
+   ...defaultHandlers,
+   fetchReferences: {
+      ...defaultHandlers.fetchReferences,
+      success: ({ dispatch, response, prevData, data }) => {
+         const { difficulty = [], event_types = [], format = [], themes = [], timings = {}, type_study = [] } = data || {}
+         dispatch(
+            SystemActionCreators.setReferences({
+               ...data,
+               difficulty,
+               event_types,
+               format,
+               themes,
+               timings,
+               type_study,
+            }),
+         )
+      },
+   },
+   fetchSocUrls: {
+      ...defaultHandlers.fetchSocUrls,
+      success: ({ dispatch, response, prevData, data }) => dispatch(SystemActionCreators.setSocUrls(data || [])),
+   },
 }

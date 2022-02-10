@@ -9,46 +9,46 @@ import { ReactComponent as SocialVkSvg } from 'svg/social-vk.svg'
 import { ReactComponent as SocialFBSvg } from 'svg/social-fb.svg'
 
 const ModalLoginBottom = () => {
-    const { setStep } = useDispatch()
-    const step = useSelector(({ auth }) => auth.step)
+   const { setStep } = useDispatch()
+   const step = useSelector(({ auth }) => auth.step)
 
-    return (
-        <>
-            {step === authStepTypes.CHECK_EMAIL && (
-                <>
-                    <div className='modal__or'>Или</div>
-                    <div className='modal__socials'>
-                        <Link to={'/'} className='modal__socials-item'>
-                            <SocialGoogleSvg />
-                        </Link>
-                        <Link to={'/'} className='modal__socials-item'>
-                            <SocialAppleSvg />
-                        </Link>
-                        <Link to={'/'} className='modal__socials-item'>
-                            <SocialVkSvg />
-                        </Link>
-                        <Link to={'/'} className='modal__socials-item'>
-                            <SocialFBSvg />
-                        </Link>
-                    </div>
-                </>
-            )}
-            {step === authStepTypes.LOGIN && (
-                <>
-                    <button className='modal__forgot btn' onClick={() => setStep(authStepTypes.RESTORE)}>
-                        Забыли пароль?
-                    </button>
-                </>
-            )}
-            {step === authStepTypes.REGISTER && (
-                <>
-                    <div className='modal__hint'>
-                        Нажимая на «Создать аккаунт», вы соглашаетесь с <Link to='/'>Политикой обработки данных</Link>
-                    </div>
-                </>
-            )}
-        </>
-    )
+   return (
+      <>
+         {step === authStepTypes.CHECK_EMAIL && (
+            <>
+               <div className='modal__or'>Или</div>
+               <div className='modal__socials'>
+                  <Link to={'/'} className='modal__socials-item'>
+                     <SocialGoogleSvg />
+                  </Link>
+                  <Link to={'/'} className='modal__socials-item'>
+                     <SocialAppleSvg />
+                  </Link>
+                  <Link to={'/'} className='modal__socials-item'>
+                     <SocialVkSvg />
+                  </Link>
+                  <Link to={'/'} className='modal__socials-item'>
+                     <SocialFBSvg />
+                  </Link>
+               </div>
+            </>
+         )}
+         {step === authStepTypes.LOGIN && (
+            <>
+               <button className='modal__forgot btn' onClick={() => setStep(authStepTypes.RESTORE)}>
+                  Забыли пароль?
+               </button>
+            </>
+         )}
+         {step === authStepTypes.REGISTER && (
+            <>
+               <div className='modal__hint'>
+                  Нажимая на «Создать аккаунт», вы соглашаетесь с <Link to='/'>Политикой обработки данных</Link>
+               </div>
+            </>
+         )}
+      </>
+   )
 }
 
 export default ModalLoginBottom

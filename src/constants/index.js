@@ -3,3 +3,8 @@ export const ROLES = {
    TRAINER: 2,
    EMPLOYEE: 3,
 }
+
+export const NOTIFICATIONS = {
+   TYPES: ['Системные', 'От поддержки', 'Комментарии от клиентов'],
+   SOURCE: ['Электронная почта', 'На сайте', 'Телеграм'],
+}

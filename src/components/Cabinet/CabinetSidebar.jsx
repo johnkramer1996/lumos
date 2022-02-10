@@ -1,18 +1,19 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { cabinetLinks } from 'routes'
+import { getURL } from 'utils'
 
-const CabinetSidebar = React.memo(() => {
-    return (
-        <aside className='cabinet-page__sidebar'>
-            <div className='sidebar'>
-                {cabinetLinks.map(({ title, href, number }, index) => (
-                    <Link key={index} to={href} className='sidebar__link'>
-                        <span>{title}</span>
-                        <i>{number}</i>
-                    </Link>
-                ))}
-                {/* <div className='sidebar__item sidebar__item--notification'>
+const CabinetSidebar = () => {
+   return (
+      <>
+         <div className='sidebar'>
+            {cabinetLinks.map(({ title, href, number }, index) => (
+               <Link key={index} to={href} className='sidebar__link'>
+                  <span>{title}</span>
+                  <i>{number}</i>
+               </Link>
+            ))}
+            {/* <div className='sidebar__item sidebar__item--notification'>
 									<div className='sidebar__item-show'>
 											<span>Мои мероприятия</span>
 											<i>1</i>
@@ -36,9 +37,9 @@ const CabinetSidebar = React.memo(() => {
 											</a>
 									</div>
 							</div> */}
-            </div>
-        </aside>
-    )
-})
+         </div>
+      </>
+   )
+}
 
-export default CabinetSidebar
+export default React.memo(CabinetSidebar)

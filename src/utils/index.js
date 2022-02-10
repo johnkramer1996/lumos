@@ -22,7 +22,10 @@ const parseURL = (url = '', params = {}) => {
 const getURLRoles = (routeNames = [], role = 1, params) => parseURL(routeNames[role - 1], params) || '/'
 
 export const getURL = {
-   img: (src, isDefault = false, defaultSrc = '/assets/img/course2.jpg') => (src ? `${SITE_URL}/${src}` : isDefault ? defaultSrc : ''),
+   img: (src, isDefault = false) => (src ? `${SITE_URL}/${src}` : isDefault ? getURL.defaultImg() : ''),
+   defaultImg: () => '/assets/img/course2.jpg',
+   avatar: (src, role) => (src ? `${SITE_URL}/${src}` : getURL.defaultAvatar(role)),
+   defaultAvatar: (role = 1) => '/assets/img/' + ['avatar-user.png', 'avatar-trainer.png', 'avatar-employee.webp', 'avatar-admin.png'][role - 1],
    courses: (params, role) => getURLRoles([RouteNames.COURSES, RouteNames.COURSES, RouteNames.COURSES], role, params),
    coursesItem: (params, role) => getURLRoles([RouteNames.COURSES_ITEM, RouteNames.COURSES_ITEM, RouteNames.COURSES_ITEM], role, params),
    cabinetEventsItem: (params, role) => getURLRoles([RouteNames.EVENTS_ITEM, RouteNames.CABINET_EVENTS_ITEM, RouteNames.CABINET_EVENTS_ITEM], role, params),
