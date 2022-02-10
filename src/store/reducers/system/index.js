@@ -8,7 +8,6 @@ const initialState = {
 export default function systemReducer(state = initialState, action) {
    switch (action.type) {
       case systemTypes.SET_REFERENCES:
-         console.log(action)
          return { ...state, references: action.payload }
       case systemTypes.SET_SOC_URLS:
          return { ...state, socUrls: action.payload }

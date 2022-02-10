@@ -11,78 +11,79 @@ import CoursesTabsReport from 'components/CoursesTabs/CoursesTabsReport'
 import CoursesTabsNotifications from 'components/CoursesTabs/CoursesTabsNotifications'
 import { useMemo } from 'react'
 import { ReactComponent as EditSvg } from 'svg/edit.svg'
+import { authSelectors, coursesSelectors } from 'store/selectors'
+import { hasAccess } from 'utils'
+import { ROLES } from 'constants'
 
 const CoursesItem = () => {
-    const { courseId } = useParams()
-    const { toError } = useNavigate()
-    const { setCourse, setInfo, setModules, fetchCourse, fetchInfo, fetchModules } = useDispatch()
-    const course = useSelector(({ courses }) => courses.course)
-    // const modules = useSelector(({ courses }) => courses.modules)
-    // const info = useSelector(({ courses }) => courses.info)
+   const { courseId } = useParams()
+   const { setCourse, setInfo, setModules, fetchCourse, fetchInfo, fetchModules } = useDispatch()
+   const role = useSelector(authSelectors.getRole)
+   const course = useSelector(coursesSelectors.getCourse)
+   // const modules = useSelector(({ courses }) => courses.modules)
+   // const info = useSelector(({ courses }) => courses.info)
 
-    const fetchCourseRequest = useRequest({
-        request: fetchCourse,
-        error: ({ error }) => {},
-        // error.status === 404 && toError()
-    })
-    const fetchInfoRequest = useRequest({
-        request: fetchInfo,
-    })
-    const fetchModulesRequest = useRequest({
-        request: fetchModules,
-    })
-    useEffect(() => {
-        fetchCourseRequest.call({ courseId })
-        fetchInfoRequest.call({ courseId })
-        fetchModulesRequest.call({ courseId })
-        return () => {
-            setCourse({})
-            setInfo({})
-            setModules([])
-        }
-    }, [])
+   const fetchCourseRequest = useRequest({
+      request: fetchCourse,
+      error: ({ error }) => {},
+   })
+   const fetchInfoRequest = useRequest({
+      request: fetchInfo,
+   })
+   const fetchModulesRequest = useRequest({
+      request: fetchModules,
+   })
+   useEffect(() => {
+      // fetchCourseRequest.call({ courseId })
+      fetchInfoRequest.call({ courseId })
+      // fetchModulesRequest.call({ courseId })
+      return () => {
+         //  setCourse({})
+         setInfo({})
+         //  setModules([])
+      }
+   }, [])
 
-    const tabItems = useMemo(
-        () => [
-            { title: 'Уроки', notifications: 0, component: <CoursesTabsLessons /> },
-            { title: 'Ученики', notifications: 0, component: <CoursesTabsStudents /> },
-            { title: 'Статистика', notifications: 0, component: <CoursesTabsReport /> },
-            { title: 'Уведомления', notifications: 1, component: <CoursesTabsNotifications /> },
-        ],
-        [],
-    )
+   const tabItems = useMemo(
+      () => [
+         { title: 'Уроки', notifications: 0, component: <CoursesTabsLessons /> },
+         { title: 'Ученики', notifications: 0, component: <CoursesTabsStudents /> },
+         { title: 'Статистика', notifications: 0, component: <CoursesTabsReport /> },
+         { title: 'Уведомления', notifications: 1, component: <CoursesTabsNotifications />, hasAccess: hasAccess(role, [ROLES.TRAINER]) },
+      ],
+      [],
+   )
 
-    return (
-        <>
-            {fetchCourseRequest.isLoading ? (
-                <Loader />
-            ) : (
-                <section className='lkt-course'>
-                    <div className='container'>
-                        <div className='lkt-course__inner'>
-                            <div className='breadcrumbs'>
-                                <Link to={RouteNames.CABINET_COURSES} className='breadcrumbs__item'>
-                                    Мои курсы
-                                </Link>
-                            </div>
-                            <div className='lkt-course__top'>
-                                <h1 className='lkt-course__title display-3'>{course.name}</h1>
-                                <div className='lkt-course__nav'>
-                                    <button className='lkt-course__history'>История редактирования</button>
-                                    <Button to={`${RouteNames.CABINET_COURSES}/${courseId}/edit`} className='lkt-course__edit' outline link>
-                                        <EditSvg />
-                                        <span>Редактировать курс</span>
-                                    </Button>
-                                </div>
-                            </div>
-
-                            <Tabs items={tabItems} classPrefix='lkt-course' />
+   return (
+      <>
+         {fetchInfoRequest.isLoading ? (
+            <Loader />
+         ) : (
+            <section className='lkt-course'>
+               <div className='container'>
+                  <div className='lkt-course__inner'>
+                     <div className='breadcrumbs'>
+                        <Link to={RouteNames.CABINET_COURSES} className='breadcrumbs__item'>
+                           Мои курсы
+                        </Link>
+                     </div>
+                     <div className='lkt-course__top'>
+                        <h1 className='lkt-course__title display-3'>{course.name}</h1>
+                        <div className='lkt-course__nav'>
+                           <button className='lkt-course__history'>История редактирования</button>
+                           <Button to={`${RouteNames.CABINET_COURSES}/${courseId}/edit`} className='lkt-course__edit' outline link>
+                              <EditSvg />
+                              <span>Редактировать курс</span>
+                           </Button>
                         </div>
-                    </div>
-                </section>
-            )}
-        </>
-    )
+                     </div>
+                     <Tabs items={tabItems} classPrefix='lkt-course' />
+                  </div>
+               </div>
+            </section>
+         )}
+      </>
+   )
 }
 
 export default CoursesItem

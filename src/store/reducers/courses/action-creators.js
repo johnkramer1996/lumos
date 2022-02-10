@@ -1,6 +1,5 @@
 import CoursesService from 'api/CoursesService'
-import { asyncAction, crateActionCreator, crateHandles } from 'utils'
-import { ModalsActionCreators } from '../modals/action-creators'
+import { crateActionCreator, crateHandles } from 'utils'
 import { coursesTypes } from './types'
 
 export const CoursesActionCreators = {
@@ -49,7 +48,15 @@ export const courseHandlers = {
    },
    fetchInfo: {
       ...defaultHandlers.fetchInfo,
-      success: ({ dispatch, response, prevData, data }) => dispatch(CoursesActionCreators.setInfo(data || {})),
+      success: ({ dispatch, response, prevData, data }) => {
+         joinData(data?.course.moduls, data?.course.lessons, 'id', 'modul_id', 'lessons', 'module')
+         dispatch(CoursesActionCreators.setCourse(data?.course || []))
+         dispatch(CoursesActionCreators.setModules(data?.course?.moduls || []))
+         dispatch(CoursesActionCreators.setLessons(data?.course?.lessons || []))
+         dispatch(CoursesActionCreators.setDescriptions(data?.descriptions || []))
+         dispatch(CoursesActionCreators.setPrices(data?.prices || []))
+         //  dispatch(CoursesActionCreators.setInfo(data || {}))
+      },
    },
    editInfo: {
       ...defaultHandlers.editInfo,
@@ -65,6 +72,7 @@ export const courseHandlers = {
    fetchModules: {
       ...defaultHandlers.fetchModules,
       success: ({ dispatch, response, prevData, data }) => {
+         console.log(data)
          dispatch(CoursesActionCreators.setModules(data || []))
       },
    },
@@ -92,7 +100,10 @@ export const courseHandlers = {
    fetchLesson: {
       ...defaultHandlers.fetchLesson,
       success: ({ dispatch, response, prevData, data }) => {
-         console.log(response)
+         // TODO CHECK IT
+         prevData.prev_lesson = prevData.prev_lesson ? prevData.prev_lesson : {}
+         prevData.next_lesson = prevData.next_lesson ? prevData.next_lesson : {}
+         dispatch(CoursesActionCreators.setCoursesData(prevData || {}))
          dispatch(CoursesActionCreators.setLessonQuestions(response.data?.questions || []))
          dispatch(CoursesActionCreators.setLessonFiles(data?.files || []))
          dispatch(CoursesActionCreators.setLesson(data || {}))
@@ -148,7 +159,6 @@ export const courseHandlers = {
    fetchUserLessonTest: {
       ...defaultHandlers.fetchUserLessonTest,
       success: ({ dispatch, response, prevData, data }) => {
-         console.log(data)
          dispatch(CoursesActionCreators.setCourse(data?.course || {}))
          dispatch(CoursesActionCreators.setLesson(data?.lessons || {}))
          dispatch(CoursesActionCreators.setLessonFiles(data?.lessons?.files || []))

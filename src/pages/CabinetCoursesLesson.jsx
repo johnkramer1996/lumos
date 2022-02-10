@@ -18,7 +18,7 @@ const CabinetCoursesLesson = () => {
    const { courseId, lessonId } = useParams()
    const { fetchLesson, setLesson, setLessons, setLessonFiles, fetchUserLesson } = useDispatch()
    const role = useSelector(authSelectors.getRole)
-   const { prev_lesson, next_lesson } = useSelector(coursesSelectors.getData)
+   const { prev_lesson = {}, next_lesson = {} } = useSelector(coursesSelectors.getData)
    const { name: courseName } = useSelector(coursesSelectors.getCourse)
    const lessons = useSelector(coursesSelectors.getLessons)
    const lesson = useSelector(coursesSelectors.getLesson)
@@ -26,15 +26,15 @@ const CabinetCoursesLesson = () => {
    const questions = useSelector(coursesSelectors.getLessonQuestions)
    const files = useSelector(coursesSelectors.getLessonFiles)
 
-   const fetchLessonRequest = useRequest({
-      request: fetchLesson,
-   })
    const fetchUserLessonRequest = useRequest({
       request: fetchUserLesson,
    })
+   const fetchLessonRequest = useRequest({
+      request: fetchLesson,
+   })
+   const roleRequests = [fetchUserLessonRequest, fetchLessonRequest][role - 1] || fetchLessonRequest
 
    useEffect(() => {
-      const roleRequests = [fetchUserLessonRequest, fetchLessonRequest][role - 1]
       roleRequests.call({ courseId, lessonId })
       return () => {
          setLessons([])
@@ -54,7 +54,7 @@ const CabinetCoursesLesson = () => {
                   {courseName}
                </Link>
             </div>
-            {fetchUserLessonRequest.isLoading ? (
+            {roleRequests.isLoading ? (
                <Loader />
             ) : (
                <>
@@ -73,7 +73,7 @@ const CabinetCoursesLesson = () => {
                      <div className='lesson-page__top-center'>
                         <div className='lesson-page__top-title'>{name}</div>
                         <div className='lesson-page__top-num'>
-                           {number + 1} из {lessons.length}
+                           {number + 1} из {lessons.length || 1}
                         </div>
                      </div>
                      <div className='lesson-page__top-right'>

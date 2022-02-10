@@ -56,7 +56,7 @@ export const getData = (response, prev = false) => {
    let data = response.data
    while (data.data !== undefined) {
       // TODO CHECK IT
-      if (prev && (Object.getOwnPropertyNames(data.data).length > 1 || !data.data?.data)) break
+      if (prev && (Object.getOwnPropertyNames(data.data).length > 1 || !data.data?.data)) return data.data
       data = data.data
    }
    return data
@@ -148,5 +148,5 @@ export const formatBytes = (bytes, decimals = 2) => {
 }
 
 export const hasAccess = (role, availables = [1, 2, 3]) => {
-   return availables.find((item) => item === role)
+   return availables.includes((item) => item === role)
 }
