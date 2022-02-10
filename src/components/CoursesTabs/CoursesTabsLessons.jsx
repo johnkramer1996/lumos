@@ -2,20 +2,19 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { RouteNames } from 'routes'
-import { coursesSelectors } from 'store/selectors'
-import { declOfNum, getDeclOfArray } from 'utils'
+import { authSelectors, coursesSelectors } from 'store/selectors'
+import { declOfNum, getDeclOfArray, getURL } from 'utils'
 
 const CoursesTabsLessons = () => {
    const { courseId } = useParams()
+   const role = useSelector(authSelectors.getRole)
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
-
-   console.log(modules)
 
    return (
       <div className='lessons-tab'>
          <div className='lessons-tab__left'>
-            {modules?.map(({ name, lessons }, index) => (
+            {modules.map(({ name, lessons }, index) => (
                <div key={index} className='lessons-tab__module'>
                   <div className='lessons-tab__module-top'>
                      <div className='lessons-tab__module-title'>{name}</div>
@@ -24,8 +23,8 @@ const CoursesTabsLessons = () => {
                      </div>
                   </div>
                   <div className='lessons-tab__module-items'>
-                     {lessons?.map(({ id, name }) => (
-                        <Link key={id} to={`${RouteNames.CABINET_COURSES}/${courseId}/lessons/${id}`} className='lessons-tab__module-item'>
+                     {lessons.map(({ id, name }) => (
+                        <Link key={id} to={getURL.cabinetCoursesLesson({ courseId, lessonId: id }, role)} className='lessons-tab__module-item'>
                            <span className='lessons-tab__module-item-num'>01</span>
                            <span className='lessons-tab__module-item-title'>{name}</span>
                            {/* <span className='lessons-tab__module-item-notification'>1</span> */}

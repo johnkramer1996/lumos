@@ -147,6 +147,6 @@ export const formatBytes = (bytes, decimals = 2) => {
    return (parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) || 'Нет данных') + ' ' + (sizes[i] || '')
 }
 
-export const hasAccess = (role, availables = [1, 2, 3]) => {
-   return availables.includes((item) => item === role)
+export const hasAccess = (role, availables = []) => {
+   return !!availables.find((item) => item === role)
 }

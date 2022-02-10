@@ -16,7 +16,7 @@ import { ROLES } from 'constants'
 
 const CabinetCoursesLesson = () => {
    const { courseId, lessonId } = useParams()
-   const { fetchLesson, setLesson, setLessons, setLessonFiles, fetchUserLesson } = useDispatch()
+   const { fetchLesson, resetCourses, fetchUserLesson } = useDispatch()
    const role = useSelector(authSelectors.getRole)
    const { prev_lesson = {}, next_lesson = {} } = useSelector(coursesSelectors.getData)
    const { name: courseName } = useSelector(coursesSelectors.getCourse)
@@ -37,9 +37,7 @@ const CabinetCoursesLesson = () => {
    useEffect(() => {
       roleRequests.call({ courseId, lessonId })
       return () => {
-         setLessons([])
-         setLesson({})
-         setLessonFiles([])
+         resetCourses([])
       }
    }, [lessonId])
 
@@ -95,6 +93,7 @@ const CabinetCoursesLesson = () => {
                         </div>
                      </div>
                      <div className='lesson-page__right'>
+                        {console.log(hasAccess(role, [ROLES.TRAINER]))}
                         {hasAccess(role, [ROLES.TRAINER]) && (
                            <div className='lesson-page__nav card-bg'>
                               <Button to={getURL.cabinetCoursesEditLessonTest({ courseId, lessonId }, role)} className='lesson-page__edit' outline link>

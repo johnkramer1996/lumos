@@ -3,6 +3,7 @@ import { crateActionCreator, crateHandles } from 'utils'
 import { coursesTypes } from './types'
 
 export const CoursesActionCreators = {
+   resetCourses: (payload) => ({ type: coursesTypes.RESET_COURSES, payload }),
    setCoursesData: (payload) => ({ type: coursesTypes.SET_COURSES_DATA, payload }),
    setCourses: (payload) => ({ type: coursesTypes.SET_COURSES, payload }),
    setCourse: (payload) => ({ type: coursesTypes.SET_COURSE, payload }),

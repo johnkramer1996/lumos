@@ -14,6 +14,8 @@ const initialState = {
 
 export default function coursesReducer(state = initialState, action) {
    switch (action.type) {
+      case coursesTypes.RESET_COURSES:
+         return { ...initialState }
       case coursesTypes.SET_COURSES_DATA:
          return { ...state, data: action.payload }
       case coursesTypes.SET_COURSES:

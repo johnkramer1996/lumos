@@ -17,30 +17,19 @@ import { ROLES } from 'constants'
 
 const CoursesItem = () => {
    const { courseId } = useParams()
-   const { setCourse, setInfo, setModules, fetchCourse, fetchInfo, fetchModules } = useDispatch()
+   const { resetCourses, fetchInfo } = useDispatch()
    const role = useSelector(authSelectors.getRole)
    const course = useSelector(coursesSelectors.getCourse)
    // const modules = useSelector(({ courses }) => courses.modules)
    // const info = useSelector(({ courses }) => courses.info)
 
-   const fetchCourseRequest = useRequest({
-      request: fetchCourse,
-      error: ({ error }) => {},
-   })
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
    })
-   const fetchModulesRequest = useRequest({
-      request: fetchModules,
-   })
    useEffect(() => {
-      // fetchCourseRequest.call({ courseId })
       fetchInfoRequest.call({ courseId })
-      // fetchModulesRequest.call({ courseId })
       return () => {
-         //  setCourse({})
-         setInfo({})
-         //  setModules([])
+         resetCourses({})
       }
    }, [])
 
