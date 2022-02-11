@@ -5,11 +5,10 @@ import { declOfNum, getDeclOfArray, getFullName, getURL } from 'utils'
 import { useSelector } from 'react-redux'
 import { authSelectors } from 'store/selectors'
 
-const CoursesItem2 = ({ id = 0, image = '', name = '', all_users = 0, width = '', trainer = {}, ...rest }) => {
-   const rolesId = useSelector(authSelectors.getRolesId)
-
+const CoursesItem2 = ({ id = 0, image = '', name = '', all_users = 0, width = '', trainer = {}, rolesId }) => {
    return (
-      <Link to={getURL.cabinetCoursesItem({ courseId: id }, rolesId)} className='course-card2'>
+      // <Link to={getURL.cabinetCoursesItem({ courseId: id }, rolesId)} className='course-card2'>
+      <Link to={getURL.coursesItem({ courseId: id })} className='course-card2'>
          <div className='course-card2__img img img--cover'>
             <img src={getURL.img(image)} alt='' />
          </div>

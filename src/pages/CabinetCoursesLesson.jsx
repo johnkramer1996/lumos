@@ -22,7 +22,6 @@ const CabinetCoursesLesson = () => {
    const lessons = useSelector(coursesSelectors.getLessons)
    const lesson = useSelector(coursesSelectors.getLesson)
    const { id, number, name, description, can_comment, is_test } = lesson
-   const questions = useSelector(coursesSelectors.getLessonQuestions)
    const files = useSelector(coursesSelectors.getLessonFiles)
 
    const fetchUserLessonRequest = useRequest({

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Route, Routes, useLocation, useParams } from 'react-router-dom'
 import { CabinetEvents, CabinetSettings, CabinetSidebar, CabinetStatistics, CabinetSupport, CabinetCourses } from 'components/'
 import { RouteNames } from 'routes'
 import CabinetTrainers from 'components/Cabinet/CabinetTrainers'
@@ -7,8 +7,6 @@ import CabinetSidebarUser from 'components/Cabinet/CabinetSidebarUser'
 
 const Cabinet = () => {
    const { cabinetItem } = useParams()
-
-   console.log(useParams())
 
    const getActivePage = (cabinetItem) => {
       switch (`${RouteNames.CABINET}/${cabinetItem}`) {

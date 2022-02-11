@@ -5,9 +5,7 @@ import CabinetTitle from './CabinetTitle'
 import CabinetNav from './CabinetNav'
 import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 import { authSelectors, coursesSelectors, settingsSelectors } from 'store/selectors'
-import { getRequest, hasAccess } from 'utils'
-import { ROLES } from 'constants'
-import { CabinetGreet } from 'components'
+import { getRequest } from 'utils'
 
 const CabinetCourses = () => {
    const { resetCourses, fetchCourses, fetchUserCourses } = useDispatch()
@@ -24,8 +22,6 @@ const CabinetCourses = () => {
    })
    const roleRequests = getRequest([fetchUserCoursesRequest, fetchCoursesRequest], rolesId)
 
-   console.log(roleRequests)
-
    useEffect(() => {
       const body = getRequest([{}, { page: 1, limit: 1000 }], rolesId)
       roleRequests?.call(body)
@@ -34,6 +30,7 @@ const CabinetCourses = () => {
 
    // TODO ???
    //  const ActivePage = [CabinetCoursesUser, CabinetCoursesTrainer, CabinetCoursesEmployee][rolesId - 1]
+   // return React.createElement(ActivePage, { isLoading: fetchCoursesRequest.isLoading }, null)
 
    return (
       <>
@@ -46,8 +43,6 @@ const CabinetCourses = () => {
          </div>
       </>
    )
-
-   // return React.createElement(ActivePage, { isLoading: fetchCoursesRequest.isLoading }, null)
 }
 
 export default CabinetCourses

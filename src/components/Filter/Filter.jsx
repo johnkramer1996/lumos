@@ -30,9 +30,7 @@ const Filter = () => {
       const format_study = query.getAll('format_study') ?? []
       setFilter({ ...filter, themes, type_study, difficulty, format_study })
 
-      return () => {
-         setFilter({})
-      }
+      return () => setFilter({})
    }, [location])
 
    const onChangeFilter = (name, value, checked) => {

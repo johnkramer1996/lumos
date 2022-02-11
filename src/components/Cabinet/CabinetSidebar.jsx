@@ -1,42 +1,27 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { cabinetLinks } from 'routes'
-import { getURL } from 'utils'
+import React, { useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { cabinetLinks, RouteNames } from 'routes'
+import { isActiveClass } from 'utils'
+import CabinetSidebarItem from './CabinetSidebarItem'
 
 const CabinetSidebar = () => {
+   const location = useLocation()
+   const state = location.state || {}
+
    return (
       <>
          <div className='sidebar'>
-            {cabinetLinks.map(({ title, href, number }, index) => (
-               <Link key={index} to={href} className='sidebar__link'>
-                  <span>{title}</span>
-                  <i>{number}</i>
-               </Link>
-            ))}
-            {/* <div className='sidebar__item sidebar__item--notification'>
-									<div className='sidebar__item-show'>
-											<span>Мои мероприятия</span>
-											<i>1</i>
-									</div>
-									<div className='sidebar__item-hidden'>
-											<a href='' className='sidebar__sublink sidebar__sublink--active'>
-													<span>Все</span>
-													<i></i>
-											</a>
-											<a href='' className='sidebar__sublink'>
-													<span>Запланированные</span>
-													<i></i>
-											</a>
-											<a href='' className='sidebar__sublink sidebar__sublink--notification'>
-													<span>На модерации</span>
-													<i>1</i>
-											</a>
-											<a href='' className='sidebar__sublink'>
-													<span>Завершенные</span>
-													<i></i>
-											</a>
-									</div>
-							</div> */}
+            {cabinetLinks
+               .map((link, index) => {
+                  // TODO REMAKE IT
+                  return {
+                     ...link,
+                     dropdown: index === 0 || index === 1,
+                  }
+               })
+               .map((props, index) => (
+                  <CabinetSidebarItem {...props} index={index} state={state} />
+               ))}
          </div>
       </>
    )

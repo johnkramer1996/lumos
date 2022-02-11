@@ -1,5 +1,5 @@
 import { Component, useMemo, useState } from 'react'
-import { useDispatch, useRequest } from 'hooks'
+import { useDispatch, useNavigate, useRequest } from 'hooks'
 import { useSelector } from 'react-redux'
 import ModalLoginBottom from './ModalLoginBottom'
 import ModalLoginForm from './ModalLoginForm'
@@ -7,13 +7,19 @@ import { authStepTypes } from 'store/reducers/auth/types'
 import { ReactComponent as CloseSvg } from 'svg/close.svg'
 
 const ModalLogin = ({ onContinue }) => {
+   const { toCabinet } = useNavigate()
    const { setStep, checkEmail, login, register, restore } = useDispatch()
    const step = useSelector(({ auth }) => auth.step)
 
-   const checkEmailRequest = useRequest({ request: checkEmail, success: ({ dispatch, response, prevData, data }) => (data.exists === 1 ? setStep('LOGIN') : setStep('REGISTER')) })
-   const loginRequest = useRequest({ request: login })
-   const registerRequest = useRequest({ request: register, success: ({ dispatch, response, prevData, data }) => setStep('LOGIN') })
-   const restoreRequest = useRequest({ request: restore, success: ({ dispatch, response, prevData, data }) => setStep('LOGIN') })
+   const checkEmailRequest = useRequest({ request: checkEmail, success: ({ response, prevData, data }) => (data.exists === 1 ? setStep('LOGIN') : setStep('REGISTER')) })
+   const loginRequest = useRequest({
+      request: login,
+      success: () => {
+         toCabinet()
+      },
+   })
+   const registerRequest = useRequest({ request: register, success: ({ response, prevData, data }) => setStep('LOGIN') })
+   const restoreRequest = useRequest({ request: restore, success: ({ response, prevData, data }) => setStep('LOGIN') })
 
    const steps = useMemo(
       () => ({
@@ -56,9 +62,11 @@ const ModalLogin = ({ onContinue }) => {
                )}
                <span>{steps[step].title}</span>
             </div>
-            <button className='modal__close' onClick={onContinue}>
-               <CloseSvg />
-            </button>
+            {onContinue && (
+               <button className='modal__close' onClick={onContinue}>
+                  <CloseSvg />
+               </button>
+            )}
          </div>
          <div className='modal__content'>
             <ModalLoginForm steps={steps} />

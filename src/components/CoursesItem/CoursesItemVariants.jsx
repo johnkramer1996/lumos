@@ -8,8 +8,8 @@ const CoursesItemVariansts = () => {
    const prices = useSelector(frontCoursesSelectors.getPrices)
    const modules = useSelector(frontCoursesSelectors.getModules)
    prices.forEach((price) => {
-      price.modules = price.moduls.map((item) => modules[+item])
-      price.countLesson = price.modules.reduce((prev, { lessons }) => prev + lessons.length, 0)
+      price.modules = price.moduls.map((item) => modules[+item - 1])
+      price.countLesson = price.modules.reduce((prev, module) => prev + module.lessons.length, 0)
    })
 
    return (

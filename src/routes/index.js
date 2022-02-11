@@ -1,3 +1,4 @@
+import { CabinetCourses } from 'components'
 import CabinetTrainers from 'components/Cabinet/CabinetTrainers'
 import {
    About,
@@ -23,6 +24,7 @@ import {
    CabinetCoursesLesson,
    CabinetCoursesLessonTest,
    CabinetCoursesLessons,
+   Logout,
 } from 'pages/'
 
 export const RouteNames = {
@@ -33,14 +35,20 @@ export const RouteNames = {
    CABINET_ITEM: '/cabinet/:cabinetItem',
    CABINET_ITEM_SUB: '/cabinet/:cabinetItem/:cabinetId',
    CABINET_COURSES: '/cabinet/courses',
-   ADD_COURSE: '/cabinet/courses/add',
+   CABINET_COURSES_PLANNED: '/cabinet/courses/planned',
+   CABINET_COURSES_MODERATION: '/cabinet/courses/moderation',
+   CABINET_COURSES_COMPLETED: '/cabinet/courses/completed',
+   CABINET_COURSES_ADD: '/cabinet/courses/add',
    CABINET_COURSES_ITEM: '/cabinet/courses/:courseId',
-   CABINET_COURSES_LESSONS: '/cabinet/courses/:courseId/lessons/',
+   CABINET_COURSES_LESSONS: '/cabinet/courses/:courseId/lessons',
    CABINET_COURSES_LESSON: '/cabinet/courses/:courseId/lessons/:lessonId',
    CABINET_COURSES_LESSON_TEST: '/cabinet/courses/:courseId/lessons/:lessonId/test',
    CABINET_COURSES_EDIT: '/cabinet/courses/:courseId/edit',
-   CABINET_COURSES_EDIT_LESSON: '/cabinet/courses/:courseId/edit/lessons/:lessonId',
+   CABINET_COURSES_LESSON_EDIT: '/cabinet/courses/:courseId/lessons/:lessonId/edit',
    CABINET_EVENTS: '/cabinet/events',
+   CABINET_EVENTS_PLANNED: '/cabinet/events/planned',
+   CABINET_EVENTS_MODERATION: '/cabinet/events/moderation',
+   CABINET_EVENTS_COMPLETED: '/cabinet/events/completed',
    CABINET_EVENTS_ADD: '/cabinet/events/add',
    CABINET_EVENTS_ITEM: '/cabinet/events/:eventId',
    CABINET_EVENTS_EDIT: '/cabinet/events/:eventId/edit',
@@ -63,6 +71,7 @@ export const RouteNames = {
    PARTNERS: '/partners',
    REVIEWS: '/reviews',
    SUBSCRIBE: '/subscribe',
+   LOGOUT: '/logout',
 }
 export const publicRoutes = [
    { path: RouteNames.ABOUT, element: <About /> },
@@ -81,21 +90,29 @@ export const publicRoutes = [
    { path: RouteNames.REVIEWS, element: <Reviews /> },
    { path: RouteNames.SUBSCRIBE, element: <Subscribe /> },
    { path: RouteNames.ERROR, element: <Error /> },
+   { path: RouteNames.LOGOUT, element: <Logout /> },
 ]
 export const privateRoutes = [
    ...publicRoutes,
+   //  { path: RouteNames.CABINET_TRAINERS, element: <CabinetTrainers /> },
+   //  { path: RouteNames.CABINET_TRAINERS_ITEM, element: <Cabinet /> },
    { path: RouteNames.CABINET, element: <Cabinet /> },
    { path: RouteNames.CABINET_ITEM, element: <Cabinet /> },
    { path: RouteNames.CABINET_ITEM_SUB, element: <Cabinet /> },
-   //  { path: RouteNames.CABINET_TRAINERS, element: <CabinetTrainers /> },
-   //  { path: RouteNames.CABINET_TRAINERS_ITEM, element: <Cabinet /> },
-   { path: RouteNames.ADD_COURSE, element: <CabinetCoursesAdd /> },
+   //  { path: RouteNames.CABINET_COURSES, element: <CabinetCourses /> },
+   { path: RouteNames.CABINET_COURSES_PLANNED, element: <Cabinet /> },
+   { path: RouteNames.CABINET_COURSES_MODERATION, element: <Cabinet /> },
+   { path: RouteNames.CABINET_COURSES_COMPLETED, element: <Cabinet /> },
+   { path: RouteNames.CABINET_COURSES_ADD, element: <CabinetCoursesAdd /> },
    { path: RouteNames.CABINET_COURSES_ITEM, element: <CabinetCoursesItem /> },
    { path: RouteNames.CABINET_COURSES_LESSONS, element: <CabinetCoursesLessons /> },
    { path: RouteNames.CABINET_COURSES_LESSON, element: <CabinetCoursesLesson /> },
    { path: RouteNames.CABINET_COURSES_LESSON_TEST, element: <CabinetCoursesLessonTest /> },
    { path: RouteNames.CABINET_COURSES_EDIT, element: <CabinetCoursesAdd /> },
-   { path: RouteNames.CABINET_COURSES_EDIT_LESSON, element: <CabinetCoursesAdd /> },
+   { path: RouteNames.CABINET_COURSES_LESSON_EDIT, element: <CabinetCoursesAdd /> },
+   { path: RouteNames.CABINET_EVENTS_PLANNED, element: <Cabinet /> },
+   { path: RouteNames.CABINET_EVENTS_MODERATION, element: <Cabinet /> },
+   { path: RouteNames.CABINET_EVENTS_COMPLETED, element: <Cabinet /> },
    { path: RouteNames.CABINET_EVENTS_ADD, element: <CabinetEventsAdd /> },
    { path: RouteNames.CABINET_EVENTS_ITEM, element: <CabinetEventsItem /> },
    { path: RouteNames.CABINET_EVENTS_EDIT, element: <CabinetEventsAdd /> },

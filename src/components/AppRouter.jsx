@@ -33,7 +33,7 @@ const AppRouter = () => {
                   {publicRoutes.map((route) => (
                      <Route key={route.path} path={route.path} element={route.element} />
                   ))}
-                  {/* <Route path='*' element={<Navigate to={RouteNames.ERROR} />} /> */}
+                  <Route path='*' element={<Navigate to={RouteNames.LOGOUT} />} />
                </Routes>
             </>
          )}

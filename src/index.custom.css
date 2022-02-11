@@ -220,3 +220,11 @@
 .course-variants__pag {
    display: none;
 }
+
+.sidebar__item-hidden {
+   padding-left: 0;
+}
+.sidebar__sublink {
+   padding-left: 32px;
+   cursor: pointer;
+}
