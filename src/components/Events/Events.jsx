@@ -1,13 +1,13 @@
 import { Button } from 'components/ui'
 import { useDispatch, useRequest } from 'hooks'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { RouteNames } from 'routes'
 import { authSelectors } from 'store/selectors'
 import { ReactComponent as ShareSvg } from 'svg/share.svg'
 import { ReactComponent as EditSvg } from 'svg/edit.svg'
-import { declOfNum, getDate, getDeclOfArray, getURL, hasAccess } from 'utils'
+import { declOfNum, getDate, getDeclOfArray, getURL, hasAccess, isActiveClass } from 'utils'
 import { ROLES } from 'constants'
 
 const Events = ({ event }) => {
@@ -18,18 +18,20 @@ const Events = ({ event }) => {
    const { id: user_id } = user
    const { id, image, name, text, edate, etime, timing, All_Users, users = [], user_id: event_user_id } = event
    const { name: typeName } = event.get_type || {}
-   const enrolledCourse = !!users.find(({ id }) => +id === +user_id)
    const isUserPage = user_id === event_user_id
+
+   const [isEnrolledPage, setIsEnrolledPage] = useState(false)
+
+   useEffect(() => {
+      setIsEnrolledPage(!!users.find(({ user_id: id }) => +id === +user_id))
+   }, [users])
 
    const addUserToEventRequest = useRequest({
       request: addUserToEvent,
       success: () => {
          setIsShow(true)
          setContent({ title: 'Успешно добавлен' })
-      },
-      error: () => {
-         setIsShow(true)
-         setContent({ title: 'Уже добавлен' })
+         setIsEnrolledPage(true)
       },
    })
 
@@ -39,7 +41,7 @@ const Events = ({ event }) => {
          setContent({ title: 'Авторизируйтесь!' })
          return
       }
-      if (enrolledCourse) {
+      if (isEnrolledPage) {
          setIsShow(true)
          setContent({ title: 'Вы уже записаны на курс' })
          return
@@ -57,10 +59,14 @@ const Events = ({ event }) => {
                      <div className='event-page__card-img img img--md img--cover'>
                         <img src={getURL.img(image)} alt='' />
                      </div>
-                     <Button className='event-page__card-btn' onClick={onEnroll}>
-                        Записаться
-                     </Button>
-                     {hasAccess(rolesId, [ROLES.USER]) && <div className='event-page__card-hint'>Запись бесплатна</div>}
+                     {(!isUserPage || hasAccess(rolesId, [ROLES.USER])) && (
+                        <>
+                           <Button className={`event-page__card-btn${isActiveClass(isEnrolledPage, 'btn--disabled')}`} onClick={onEnroll}>
+                              {!isEnrolledPage ? 'Записаться' : 'Вы уже записаны'}
+                           </Button>
+                           <div className='event-page__card-hint'>Запись бесплатна</div>
+                        </>
+                     )}
                      {isUserPage && hasAccess(rolesId, [ROLES.TRAINER]) && (
                         <>
                            <div className='event-page__card-num'>

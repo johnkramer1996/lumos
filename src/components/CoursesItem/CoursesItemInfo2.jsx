@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { RouteNames } from 'routes'
 import { frontCoursesSelectors } from 'store/selectors'
-import { getURL, timer } from 'utils'
+import { getURL, isActiveClass, timer } from 'utils'
 import { Button } from 'components/ui'
 
-const CoursesItemInfo = ({ onEnroll }) => {
+const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
    const { courseId } = useParams()
    const { descriptions = [], description, result_learn_text } = useSelector(frontCoursesSelectors.getCourse)
    const course = useSelector(frontCoursesSelectors.getCourse)
@@ -114,8 +114,8 @@ const CoursesItemInfo = ({ onEnroll }) => {
                            <div className='course-info2__cart-prices-old'>{price_with_sale} руб.</div>
                         </div>
                         <div className='course-info2__cart-buttons'>
-                           <Button className='course-info2__cart-btn' onClick={onEnroll}>
-                              Записаться
+                           <Button className={`course-info2__cart-btn${isActiveClass(isEnrolledPage, 'btn--disabled')}`} onClick={onEnroll}>
+                              {!isEnrolledPage ? 'Записаться' : 'Вы уже записаны'}
                            </Button>
                            <Button to={getURL.cabinetCoursesLesson({ courseId, lessonId })} className='course-info2__cart-btn course-info2__cart-btn--free' outline link>
                               Пройти бесплатный урок

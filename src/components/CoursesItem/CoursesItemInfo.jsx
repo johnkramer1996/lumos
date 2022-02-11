@@ -1,12 +1,12 @@
 import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { getURL, timer } from 'utils'
+import { getURL, isActiveClass, timer } from 'utils'
 import { ReactComponent as PlaySvg } from 'svg/play.svg'
 import { Button } from 'components/ui'
 import { frontCoursesSelectors, systemSelectors } from 'store/selectors'
 import { useEffect } from 'react'
 
-const CoursesItemInfo = ({ onEnroll }) => {
+const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
    const course = useSelector(frontCoursesSelectors.getCourse)
    const prices = useSelector(frontCoursesSelectors.getPrices)
    const { image, name, short_desc, width, type_study: typeStudy, format_study, anytime } = course
@@ -64,8 +64,8 @@ const CoursesItemInfo = ({ onEnroll }) => {
                            <div className='course-info__cart-prices-old'>{price_with_sale} руб.</div>
                         </div>
                         <div className='course-info__cart-right'>
-                           <Button className='course-info__cart-btn' onClick={onEnroll}>
-                              Записаться
+                           <Button className={`course-info__cart-btn${isActiveClass(isEnrolledPage, 'btn--disabled')}`} onClick={onEnroll}>
+                              {!isEnrolledPage ? 'Записаться' : 'Вы уже записаны'}
                            </Button>
                            <div className='course-info__cart-places'>Осталось 12 мест</div>
                         </div>

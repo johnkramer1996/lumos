@@ -13,7 +13,7 @@ const CoursesItem = () => {
    const { id: user_id } = useSelector(authSelectors.getUser)
    const course = useSelector(frontCoursesSelectors.getCourse)
    const { id, users = [] } = course
-   const enrolledCourse = !!users.find(({ id }) => +id === +user_id)
+   const isEnrolledPage = !!users.find(({ id }) => +id === +user_id)
 
    const fetchFrontCourseRequest = useRequest({
       request: fetchFrontCourse,
@@ -37,7 +37,7 @@ const CoursesItem = () => {
          setContent({ title: 'Авторизируйтесь!' })
          return
       }
-      if (enrolledCourse) {
+      if (isEnrolledPage) {
          setIsShow(true)
          setContent({ title: 'Вы уже записаны на курс' })
          return
@@ -53,8 +53,8 @@ const CoursesItem = () => {
          ) : (
             <>
                <CoursesItemTop />
-               <CoursesItemInfo onEnroll={onEnroll} />
-               <CoursesItemInfo2 onEnroll={onEnroll} />
+               <CoursesItemInfo onEnroll={onEnroll} isEnrolledPage={isEnrolledPage} />
+               <CoursesItemInfo2 onEnroll={onEnroll} isEnrolledPage={isEnrolledPage} />
                <CoursesItemPopular />
                <CoursesItemFeedback />
                <CoursesItemVariants />

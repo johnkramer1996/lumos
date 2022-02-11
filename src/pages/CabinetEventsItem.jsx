@@ -23,11 +23,8 @@ const CabinetEventsItem = () => {
       return () => resetEvents()
    }, [])
 
-   console.log('2')
-
    useEffect(() => {
       const isUserPage = user_id === page_user_id
-      console.log(isUserPage, eventId)
       if (!fetchEventRequest.isLoading && !isUserPage) toItems({ eventId, type: 'events' })
    }, [fetchEventRequest.isLoading])
 

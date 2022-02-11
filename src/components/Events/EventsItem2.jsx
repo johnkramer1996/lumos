@@ -10,7 +10,7 @@ const EventsItem2 = ({ id, image, edate = '', etime = '', name = '', all_users =
 
    return (
       <Link to={getURL.cabinetEventsItem({ eventId: id }, rolesId)} className='event-card2'>
-         <div className='event-card2__img img img--md img-cover'>
+         <div className='event-card2__img img img--md img--cover'>
             <img src={getURL.img(image)} alt='' />
          </div>
          <div className='event-card2__content'>
@@ -19,14 +19,16 @@ const EventsItem2 = ({ id, image, edate = '', etime = '', name = '', all_users =
                <span className='event-card2__time-hour'>{etime}</span>
             </div>
             <h3 className='event-card2__title'>{name}</h3>
-            <div className='event-card2__bottom'>
-               <div className='event-card2__students'>
-                  <div className='event-card2__students-title'>
-                     {all_users} {declOfNum(all_users, getDeclOfArray['users'])}
+            {all_users && (
+               <div className='event-card2__bottom'>
+                  <div className='event-card2__students'>
+                     <div className='event-card2__students-title'>
+                        {all_users} {declOfNum(all_users, getDeclOfArray['users'])}
+                     </div>
+                     <div className='event-card2__students-new'>{new_users} новых</div>
                   </div>
-                  <div className='event-card2__students-new'>{new_users} новых</div>
                </div>
-            </div>
+            )}
          </div>
       </Link>
    )
