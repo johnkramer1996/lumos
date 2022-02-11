@@ -14,9 +14,7 @@ const ModalLogin = ({ onContinue }) => {
    const checkEmailRequest = useRequest({ request: checkEmail, success: ({ response, prevData, data }) => (data.exists === 1 ? setStep('LOGIN') : setStep('REGISTER')) })
    const loginRequest = useRequest({
       request: login,
-      success: () => {
-         toCabinet()
-      },
+      success: () => toCabinet(),
    })
    const registerRequest = useRequest({ request: register, success: ({ response, prevData, data }) => setStep('LOGIN') })
    const restoreRequest = useRequest({ request: restore, success: ({ response, prevData, data }) => setStep('LOGIN') })

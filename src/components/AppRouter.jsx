@@ -10,9 +10,11 @@ const AppRouter = () => {
    const { auth } = useDispatch()
    const isAuth = useSelector(authSelectors.getIsAuth)
 
-   const authRequest = useRequest({ request: auth })
+   const authRequest = useRequest({ request: auth, isLoadingDefault: localStorage.getItem('token') })
 
    useEffect(() => localStorage.getItem('token') && authRequest.call(), [])
+
+   console.log(localStorage.getItem('token'), 'token')
 
    return (
       <div className='content'>

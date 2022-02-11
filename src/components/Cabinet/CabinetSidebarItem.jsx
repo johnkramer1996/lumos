@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { isActiveClass } from 'utils'
 
-const CabinetSidebarItem = ({ title, href, number, dropdown, index, state }) => {
+const CabinetSidebarItem = ({ title, href, number, dropdown, index, search, list = [], filter = [] }) => {
    const [isVisible, setIsVisible] = useState(false)
 
    return (
@@ -19,22 +20,32 @@ const CabinetSidebarItem = ({ title, href, number, dropdown, index, state }) => 
                   {/* <i>1</i> */}
                </div>
                <div className='sidebar__item-hidden'>
-                  <Link to={{ pathname: href }} state={{ status: 'all' }} className={`sidebar__sublink${isActiveClass(state.status === 'all', 'sidebar__sublink--active')}`}>
+                  <Link to={{ pathname: href, search: '' }} className={`sidebar__sublink${isActiveClass(search === 'all', 'sidebar__sublink--active')}`}>
                      <span>Все</span>
                      <i></i>
                   </Link>
-                  <Link to={{ pathname: href }} state={{ status: 'planned' }} className={`sidebar__sublink${isActiveClass(state.status === 'planned', 'sidebar__sublink--active')}`}>
+                  {list.map(({ title, search }, index) => (
+                     <Link key={index} to={{ pathname: href, search: `?${search}=1` }} className={`sidebar__sublink${isActiveClass(filter[`_${search}`]?.length, 'sidebar__sublink--active')}`}>
+                        <span>{title}</span>
+                        <i></i>
+                     </Link>
+                  ))}
+                  {/* <Link to={{ pathname: href, search: '?features=1' }} className={`sidebar__sublink${isActiveClass(search === 'features', 'sidebar__sublink--active')}`}>
                      <span>Запланированные</span>
                      <i></i>
                   </Link>
-                  <Link to={{ pathname: href }} state={{ status: 'moderation' }} className={`sidebar__sublink${isActiveClass(state.status === 'moderation', 'sidebar__sublink--active')}`}>
+                  <Link to={{ pathname: href, search: '?ended=1' }} className={`sidebar__sublink${isActiveClass(search === 'ended', 'sidebar__sublink--active')}`}>
+                     <span>Закончившиеся</span>
+                     <i></i>
+                  </Link>
+                  <Link to={{ pathname: href, search: '?nomoderated=1' }} className={`sidebar__sublink${isActiveClass(search === 'nomoderated', 'sidebar__sublink--active')}`}>
                      <span>На модерации</span>
                      <i>1</i>
                   </Link>
-                  <Link to={{ pathname: href }} state={{ status: 'completed' }} className={`sidebar__sublink${isActiveClass(state.status === 'completed', 'sidebar__sublink--active')}`}>
-                     <span>Завершенные</span>
+                  <Link to={{ pathname: href, search: '?moderated=1' }} className={`sidebar__sublink${isActiveClass(search === 'moderated', 'sidebar__sublink--active')}`}>
+                     <span>Модерирование</span>
                      <i></i>
-                  </Link>
+                  </Link> */}
                </div>
             </div>
          )}

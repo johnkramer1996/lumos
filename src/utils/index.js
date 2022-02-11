@@ -130,6 +130,8 @@ export const formatBytes = (bytes, decimals = 2) => {
 export const hasAccess = (rolesId, availables = []) => !![...availables, ROLES.ADMIN].find((i) => rolesId.find((id) => i === id))
 
 export const getRequest = (requests, rolesId) => {
+   console.log(requests, rolesId)
+   if (requests.length < rolesId.sort((a, b) => a - b)[rolesId.length - 1]) return requests[requests.length - 1]
    const avaibleRequests = requests.filter((_, inx) => rolesId.find((id) => id === inx + 1))
    return avaibleRequests[avaibleRequests.length - 1] || requests[0]
 }

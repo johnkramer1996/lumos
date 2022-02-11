@@ -7,8 +7,8 @@ import { authStepTypes } from 'store/reducers/auth/types'
 const ModalLoginForm = ({ steps = {} }) => {
    const step = useSelector(({ auth }) => auth.step)
 
-   const email = useInput()
-   const password = useInput()
+   const email = useInput({ initialValue: 'user@test.com' })
+   const password = useInput({ initialValue: 123456789 })
    const name = useInput()
    const phone = useInput()
 

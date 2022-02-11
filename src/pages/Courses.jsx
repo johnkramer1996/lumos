@@ -5,17 +5,28 @@ import { useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 import CabinetTitle from 'components/Cabinet/CabinetTitle'
-import { frontCoursesSelectors } from 'store/selectors'
+import { authSelectors, frontCoursesSelectors } from 'store/selectors'
 
 const Courses = () => {
-   const { fetchFrontCourses } = useDispatch()
+   const { resetFrontCourses, fetchFrontCourses, fetchFrontAuthCourses } = useDispatch()
+   const isAuth = useSelector(authSelectors.getIsAuth)
    const courses = useSelector(frontCoursesSelectors.getCourses)
    const filter = useSelector(({ settings }) => settings.filter)
 
+   const fetchFrontAuthCoursesRequest = useRequest({
+      request: fetchFrontAuthCourses,
+   })
    const fetchFrontCoursesRequest = useRequest({
       request: fetchFrontCourses,
    })
-   useEffect(() => fetchFrontCoursesRequest.call(), [])
+   const authRequest = isAuth ? fetchFrontAuthCoursesRequest : fetchFrontCoursesRequest
+
+   console.log(isAuth)
+
+   useEffect(() => {
+      authRequest.call()
+      return () => resetFrontCourses()
+   }, [])
 
    const filteredCourses = useMemo(
       () =>
@@ -41,7 +52,7 @@ const Courses = () => {
                      <div className='courses'>
                         <CabinetTitle title={'Популярные курсы'} btnHref={'/'} />
 
-                        <CoursesItemWrapper items={filteredCourses} isLoading={fetchFrontCoursesRequest.isLoading} numberComponent={1} className={'courses__items'} />
+                        <CoursesItemWrapper items={filteredCourses} isLoading={authRequest.isLoading} numberComponent={1} className={'courses__items'} />
                      </div>
                   </main>
                </div>

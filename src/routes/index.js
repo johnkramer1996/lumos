@@ -118,8 +118,26 @@ export const privateRoutes = [
    { path: RouteNames.CABINET_EVENTS_EDIT, element: <CabinetEventsAdd /> },
 ]
 export const cabinetLinks = [
-   { title: 'Мои курсы', href: RouteNames.CABINET_COURSES, number: 0 },
-   { title: 'Мои мероприятия', href: RouteNames.CABINET_EVENTS, number: 1 },
+   {
+      title: 'Мои курсы',
+      href: RouteNames.CABINET_COURSES,
+      number: 0,
+      list: [
+         { title: 'На модерации', search: 'nomoderated' },
+         { title: 'Модерирование', search: 'moderated' },
+      ],
+   },
+   {
+      title: 'Мои мероприятия',
+      href: RouteNames.CABINET_EVENTS,
+      number: 1,
+      list: [
+         { title: 'Запланированные', search: 'features' },
+         { title: 'Закончившиеся', search: 'ended' },
+         { title: 'На модерации', search: 'nomoderated' },
+         { title: 'Модерирование', search: 'moderated' },
+      ],
+   },
    { title: 'Статистика', href: RouteNames.CABINET_STATISTICS, number: 0 },
    { title: 'Служба поддержки', href: RouteNames.CABINET_SUPPORT, number: 0 },
    { title: 'Настройки аккаунта', href: RouteNames.CABINET_SETTINGS, number: 0 },

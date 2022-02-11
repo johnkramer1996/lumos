@@ -6,8 +6,8 @@ import { useLocation, useNavigate, createSearchParams } from 'react-router-dom'
 import FilterItems from './FilterItems'
 
 const Filter = () => {
-   const query = useQuery()
    const location = useLocation()
+   const query = useQuery()
    const navigate = useNavigate()
    const { setFilter } = useDispatch()
    const filter = useSelector(({ settings }) => settings.filter)
@@ -29,7 +29,6 @@ const Filter = () => {
       const difficulty = query.getAll('difficulty') ?? []
       const format_study = query.getAll('format_study') ?? []
       setFilter({ ...filter, themes, type_study, difficulty, format_study })
-
       return () => setFilter({})
    }, [location])
 

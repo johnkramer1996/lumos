@@ -35,9 +35,6 @@ export const frontCoursesHandlers = {
          const { descriptions = [], prices = [], trainer = [], moduls = [], lessons = [], whoms = [] } = data || {}
 
          joinData(moduls, lessons, 'id', 'modul_id', 'lessons', 'module')
-
-         console.log(data)
-
          dispatch(FrontCoursesActionCreators.setFrontCourse(data || {}))
          dispatch(FrontCoursesActionCreators.setFrontInterestes(interestes))
          dispatch(FrontCoursesActionCreators.setFrontDescriptions(descriptions))
@@ -48,4 +45,8 @@ export const frontCoursesHandlers = {
          dispatch(FrontCoursesActionCreators.setFrontWhoms(whoms))
       },
    },
+   //  fetchFrontAuthCourses
+   //  fetchFrontAuthCourse
 }
+frontCoursesHandlers.fetchFrontAuthCourses.success = frontCoursesHandlers.fetchFrontCourses.success
+frontCoursesHandlers.fetchFrontAuthCourse.success = frontCoursesHandlers.fetchFrontCourse.success

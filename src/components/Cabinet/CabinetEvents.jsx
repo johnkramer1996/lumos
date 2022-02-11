@@ -1,35 +1,47 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { EventsItem2 } from 'components'
 import { useSelector } from 'react-redux'
 import CabinetTitle from './CabinetTitle'
 import CabinetNav from './CabinetNav'
-import { useDispatch, useRequest } from 'hooks'
+import { useDispatch, useQuery, useRequest } from 'hooks'
 import { authSelectors, eventsSelectors } from 'store/selectors'
 import { getRequest } from 'utils'
 import { Loader } from 'components/ui'
+import { useLocation } from 'react-router-dom'
 
 const CabinetEvents = () => {
-   const { fetchEvents, fetchUserEvents } = useDispatch()
+   const location = useLocation()
+   const query = useQuery()
+   const { resetEvents, fetchEvents, fetchUserEvents } = useDispatch()
+   const { setFilter } = useDispatch()
+   const filter = useSelector(({ settings }) => settings.filter)
    const rolesId = useSelector(authSelectors.getRolesId)
    const events = useSelector(eventsSelectors.getEvents)
    const data = useSelector(eventsSelectors.getData)
 
+   const roleRequest = useMemo(() => getRequest([fetchUserEvents, fetchEvents], rolesId), [])
    const fetchEventsRequest = useRequest({
-      request: fetchEvents,
+      request: roleRequest,
    })
-   const fetchUserEventsRequest = useRequest({
-      request: fetchUserEvents,
-   })
-   const roleRequests = getRequest([fetchUserEventsRequest, fetchEventsRequest], rolesId)
 
    useEffect(() => {
-      roleRequests.call({ page: 1, limit: 1000 })
-   }, [])
+      const _features = query.getAll('features') ?? []
+      const _ended = query.getAll('ended') ?? []
+      const _nomoderated = query.getAll('nomoderated') ?? []
+      const _moderated = query.getAll('moderated') ?? []
+      fetchEventsRequest.call({ page: 1, _limit: 30, _features, _ended, _nomoderated, _moderated })
+
+      setFilter({ ...filter, _features, _ended, _nomoderated, _moderated })
+      return () => {
+         setFilter({})
+         resetEvents()
+      }
+   }, [location])
 
    return (
       <div className='cabinet-page__group'>
          <CabinetTitle title={'Мои мероприятия'} type={'events'} isBtnAll={false} />
-         {roleRequests.isloading ? (
+         {fetchEventsRequest.isLoading ? (
             <Loader />
          ) : (
             <>

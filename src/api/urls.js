@@ -72,14 +72,14 @@ export const adminURL = {
    ADD_USER: '/admin/users/set_role',
 }
 export const frontCoursesURL = {
-   FETCH_COURSES: '/users/front/courses',
+   FETCH_COURSES: '/front/courses',
+   FETCH_COURSE: ({ courseId }) => `/front/courses/${courseId}`,
    FETCH_AUTH_COURSES: '/users/front/courses',
-   FETCH_COURSE: ({ courseId }) => `/users/front/courses/${courseId}`,
    FETCH_AUTH_COURSE: ({ courseId }) => `/users/front/courses/${courseId}`,
 }
 export const frontEventsURL = {
-   FETCH_EVENTS: '/users/front/events',
-   FETCH_EVENT: ({ eventId }) => `/users/front/events/${eventId}`,
+   FETCH_EVENTS: '/front/events',
+   FETCH_EVENT: ({ eventId }) => `/front/events/${eventId}`,
    FETCH_AUTH_EVENTS: '/users/front/events',
    FETCH_AUTH_EVENT: ({ eventId }) => `/users/front/events/${eventId}`,
 }

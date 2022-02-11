@@ -1,7 +1,7 @@
 import { frontEventsTypes } from './types'
 
 const initialState = {
-   eventsData: {},
+   data: {},
    events: [],
    event: {},
 }

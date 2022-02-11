@@ -2,7 +2,7 @@ import { settingsTypes } from './types'
 
 const initialState = {
    typeShow: localStorage.getItem('typeShow') || 'col',
-   filter: { themes: [], type_study: [], format_study: [], difficulty: [] },
+   filter: { themes: [], type_study: [], format_study: [], difficulty: [], _features: [], _ended: [], _nomoderated: [], _moderated: [] },
 }
 
 export default function settingsReducer(state = initialState, action) {
