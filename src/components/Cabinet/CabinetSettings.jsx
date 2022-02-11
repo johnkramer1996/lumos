@@ -11,6 +11,7 @@ const CabinetSettings = () => {
       request: settings,
    })
    const createRequest = (name, value) => {
+      if (!name || !value) return
       const body = new FormData()
       body.append(name, value)
       if (name === 'password') body.append('password_confirmation', value)
@@ -31,7 +32,6 @@ const CabinetSettings = () => {
    }
    const onChangeInputImg = (input) => {
       input.onChange()
-      console.log(input.ref.current.name)
       // TODO CHECK NAME
       input.ref.current.files[0] && createRequest(input.ref.current.name, input.ref.current.files[0])
    }

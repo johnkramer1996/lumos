@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { Button } from 'components/ui'
+import { Button, DatePicker } from 'components/ui'
 import { getDate, getURL } from 'utils'
 import { useDispatch, useInput, useInputFile } from 'hooks'
 import { authSelectors } from 'store/selectors'
@@ -19,8 +19,8 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
    const email = useInput({ bind: { className: 'account-settings__item-input' }, is: { isDisabled: true } })
    const createdAt = useInput({ bind: { className: 'account-settings__item-input' } })
    const password = useInput({ initialValue: 'password', bind: { className: 'account-settings__item-input' }, is: { isDisabled: true } })
-   const vacationStart = useInput({ bind: { className: 'account-settings__item-input' }, is: { isDate: true } })
-   const vacationEnd = useInput({ bind: { className: 'account-settings__item-input' }, is: { isDate: true } })
+   const vacationStart = useInput({ bind: { className: 'account-settings__item-input' } })
+   const vacationEnd = useInput({ bind: { className: 'account-settings__item-input' } })
 
    useEffect(() => {
       avatar.setValue(getURL.avatar(user.avatar, rolesId))
@@ -30,13 +30,17 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
       user.vacation[1] && vacationEnd.setValue(user.vacation[1])
    }, [user])
 
+   useEffect(() => {}, [])
+
    return (
       <div className='account-settings__group card-bg'>
          <h3 className='account-settings__subtitle display-4'>Аккаунт</h3>
          <div className='account-settings__photo'>
             <div className='account-settings__photo-title'>Фото</div>
             <div className='account-settings__photo-wrap'>
-               <div className='account-settings__photo-img'>{avatar.value && <img src={avatar.value} alt='' />}</div>
+               <div className='account-settings__photo-img' onClick={avatar.onOpen}>
+                  {avatar.value && <img src={avatar.value} alt='' />}
+               </div>
                <div className='account-settings__photo-buttons'>
                   <Button className='account-settings__photo-save btn--uploadfile'>
                      <input ref={avatar.ref} type='file' accept='image/png, image/gif, image/jpeg' onChange={onChange.bind(null, avatar)} name='avatar' />
@@ -58,7 +62,7 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
                   Изменить
                </button>
             </div>
-            <input className='account-settings__item-input' type='email' name='new_email' {...email.bind} onBlur={onBlur.bind(null, email)} />
+            <input type='email' name='new_email' {...email.bind} onBlur={onBlur.bind(null, email)} />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
@@ -67,7 +71,7 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
                   Изменить пароль
                </button>
             </div>
-            <input className='account-settings__item-input' type='password' name='password' {...password.bind} onBlur={onBlur.bind(null, password)} />
+            <input type='password' name='password' {...password.bind} onBlur={onBlur.bind(null, password)} />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
@@ -96,19 +100,20 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Отпуск от</span>
             </div>
-            <input className='account-settings__item-input' type='text' {...vacationStart.bind} onBlur={onBlur.bind(null, vacationStart)} maxLength='10' name='vacation_start' />
+            <DatePicker name='vacation_start' input={vacationStart} onBlur={onBlur} />
+            {/* <input type='text' {...vacationStart.bind} onBlur={onBlur.bind(null, vacationStart)} name='vacation_start' maxLength='10' /> */}
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Отпуск до</span>
             </div>
-            <input className='account-settings__item-input' type='text' {...vacationEnd.bind} onBlur={onBlur.bind(null, vacationEnd)} maxLength='10' name='vacation_end' />
+            <DatePicker name='vacation_end' input={vacationEnd} onBlur={onBlur} />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Дата регистрации</span>
             </div>
-            <input className='account-settings__item-input' type='text' {...createdAt.bind} onBlur={onBlur.bind(null, createdAt)} disabled />
+            <input type='text' {...createdAt.bind} onBlur={onBlur.bind(null, createdAt)} disabled />
          </div>
          <button className='account-settings__logout btn btn-light-red' onClick={logout}>
             <LogoutSvg />

@@ -1,3 +1,11 @@
+.datepicker {
+}
+
+.datepicker-cell.selected,
+.datepicker-cell.selected:hover {
+   background-color: #5e61da;
+}
+
 .img {
    display: block;
    position: relative;
