@@ -19,7 +19,7 @@ const EventsItem2 = ({ id, image, edate = '', etime = '', name = '', all_users =
                <span className='event-card2__time-hour'>{etime}</span>
             </div>
             <h3 className='event-card2__title'>{name}</h3>
-            {all_users && (
+            {!!all_users && (
                <div className='event-card2__bottom'>
                   <div className='event-card2__students'>
                      <div className='event-card2__students-title'>

@@ -1,74 +1,72 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Main, CourseDetail, CoursesSlider } from 'components/'
 import { useSelector } from 'react-redux'
+import { useDispatch, useRequest } from 'hooks'
+import { authSelectors, frontCoursesSelectors } from 'store/selectors'
 
 const Home = () => {
-    const { themes = [] } = useSelector(({ system }) => system.references)
-    const courses = [
-        {
-            id: 1,
-            img: 'assets/img/course.jpg',
-            student: '352 учеников',
-            title: 'Название курса',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id elit lacus magnis mattis quisque volutpat.',
-        },
-        {
-            id: 2,
-            img: 'assets/img/course2.jpg',
-            student: '352 учеников',
-            title: 'Название курса',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id elit lacus magnis mattis quisque volutpat.',
-        },
-        {
-            id: 3,
-            img: 'assets/img/course3.jpg',
-            student: '352 учеников',
-            title: 'Название курса',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Id elit lacus magnis mattis quisque volutpat.',
-        },
-    ]
-    const items = themes.map((item) => ({ ...item, items: courses }))
+   const { resetFrontCourses, fetchFrontCourses, fetchFrontAuthCourses } = useDispatch()
+   const isAuth = useSelector(authSelectors.getIsAuth)
+   const courses = useSelector(frontCoursesSelectors.getCourses)
+   const { themes = [] } = useSelector(({ system }) => system.references)
 
-    return (
-        <>
-            <Main
-                title={'Обучение без ограничений'}
-                descr={'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa id sem sem vitae, ac in vulputate enim elementum.'}
-                img={'/assets/img/art.svg'}
-            />
+   const fetchFrontAuthCoursesRequest = useRequest({
+      request: fetchFrontAuthCourses,
+   })
+   const fetchFrontCoursesRequest = useRequest({
+      request: fetchFrontCourses,
+   })
+   const authRequest = isAuth ? fetchFrontAuthCoursesRequest : fetchFrontCoursesRequest
 
-            <CoursesSlider className={'course-slider1'} title={'Популярные курсы'} items={items} />
+   useEffect(() => {
+      authRequest.call()
+      return () => resetFrontCourses()
+   }, [])
 
-            <CourseDetail
-                items={[
-                    {
-                        id: 1,
-                        img: 'assets/img/course4.jpg',
-                        title: 'Название курса',
-                        descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa id sem sem vitae, ac in vulputate enim elementum.',
-                        btn: 'Пройти пробный урок',
-                        stock: '-35%',
-                        date: 'до 16 сентября',
-                        price: '4 800 руб.',
-                        priceOld: '6 000 руб.',
-                    },
-                    {
-                        id: 2,
-                        img: 'assets/img/course4.jpg',
-                        title: 'Название курса',
-                        descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa id sem sem vitae, ac in vulputate enim elementum.',
-                        btn: 'Пройти пробный урок',
-                        stock: '-35%',
-                        date: 'до 16 сентября',
-                        price: '4 800 руб.',
-                        priceOld: '6 000 руб.',
-                    },
-                ]}
-            />
+   const items = themes.map((item) => ({ ...item, items: courses.filter(({ category_id }) => category_id === item.id) }))
 
-            <CoursesSlider className={'course-slider2'} title={'Новые курсы'} items={[items[0]]} />
-        </>
-    )
+   console.log(items)
+
+   return (
+      <>
+         <Main
+            title={'Обучение без ограничений'}
+            descr={'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa id sem sem vitae, ac in vulputate enim elementum.'}
+            img={'/assets/img/art.svg'}
+         />
+
+         <CoursesSlider className={'course-slider1'} title={'Популярные курсы'} items={items} />
+
+         <CourseDetail
+            items={[
+               {
+                  id: 1,
+                  img: 'assets/img/course4.jpg',
+                  title: 'Название курса',
+                  descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa id sem sem vitae, ac in vulputate enim elementum.',
+                  btn: 'Пройти пробный урок',
+                  stock: '-35%',
+                  date: 'до 16 сентября',
+                  price: '4 800 руб.',
+                  priceOld: '6 000 руб.',
+               },
+               {
+                  id: 2,
+                  img: 'assets/img/course4.jpg',
+                  title: 'Название курса',
+                  descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Massa id sem sem vitae, ac in vulputate enim elementum.',
+                  btn: 'Пройти пробный урок',
+                  stock: '-35%',
+                  date: 'до 16 сентября',
+                  price: '4 800 руб.',
+                  priceOld: '6 000 руб.',
+               },
+            ]}
+         />
+
+         <CoursesSlider className={'course-slider2'} title={'Новые курсы'} items={[items[0]]} />
+      </>
+   )
 }
 
 export default Home

@@ -21,8 +21,6 @@ const Courses = () => {
    })
    const authRequest = isAuth ? fetchFrontAuthCoursesRequest : fetchFrontCoursesRequest
 
-   console.log(isAuth)
-
    useEffect(() => {
       authRequest.call()
       return () => resetFrontCourses()
