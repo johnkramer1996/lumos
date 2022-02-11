@@ -15,19 +15,31 @@ import { authSelectors, coursesSelectors } from 'store/selectors'
 import { hasAccess } from 'utils'
 import { ROLES } from 'constants'
 
-const CoursesItem = () => {
+const CabinetCoursesItem = () => {
    const { courseId } = useParams()
+   const { toItems } = useNavigate()
    const { resetCourses, fetchInfo } = useDispatch()
    const role = useSelector(authSelectors.getRolesId)
+   const user = useSelector(authSelectors.getUser)
+   const { id: user_id } = user
    const course = useSelector(coursesSelectors.getCourse)
+   const { user_id: page_user_id } = course
 
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
+      success: () => {},
    })
+
    useEffect(() => {
       fetchInfoRequest.call({ courseId })
       return () => resetCourses()
    }, [])
+
+   useEffect(() => {
+      const isUserPage = user_id === page_user_id
+      console.log(isUserPage)
+      if (!fetchInfoRequest.isLoading && !isUserPage) toItems({ courseId })
+   }, [fetchInfoRequest.isLoading])
 
    const tabItems = useMemo(
       () => [
@@ -71,4 +83,4 @@ const CoursesItem = () => {
    )
 }
 
-export default CoursesItem
+export default CabinetCoursesItem

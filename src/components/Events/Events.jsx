@@ -14,9 +14,12 @@ const Events = ({ event }) => {
    const { eventId } = useParams()
    const { setIsShow, setContent, addUserToEvent } = useDispatch()
    const rolesId = useSelector(authSelectors.getRolesId)
-   const { id: user_id } = useSelector(authSelectors.getUser)
-   const { id, image, name, text, edate, etime, timing, All_Users } = event
+   const user = useSelector(authSelectors.getUser)
+   const { id: user_id } = user
+   const { id, image, name, text, edate, etime, timing, All_Users, users = [], user_id: event_user_id } = event
    const { name: typeName } = event.get_type || {}
+   const enrolledCourse = !!users.find(({ id }) => +id === +user_id)
+   const isUserPage = user_id === event_user_id
 
    const addUserToEventRequest = useRequest({
       request: addUserToEvent,
@@ -36,6 +39,12 @@ const Events = ({ event }) => {
          setContent({ title: 'Авторизируйтесь!' })
          return
       }
+      if (enrolledCourse) {
+         setIsShow(true)
+         setContent({ title: 'Вы уже записаны на курс' })
+         return
+      }
+
       addUserToEventRequest.call({ body: { user_id, event_id: id } })
    }
 
@@ -52,7 +61,7 @@ const Events = ({ event }) => {
                         Записаться
                      </Button>
                      {hasAccess(rolesId, [ROLES.USER]) && <div className='event-page__card-hint'>Запись бесплатна</div>}
-                     {hasAccess(rolesId, [ROLES.TRAINER]) && (
+                     {isUserPage && hasAccess(rolesId, [ROLES.TRAINER]) && (
                         <>
                            <div className='event-page__card-num'>
                               {All_Users} {declOfNum(All_Users, getDeclOfArray['members'])}
@@ -71,7 +80,7 @@ const Events = ({ event }) => {
                </aside>
                <div className='event-page__right'>
                   <div className='event-page__top'>
-                     {hasAccess(rolesId, [ROLES.TRAINER]) && (
+                     {isUserPage && hasAccess(rolesId, [ROLES.TRAINER]) && (
                         <div className='breadcrumbs'>
                            <Link to={RouteNames.CABINET_COURSES} className='breadcrumbs__item'>
                               Мои мероприятия

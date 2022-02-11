@@ -5,23 +5,23 @@ import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { addZerro, getURL, isActiveClass } from 'utils'
 import { ReactComponent as NextSvg } from 'svg/next.svg'
-import { authSelectors } from 'store/selectors'
+import { authSelectors, coursesSelectors } from 'store/selectors'
 import { Button } from 'components/ui'
 
 const CabinetCoursesLessons = () => {
    const { courseId } = useParams()
    const { setCourse, setLesson, setLessons, fetchUserCourse } = useDispatch()
    const role = useSelector(authSelectors.getRolesId)
-   const { short_desc } = useSelector(({ courses }) => courses.course)
-   const course = useSelector(({ courses }) => courses.course)
-   const modules = useSelector(({ courses }) => courses.modules)
-   const lessons = useSelector(({ courses }) => courses.lessons)
+   const course = useSelector(coursesSelectors.getCourse)
+   const modules = useSelector(coursesSelectors.getModules)
+   const lessons = useSelector(coursesSelectors.getLessons)
+   const { short_desc } = course
    const viewLessons = lessons.filter(({ userstatus }) => userstatus)
    const currentLesson = viewLessons[viewLessons.length - 1] || lessons[0] || []
-
+   let index = 0
    modules.reduce((prev, value) => value.lessons.reduce((prev, value) => ((value.index = prev), prev++)), 0)
 
-   console.log(modules)
+   console.log(currentLesson)
 
    const fetchUserCourseRequest = useRequest({
       request: fetchUserCourse,
@@ -60,15 +60,17 @@ const CabinetCoursesLessons = () => {
                   <div className='lkp-course__lesson card-bg'>
                      <div className='lkp-course__lesson-top'>
                         <h3 className='lkp-course__lesson-title display-4'>Уроки</h3>
-                        <div className='lkp-course__lesson-num'>5 из {lessons.length}</div>
+                        <div className='lkp-course__lesson-num'>
+                           {(lessons.indexOf(currentLesson) || 0) + 1} из {lessons.length}
+                        </div>
                      </div>
                      {modules.map(({ id, name, lessons }, indexModule) => {
-                        let index = lessons.length
                         return (
                            <div key={id || indexModule} className='lkp-course__group'>
                               <div className='lkp-course__group-title'>{name}</div>
                               <div className='lkp-course__items'>
                                  {lessons.map(({ id, name, progress, number }, indexLesson) => {
+                                    index++
                                     return (
                                        <div key={id || indexLesson}>
                                           {currentLesson.id === id ? (
@@ -79,7 +81,7 @@ const CabinetCoursesLessons = () => {
                                                 <div className='lkp-course__current-info'>
                                                    <div className='lkp-course__current-status'>Текущий урок</div>
                                                    <div className='lkp-course__current-title'>
-                                                      <span>{addZerro(number)}</span>
+                                                      <span>{addZerro(index)}</span>
                                                       <span>{name}</span>
                                                    </div>
                                                 </div>
@@ -87,13 +89,13 @@ const CabinetCoursesLessons = () => {
                                           ) : progress === 'view' ? (
                                              <Link to={getURL.cabinetCoursesLesson({ courseId, lessonId: id }, role)} className='lkp-course__item'>
                                                 <i></i>
-                                                <span className='lkp-course__item-num'>{addZerro(number)}</span>
+                                                <span className='lkp-course__item-num'>{addZerro(index)}</span>
                                                 <span className='lkp-course__item-text'>{name}</span>
                                              </Link>
                                           ) : (
                                              <span className='lkp-course__item lkp-course__item--disabled'>
                                                 <i></i>
-                                                <span className='lkp-course__item-num'>{addZerro(number)}</span>
+                                                <span className='lkp-course__item-num'>{addZerro(index)}</span>
                                                 <span className='lkp-course__item-text'>{name}</span>
                                              </span>
                                           )}

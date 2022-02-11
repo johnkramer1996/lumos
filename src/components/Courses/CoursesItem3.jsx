@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom'
 import React from 'react'
-import { RouteNames } from 'routes'
-import { getURL } from 'utils'
+import { declOfNum, getDeclOfArray, getFullName, getURL } from 'utils'
 import { useSelector } from 'react-redux'
 import { authSelectors } from 'store/selectors'
 
-const CoursesItem3 = ({ id = 1, image, name, user = {}, status, students, ...rest }) => {
+const CoursesItem3 = ({ id = 1, image, name, all_users, all_new_users, trainer = {}, status, ...rest }) => {
    const rolesId = useSelector(authSelectors.getRolesId)
 
    return (
@@ -15,10 +14,10 @@ const CoursesItem3 = ({ id = 1, image, name, user = {}, status, students, ...res
          </div>
          <div className='course-card3__content'>
             <div className='course-card3__title'>{name}</div>
-            {user && (
+            {Object.keys(trainer).length !== 0 && (
                <div className='course-card3__user'>
                   <img src='/assets/img/avatar2.jpg' alt='' />
-                  <span>Ольга Олеговна</span>
+                  <span>{getFullName(trainer)}</span>
                </div>
             )}
             {status && (
@@ -27,11 +26,13 @@ const CoursesItem3 = ({ id = 1, image, name, user = {}, status, students, ...res
                   <span>23 ч</span>
                </div>
             )}
-            {students && (
+            {true && (
                <div className='course-card3__bottom'>
                   <div className='course-card3__students'>
-                     <div className='course-card3__students-title'>48 учеников</div>
-                     <div className='course-card3__students-new'>8 новых</div>
+                     <div className='course-card3__students-title'>
+                        {all_users} {declOfNum(all_users, getDeclOfArray['users'])}
+                     </div>
+                     <div className='course-card3__students-new'>{all_new_users} новых</div>
                   </div>
                   <div className='course-card3__num'>2</div>
                </div>

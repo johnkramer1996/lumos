@@ -13,7 +13,7 @@ const CoursesItemWrapper = ({ items = [], amount = items.length, isLoading = fal
       <>
          {isLoading ? (
             <div className={`${className}`}>
-               {Array(8)
+               {Array(3)
                   .fill(0)
                   .map((_, index) => (
                      <CoursesItemLoader key={index} />

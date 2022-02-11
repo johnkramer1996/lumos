@@ -42,6 +42,7 @@ const CoursesItem = () => {
          setContent({ title: 'Вы уже записаны на курс' })
          return
       }
+
       addUserToCourseRequest.call({ body: { user_id, course_id: id } })
    }
 

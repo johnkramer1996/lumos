@@ -50,7 +50,7 @@ const AddCourseTabMain = ({ refTabs, onUpdateListener }, ref) => {
          setIsShow(true)
          setContent({ title: 'Основная информация о курсе  - добавлена,', descr: 'теперь заполните Уроки' })
          refTabs.current.nextItems()
-         toCabinetItemsEdit({ courseId: data.course.id })
+         toCabinetItemsEdit({ id: data.course.id })
       },
    })
    const putCourseRequest = useRequest({

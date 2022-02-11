@@ -125,21 +125,13 @@ const CoursesItemInfo = ({ onEnroll }) => {
                      <div className='course-info2__timer'>
                         <div className='course-info2__timer-title'>Скидка исчезнет через</div>
                         <div className='course-info2__timer-wrap'>
-                           <div ref={days} className='course-info2__timer-item'>
-                              11
-                           </div>
+                           <div ref={days} className='course-info2__timer-item'></div>
                            <div className='course-info2__timer-separate'>:</div>
-                           <div ref={hours} className='course-info2__timer-item'>
-                              11
-                           </div>
+                           <div ref={hours} className='course-info2__timer-item'></div>
                            <div className='course-info2__timer-separate'>:</div>
-                           <div ref={minutes} className='course-info2__timer-item'>
-                              29
-                           </div>
+                           <div ref={minutes} className='course-info2__timer-item'></div>
                            <div className='course-info2__timer-separate'>:</div>
-                           <div ref={seconds} className='course-info2__timer-item course-info__timer-item--sek'>
-                              59
-                           </div>
+                           <div ref={seconds} className='course-info2__timer-item course-info__timer-item--sek'></div>
                         </div>
                      </div>
                   </div>

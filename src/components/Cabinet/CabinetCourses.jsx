@@ -5,7 +5,9 @@ import CabinetTitle from './CabinetTitle'
 import CabinetNav from './CabinetNav'
 import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 import { authSelectors, coursesSelectors, settingsSelectors } from 'store/selectors'
-import { getRequest } from 'utils'
+import { getRequest, hasAccess } from 'utils'
+import { ROLES } from 'constants'
+import { CabinetGreet } from 'components'
 
 const CabinetCourses = () => {
    const { resetCourses, fetchCourses, fetchUserCourses } = useDispatch()
@@ -25,7 +27,7 @@ const CabinetCourses = () => {
    console.log(roleRequests)
 
    useEffect(() => {
-      const body = [{}, { page: 1, limit: 1000 }][rolesId - 1]
+      const body = getRequest([{}, { page: 1, limit: 1000 }], rolesId)
       roleRequests?.call(body)
       return () => resetCourses([])
    }, [])
@@ -36,9 +38,10 @@ const CabinetCourses = () => {
    return (
       <>
          <div className='lkt-courses'>
-            {/* <CabinetGreet /> */}
+            {/* {hasAccess(rolesId, [ROLES.USER]) && <CabinetGreet />} */}
             <CabinetTitle title={'Мои курсы'} isBtnAll={false} />
-            <CabinetNav total={data.total} />
+            {/* // TODO REMAKE TO HOC */}
+            {!roleRequests.isLoading && <CabinetNav total={data.total} />}
             <CoursesItemWrapper items={courses} isLoading={roleRequests.isLoading} className={`cabinet-page__items cabinet-page__items--${typeShow}`} numberComponent={2} />
          </div>
       </>

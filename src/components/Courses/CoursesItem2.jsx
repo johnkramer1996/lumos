@@ -5,7 +5,7 @@ import { declOfNum, getDeclOfArray, getFullName, getURL } from 'utils'
 import { useSelector } from 'react-redux'
 import { authSelectors } from 'store/selectors'
 
-const CoursesItem2 = ({ id = 0, image = '', name = '', all_users = 0, width = '', trainer = {} }) => {
+const CoursesItem2 = ({ id = 0, image = '', name = '', all_users = 0, width = '', trainer = {}, ...rest }) => {
    const rolesId = useSelector(authSelectors.getRolesId)
 
    return (

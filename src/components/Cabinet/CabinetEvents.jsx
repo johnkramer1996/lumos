@@ -6,6 +6,7 @@ import CabinetNav from './CabinetNav'
 import { useDispatch, useRequest } from 'hooks'
 import { authSelectors, eventsSelectors } from 'store/selectors'
 import { getRequest } from 'utils'
+import { Loader } from 'components/ui'
 
 const CabinetEvents = () => {
    const { fetchEvents, fetchUserEvents } = useDispatch()
@@ -28,13 +29,19 @@ const CabinetEvents = () => {
    return (
       <div className='cabinet-page__group'>
          <CabinetTitle title={'Мои мероприятия'} type={'events'} isBtnAll={false} />
-         <CabinetNav type={'events'} total={data.total} />
-         {/* <CoursesItemWrapper items={events} isLoading={fetchEventsRequest.isLoading} className={`cabinet-page__items cabinet-page__items--${typeShow}`} /> */}
-         <div className='cabinet-page__items'>
-            {events.map((props) => (
-               <EventsItem2 key={props.id} {...props} />
-            ))}
-         </div>
+         {roleRequests.isloading ? (
+            <Loader />
+         ) : (
+            <>
+               <CabinetNav type={'events'} total={data.total} />
+               <div className='cabinet-page__items'>
+                  {events.map((props) => (
+                     <EventsItem2 key={props.id} {...props} />
+                  ))}
+               </div>
+               {/* <CoursesItemWrapper items={events} isLoading={fetchEventsRequest.isLoading} className={`cabinet-page__items cabinet-page__items--${typeShow}`} /> */}
+            </>
+         )}
       </div>
    )
 }
