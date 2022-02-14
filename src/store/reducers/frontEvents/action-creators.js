@@ -3,6 +3,7 @@ import { crateActionCreator, crateHandles } from 'utils'
 import { frontEventsTypes } from './types'
 
 export const FrontEventsActionCreators = {
+   resetFrontEvents: (payload) => ({ type: frontEventsTypes.RESET_FRONT_EVENTS, payload }),
    setFrontEventsData: (payload) => ({ type: frontEventsTypes.SET_FRONT_EVENTS_DATA, payload }),
    setFrontEvents: (payload) => ({ type: frontEventsTypes.SET_FRONT_EVENTS, payload }),
    setFrontEvent: (payload) => ({ type: frontEventsTypes.SET_FRONT_EVENT, payload }),

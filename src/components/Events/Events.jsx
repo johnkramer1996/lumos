@@ -17,17 +17,15 @@ const Events = ({ event }) => {
    const user = useSelector(authSelectors.getUser)
    const { id: user_id } = user
    const { id, image, name, text, edate, etime, timing, All_Users, user_id: event_user_id } = event
-   //  const users = Array.isArray(event.users) ? event.users : event.users ? [event.users] : []
-   const users = event.users
+   const users = event.users || {}
    const { name: typeName } = event.get_type || {}
    const isUserPage = user_id === event_user_id
 
    const [isEnrolledPage, setIsEnrolledPage] = useState(false)
 
    useEffect(() => {
-      // setIsEnrolledPage(users.user_id === user_id)
-      // setIsEnrolledPage(!!users.find(({ user_id: id }) => +id === +user_id))
-   }, [users])
+      setIsEnrolledPage(users.user_id === user_id)
+   }, [event])
 
    const addUserToEventRequest = useRequest({
       request: addUserToEvent,
@@ -38,8 +36,6 @@ const Events = ({ event }) => {
    })
 
    const onEnroll = () => {
-      setIsEnrolledPage(true)
-      return
       if (!rolesId.length) {
          setIsShow(true)
          setContent({ title: 'Авторизируйтесь!' })

@@ -8,6 +8,8 @@ const initialState = {
 
 export default function frontEventsReducer(state = initialState, action) {
    switch (action.type) {
+      case frontEventsTypes.RESET_FRONT_EVENTS:
+         return { ...initialState }
       case frontEventsTypes.SET_FRONT_EVENTS_DATA:
          return { ...state, data: action.payload }
       case frontEventsTypes.SET_FRONT_EVENTS:
