@@ -1,5 +1,4 @@
 import { Events } from 'components'
-import { Button } from 'components/ui'
 import { useDispatch, useRequest } from 'hooks'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
@@ -8,15 +7,19 @@ import { authSelectors, frontEventsSelectors } from 'store/selectors'
 
 const EventsItem = () => {
    const { eventId } = useParams()
-   const { resetEvents, fetchFrontEvent } = useDispatch()
+   const { resetEvents, fetchFrontEvent, fetchFrontAuthEvent } = useDispatch()
+   const isAuth = useSelector(authSelectors.getIsAuth)
    const event = useSelector(frontEventsSelectors.getEvent)
 
-   const fetchFrontEventRequest = useRequest({
-      request: fetchFrontEvent,
+   const authRequest = useRequest({
+      request: isAuth ? fetchFrontAuthEvent : fetchFrontAuthEvent,
    })
+
+   console.log(isAuth)
+
    useEffect(() => {
-      fetchFrontEventRequest.call({ eventId })
-      return () => (resetEvents(), resetEvents())
+      authRequest.call({ eventId })
+      return () => resetEvents()
    }, [])
 
    return <Events event={event} />

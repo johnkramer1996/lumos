@@ -109,6 +109,11 @@ export const maskDate = (e) => {
    if (len > 9) e.preventDefault()
 }
 
+export const validatePassword = (value) => {
+   if (!value) return
+   return value.length > 7
+}
+
 export const validateName = (value) => /^[a-zа-яёїієґ ,.'-]+$/i.test(value)
 
 export const validatePhone = (value) => !value.includes('_')

@@ -2,30 +2,24 @@ import React, { useEffect } from 'react'
 import { Main, CourseDetail, CoursesSlider } from 'components/'
 import { useSelector } from 'react-redux'
 import { useDispatch, useRequest } from 'hooks'
-import { authSelectors, frontCoursesSelectors } from 'store/selectors'
+import { authSelectors, frontCoursesSelectors, systemSelectors } from 'store/selectors'
 
 const Home = () => {
    const { resetFrontCourses, fetchFrontCourses, fetchFrontAuthCourses } = useDispatch()
    const isAuth = useSelector(authSelectors.getIsAuth)
    const courses = useSelector(frontCoursesSelectors.getCourses)
-   const { themes = [] } = useSelector(({ system }) => system.references)
+   const { themes } = useSelector(systemSelectors.getReferences)
 
-   const fetchFrontAuthCoursesRequest = useRequest({
-      request: fetchFrontAuthCourses,
+   const fetchFrontCourseRequest = useRequest({
+      request: isAuth ? fetchFrontAuthCourses : fetchFrontCourses,
    })
-   const fetchFrontCoursesRequest = useRequest({
-      request: fetchFrontCourses,
-   })
-   const authRequest = isAuth ? fetchFrontAuthCoursesRequest : fetchFrontCoursesRequest
 
    useEffect(() => {
-      authRequest.call()
+      fetchFrontCourseRequest.call()
       return () => resetFrontCourses()
    }, [])
 
    const items = themes.map((item) => ({ ...item, items: courses.filter(({ category_id }) => category_id === item.id) }))
-
-   console.log(items)
 
    return (
       <>

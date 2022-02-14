@@ -12,7 +12,7 @@ const AppRouter = () => {
 
    const authRequest = useRequest({ request: auth, isLoadingDefault: localStorage.getItem('token') })
 
-   useEffect(() => localStorage.getItem('token') && authRequest.call(), [])
+   useEffect(() => localStorage.getItem('token') && authRequest.call(), [isAuth])
 
    console.log(localStorage.getItem('token'), 'token')
 

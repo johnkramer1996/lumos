@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-import { Button, DatePicker } from 'components/ui'
+import { Button, Input } from 'components/ui'
 import { getDate, getURL } from 'utils'
 import { useDispatch, useInput, useInputFile } from 'hooks'
 import { authSelectors } from 'store/selectors'
@@ -15,12 +15,13 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
    const { logout } = useDispatch()
    const user = useSelector(authSelectors.getUser)
    const rolesId = useSelector(authSelectors.getRolesId)
+
    const avatar = useInputFile({ initialValue: getURL.avatar(user.avatar, rolesId) })
-   const email = useInput({ bind: { className: 'account-settings__item-input' }, is: { isDisabled: true } })
-   const createdAt = useInput({ bind: { className: 'account-settings__item-input' } })
-   const password = useInput({ initialValue: 'password', bind: { className: 'account-settings__item-input' }, is: { isDisabled: true } })
-   const vacationStart = useInput({ bind: { className: 'account-settings__item-input' } })
-   const vacationEnd = useInput({ bind: { className: 'account-settings__item-input' } })
+   const email = useInput({ is: { isDisabled: true, isEmail: true } })
+   const createdAt = useInput({ is: { isDisabled: true } })
+   const password = useInput({ initialValue: 'password', is: { isRequired: true, isDisabled: true, isPassword: true } })
+   const vacationStart = useInput({ initialValue: user.vacation[0], is: { isDate: true } })
+   const vacationEnd = useInput({ initialValue: user.vacation[1], is: { isDate: true } })
 
    useEffect(() => {
       avatar.setValue(getURL.avatar(user.avatar, rolesId))
@@ -62,7 +63,7 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
                   Изменить
                </button>
             </div>
-            <input type='email' name='new_email' {...email.bind} onBlur={onBlur.bind(null, email)} />
+            <Input className='account-settings__item-input' input={email} onBlur={onBlur.bind(null, 'email')} withoutWrapper />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
@@ -71,7 +72,7 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
                   Изменить пароль
                </button>
             </div>
-            <input type='password' name='password' {...password.bind} onBlur={onBlur.bind(null, password)} />
+            <Input className='account-settings__item-input' input={password} onBlur={onBlur.bind(null, 'password')} withoutWrapper minlength='5' />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
@@ -100,20 +101,19 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Отпуск от</span>
             </div>
-            <DatePicker name='vacation_start' input={vacationStart} onBlur={onBlur} />
-            {/* <input type='text' {...vacationStart.bind} onBlur={onBlur.bind(null, vacationStart)} name='vacation_start' maxLength='10' /> */}
+            <Input className='account-settings__item-input' input={vacationStart} onBlur={onBlur.bind(null, 'vacation_start')} withoutWrapper />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Отпуск до</span>
             </div>
-            <DatePicker name='vacation_end' input={vacationEnd} onBlur={onBlur} />
+            <Input className='account-settings__item-input' input={vacationEnd} onBlur={onBlur.bind(null, 'vacation_end')} withoutWrapper />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Дата регистрации</span>
             </div>
-            <input type='text' {...createdAt.bind} onBlur={onBlur.bind(null, createdAt)} disabled />
+            <Input className='account-settings__item-input' input={createdAt} onBlur={onBlur.bind(null, 'created_at')} withoutWrapper />
          </div>
          <button className='account-settings__logout btn btn-light-red' onClick={logout}>
             <LogoutSvg />

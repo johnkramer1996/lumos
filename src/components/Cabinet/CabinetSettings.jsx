@@ -17,10 +17,9 @@ const CabinetSettings = () => {
       if (name === 'password') body.append('password_confirmation', value)
       settingsRequest.call({ body })
    }
-   const onBlurInput = (input) => {
-      input.onBlur()
-      if (!input.isNewValue()) return
-      const { name, value } = input.ref.current
+   const onBlurInput = (name, e, input) => {
+      const value = e.target.value
+      if (input.check(value) || !input.isNewValue(value)) return
       createRequest(name, value)
    }
    const onChangeNovifications = (type, source, status) => {

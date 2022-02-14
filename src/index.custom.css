@@ -122,6 +122,9 @@
 .input-error::placeholder {
    color: #db422c !important;
 }
+.input-error-text {
+   text-align: left;
+}
 
 .header__logo svg {
    width: 100%;

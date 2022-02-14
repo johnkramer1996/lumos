@@ -7,9 +7,14 @@ import { declOfNum, getDeclOfArray } from 'utils'
 const CoursesItemVariansts = () => {
    const prices = useSelector(frontCoursesSelectors.getPrices)
    const modules = useSelector(frontCoursesSelectors.getModules)
+
+   console.log(modules)
+
    prices.forEach((price) => {
-      price.modules = price.moduls.map((item) => modules[+item - 1])
-      price.countLesson = price.modules.reduce((prev, module) => prev + module.lessons.length, 0)
+      if (price.moduls.length) {
+         price.modules = price.moduls.map((item) => modules[+item]).filter((item) => item)
+         price.countLesson = price.modules.reduce((prev, module) => prev + module.lessons?.length, 0)
+      }
    })
 
    return (
@@ -23,7 +28,7 @@ const CoursesItemVariansts = () => {
                <div className='course-variants__slider'>
                   <Swiper items={prices} className={''} prefix={'course-variants'} options={{ slidesPerView: 3 }}>
                      {({ id, name, width, price, price_with_sale, modules, countLesson }, index) => (
-                        <div className='swiper-slide'>
+                        <div key={id} className='swiper-slide'>
                            <div className='tarif-card'>
                               <div className='tarif-card__title'>{name}</div>
                               <div className='tarif-card__desc'>
@@ -34,7 +39,7 @@ const CoursesItemVariansts = () => {
                                  <div className='tarif-card__prices-old'>{price_with_sale} руб.</div>
                               </div>
                               <div className='tarif-card__items'>
-                                 {modules.map(({ name }, index) => (
+                                 {modules?.map(({ name }, index) => (
                                     <div className='tarif-card__item'>
                                        <i></i>
                                        <span>{name}</span>

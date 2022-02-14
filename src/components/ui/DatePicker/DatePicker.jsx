@@ -1,5 +1,6 @@
 import React, { forwardRef, useRef } from 'react'
 import { useEffect } from 'react'
+import { isActiveClass } from 'utils'
 import { Datepicker } from 'vanillajs-datepicker'
 
 Datepicker.locales.ru = {
@@ -15,9 +16,7 @@ Datepicker.locales.ru = {
    monthsTitle: 'Месяцы',
 }
 
-const DatePicker = ({ input, ...props }) => {
-   const ref = useRef()
-   console.log(input.ref)
+const DatePicker = ({ input, onBlur, ...props }) => {
    useEffect(() => {
       input.ref.current &&
          new Datepicker(input.ref.current, {
@@ -26,19 +25,14 @@ const DatePicker = ({ input, ...props }) => {
          })
    }, [])
 
-   return (
-      <input
-         type='text'
-         {...input.bind}
-         {...props}
-         onBlur={(e) => {
-            setTimeout(() => {
-               input.setValue(e.target.value)
-               props.onBlur(input)
-            }, 0)
-         }}
-      ></input>
-   )
+   const onBlurHandle = (e) => {
+      setTimeout(() => {
+         input.setValue(e.target.value)
+         onBlur(e, input)
+      }, 0)
+   }
+
+   return <input type='text' {...input.bind} {...props} className={`${props.className}${isActiveClass(input.error, 'input-error')}`} onBlur={onBlurHandle}></input>
 }
 
 export default DatePicker

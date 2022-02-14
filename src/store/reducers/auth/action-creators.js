@@ -8,8 +8,6 @@ export const AuthActionCreators = {
    setIsAuth: (payload) => ({ type: authTypes.SET_AUTH, payload }),
    setUser: (payload) => ({ type: authTypes.SET_USER, payload }),
    setToken: (payload) => ({ type: authTypes.SET_TOKEN, payload }),
-   setRoles: (payload) => ({ type: authTypes.SET_ROLES, payload }),
-   setRole: (payload) => ({ type: authTypes.SET_ROLE, payload }),
    setNotifications: (payload) => ({ type: authTypes.SET_NOTIFICATIONS, payload }),
    setStep: (payload) => ({ type: authTypes.SET_STEP, payload }),
    logout: () => async (dispatch) => {

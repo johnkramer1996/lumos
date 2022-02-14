@@ -24,7 +24,9 @@ export const frontEventsHandlers = {
       ...defaultHandlers.fetchFrontEvent,
       success: ({ dispatch, response, prevData, data }) => dispatch(FrontEventsActionCreators.setFrontEvent(data || [])),
    },
+   //  fetchFrontAuthEvents
+   //  fetchFrontAuthEvent
 }
 
-frontEventsHandlers.fetchFrontAuthEvents = frontEventsHandlers.fetchFrontEvents
-frontEventsHandlers.fetchFrontAuthEvent = frontEventsHandlers.fetchFrontEvent
+frontEventsHandlers.fetchFrontAuthEvents.success = frontEventsHandlers.fetchFrontEvents.success
+frontEventsHandlers.fetchFrontAuthEvent.success = frontEventsHandlers.fetchFrontEvent.success

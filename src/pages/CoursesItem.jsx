@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 import { CoursesItemFeedback, CoursesItemInfo, CoursesItemInfo2, CoursesItemPopular, CoursesItemSeo, CoursesItemTop, CoursesItemVariants } from 'components'
@@ -14,13 +14,15 @@ const CoursesItem = () => {
    const { id: user_id } = useSelector(authSelectors.getUser)
    const course = useSelector(frontCoursesSelectors.getCourse)
    const { id, users = [] } = course
-   const isEnrolledPage = !!users.find(({ id }) => +id === +user_id)
 
-   const fetchFrontAuthCourseRequest = useRequest({
-      request: fetchFrontAuthCourse,
-   })
+   const [isEnrolledPage, setIsEnrolledPage] = useState(false)
+
+   useEffect(() => {
+      setIsEnrolledPage(!!users.find(({ id }) => +id === +user_id))
+   }, [users])
+
    const fetchFrontCourseRequest = useRequest({
-      request: fetchFrontCourse,
+      request: isAuth ? fetchFrontAuthCourse : fetchFrontCourse,
    })
    const addUserToCourseRequest = useRequest({
       request: addUserToCourse,
@@ -29,10 +31,9 @@ const CoursesItem = () => {
          setContent({ title: 'Успешно добавлен' })
       },
    })
-   const authRequest = isAuth ? fetchFrontAuthCourseRequest : fetchFrontCourseRequest
 
    useEffect(() => {
-      authRequest.call({ courseId })
+      fetchFrontCourseRequest.call({ courseId })
       return () => resetFrontCourses()
    }, [])
 
@@ -47,13 +48,14 @@ const CoursesItem = () => {
          setContent({ title: 'Вы уже записаны на курс' })
          return
       }
+      setIsEnrolledPage(true)
 
       addUserToCourseRequest.call({ body: { user_id, course_id: id } })
    }
 
    return (
       <>
-         {authRequest.isLoading ? (
+         {fetchFrontCourseRequest.isLoading ? (
             <Loader />
          ) : (
             <>
