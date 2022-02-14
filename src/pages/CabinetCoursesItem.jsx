@@ -37,7 +37,6 @@ const CabinetCoursesItem = () => {
 
    useEffect(() => {
       const isUserPage = user_id === page_user_id
-      console.log(isUserPage)
       if (!fetchInfoRequest.isLoading && !isUserPage) toItems({ courseId })
    }, [fetchInfoRequest.isLoading])
 

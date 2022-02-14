@@ -8,7 +8,6 @@ import { authSelectors, coursesSelectors } from 'store/selectors'
 import { ReactComponent as EditSvg } from 'svg/edit.svg'
 import { ReactComponent as DownloadSvg } from 'svg/download.svg'
 import { ReactComponent as DocumentSvg } from 'svg/document.svg'
-import { RouteNames } from 'routes'
 import { addZerro, formatBytes, getRequest, getURL, hasAccess } from 'utils'
 import { Comments } from 'components'
 import { ROLES } from 'constants'
@@ -34,9 +33,7 @@ const CabinetCoursesLesson = () => {
 
    useEffect(() => {
       roleRequests.call({ courseId, lessonId })
-      return () => {
-         resetCourses([])
-      }
+      return () => resetCourses([])
    }, [courseId, lessonId])
 
    return (
@@ -91,7 +88,6 @@ const CabinetCoursesLesson = () => {
                         </div>
                      </div>
                      <div className='lesson-page__right'>
-                        {console.log(hasAccess(rolesId, [ROLES.TRAINER]))}
                         {hasAccess(rolesId, [ROLES.TRAINER]) && (
                            <div className='lesson-page__nav card-bg'>
                               <Button to={getURL.cabinetCoursesEditLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__edit' outline link>

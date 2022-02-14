@@ -15,10 +15,15 @@ export const CoursesActionCreators = {
    setLessonQuestions: (payload) => ({ type: coursesTypes.SET_LESSON_QUESTIONS, payload }),
    setLessonFiles: (payload) => ({ type: coursesTypes.SET_LESSON_FILES, payload }),
    addLessonFile: (payload) => ({ type: coursesTypes.ADD_LESSON_FILE, payload }),
+   setCommentsData: (payload) => ({ type: coursesTypes.SET_COMMENTS_DATA, payload }),
+   setComments: (payload) => ({ type: coursesTypes.SET_COMMENTS, payload }),
+   addLessonComment: (payload) => ({ type: coursesTypes.ADD_LESSON_COMMENT, payload }),
    ...crateActionCreator(CoursesService),
 }
 
 const defaultHandlers = crateHandles(CoursesService)
+
+console.log(defaultHandlers)
 
 export const courseHandlers = {
    ...defaultHandlers,
@@ -164,9 +169,21 @@ export const courseHandlers = {
          dispatch(CoursesActionCreators.setLessonQuestions(data?.questions || []))
       },
    },
-   // fetchUserLessonComments
+   fetchUserLessonComments: {
+      ...defaultHandlers.fetchUserLessonComments,
+      success: ({ dispatch, response, prevData, data }) => {
+         dispatch(CoursesActionCreators.setCommentsData(data?.comments || {}))
+         dispatch(CoursesActionCreators.setComments(data?.comments?.data || []))
+      },
+   },
    // sendLessonTest
-   // addComment
+   addComment: {
+      ...defaultHandlers.addComment,
+      success: ({ dispatch, response, prevData, data }) => {
+         console.log(data)
+         dispatch(CoursesActionCreators.addLessonComment(data?.comments[0] || []))
+      },
+   },
    addLike: {
       ...defaultHandlers.addLike,
    },

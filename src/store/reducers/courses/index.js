@@ -11,6 +11,8 @@ const initialState = {
    lessonQuestions: [],
    lessonFiles: [],
    prices: [],
+   commentsData: {},
+   comments: [],
 }
 
 export default function coursesReducer(state = initialState, action) {
@@ -39,6 +41,12 @@ export default function coursesReducer(state = initialState, action) {
          return { ...state, lessonFiles: action.payload }
       case coursesTypes.ADD_LESSON_FILE:
          return { ...state, lessonFiles: [...state.lessonFiles, ...action.payload] }
+      case coursesTypes.SET_COMMENTS_DATA:
+         return { ...state, commentsData: action.payload }
+      case coursesTypes.SET_COMMENTS:
+         return { ...state, comments: action.payload }
+      case coursesTypes.ADD_LESSON_COMMENT:
+         return { ...state, comments: [...state.comments, action.payload] }
       default:
          return state
    }

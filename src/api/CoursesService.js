@@ -160,7 +160,7 @@ export default class CoursesService {
       return await axios.get(userCoursesURL.FETCH_LESSON_TEST({ courseId, lessonId }))
    }
    static async fetchUserLessonComments({ courseId = 0, lessonId = 0 } = {}) {
-      return await axios.get(userCoursesURL.FETCH_LESSON_TEST({ courseId, lessonId }))
+      return await axios.get(userCoursesURL.FETCH_LESSON_COMMENTS({ courseId, lessonId }))
    }
    static async sendLessonTest({ body = {} } = {}) {
       return await axios.post(userCoursesURL.SEND_LESSON_TEST, body, {
@@ -169,8 +169,8 @@ export default class CoursesService {
          },
       })
    }
-   static async addComment({ courseId = 0, body = {} } = {}) {
-      return await axios.post(userCoursesURL.ADD_COMMENT({ courseId }), body, {
+   static async addComment({ courseId = 0, lessonId = 0, body = {} } = {}) {
+      return await axios.post(userCoursesURL.ADD_COMMENT({ courseId, lessonId }), body, {
          headers: {
             'Content-Type': 'application/json',
          },

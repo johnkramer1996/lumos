@@ -14,8 +14,6 @@ const AppRouter = () => {
 
    useEffect(() => localStorage.getItem('token') && authRequest.call(), [isAuth])
 
-   console.log(localStorage.getItem('token'), 'token')
-
    return (
       <div className='content'>
          {localStorage.getItem('token') && authRequest.isLoading ? (

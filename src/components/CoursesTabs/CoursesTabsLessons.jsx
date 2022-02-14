@@ -11,8 +11,6 @@ const CoursesTabsLessons = () => {
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
 
-   console.log(course)
-
    return (
       <div className='lessons-tab'>
          <div className='lessons-tab__left'>

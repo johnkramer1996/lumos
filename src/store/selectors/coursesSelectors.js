@@ -10,6 +10,8 @@ const coursesSelectors = {
    getLesson: ({ courses }) => courses.lesson,
    getLessonQuestions: ({ courses }) => courses.lessonQuestions,
    getLessonFiles: ({ courses }) => courses.lessonFiles,
+   getCommentsData: ({ courses }) => courses.commentsData,
+   getComments: ({ courses }) => courses.comments,
 }
 
 export default coursesSelectors
