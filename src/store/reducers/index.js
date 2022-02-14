@@ -6,14 +6,16 @@ import modals from './modals'
 import settings from './settings'
 import frontCourses from './frontCourses'
 import frontEvents from './frontEvents'
+import frontStatic from './frontStatic'
 
 export default {
-    auth,
-    courses,
-    events,
-    system,
-    modals,
-    settings,
-    frontCourses,
-    frontEvents,
+   auth,
+   courses,
+   events,
+   system,
+   modals,
+   settings,
+   frontCourses,
+   frontEvents,
+   frontStatic,
 }

@@ -83,3 +83,10 @@ export const frontEventsURL = {
    FETCH_AUTH_EVENTS: '/users/front/events',
    FETCH_AUTH_EVENT: ({ eventId }) => `/users/front/events/${eventId}`,
 }
+export const frontStaticURL = {
+   FETCH_FAQ: '/front/faq',
+   FETCH_CONTACTS: '/front/contacts',
+   FETCH_BLOG_CATEGORY: '/front/blogcategory',
+   FETCH_PAGES: '/front/pages',
+   FETCH_PAGE: ({ pageId }) => `/front/pages/${pageId}`,
+}

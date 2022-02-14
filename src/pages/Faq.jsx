@@ -1,30 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Faq as FaqComponent } from 'components/'
+import { useDispatch, useRequest } from 'hooks'
+import { useSelector } from 'react-redux'
 
 const Faq = () => {
-    const items = [
-        {
-            id: 1,
-            title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis consequat a, lobortis non est?',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis conseq a, lobortis non est. Vivamus tempus euismod erat, vel accumsan erat malesuada eget. Olor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis consequat a, lobortis non est. Vivamus tempus euismod erat, vel accumsan erat malesuada eget',
-        },
-        {
-            id: 2,
-            title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis consequat a, lobortis non est?',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis conseq a, lobortis non est. Vivamus tempus euismod erat, vel accumsan erat malesuada eget. Olor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis consequat a, lobortis non est. Vivamus tempus euismod erat, vel accumsan erat malesuada eget',
-        },
-        {
-            id: 3,
-            title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis consequat a, lobortis non est?',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis conseq a, lobortis non est. Vivamus tempus euismod erat, vel accumsan erat malesuada eget. Olor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis consequat a, lobortis non est. Vivamus tempus euismod erat, vel accumsan erat malesuada eget',
-        },
-        {
-            id: 4,
-            title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis consequat a, lobortis non est?',
-            descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis conseq a, lobortis non est. Vivamus tempus euismod erat, vel accumsan erat malesuada eget. Olor sit amet, consectetur adipiscing elit. Quisque ante tellus, malesuada mollis consequat a, lobortis non est. Vivamus tempus euismod erat, vel accumsan erat malesuada eget',
-        },
-    ]
-    return <FaqComponent items={items} />
+   const { fetchFrontFaq } = useDispatch()
+   const { list } = useSelector(({ frontStatic }) => frontStatic)
+
+   const fetchFrontFaqRequest = useRequest({
+      request: fetchFrontFaq,
+   })
+
+   useEffect(() => {
+      fetchFrontFaqRequest.call()
+   }, [])
+
+   return <FaqComponent items={list} />
 }
 
 export default Faq
