@@ -3,22 +3,39 @@ import { useSelector } from 'react-redux'
 import { frontStaticSelectors } from 'store/selectors'
 import { ReactComponent as PhoneSvg } from 'svg/phone.svg'
 import { ReactComponent as EmailSvg } from 'svg/email.svg'
-import { useInput } from 'hooks'
+import { useDispatch, useInput, useRequest } from 'hooks'
 import { Button, Input } from 'components/ui'
 
 const Contacts = ({ title = 'Контакты' }) => {
+   const { sendFrontContacts, setIsShow, setContent } = useDispatch()
    const contacts = useSelector(frontStaticSelectors.getContacts)
 
    const name = useInput({ is: { isRequired: true, isName: true } })
    const email = useInput({ is: { isRequired: true, isEmail: true } })
    const text = useInput({ is: { isRequired: true, isTextarea: true } })
 
+   const sendFrontContactsRequest = useRequest({
+      request: sendFrontContacts,
+      success: () => {
+         name.clear()
+         email.clear()
+         text.clear()
+         setIsShow(true)
+         setContent({ title: 'Заявка отправлена' })
+      },
+   })
+
    const onSubmit = (e) => {
       e.preventDefault()
 
       if ([name, email, text].filter((i) => i.check(i.value)).length) return
+      const body = {
+         name: name.value,
+         email: email.value,
+         text: text.value,
+      }
 
-      console.log('send')
+      sendFrontContactsRequest.call({ body })
    }
 
    return (
@@ -40,10 +57,15 @@ const Contacts = ({ title = 'Контакты' }) => {
                   <form className='contacts__form' onSubmit={onSubmit}>
                      <h3 className='contacts__form-title display-3'>Связаться с нами</h3>
                      <div className='contacts__form-grid'>
-                        <Input classNameWrapper='contacts__form-group' input={name} label='Имя' />
-                        <Input classNameWrapper='contacts__form-group' input={email} label='E-mail' />
-
-                        <Input classNameWrapper='contacts__form-group contacts__form-group--text' input={text} label='Связаться с нами' placeholder='Напишите свой вопрос или опишите проблему' />
+                        <Input classNameWrapper='contacts__form-group' name='name' input={name} label='Имя' />
+                        <Input classNameWrapper='contacts__form-group' name='email' input={email} label='E-mail' />
+                        <Input
+                           classNameWrapper='contacts__form-group contacts__form-group--text'
+                           name='text'
+                           input={text}
+                           label='Связаться с нами'
+                           placeholder='Напишите свой вопрос или опишите проблему'
+                        />
                      </div>
                      <Button className='contacts__form-btn'>Отправить</Button>
                   </form>

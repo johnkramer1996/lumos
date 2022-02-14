@@ -8,6 +8,14 @@ export default class FrontStaticService {
    static async fetchFrontContacts() {
       return await axios.get(frontStaticURL.FETCH_CONTACTS)
    }
+   static async sendFrontContacts({ body = {} }) {
+      console.log(body)
+      return await axios.post(frontStaticURL.SEND_CONTACTS, body, {
+         headers: {
+            'Content-Type': 'application/json',
+         },
+      })
+   }
    static async fetchFrontBlogCategory() {
       return await axios.get(frontStaticURL.FETCH_BLOG_CATEGORY)
    }

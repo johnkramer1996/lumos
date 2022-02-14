@@ -86,6 +86,7 @@ export const frontEventsURL = {
 export const frontStaticURL = {
    FETCH_FAQ: '/front/faq',
    FETCH_CONTACTS: '/front/contacts',
+   SEND_CONTACTS: '/front/contacts',
    FETCH_BLOG_CATEGORY: '/front/blogcategory',
    FETCH_PAGES: '/front/pages',
    FETCH_PAGE: ({ pageId }) => `/front/pages/${pageId}`,

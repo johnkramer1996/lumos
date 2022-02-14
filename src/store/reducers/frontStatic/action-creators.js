@@ -27,4 +27,7 @@ export const frontStaticHandlers = {
          dispatch(FrontStaticActionCreators.setFrontStaticContacts(data || {}))
       },
    },
+   sendFrontContacts: {
+      ...defaultHandlers.sendFrontContacts,
+   },
 }
