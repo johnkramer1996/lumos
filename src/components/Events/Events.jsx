@@ -24,7 +24,7 @@ const Events = ({ event }) => {
    const [isEnrolledPage, setIsEnrolledPage] = useState(false)
 
    useEffect(() => {
-      setIsEnrolledPage(users.user_id === user_id)
+      setIsEnrolledPage(+users.user_id === +user_id)
    }, [event])
 
    const addUserToEventRequest = useRequest({

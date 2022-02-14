@@ -13,13 +13,14 @@ const CoursesItem = () => {
    const rolesId = useSelector(authSelectors.getRolesId)
    const { id: user_id } = useSelector(authSelectors.getUser)
    const course = useSelector(frontCoursesSelectors.getCourse)
-   const { id, users = [] } = course
+   const { id } = course
+   const users = course.is_user || {}
 
    const [isEnrolledPage, setIsEnrolledPage] = useState(false)
 
    useEffect(() => {
-      setIsEnrolledPage(!!users.find(({ id }) => +id === +user_id))
-   }, [users])
+      setIsEnrolledPage(+users.user_id === +user_id)
+   }, [course])
 
    const fetchFrontCourseRequest = useRequest({
       request: isAuth ? fetchFrontAuthCourse : fetchFrontCourse,
