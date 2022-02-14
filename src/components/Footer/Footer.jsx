@@ -2,9 +2,11 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
+import { frontStaticSelectors, systemSelectors } from 'store/selectors'
 
 const Footer = () => {
-   const { themes = [] } = useSelector(({ system }) => system.references)
+   const contacts = useSelector(frontStaticSelectors.getContacts)
+   const { themes } = useSelector(systemSelectors.getReferences)
 
    const items = [
       [
@@ -109,8 +111,8 @@ const Footer = () => {
                         </svg>
                      </a>
                   </div>
-                  <a href='' className='footer__phone'>
-                     8 800 888-88-88
+                  <a href={`tel:${contacts.phone}`} className='footer__phone'>
+                     {contacts.phone}
                   </a>
                </div>
             </div>

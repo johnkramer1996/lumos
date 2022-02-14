@@ -31,7 +31,15 @@ const Input = ({ classNameWrapper = '', label = '', placeholder = '', input, lis
                   onBlur={onBlurHandle}
                />
             ) : (
-               <textarea type='text' placeholder={placeholder || label} {...input.bind} {...props} onChange={onChangeHandle} onBlur={onBlurHandle}></textarea>
+               <textarea
+                  type='text'
+                  placeholder={placeholder || label}
+                  {...input.bind}
+                  {...props}
+                  className={`${props.className || ''}${isActiveClass(input.error, 'input-error')}`}
+                  onChange={onChangeHandle}
+                  onBlur={onBlurHandle}
+               ></textarea>
             )
          ) : (
             <select {...input.bind} {...props} className={`${props.className || ''}${isActiveClass(input.error, 'input-error')}`} onChange={onChangeHandle} onBlur={onBlurHandle}>

@@ -9,6 +9,7 @@ const useDispatch = () => {
    return useMemo(
       () => ({
          toError: () => navigate(RouteNames.ERROR),
+         toContacts: () => navigate(RouteNames.CONTACTS),
          toItems: ({ courseId, eventId, type = 'courses' }) => navigate(getURL.parseURL([RouteNames.COURSES_ITEM, RouteNames.EVENTS_ITEM][type === 'courses' ? 0 : 1], { courseId, eventId })),
          toCabinet: () => navigate(RouteNames.CABINET),
          toCabinetItems: ({ type } = {}) => navigate(getTypeItems(type)),

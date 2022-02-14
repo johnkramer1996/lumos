@@ -1,8 +1,11 @@
 import React from 'react'
 import FaqItem from './FaqItem'
 import { Button } from 'components/ui'
+import { useNavigate } from 'hooks'
 
 const Faq = ({ title = 'Часто задаваемые вопросы', items = [] }) => {
+   const { toContacts } = useNavigate()
+
    return (
       <section className='faq'>
          <div className='container'>
@@ -22,7 +25,7 @@ const Faq = ({ title = 'Часто задаваемые вопросы', items =
                      </div>
                      <div className='faq__card-title'>Не нашли ответ на свой вопрос?</div>
                      <div className='faq__card-desc'>Aliquam commodo dictum hendrerit. Lorem ipsum dolor sit amet, consectetur adipiscing elit dictum hendrerit.</div>
-                     <Button className='faq__card-btn' onClick={() => {}}>
+                     <Button className='faq__card-btn' onClick={() => toContacts()}>
                         Связаться с нами
                      </Button>
                   </div>
