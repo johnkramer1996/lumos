@@ -19,7 +19,7 @@ const FooterTop = () => {
          {
             name: 'О портале',
             items: [
-               { href: RouteNames.NEWS, name: 'Блог' },
+               { href: RouteNames.BLOG, name: 'Блог' },
                ...pagesItems,
                { href: RouteNames.REVIEWS, name: 'Отзывы' },
                { href: RouteNames.FAQ, name: 'Часто задаваемые вопросы' },

@@ -2,9 +2,9 @@ import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'rea
 import PropTypes from 'prop-types'
 import { Loader } from 'components/ui'
 
-const Tabs = ({ items, isLoading = false, classPrefix = 'course-report', onChangeListener = () => {}, isAvaibleIndex = () => true }, ref) => {
+const Tabs = ({ items, isLoading = false, classPrefix = 'course-report', onChangeListener = () => {}, isAvaibleIndex = () => true, all }, ref) => {
    const [itemsState, setItems] = useState(items.filter(({ hasAccess }) => hasAccess !== false))
-   const [activeIndex, setAtiveIndex] = useState(0)
+   const [activeIndex, setAtiveIndex] = useState(all ? -1 : 0)
 
    const events = {
       setItemsByIndex: (activeIndex) => {
@@ -24,6 +24,11 @@ const Tabs = ({ items, isLoading = false, classPrefix = 'course-report', onChang
             <>
                <div className={`${classPrefix}__nav`}>
                   <div className={`${classPrefix}__tabs`}>
+                     {all && (
+                        <div className={`${classPrefix}__tab${activeIndex === -1 ? ` ${classPrefix}__tab--active` : ''} ${classPrefix}__tab`} onClick={() => events.changeTab(-1)}>
+                           Все
+                        </div>
+                     )}
                      {itemsState.map(({ title, notifications }, index) => (
                         <div
                            key={index}
@@ -47,7 +52,9 @@ const Tabs = ({ items, isLoading = false, classPrefix = 'course-report', onChang
                {isLoading ? (
                   <Loader />
                ) : (
-                  <div className={`${classPrefix}__content  ${classPrefix}__content--active`}>{itemsState[activeIndex].component}</div>
+                  <div className={`${classPrefix}__content  ${classPrefix}__content--active`}>
+                     {all && activeIndex === -1 ? itemsState.map(({ component }, index) => <div key={index}>{component}</div>) : itemsState[activeIndex].component}
+                  </div>
                   // itemsState.items.map(({ component }, index) => (
                   //     <div key={index} className={`${classPrefix}__content${itemsState.activeIndex === index ? ` ${classPrefix}__content--active` : ''}`}>
                   //         {component}

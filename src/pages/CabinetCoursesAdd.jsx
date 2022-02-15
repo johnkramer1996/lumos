@@ -12,7 +12,6 @@ const CabinetAddCourse = () => {
    const { courseId, lessonId } = useParams()
    const isEditPage = !!courseId
    const isLessonPage = !!lessonId
-   const { toError } = useNavigate()
    const { resetCourses, setIsShow, setContent, setCourse, setModules, fetchInfo } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
