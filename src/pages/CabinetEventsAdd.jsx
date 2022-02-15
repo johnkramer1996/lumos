@@ -15,8 +15,8 @@ const CabinetEventsAdd = () => {
 
    const inputName = useInput({ initialValue: 'test', bind: { name: 'name' }, is: { isRequired: true, isName: true } })
    const inputType = useInput({ initialValue: 1, bind: { name: 'event_type_id' }, is: { isRequired: true } })
-   const inputEDate = useInput({ initialValue: getDate(new Date(2022, 11, 31)), bind: { name: 'edate' }, is: { isRequired: true, date: true } })
-   const inputETime = useInput({ initialValue: '12:00:00', bind: { name: 'etime' }, is: { isRequired: true, date: true } })
+   const inputEDate = useInput({ initialValue: getDate(new Date(2022, 11, 31)), bind: { name: 'edate' }, is: { isRequired: true, isDate: true } })
+   const inputETime = useInput({ initialValue: '12:00:00', bind: { name: 'etime' }, is: { isRequired: true, isTime: true } })
    const inputTiming = useInput({ initialValue: 'test', bind: { name: 'timing' }, is: { isRequired: true } })
    const inputText = useInput({
       initialValue:

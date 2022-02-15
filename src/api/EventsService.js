@@ -39,11 +39,7 @@ export default class EventsService {
       return await axios.delete(trainerEventsURL.DELETE_EVENT({ eventId }))
    }
    static async addUserToEvent({ body = {} } = {}) {
-      return await axios.post(userEventsURL.ADD_USER, body, {
-         headers: {
-            'Content-Type': 'application/json',
-         },
-      })
+      return await axios.post(userEventsURL.ADD_USER, body)
    }
    static async fetchUserEvents() {
       return await axios.get(userEventsURL.FETCH_EVENTS)

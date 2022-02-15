@@ -17,7 +17,7 @@ const CabinetSettingsNotifications = ({ onChange }) => {
          .map((_) => new Array(user_notify_sourses.length).fill(0))
          .map((row, indexRow) => ({
             type: user_notify_types[indexRow].name,
-            sources: row.map((col, indexCol) => ({
+            sources: row.map((_, indexCol) => ({
                source: user_notify_sourses[indexCol].name,
                status: !!notifications?.find(({ type, source }) => type === indexRow && source === indexCol),
             })),

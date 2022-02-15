@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { maskDate, toBoolean, validateEmail, validateName, validatePassword, validatePhone } from 'utils'
 
-const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, isDisabled, isDate, isCheckbox, isName, isNumbers, isEmail, isTextarea, isPassword } = {} } = {}) => {
+const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, isDisabled, isDate, isCheckbox, isName, isNumbers, isEmail, isTextarea, isPassword, isTime } = {} } = {}) => {
    const [value, setValue] = useState(initialValue)
    const [error, setError] = useState('')
    const prevValueRef = useRef(initialValue)
@@ -10,7 +10,9 @@ const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, 
 
    const onChange = useCallback((e) => {
       let newValue = !isCheckbox ? e.target.value : e.target.checked
-      newValue = !isNumbers ? newValue : onlyNumbers(newValue)
+      if (isNumbers) newValue = patternNumbers(newValue)
+      // if (isTime) newValue = patternTime(newValue)
+      console.log(patternTime(newValue))
       setValue(newValue)
    }, [])
    const onFocus = useCallback((e) => {
@@ -44,7 +46,8 @@ const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, 
    }, [])
    const update = () => setError('')
    const isNewValue = (val) => prevValueRef.current !== val
-   const onlyNumbers = (val) => val.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')
+   const patternNumbers = (val) => val.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')
+   const patternTime = (val) => val.replace(/^([01]?[0-9]|2[0-3]):[0-5][0-9]/g, '')
 
    propertyRef.current = {
       value,
