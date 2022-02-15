@@ -42,7 +42,7 @@ const CoursesItemTopNav = ({ course = {} }) => {
          </button>
          <button className='course-top__nav-item' onClick={onFavorite}>
             {isFavorite ? <Favorite color={THEME_COLORS.ACCENT} fill /> : <Favorite />}
-            <span>В избранное</span>
+            <span>{isFavorite ? 'В избранном' : 'В избранное'}</span>
          </button>
       </div>
    )

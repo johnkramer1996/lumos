@@ -72,7 +72,7 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
                   Изменить пароль
                </button>
             </div>
-            <Input className='account-settings__item-input' input={password} onBlur={onBlur.bind(null, 'password')} withoutWrapper minlength='5' />
+            <Input className='account-settings__item-input' input={password} onBlur={onBlur.bind(null, 'password')} withoutWrapper />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
