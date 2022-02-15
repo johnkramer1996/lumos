@@ -4,6 +4,7 @@ export const IMG_URL = `${SITE_URL}/`
 export const systemURL = {
    FETCH_REFERENCES: '/data/references',
    FETCH_SOC_URLS: '/data/soc_urls',
+   FETCH_USER_SETTINGS: '/data/user_settings',
 }
 export const authURL = {
    LOGIN: '/auth/login',

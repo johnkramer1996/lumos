@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useRequest } from 'hooks/'
 import CabinetSettingsDocs from './CabinetSettingsDocs'
 import CabinetSettingsAccount from './CabinetSettingsAccount'
@@ -6,10 +6,15 @@ import CabinetSettingsPersonalInformation from './CabinetSettingsPersonalInforma
 import CabinetSettingsNotifications from './CabinetSettingsNotifications'
 
 const CabinetSettings = () => {
-   const { settings } = useDispatch()
-   const settingsRequest = useRequest({
-      request: settings,
-   })
+   const { settings, fetchUserSettings } = useDispatch()
+
+   const fetchUserSettingsRequest = useRequest({ request: fetchUserSettings })
+   const settingsRequest = useRequest({ request: settings })
+
+   useEffect(() => {
+      fetchUserSettingsRequest.call()
+   }, [])
+
    const createRequest = (name, value) => {
       if (!name || !value) return
       const body = new FormData()

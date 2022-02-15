@@ -12,7 +12,6 @@ const initialState = {
 }
 
 export default function frontStaicReducer(state = initialState, action) {
-   console.log(action)
    switch (action.type) {
       case frontStaticTypes.RESET_FRONT_STATIC:
          return { ...initialState }
