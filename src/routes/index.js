@@ -59,7 +59,6 @@ export const RouteNames = {
    COURSES: '/courses',
    COURSES_ITEM: '/courses/:courseId',
    COURSES_LESSON: '/courses/:courseId/lessons/:lessonId',
-   COURSES_TRAINER: '/courses/:courseId/:trainerId',
    ERROR: '/error',
    FAQ: '/faq',
    EVENTS: '/events',
@@ -72,6 +71,8 @@ export const RouteNames = {
    SUBSCRIBE: '/subscribe',
    LOGOUT: '/logout',
    PAGES_ITEM: '/pages/:pageId',
+   TRAINERS_ITEM: '/trainers/:trainerId',
+   USERS_ITEM: '/users/:userId',
 }
 export const publicRoutes = [
    { path: RouteNames.PAGES_ITEM, element: <PagesItem /> },
@@ -81,7 +82,6 @@ export const publicRoutes = [
    { path: RouteNames.COURSES, element: <Courses /> },
    { path: RouteNames.COURSES_ITEM, element: <CoursesItem /> },
    { path: RouteNames.COURSES_LESSON, element: <CabinetCoursesLesson /> },
-   { path: RouteNames.COURSES_TRAINER, element: <TrainersItem /> },
    { path: RouteNames.EVENTS, element: <Events /> },
    { path: RouteNames.EVENTS_ITEM, element: <EventsItem /> },
    { path: RouteNames.FAQ, element: <Faq /> },
@@ -93,6 +93,8 @@ export const publicRoutes = [
    { path: RouteNames.SUBSCRIBE, element: <Subscribe /> },
    { path: RouteNames.ERROR, element: <Error /> },
    { path: RouteNames.LOGOUT, element: <Logout /> },
+   { path: RouteNames.TRAINERS_ITEM, element: <TrainersItem /> },
+   { path: RouteNames.USERS_ITEM, element: <TrainersItem /> },
 ]
 export const privateRoutes = [
    ...publicRoutes,
