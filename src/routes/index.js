@@ -1,3 +1,4 @@
+import { ROLES } from 'constants'
 import {
    Home,
    Contacts,
@@ -118,9 +119,9 @@ export const cabinetLinks = [
       href: RouteNames.CABINET_COURSES,
       number: 0,
       list: [
-         { title: 'На модерации', search: 'nomoderated' },
-         { title: 'Модерирование', search: 'moderated' },
-         { title: 'Избранное', search: 'favorite' },
+         { title: 'На модерации', search: 'nomoderated', hasAccess: [ROLES.TRAINER, ROLES.EMPLOYEE] },
+         { title: 'Модерирование', search: 'moderated', hasAccess: [ROLES.TRAINER, ROLES.EMPLOYEE] },
+         { title: 'Избранное', search: 'favorite', hasAccess: [ROLES.USER, ROLES.TRAINER, ROLES.EMPLOYEE] },
       ],
    },
    {
@@ -128,10 +129,10 @@ export const cabinetLinks = [
       href: RouteNames.CABINET_EVENTS,
       number: 1,
       list: [
-         { title: 'Запланированные', search: 'features' },
-         { title: 'Закончившиеся', search: 'ended' },
-         { title: 'На модерации', search: 'nomoderated' },
-         { title: 'Модерирование', search: 'moderated' },
+         { title: 'Запланированные', search: 'features', hasAccess: [ROLES.TRAINER, ROLES.EMPLOYEE] },
+         { title: 'Закончившиеся', search: 'ended', hasAccess: [ROLES.TRAINER, ROLES.EMPLOYEE] },
+         { title: 'На модерации', search: 'nomoderated', hasAccess: [ROLES.TRAINER, ROLES.EMPLOYEE] },
+         { title: 'Модерирование', search: 'moderated', hasAccess: [ROLES.TRAINER, ROLES.EMPLOYEE] },
       ],
    },
    { title: 'Статистика', href: RouteNames.CABINET_STATISTICS, number: 0 },

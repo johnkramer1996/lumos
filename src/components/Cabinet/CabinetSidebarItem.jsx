@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { isActiveClass } from 'utils'
 
-const CabinetSidebarItem = ({ title, href, number, dropdown, index, search, list = [], filter = [] }) => {
+const CabinetSidebarItem = ({ title, href, number, index, search, list = [], filter = [] }) => {
    const [isVisible, setIsVisible] = useState(false)
 
    return (
       <>
-         {!dropdown ? (
+         {!list.length ? (
             <Link key={index} to={href} className='sidebar__link'>
                <span>{title}</span>
                <i>{number}</i>

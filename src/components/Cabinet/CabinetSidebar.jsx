@@ -21,7 +21,7 @@ const CabinetSidebar = () => {
                   // TODO REMAKE IT
                   return {
                      ...link,
-                     dropdown: hasAccess(rolesId, [ROLES.USER, ROLES.TRAINER, ROLES.EMPLOYEE]) && (index === 0 || index === 1),
+                     list: link.list?.filter((item) => hasAccess(rolesId, item.hasAccess)),
                   }
                })
                .map((props, index) => (
