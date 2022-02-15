@@ -1,7 +1,4 @@
-import { CabinetCourses } from 'components'
-import CabinetTrainers from 'components/Cabinet/CabinetTrainers'
 import {
-   About,
    Home,
    Contacts,
    Courses,
@@ -25,11 +22,10 @@ import {
    CabinetCoursesLessonTest,
    CabinetCoursesLessons,
    Logout,
+   PagesItem,
 } from 'pages/'
 
 export const RouteNames = {
-   ABOUT: '/about',
-   ADD_LESSON: '/add',
    BLOG: '/blog',
    CABINET: '/cabinet',
    CABINET_ITEM: '/cabinet/:cabinetItem',
@@ -72,9 +68,10 @@ export const RouteNames = {
    REVIEWS: '/reviews',
    SUBSCRIBE: '/subscribe',
    LOGOUT: '/logout',
+   PAGES_ITEM: '/pages/:pageId',
 }
 export const publicRoutes = [
-   { path: RouteNames.ABOUT, element: <About /> },
+   { path: RouteNames.PAGES_ITEM, element: <PagesItem /> },
    { path: RouteNames.BLOG, element: <Blog /> },
    { path: RouteNames.CONTACTS, element: <Contacts /> },
    { path: RouteNames.COURSES, element: <Courses /> },
@@ -94,8 +91,6 @@ export const publicRoutes = [
 ]
 export const privateRoutes = [
    ...publicRoutes,
-   //  { path: RouteNames.CABINET_TRAINERS, element: <CabinetTrainers /> },
-   //  { path: RouteNames.CABINET_TRAINERS_ITEM, element: <Cabinet /> },
    { path: RouteNames.CABINET, element: <Cabinet /> },
    { path: RouteNames.CABINET_ITEM, element: <Cabinet /> },
    { path: RouteNames.CABINET_ITEM_SUB, element: <Cabinet /> },
@@ -141,4 +136,10 @@ export const cabinetLinks = [
    { title: 'Статистика', href: RouteNames.CABINET_STATISTICS, number: 0 },
    { title: 'Служба поддержки', href: RouteNames.CABINET_SUPPORT, number: 0 },
    { title: 'Настройки аккаунта', href: RouteNames.CABINET_SETTINGS, number: 0 },
+]
+export const navLinks = [
+   { title: 'Мероприятия', href: RouteNames.EVENTS },
+   { title: 'Подписка', href: RouteNames.SUBSCRIBE },
+   //  { title: 'О нас', href: RouteNames.ABOUT },
+   { title: 'Новости', href: RouteNames.NEWS },
 ]

@@ -8,7 +8,7 @@ import { authSelectors } from 'store/selectors'
 import { ReactComponent as SocialGoogleSvg } from 'svg/social-google.svg'
 import { ReactComponent as SocialAppleSvg } from 'svg/social-apple.svg'
 import { ReactComponent as SocialVkSvg } from 'svg/social-vk.svg'
-import { ReactComponent as SocialFBSvg } from 'svg/social-fb.svg'
+import { ReactComponent as SocialFbSvg } from 'svg/social-fb.svg'
 import { ReactComponent as LogoutSvg } from 'svg/logout.svg'
 
 const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
@@ -92,7 +92,7 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
                   <span>Подключить</span>
                </div>
                <div className='account-settings__item-social'>
-                  <SocialFBSvg />
+                  <SocialFbSvg />
                   <span>Подключить</span>
                </div>
             </div>

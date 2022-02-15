@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { frontStaticSelectors } from 'store/selectors'
 import { ReactComponent as PhoneSvg } from 'svg/phone.svg'
@@ -14,12 +14,12 @@ const Contacts = ({ title = 'Контакты' }) => {
    const email = useInput({ is: { isRequired: true, isEmail: true } })
    const text = useInput({ is: { isRequired: true, isTextarea: true } })
 
+   const inputs = useMemo(() => [name, email, text], [name, email, text])
+
    const sendFrontContactsRequest = useRequest({
       request: sendFrontContacts,
       success: () => {
-         name.clear()
-         email.clear()
-         text.clear()
+         inputs.filter((i) => i.clear())
          setIsShow(true)
          setContent({ title: 'Заявка отправлена' })
       },
@@ -28,7 +28,7 @@ const Contacts = ({ title = 'Контакты' }) => {
    const onSubmit = (e) => {
       e.preventDefault()
 
-      if ([name, email, text].filter((i) => i.check(i.value)).length) return
+      if (inputs.filter((i) => i.check(i.value)).length) return
       const body = {
          name: name.value,
          email: email.value,

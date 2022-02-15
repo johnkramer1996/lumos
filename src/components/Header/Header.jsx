@@ -2,32 +2,25 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { HeaderBurger, HeaderLK, HeaderLogo, HeaderNotification, HeaderSearch } from './'
 import { Nav } from 'components/'
 import { Button } from 'components/ui/'
-import { RouteNames } from 'routes'
+import { navLinks } from 'routes'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'hooks/'
 import { useLocation } from 'react-router-dom'
+import { authStepTypes } from 'store/reducers/auth/types'
 
 const Header = () => {
    const { pathname } = useLocation()
-   const { setShowModal, setIsShow, setContent, setType } = useDispatch()
+   const { setIsShow, setType } = useDispatch()
    const isAuth = useSelector((state) => state.auth.isAuth)
    const [isNavActive, setIsNavActive] = useState(false)
 
    const onToggleNav = useCallback(() => setIsNavActive((prev) => !prev), [])
    const onShowModal = useCallback(() => {
       setIsShow(true)
-      setType('LOGIN')
+      setType(authStepTypes.LOGIN)
    }, [setIsShow, setType])
 
-   const itemsNav = useMemo(
-      () => [
-         { title: 'Мероприятия', href: RouteNames.EVENTS },
-         { title: 'Подписка', href: RouteNames.SUBSCRIBE },
-         { title: 'О нас', href: RouteNames.ABOUT },
-         { title: 'Новости', href: RouteNames.NEWS },
-      ],
-      [],
-   )
+   const itemsNav = useMemo(() => navLinks, [])
 
    return (
       <header className={`header${pathname === '/' ? ' header--b0' : ''}`}>

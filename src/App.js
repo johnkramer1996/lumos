@@ -8,10 +8,13 @@ import { useSelector } from 'react-redux'
 
 const App = () => {
    const { pathname } = useLocation()
-   const { fetchReferences, fetchSocUrls, fetchFrontContacts } = useDispatch()
+   const { fetchReferences, fetchSocUrls, fetchFrontContacts, fetchFrontBlogCategory, fetchFrontPages, fetchFrontPage } = useDispatch()
 
    const fetchReferencesRequest = useRequest({ request: fetchReferences })
    const fetchSocUrlsRequest = useRequest({ request: fetchSocUrls })
+   const fetchFrontContactsRequest = useRequest({ request: fetchFrontContacts })
+   const fetchFrontBlogCategoryRequest = useRequest({ request: fetchFrontBlogCategory })
+   const fetchFrontPagesRequest = useRequest({ request: fetchFrontPages })
 
    useEffect(() => {
       fetchReferencesRequest.call()
@@ -20,12 +23,10 @@ const App = () => {
 
    useEffect(() => window.scrollTo(0, 0), [pathname])
 
-   const fetchFrontContactsRequest = useRequest({
-      request: fetchFrontContacts,
-   })
-
    useEffect(() => {
       fetchFrontContactsRequest.call()
+      fetchFrontBlogCategoryRequest.call()
+      fetchFrontPagesRequest.call()
    }, [])
 
    return (

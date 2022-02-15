@@ -4,9 +4,14 @@ import { frontStaticTypes } from './types'
 
 export const FrontStaticActionCreators = {
    resetFrontStatic: (payload) => ({ type: frontStaticTypes.RESET_FRONT_EVENTS, payload }),
-   setFrontStaticData: (payload) => ({ type: frontStaticTypes.SET_FRONT_STATIC_DATA, payload }),
-   setFrontStaticFaq: (payload) => ({ type: frontStaticTypes.SET_FRONT_STATIC_FAQ, payload }),
-   setFrontStaticContacts: (payload) => ({ type: frontStaticTypes.SET_FRONT_STATIC_CONTACTS, payload }),
+   setFrontStaticFaqData: (payload) => ({ type: frontStaticTypes.SET_FRONT_FAQ_DATA, payload }),
+   setFrontStaticFaq: (payload) => ({ type: frontStaticTypes.SET_FRONT_FAQ, payload }),
+   setFrontStaticContacts: (payload) => ({ type: frontStaticTypes.SET_FRONT_CONTACTS, payload }),
+   setFrontStaticBlogCategoryData: (payload) => ({ type: frontStaticTypes.SET_FRONT_BLOG_CATEGORY_DATA, payload }),
+   setFrontStaticBlogCategory: (payload) => ({ type: frontStaticTypes.SET_FRONT_BLOG_CATEGORY, payload }),
+   setFrontStaticPagesData: (payload) => ({ type: frontStaticTypes.SET_FRONT_BLOG_CATEGORY_DATA, payload }),
+   setFrontStaticPages: (payload) => ({ type: frontStaticTypes.SET_FRONT_PAGES, payload }),
+   setFrontStaticPage: (payload) => ({ type: frontStaticTypes.SET_FRONT_PAGE, payload }),
    ...crateActionCreator(FrontStaticService),
 }
 
@@ -17,7 +22,7 @@ export const frontStaticHandlers = {
    fetchFrontFaq: {
       ...defaultHandlers.fetchFrontFaq,
       success: ({ dispatch, response, prevData, data }) => {
-         dispatch(FrontStaticActionCreators.setFrontStaticData(prevData || {}))
+         dispatch(FrontStaticActionCreators.setFrontStaticFaqData(prevData || {}))
          dispatch(FrontStaticActionCreators.setFrontStaticFaq(data || []))
       },
    },
@@ -27,7 +32,25 @@ export const frontStaticHandlers = {
          dispatch(FrontStaticActionCreators.setFrontStaticContacts(data || {}))
       },
    },
-   sendFrontContacts: {
-      ...defaultHandlers.sendFrontContacts,
+   //  sendFrontContacts
+   fetchFrontBlogCategory: {
+      ...defaultHandlers.fetchFrontBlogCategory,
+      success: ({ dispatch, response, prevData, data }) => {
+         dispatch(FrontStaticActionCreators.setFrontStaticBlogCategoryData(prevData || {}))
+         dispatch(FrontStaticActionCreators.setFrontStaticBlogCategory(data || []))
+      },
+   },
+   fetchFrontPages: {
+      ...defaultHandlers.fetchFrontPages,
+      success: ({ dispatch, response, prevData, data }) => {
+         dispatch(FrontStaticActionCreators.setFrontStaticPagesData(prevData || {}))
+         dispatch(FrontStaticActionCreators.setFrontStaticPages(data || []))
+      },
+   },
+   fetchFrontPage: {
+      ...defaultHandlers.fetchFrontPage,
+      success: ({ dispatch, response, prevData, data }) => {
+         dispatch(FrontStaticActionCreators.setFrontStaticPage(data || {}))
+      },
    },
 }
