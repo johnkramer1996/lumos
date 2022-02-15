@@ -1,18 +1,15 @@
 import React, { useState } from 'react'
 // import { ReactComponent as LikeSvg } from 'svg/like.svg'
 import { ReactComponent as ShareSvg } from 'svg/share.svg'
-import { useSelector } from 'react-redux'
-import { frontCoursesSelectors } from 'store/selectors'
 import Like from 'svg/Like'
 import Favorite from 'svg/Favorite'
 import { THEME_COLORS } from 'constants'
 import { useDispatch, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 
-const CoursesItemTopNav = () => {
+const CoursesItemTopNav = ({ course }) => {
    const { courseId } = useParams()
    const { addLike, addFavorite } = useDispatch()
-   const course = useSelector(frontCoursesSelectors.getCourse)
    const { count_likes = 0, likes = [], isfavorite, is_liked } = course
    const [isLike, setIsLike] = useState(is_liked)
    const [countLikes, setCountLikes] = useState(count_likes)
@@ -30,6 +27,8 @@ const CoursesItemTopNav = () => {
       setIsFavorite(!isFavorite)
       addFavoriteRequest.call({ courseId })
    }
+
+   console.log(course)
 
    return (
       <div className='course-top__nav'>
