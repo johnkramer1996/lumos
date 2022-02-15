@@ -4,13 +4,14 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useLocation } from 'react-router-dom'
 import { cabinetLinks, RouteNames } from 'routes'
-import { authSelectors } from 'store/selectors'
+import { authSelectors, settingsSelectors, systemSelectors } from 'store/selectors'
 import { hasAccess, isActiveClass } from 'utils'
 import CabinetSidebarItem from './CabinetSidebarItem'
 
 const CabinetSidebar = () => {
+   const location = useLocation()
    const rolesId = useSelector(authSelectors.getRolesId)
-   const filter = useSelector(({ settings }) => settings.filter)
+   const filter = useSelector(settingsSelectors.getFilter)
 
    return (
       <>
@@ -20,11 +21,11 @@ const CabinetSidebar = () => {
                   // TODO REMAKE IT
                   return {
                      ...link,
-                     dropdown: hasAccess(rolesId, [ROLES.TRAINER, ROLES.EMPLOYEE]) && (index === 0 || index === 1),
+                     dropdown: hasAccess(rolesId, [ROLES.USER, ROLES.TRAINER, ROLES.EMPLOYEE]) && (index === 0 || index === 1),
                   }
                })
                .map((props, index) => (
-                  <CabinetSidebarItem key={index} {...props} index={index} filter={filter} />
+                  <CabinetSidebarItem key={index} {...props} index={index} filter={filter} search={location.search} />
                ))}
          </div>
       </>

@@ -120,6 +120,7 @@ export const cabinetLinks = [
       list: [
          { title: 'На модерации', search: 'nomoderated' },
          { title: 'Модерирование', search: 'moderated' },
+         { title: 'Избранное', search: 'favorite' },
       ],
    },
    {

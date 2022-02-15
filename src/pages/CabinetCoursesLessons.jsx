@@ -10,7 +10,7 @@ import { Button, Loader } from 'components/ui'
 
 const CabinetCoursesLessons = () => {
    const { courseId } = useParams()
-   const { setCourse, setLesson, setLessons, fetchUserCourse } = useDispatch()
+   const { resetCourse, fetchUserCourse } = useDispatch()
    const role = useSelector(authSelectors.getRolesId)
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
@@ -28,11 +28,7 @@ const CabinetCoursesLessons = () => {
    useEffect(() => {
       fetchUserCourseRequest.call({ courseId })
 
-      return () => {
-         setLessons([])
-         setLesson({})
-         setCourse({})
-      }
+      return () => resetCourse()
    }, [])
 
    return (

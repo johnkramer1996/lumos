@@ -7,10 +7,10 @@ import { THEME_COLORS } from 'constants'
 import { useDispatch, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 
-const CoursesItemTopNav = ({ course }) => {
+const CoursesItemTopNav = ({ course = {} }) => {
    const { courseId } = useParams()
    const { addLike, addFavorite } = useDispatch()
-   const { count_likes = 0, likes = [], isfavorite, is_liked } = course
+   const { count_likes = 0, is_liked, isfavorite } = course
    const [isLike, setIsLike] = useState(is_liked)
    const [countLikes, setCountLikes] = useState(count_likes)
    const [isFavorite, setIsFavorite] = useState(isfavorite)
@@ -27,8 +27,6 @@ const CoursesItemTopNav = ({ course }) => {
       setIsFavorite(!isFavorite)
       addFavoriteRequest.call({ courseId })
    }
-
-   console.log(course)
 
    return (
       <div className='course-top__nav'>

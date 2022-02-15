@@ -103,8 +103,11 @@ export default class CoursesService {
    static async addUserToCourse({ body = {} } = {}) {
       return await axios.post(userCoursesURL.ADD_USER, body)
    }
-   static async fetchUserCourses() {
-      return await axios.get(userCoursesURL.FETCH_COURSES)
+   static async fetchUserCourses(params = {}) {
+      console.log(params)
+      return await axios.get(userCoursesURL.FETCH_COURSES, {
+         params,
+      })
    }
    static async fetchUserCourse({ courseId = 0 } = {}) {
       return await axios.get(userCoursesURL.FETCH_COURSE({ courseId }))

@@ -8,6 +8,7 @@ import { authSelectors, coursesSelectors, settingsSelectors } from 'store/select
 import { getRequest } from 'utils'
 import { useLocation } from 'react-router-dom'
 import { useRef } from 'react'
+import { cabinetLinks } from 'routes'
 
 const CabinetCourses = () => {
    const location = useLocation()
@@ -30,23 +31,29 @@ const CabinetCourses = () => {
       const _ended = query.getAll('ended') ?? []
       const _nomoderated = query.getAll('nomoderated') ?? []
       const _moderated = query.getAll('moderated') ?? []
-      fetchCoursesRequests.call({ page: 1, _limit: 30, _features, _ended, _nomoderated, _moderated })
+      const favorite = query.getAll('favorite') ?? []
+      fetchCoursesRequests.call({ page: 1, _limit: 30, _features, _ended, _nomoderated, _moderated, favorite })
 
-      setFilter({ ...filter, _features, _ended, _nomoderated, _moderated })
+      setFilter({ ...filter, _features, _ended, _nomoderated, _moderated, favorite })
+
       return () => {
          setFilter({})
          resetCourses()
       }
    }, [location])
 
-   //  const ActivePage = [CabinetCoursesUser, CabinetCoursesTrainer, CabinetCoursesEmployee][rolesId - 1]
-   // return React.createElement(ActivePage, { isLoading: fetchCoursesRequest.isLoading }, null)
+   //  const title = cabinetLinks.find(({ link }) => {
+   //     return search === location.search
+   //  })
+
+   console.log(cabinetLinks)
 
    return (
       <>
          <div className='lkt-courses'>
             {/* {hasAccess(rolesId, [ROLES.USER]) && <CabinetGreet />} */}
             <CabinetTitle title={'Мои курсы'} isBtnAll={false} />
+            {/* {title} */}
             {/* // TODO REMAKE TO HOC */}
             {!fetchCoursesRequests.isLoading && <CabinetNav total={data.total} />}
             <CoursesItemWrapper items={courses} isLoading={fetchCoursesRequests.isLoading} className={`cabinet-page__items cabinet-page__items--${typeShow}`} numberComponent={2} />
