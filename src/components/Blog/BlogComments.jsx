@@ -7,7 +7,7 @@ const BlogComments = () => {
          <div className='blog-comments__inner'>
             <div className='blog-comments__top'>
                <div className='blog-comments__avatar'>
-                  <img src='img/avatar2.jpg' alt='' />
+                  <img src='/assets/img/avatar2.jpg' alt='' />
                </div>
                <textarea placeholder='Написать комментарий или задать вопрос...'></textarea>
             </div>
@@ -15,7 +15,7 @@ const BlogComments = () => {
                <div className='blog-comments__main'>
                   <div className='blog-comments__item'>
                      <div className='blog-comments__avatar'>
-                        <img src='img/avatar3.jpg' alt='' />
+                        <img src='/assets/img/avatar3.jpg' alt='' />
                      </div>
                      <div className='blog-comments__item-content'>
                         <div className='blog-comments__item-top'>
@@ -34,7 +34,7 @@ const BlogComments = () => {
                <div className='blog-comments__sub'>
                   <div className='blog-comments__item'>
                      <div className='blog-comments__avatar'>
-                        <img src='img/avatar4.jpg' alt='' />
+                        <img src='/assets/img/avatar4.jpg' alt='' />
                      </div>
                      <div className='blog-comments__item-content'>
                         <div className='blog-comments__item-top'>
@@ -52,7 +52,7 @@ const BlogComments = () => {
                   </div>
                   <div className='blog-comments__item'>
                      <div className='blog-comments__avatar'>
-                        <img src='img/avatar5.jpg' alt='' />
+                        <img src='/assets/img/avatar5.jpg' alt='' />
                      </div>
                      <div className='blog-comments__item-content'>
                         <div className='blog-comments__item-top'>
@@ -69,7 +69,7 @@ const BlogComments = () => {
                   </div>
                   <div className='blog-comments__item'>
                      <div className='blog-comments__avatar'>
-                        <img src='img/avatar4.jpg' alt='' />
+                        <img src='/assets/img/avatar4.jpg' alt='' />
                      </div>
                      <div className='blog-comments__item-content'>
                         <div className='blog-comments__item-top'>
@@ -97,7 +97,7 @@ const BlogComments = () => {
                <div className='blog-comments__main'>
                   <div className='blog-comments__item'>
                      <div className='blog-comments__avatar'>
-                        <img src='img/avatar3.jpg' alt='' />
+                        <img src='/assets/img/avatar3.jpg' alt='' />
                      </div>
                      <div className='blog-comments__item-content'>
                         <div className='blog-comments__item-top'>
@@ -116,7 +116,7 @@ const BlogComments = () => {
                <div className='blog-comments__sub'>
                   <div className='blog-comments__item'>
                      <div className='blog-comments__avatar'>
-                        <img src='img/avatar4.jpg' alt='' />
+                        <img src='/assets/img/avatar4.jpg' alt='' />
                      </div>
                      <div className='blog-comments__item-content'>
                         <div className='blog-comments__item-top'>
@@ -134,7 +134,7 @@ const BlogComments = () => {
                   </div>
                   <div className='blog-comments__item'>
                      <div className='blog-comments__avatar'>
-                        <img src='img/avatar5.jpg' alt='' />
+                        <img src='/assets/img/avatar5.jpg' alt='' />
                      </div>
                      <div className='blog-comments__item-content'>
                         <div className='blog-comments__item-top'>

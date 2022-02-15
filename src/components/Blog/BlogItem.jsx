@@ -1,4 +1,4 @@
-import { Share } from 'components'
+import { Comments, Share } from 'components'
 import { Loader } from 'components/ui'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -9,6 +9,7 @@ import BlogComments from './BlogComments'
 import BlogGroup from './BlogGroup'
 
 const BlogItem = ({ isLoading, title, image, text, interested = [] }) => {
+   const can_comment = true
    return (
       <section className='blog-page'>
          {isLoading ? (
@@ -33,10 +34,9 @@ const BlogItem = ({ isLoading, title, image, text, interested = [] }) => {
                      <Share />
                   </div>
                </div>
-
                <BlogGroup items={interested} title='Вам может быть интересно' />
-
-               <BlogComments />
+               {can_comment && <Comments />}
+               {/* <BlogComments /> */}
             </div>
          )}
       </section>

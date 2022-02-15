@@ -143,7 +143,6 @@ const CabinetCoursesLesson = () => {
                            ))}
                      </div>
                   </div>
-                  <Comments />
                   {can_comment && <Comments />}
                </>
             )}
