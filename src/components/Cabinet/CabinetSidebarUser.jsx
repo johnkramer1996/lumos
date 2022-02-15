@@ -5,7 +5,7 @@ import { authSelectors } from 'store/selectors'
 import { getURL, hasAccess } from 'utils'
 
 const CabinetSidebarUser = () => {
-   const role = useSelector(authSelectors.getRolesId)
+   const rolesId = useSelector(authSelectors.getRolesId)
 
    return (
       <>
@@ -14,7 +14,7 @@ const CabinetSidebarUser = () => {
                <img src={getURL.avatar('', ROLES.TRAINER)} alt='' />
             </div>
             <div className='cabinet-student__card-name'>Олег Олегов</div>
-            {hasAccess(role, [ROLES.EMPLOYEE]) && (
+            {hasAccess(rolesId, [ROLES.EMPLOYEE]) && (
                <div className='cabinet-student__card-balls'>
                   <i></i>
                   <span>340 баллов</span>
@@ -27,7 +27,7 @@ const CabinetSidebarUser = () => {
                      olel83@gmail.com
                   </a>
                </div>
-               {hasAccess(role, [ROLES.EMPLOYEE]) && (
+               {hasAccess(rolesId, [ROLES.EMPLOYEE]) && (
                   <div className='cabinet-student__card-item'>
                      <span className='cabinet-student__card-item-title'>Телефон</span>
                      <a className='cabinet-student__card-item-link' href='tel:+7 777 777 77 77'>
@@ -35,7 +35,7 @@ const CabinetSidebarUser = () => {
                      </a>
                   </div>
                )}
-               {hasAccess(role, [ROLES.EMPLOYEE]) && (
+               {hasAccess(rolesId, [ROLES.EMPLOYEE]) && (
                   <div className='cabinet-student__card-item'>
                      <span className='cabinet-student__card-item-title'>Отпуск</span>
                      <p className='cabinet-student__card-item-text'>с 13 мая до 25 мая</p>

@@ -60,7 +60,7 @@ const CoursesItem = () => {
             <Loader />
          ) : (
             <>
-               <CoursesItemTop course={course} />
+               <CoursesItemTop />
                <CoursesItemInfo onEnroll={onEnroll} isEnrolledPage={isEnrolledPage} />
                <CoursesItemInfo2 onEnroll={onEnroll} isEnrolledPage={isEnrolledPage} />
                <CoursesItemPopular />

@@ -8,8 +8,6 @@ const CoursesItemVariansts = () => {
    const prices = useSelector(frontCoursesSelectors.getPrices)
    const modules = useSelector(frontCoursesSelectors.getModules)
 
-   console.log(modules)
-
    prices.forEach((price) => {
       if (price.moduls.length) {
          price.modules = price.moduls.map((item) => modules[+item]).filter((item) => item)

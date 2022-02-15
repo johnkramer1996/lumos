@@ -86,7 +86,6 @@ export default class CoursesService {
       return await axios.delete(trainerCoursesLessonsURL.DELETE_LESSON({ courseId, lessonId }))
    }
    static async uploadFile({ courseId = 0, lessonId = 0, body = {} } = {}) {
-      console.log(body)
       return await axios.post(trainerCoursesLessonsURL.UPLOAD_FILE({ courseId, lessonId }), body, {
          headers: {
             'Content-Type': 'multipart/form-data',
@@ -104,7 +103,6 @@ export default class CoursesService {
       return await axios.post(userCoursesURL.ADD_USER, body)
    }
    static async fetchUserCourses(params = {}) {
-      console.log(params)
       return await axios.get(userCoursesURL.FETCH_COURSES, {
          params,
       })

@@ -24,6 +24,7 @@ import {
    CabinetCoursesLessons,
    Logout,
    PagesItem,
+   TrainersItem,
 } from 'pages/'
 
 export const RouteNames = {
@@ -52,12 +53,11 @@ export const RouteNames = {
    CABINET_STATISTICS: '/cabinet/statistics',
    CABINET_SUPPORT: '/cabinet/support',
    CABINET_SETTINGS: '/cabinet/settings',
-   CABINET_TRAINERS: '/cabinet/trainers',
-   CABINET_TRAINERS_ITEM: '/cabinet/trainers/:trainerId',
    CONTACTS: '/contacts',
    COURSES: '/courses',
    COURSES_ITEM: '/courses/:courseId',
    COURSES_LESSON: '/courses/:courseId/lessons/:lessonId',
+   COURSES_TRAINER: '/courses/:courseId/:trainerId',
    ERROR: '/error',
    FAQ: '/faq',
    EVENTS: '/events',
@@ -78,6 +78,7 @@ export const publicRoutes = [
    { path: RouteNames.COURSES, element: <Courses /> },
    { path: RouteNames.COURSES_ITEM, element: <CoursesItem /> },
    { path: RouteNames.COURSES_LESSON, element: <CabinetCoursesLesson /> },
+   { path: RouteNames.COURSES_TRAINER, element: <TrainersItem /> },
    { path: RouteNames.EVENTS, element: <Events /> },
    { path: RouteNames.EVENTS_ITEM, element: <EventsItem /> },
    { path: RouteNames.FAQ, element: <Faq /> },

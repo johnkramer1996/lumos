@@ -28,6 +28,8 @@ const CoursesItemTopNav = ({ course = {} }) => {
       addFavoriteRequest.call({ courseId })
    }
 
+   console.log(course)
+
    return (
       <div className='course-top__nav'>
          <button className='course-top__nav-item course-top__like' onClick={onLike}>

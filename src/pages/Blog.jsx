@@ -1,30 +1,33 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { News as NewsComponent } from 'components/'
+import { useSelector } from 'react-redux'
+import { frontStaticSelectors } from 'store/selectors'
+import { useDispatch, useQuery, useRequest } from 'hooks'
+import { useLocation } from 'react-router-dom'
 
 const Blog = () => {
-   const popularItems = [
-      {
-         id: 1,
-         img: '/assets/img/blog2.jpg',
-         category: 'Раздел статьи',
-         title: 'Название статьи в блоге в несколько',
-         descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pharetra, eget nunc hendrerit mauris sit magnis cursus facilisis. Tellus non pharetra, quam quam enim libero, in. Eget venenatis rhoncus a metus, trop..',
-         author: 'Ольга Олеговна',
-         numberComments: 4,
-      },
-      {
-         id: 2,
-         img: '/assets/img/blog3.jpg',
-         category: 'Раздел статьи',
-         title: 'Название статьи в блоге в несколько',
-         descr: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pharetra, eget nunc hendrerit mauris sit magnis cursus facilisis. Tellus non pharetra, quam quam enim libero, in. Eget venenatis rhoncus a metus, trop..',
-         author: 'Ольга Олеговна',
-         numberComments: 4,
-      },
-   ]
-   const newItems = popularItems
+   const location = useLocation()
+   const query = useQuery()
+   const { fetchFrontBlogCategory } = useDispatch()
+   const { allBlogs, popularBlogs, newBlogs } = useSelector(frontStaticSelectors.getBlogs)
 
-   return <NewsComponent title={'Блог'} popularItems={popularItems} newItems={newItems} />
+   const fetchFrontBlogCategoryRequest = useRequest({ request: fetchFrontBlogCategory })
+   useEffect(() => {
+      const _limit = 100
+      const _limit_popular = 100
+      const _limit_new = 100
+      const category_id = query.getAll('category_id') ?? []
+      fetchFrontBlogCategoryRequest.call({
+         _limit,
+         _limit_popular,
+         _limit_new,
+         category_id,
+      })
+   }, [location])
+
+   console.log(allBlogs)
+
+   return <NewsComponent title={'Блог'} popularItems={popularBlogs} newItems={newBlogs} />
 }
 
 export default Blog

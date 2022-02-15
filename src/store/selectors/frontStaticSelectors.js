@@ -4,6 +4,7 @@ const frontStaticSelectors = {
    getContacts: ({ frontStatic }) => frontStatic.contacts,
    getBlogCategoryData: ({ frontStatic }) => frontStatic.blogCategoryData,
    getBlogCategory: ({ frontStatic }) => frontStatic.blogCategory,
+   getBlogs: ({ frontStatic }) => frontStatic.blogs,
    getPagesData: ({ frontStatic }) => frontStatic.pagesData,
    getPages: ({ frontStatic }) => frontStatic.pages,
    getPage: ({ frontStatic }) => frontStatic.page,

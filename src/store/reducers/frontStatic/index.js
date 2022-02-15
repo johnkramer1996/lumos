@@ -6,6 +6,7 @@ const initialState = {
    contacts: {},
    blogCategoryData: {},
    blogCategory: [],
+   blogs: { allBlogs: [], popularBlogs: [], newBlogs: [] },
    pagesData: {},
    pages: [],
    page: {},
@@ -25,6 +26,8 @@ export default function frontStaicReducer(state = initialState, action) {
          return { ...state, blogCategoryData: action.payload }
       case frontStaticTypes.SET_FRONT_BLOG_CATEGORY:
          return { ...state, blogCategory: action.payload }
+      case frontStaticTypes.SET_FRONT_BLOGS:
+         return { ...state, blogs: action.payload }
       case frontStaticTypes.SET_FRONT_PAGES_DATA:
          return { ...state, pagesData: action.payload }
       case frontStaticTypes.SET_FRONT_PAGES:

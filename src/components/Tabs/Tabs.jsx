@@ -4,7 +4,7 @@ import { Loader } from 'components/ui'
 
 const Tabs = ({ items = [], isLoading = false, classPrefix = 'course-report', onChangeListener = () => {}, isAvaibleIndex = () => true, all }, ref) => {
    const [itemsState, setItems] = useState(items)
-   const [activeIndex, setAtiveIndex] = useState(all ? -1 : 0)
+   const [activeIndex, setAtiveIndex] = useState(false && all ? -1 : 0)
 
    useEffect(() => {
       setItems([...items])
@@ -28,7 +28,7 @@ const Tabs = ({ items = [], isLoading = false, classPrefix = 'course-report', on
             <>
                <div className={`${classPrefix}__nav`}>
                   <div className={`${classPrefix}__tabs`}>
-                     {all && (
+                     {false && all && (
                         <div className={`${classPrefix}__tab${activeIndex === -1 ? ` ${classPrefix}__tab--active` : ''} ${classPrefix}__tab`} onClick={() => events.changeTab(-1)}>
                            Все
                         </div>
@@ -57,7 +57,7 @@ const Tabs = ({ items = [], isLoading = false, classPrefix = 'course-report', on
                   <Loader />
                ) : (
                   <div className={`${classPrefix}__content  ${classPrefix}__content--active`}>
-                     {all && activeIndex === -1 ? itemsState.map(({ component }, index) => <div key={index}>{component}</div>) : itemsState[activeIndex].component}
+                     {false && all && activeIndex === -1 ? itemsState.map(({ component }, index) => <div key={index}>{component}</div>) : itemsState[activeIndex].component}
                   </div>
                   // itemsState.items.map(({ component }, index) => (
                   //     <div key={index} className={`${classPrefix}__content${itemsState.activeIndex === index ? ` ${classPrefix}__content--active` : ''}`}>

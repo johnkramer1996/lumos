@@ -17,13 +17,10 @@ const CabinetSidebar = () => {
       <>
          <div className='sidebar'>
             {cabinetLinks
-               .map((link, index) => {
-                  // TODO REMAKE IT
-                  return {
-                     ...link,
-                     list: link.list?.filter((item) => hasAccess(rolesId, item.hasAccess)),
-                  }
-               })
+               .map((link, index) => ({
+                  ...link,
+                  list: link.list?.filter((item) => hasAccess(rolesId, item.hasAccess)),
+               }))
                .map((props, index) => (
                   <CabinetSidebarItem key={index} {...props} index={index} filter={filter} search={location.search} />
                ))}

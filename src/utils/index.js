@@ -172,7 +172,7 @@ export const joinData = (arr1, arr2, id1, id2, prop1, prop2) => {
    )
 }
 
-export const getFullName = ({ first_name, last_name, name }) => `${first_name || name || 'No name'} ${last_name || ''}`
+export const getFullName = ({ first_name = '', last_name = '', name = '' } = {}) => `${first_name || name || 'No name'} ${last_name || ''}`
 
 export const timer = (days = {}, hours = {}, minutes = {}, seconds = {}) => {
    const end = new Date('02/19/2022 10:1 AM')

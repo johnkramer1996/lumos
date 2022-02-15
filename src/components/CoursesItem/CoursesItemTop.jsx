@@ -1,16 +1,20 @@
 import { ROLES } from 'constants'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import { RouteNames } from 'routes'
 import { frontCoursesSelectors, systemSelectors } from 'store/selectors'
 import { declOfNum, getDeclOfArray, getFullName, getURL } from 'utils'
 import CoursesItemTopNav from './CoursesItemTopNav'
 
 const CoursesItemTop = ({ className }) => {
-   const { name, category_id, all_users } = useSelector(frontCoursesSelectors.getCourse)
+   const { courseId } = useParams()
+   const course = useSelector(frontCoursesSelectors.getCourse)
    const trainer = useSelector(frontCoursesSelectors.getTrainer)
-   const { id: trainerId, avatar } = trainer
    const { themes } = useSelector(systemSelectors.getReferences)
+
+   const { name, category_id, all_users } = course
+   const { id: trainerId, avatar } = trainer
    const { name: categoryName } = themes[category_id] || {}
 
    return (
@@ -19,7 +23,7 @@ const CoursesItemTop = ({ className }) => {
             <div className='course-top__title display-3'>{name}</div>
             <div className='course-top__bottom'>
                <div className='course-top__left'>
-                  <Link to={`/cabinet/trainers/${trainerId}`} className='course-top__user'>
+                  <Link to={getURL.parseURL(RouteNames.COURSES_TRAINER, { courseId, trainerId })} className='course-top__user'>
                      <img src={getURL.avatar(avatar, ROLES.TRAINER)} alt='' />
                      <span>{getFullName(trainer)}</span>
                   </Link>
@@ -29,7 +33,7 @@ const CoursesItemTop = ({ className }) => {
                   </div>
                </div>
                <div className='course-top__right'>
-                  <CoursesItemTopNav />
+                  <CoursesItemTopNav course={course} />
                </div>
             </div>
          </div>
