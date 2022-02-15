@@ -1,30 +1,34 @@
 import React, { useState } from 'react'
 // import { ReactComponent as LikeSvg } from 'svg/like.svg'
 import { ReactComponent as ShareSvg } from 'svg/share.svg'
-import { ReactComponent as FavoriteSvg } from 'svg/favorite.svg'
 import { useSelector } from 'react-redux'
 import { frontCoursesSelectors } from 'store/selectors'
 import Like from 'svg/Like'
+import Favorite from 'svg/Favorite'
 import { THEME_COLORS } from 'constants'
 import { useDispatch, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 
 const CoursesItemTopNav = () => {
    const { courseId } = useParams()
-   const { count_likes = 0, likes = [], isfavorite, is_liked, ...rest } = useSelector(frontCoursesSelectors.getCourse)
+   const { addLike, addFavorite } = useDispatch()
    const course = useSelector(frontCoursesSelectors.getCourse)
-   const { addLike } = useDispatch()
+   const { count_likes = 0, likes = [], isfavorite, is_liked } = course
    const [isLike, setIsLike] = useState(is_liked)
    const [countLikes, setCountLikes] = useState(count_likes)
+   const [isFavorite, setIsFavorite] = useState(isfavorite)
 
-   const addLikeRequest = useRequest({
-      request: addLike,
-   })
+   const addLikeRequest = useRequest({ request: addLike })
+   const addFavoriteRequest = useRequest({ request: addFavorite })
 
    const onLike = () => {
       setCountLikes(isLike ? countLikes - 1 : countLikes + 1)
       setIsLike(!isLike)
       addLikeRequest.call({ courseId })
+   }
+   const onFavorite = () => {
+      setIsFavorite(!isFavorite)
+      addFavoriteRequest.call({ courseId })
    }
 
    return (
@@ -37,8 +41,8 @@ const CoursesItemTopNav = () => {
             <ShareSvg />
             <span>Поделиться</span>
          </button>
-         <button className='course-top__nav-item'>
-            <FavoriteSvg />
+         <button className='course-top__nav-item' onClick={onFavorite}>
+            {isFavorite ? <Favorite color={THEME_COLORS.ACCENT} fill /> : <Favorite />}
             <span>В избранное</span>
          </button>
       </div>

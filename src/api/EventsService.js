@@ -20,7 +20,6 @@ export default class EventsService {
    }
    static async putEvent({ eventId = 0, body = {} } = {}) {
       body.append('_method', 'PUT')
-      console.log(body)
       return await axios.post(trainerEventsURL.PUT_EVENT({ eventId }), body, {
          headers: {
             'Content-Type': 'multipart/form-data',
