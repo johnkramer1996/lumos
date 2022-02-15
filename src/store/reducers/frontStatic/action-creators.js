@@ -10,6 +10,8 @@ export const FrontStaticActionCreators = {
    setFrontStaticBlogCategoryData: (payload) => ({ type: frontStaticTypes.SET_FRONT_BLOG_CATEGORY_DATA, payload }),
    setFrontStaticBlogCategory: (payload) => ({ type: frontStaticTypes.SET_FRONT_BLOG_CATEGORY, payload }),
    setFrontStaticBlogs: (payload) => ({ type: frontStaticTypes.SET_FRONT_BLOGS, payload }),
+   setFrontStaticBlog: (payload) => ({ type: frontStaticTypes.SET_FRONT_BLOG, payload }),
+   setFrontStaticInterested: (payload) => ({ type: frontStaticTypes.SET_FRONT_INTERESTED, payload }),
    setFrontStaticPagesData: (payload) => ({ type: frontStaticTypes.SET_FRONT_BLOG_CATEGORY_DATA, payload }),
    setFrontStaticPages: (payload) => ({ type: frontStaticTypes.SET_FRONT_PAGES, payload }),
    setFrontStaticPage: (payload) => ({ type: frontStaticTypes.SET_FRONT_PAGE, payload }),
@@ -50,6 +52,13 @@ export const frontStaticHandlers = {
                popularBlogs,
             }),
          )
+      },
+   },
+   fetchFrontBlog: {
+      ...defaultHandlers.fetchFrontBlog,
+      success: ({ dispatch, response, prevData, data }) => {
+         dispatch(FrontStaticActionCreators.setFrontStaticBlog(data?.blog || []))
+         dispatch(FrontStaticActionCreators.setFrontStaticInterested(data?.interested || []))
       },
    },
    fetchFrontPages: {

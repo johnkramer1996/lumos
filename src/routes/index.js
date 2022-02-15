@@ -25,10 +25,12 @@ import {
    Logout,
    PagesItem,
    TrainersItem,
+   BlogItem,
 } from 'pages/'
 
 export const RouteNames = {
    BLOG: '/blog',
+   BLOG_ITEM: '/blog/:blogId',
    CABINET: '/cabinet',
    CABINET_ITEM: '/cabinet/:cabinetItem',
    CABINET_ITEM_SUB: '/cabinet/:cabinetItem/:cabinetId',
@@ -74,6 +76,7 @@ export const RouteNames = {
 export const publicRoutes = [
    { path: RouteNames.PAGES_ITEM, element: <PagesItem /> },
    { path: RouteNames.BLOG, element: <Blog /> },
+   { path: RouteNames.BLOG_ITEM, element: <BlogItem /> },
    { path: RouteNames.CONTACTS, element: <Contacts /> },
    { path: RouteNames.COURSES, element: <Courses /> },
    { path: RouteNames.COURSES_ITEM, element: <CoursesItem /> },

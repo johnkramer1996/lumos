@@ -76,7 +76,6 @@ export const courseHandlers = {
    fetchModules: {
       ...defaultHandlers.fetchModules,
       success: ({ dispatch, response, prevData, data }) => {
-         console.log(data)
          dispatch(CoursesActionCreators.setModules(data || []))
       },
    },
@@ -180,7 +179,6 @@ export const courseHandlers = {
    addComment: {
       ...defaultHandlers.addComment,
       success: ({ dispatch, response, prevData, data }) => {
-         console.log(data)
          dispatch(CoursesActionCreators.addLessonComment(data?.comments[0] || []))
       },
    },

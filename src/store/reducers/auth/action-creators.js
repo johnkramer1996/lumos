@@ -68,7 +68,6 @@ export const authHandlers = {
    auth: {
       ...defaultHandlers.auth,
       success: ({ dispatch, response, prevData, data }) => {
-         console.log(data)
          dispatch(AuthActionCreators.setIsAuth(true))
          dispatch(AuthActionCreators.setUser(data?.user || {}))
          dispatch(AuthActionCreators.setToken(data?.token))

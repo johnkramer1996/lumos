@@ -1,9 +1,9 @@
 import { Tabs } from 'components'
+import BlogGroup from 'components/Blog/BlogGroup'
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { frontCoursesSelectors, frontStaticSelectors } from 'store/selectors'
-import NewsTabs from './NewsTabs'
 
 const News = ({ title, popularItems = [], newItems = [] }) => {
    const location = useLocation()
@@ -12,8 +12,24 @@ const News = ({ title, popularItems = [], newItems = [] }) => {
 
    const tabItems = useMemo(
       () => [
-         { title: 'Все', component: <NewsTabs popularItems={popularItems} newItems={newItems} /> },
-         ...blogCategory.map(({ name, id }) => ({ title: name, component: <NewsTabs popularItems={popularItems} newItems={newItems} /> })),
+         {
+            title: 'Все',
+            component: (
+               <>
+                  <BlogGroup items={popularItems} title='Популярные статьи' />
+                  <BlogGroup items={newItems} title='Новые статьи' />
+               </>
+            ),
+         },
+         ...blogCategory.map(({ name, id }) => ({
+            title: name,
+            component: (
+               <>
+                  <BlogGroup items={popularItems} title='Популярные статьи' />
+                  <BlogGroup items={newItems} title='Новые статьи' />
+               </>
+            ),
+         })),
       ],
       [blogCategory, popularItems, newItems],
    )

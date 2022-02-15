@@ -16,10 +16,13 @@ export default class FrontStaticService {
          params,
       })
    }
+   static async fetchFrontBlog({ blogId = 0 } = {}) {
+      return await axios.get(frontStaticURL.FETCH_BLOG({ blogId }))
+   }
    static async fetchFrontPages() {
       return await axios.get(frontStaticURL.FETCH_PAGES)
    }
-   static async fetchFrontPage({ pageId = 1 } = {}) {
+   static async fetchFrontPage({ pageId = 0 } = {}) {
       return await axios.get(frontStaticURL.FETCH_PAGE({ pageId }))
    }
 }

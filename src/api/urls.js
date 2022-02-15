@@ -89,6 +89,7 @@ export const frontStaticURL = {
    FETCH_CONTACTS: '/front/contacts',
    SEND_CONTACTS: '/front/contacts',
    FETCH_BLOG_CATEGORY: '/front/blogcategory',
+   FETCH_BLOG: ({ blogId }) => `/front/blog/${blogId}`,
    FETCH_PAGES: '/front/pages',
    FETCH_PAGE: ({ pageId }) => `/front/pages/${pageId}`,
 }

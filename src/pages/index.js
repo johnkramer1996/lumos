@@ -1,4 +1,5 @@
 export { default as Blog } from './Blog'
+export { default as BlogItem } from './BlogItem'
 export { default as Cabinet } from './Cabinet'
 export { default as CabinetCoursesAdd } from './CabinetCoursesAdd'
 export { default as CabinetCoursesItem } from './CabinetCoursesItem'
