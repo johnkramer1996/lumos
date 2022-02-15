@@ -20,7 +20,7 @@ const CabinetCoursesLesson = () => {
    const { name: courseName } = useSelector(coursesSelectors.getCourse)
    const lessons = useSelector(coursesSelectors.getLessons)
    const lesson = useSelector(coursesSelectors.getLesson)
-   const { id, number, name, description, can_comment, is_test } = lesson
+   const { id, number, name, description, can_comment, has_text } = lesson
    const files = useSelector(coursesSelectors.getLessonFiles)
 
    const fetchUserLessonRequest = useRequest({
@@ -88,17 +88,20 @@ const CabinetCoursesLesson = () => {
                         </div>
                      </div>
                      <div className='lesson-page__right'>
-                        {hasAccess(rolesId, [ROLES.TRAINER]) && (
-                           <div className='lesson-page__nav card-bg'>
-                              <Button to={getURL.cabinetCoursesEditLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__edit' outline link>
-                                 <EditSvg />
-                                 <span>Редактировать урок</span>
-                              </Button>
-                              <Button to={getURL.cabinetCoursesLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__test' link>
-                                 Страница теста
-                              </Button>
-                           </div>
-                        )}
+                        <div className='lesson-page__nav card-bg'>
+                           {hasAccess(rolesId, [ROLES.TRAINER]) && (
+                              // TODO DO IT SIMPLE
+                              <>
+                                 <Button to={getURL.cabinetCoursesEditLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__edit' outline link>
+                                    <EditSvg />
+                                    <span>Редактировать урок</span>
+                                 </Button>
+                                 <Button to={getURL.cabinetCoursesLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__test' link>
+                                    Страница теста
+                                 </Button>
+                              </>
+                           )}
+                        </div>
                         <div className='lesson-page__files card-bg'>
                            {files.length === 0 ? (
                               <>
@@ -126,7 +129,7 @@ const CabinetCoursesLesson = () => {
                            )}
                         </div>
                         {hasAccess(rolesId, [ROLES.USER]) &&
-                           (is_test ? (
+                           (has_text ? (
                               <div className='lesson-page__test card-bg'>
                                  <div className='lesson-page__test-title display-4'>Тест</div>
                                  <div className='lesson-page__test-desc'>Для того, чтобы открыть следующий урок необходимо пройти тест для закрепления ваших знаний.</div>
