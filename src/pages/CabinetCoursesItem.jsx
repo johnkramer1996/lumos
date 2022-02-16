@@ -12,7 +12,7 @@ import CoursesTabsNotifications from 'components/CoursesTabs/CoursesTabsNotifica
 import { useMemo } from 'react'
 import { ReactComponent as EditSvg } from 'svg/edit.svg'
 import { authSelectors, coursesSelectors } from 'store/selectors'
-import { hasAccess } from 'utils'
+import { getURL, hasAccess } from 'utils'
 import { ROLES } from 'constants'
 
 const CabinetCoursesItem = () => {
@@ -23,7 +23,7 @@ const CabinetCoursesItem = () => {
    const user = useSelector(authSelectors.getUser)
    const { id: user_id } = user
    const course = useSelector(coursesSelectors.getCourse)
-   const { user_id: page_user_id } = course
+   const { name, user_id: page_user_id } = course
 
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
@@ -64,10 +64,10 @@ const CabinetCoursesItem = () => {
                         </Link>
                      </div>
                      <div className='lkt-course__top'>
-                        <h1 className='lkt-course__title display-3'>{course.name}</h1>
+                        <h1 className='lkt-course__title display-3'>{name}</h1>
                         <div className='lkt-course__nav'>
                            <button className='lkt-course__history'>История редактирования</button>
-                           <Button to={`${RouteNames.CABINET_COURSES}/${courseId}/edit`} className='lkt-course__edit' outline link>
+                           <Button to={getURL.parseURL(RouteNames.CABINET_COURSES_EDIT, { courseId })} className='lkt-course__edit' outline link>
                               <EditSvg />
                               <span>Редактировать курс</span>
                            </Button>

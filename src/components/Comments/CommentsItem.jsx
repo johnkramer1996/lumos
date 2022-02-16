@@ -2,16 +2,14 @@ import React from 'react'
 import { getDate, getFullName, getURL } from 'utils'
 
 const CommentsItem = ({ text, user = {}, updated_at }) => {
-   const { avatar, first_name, last_name, name } = user || {}
-
    return (
       <div className='blog-comments__item'>
          <div className='blog-comments__avatar'>
-            <img src={getURL.avatar(avatar)} alt='' />
+            <img src={getURL.avatar(user.avatar)} alt='' />
          </div>
          <div className='blog-comments__item-content'>
             <div className='blog-comments__item-top'>
-               <div className='blog-comments__item-name'>{getFullName({ first_name, last_name, name })}</div>
+               <div className='blog-comments__item-name'>{getFullName(user)}</div>
             </div>
             <div className='blog-comments__item-text'>{text}</div>
             <div className='blog-comments__item-bottom'>

@@ -7,6 +7,10 @@ export const CoursesActionCreators = {
    setCoursesData: (payload) => ({ type: coursesTypes.SET_COURSES_DATA, payload }),
    setCourses: (payload) => ({ type: coursesTypes.SET_COURSES, payload }),
    setCourse: (payload) => ({ type: coursesTypes.SET_COURSE, payload }),
+   resetComments: (payload) => ({ type: coursesTypes.RESET_COMMENTS, payload }),
+   setCommentsData: (payload) => ({ type: coursesTypes.SET_COMMENTS_DATA, payload }),
+   setComments: (payload) => ({ type: coursesTypes.SET_COMMENTS, payload }),
+   addComment: (payload) => ({ type: coursesTypes.ADD_COMMENT, payload }),
    setModules: (payload) => ({ type: coursesTypes.SET_MODULES, payload }),
    setDescriptions: (payload) => ({ type: coursesTypes.SET_DESCRIPTIONS, payload }),
    setPrices: (payload) => ({ type: coursesTypes.SET_PRICES, payload }),
@@ -15,9 +19,6 @@ export const CoursesActionCreators = {
    setLessonQuestions: (payload) => ({ type: coursesTypes.SET_LESSON_QUESTIONS, payload }),
    setLessonFiles: (payload) => ({ type: coursesTypes.SET_LESSON_FILES, payload }),
    addLessonFile: (payload) => ({ type: coursesTypes.ADD_LESSON_FILE, payload }),
-   setCommentsData: (payload) => ({ type: coursesTypes.SET_COMMENTS_DATA, payload }),
-   setComments: (payload) => ({ type: coursesTypes.SET_COMMENTS, payload }),
-   addLessonComment: (payload) => ({ type: coursesTypes.ADD_LESSON_COMMENT, payload }),
    ...crateActionCreator(CoursesService),
 }
 
@@ -72,7 +73,14 @@ export const courseHandlers = {
    deleteInfo: {
       ...defaultHandlers.deleteInfo,
    },
-   // fetchCourseUser
+   // fetchUsers
+   fetchComments: {
+      ...defaultHandlers.fetchComments,
+      success: ({ dispatch, response, prevData, data }) => {
+         dispatch(CoursesActionCreators.setCommentsData(prevData || {}))
+         dispatch(CoursesActionCreators.setComments(data || []))
+      },
+   },
    fetchModules: {
       ...defaultHandlers.fetchModules,
       success: ({ dispatch, response, prevData, data }) => {
@@ -179,7 +187,7 @@ export const courseHandlers = {
    addComment: {
       ...defaultHandlers.addComment,
       success: ({ dispatch, response, prevData, data }) => {
-         dispatch(CoursesActionCreators.addLessonComment(data?.comments[0] || []))
+         dispatch(CoursesActionCreators.addComment(data?.comments[0] || []))
       },
    },
    addLike: {

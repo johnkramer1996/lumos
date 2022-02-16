@@ -15,6 +15,7 @@ export const getDeclOfArray = {
    questions: ['вопрос', 'вопроса', 'вопросов'],
    files: ['файл', 'файла', 'файлов'],
    comments: ['комментарий', 'комментария', 'комментариев'],
+   new: ['новый', 'новых', 'новых'],
 }
 
 export const eventBus = {

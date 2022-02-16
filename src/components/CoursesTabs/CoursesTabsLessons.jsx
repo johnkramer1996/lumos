@@ -1,4 +1,7 @@
-import React from 'react'
+import CommentsItem from 'components/Comments/CommentsItem'
+import CommentsBoard from 'components/CommentsBoard/CommentsBoard'
+import { useDispatch, useRequest } from 'hooks'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { RouteNames } from 'routes'
@@ -7,9 +10,35 @@ import { declOfNum, getDeclOfArray, getURL } from 'utils'
 
 const CoursesTabsLessons = () => {
    const { courseId } = useParams()
-   const role = useSelector(authSelectors.getRolesId)
+   const { resetComments, fetchComments } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
+   const commentsData = useSelector(coursesSelectors.getCommentsData)
+   const comments = useSelector(coursesSelectors.getComments)
+
+   const { current_page, last_page, total } = commentsData
+
+   const [page, setPage] = useState(1)
+
+   const fetchCommentsRequest = useRequest({ request: fetchComments })
+
+   useEffect(() => {
+      return () => {
+         console.log('unmount')
+         resetComments()
+      }
+   }, [])
+
+   useEffect(() => {
+      // TODO ADD LIMIT AND PAGE!!!
+      fetchCommentsRequest.call({ courseId, page, _limit: 4 })
+   }, [page])
+
+   const onShowMoreComments = () => {
+      setPage(page + 1)
+   }
+
+   console.log(commentsData)
 
    return (
       <div className='lessons-tab'>
@@ -24,7 +53,7 @@ const CoursesTabsLessons = () => {
                   </div>
                   <div className='lessons-tab__module-items'>
                      {lessons.map(({ id, name }) => (
-                        <Link key={id} to={getURL.cabinetCoursesLesson({ courseId, lessonId: id }, role)} className='lessons-tab__module-item'>
+                        <Link key={id} to={getURL.parseURL(RouteNames.CABINET_COURSES_LESSON, { courseId, lessonId: id })} className='lessons-tab__module-item'>
                            <span className='lessons-tab__module-item-num'>01</span>
                            <span className='lessons-tab__module-item-title'>{name}</span>
                            {/* <span className='lessons-tab__module-item-notification'>1</span> */}
@@ -35,118 +64,7 @@ const CoursesTabsLessons = () => {
             ))}
          </div>
          <div className='lessons-tab__right'>
-            <div className='lessons-tab__comments'>
-               <div className='lessons-tab__comments-top'>
-                  <div className='lessons-tab__comments-title'>Комментарии</div>
-                  <div className='lessons-tab__comments-new'>2 новых</div>
-               </div>
-               <div className='lessons-tab__comments-items'>
-                  <div className='lessons-tab__comments-item lessons-tab__comments-item--new'>
-                     <div className='lessons-tab__comments-item-top'>
-                        <div className='lessons-tab__comments-item-user'>
-                           <img src='/assets/img/avatar2.jpg' alt='' />
-                           <span>Мария Мариева</span>
-                        </div>
-                        <div className='lessons-tab__comments-item-date'>12 сен в 12:40</div>
-                     </div>
-                     <div className='lessons-tab__comments-item-text'>
-                        Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem turpis?
-                     </div>
-                     <div className='lessons-tab__comments-item-title'>
-                        <span>01</span>
-                        <span>Название урока</span>
-                     </div>
-                  </div>
-                  <div className='lessons-tab__comments-item lessons-tab__comments-item--new'>
-                     <div className='lessons-tab__comments-item-top'>
-                        <div className='lessons-tab__comments-item-user'>
-                           <img src='/assets/img/avatar2.jpg' alt='' />
-                           <span>Мария Мариева</span>
-                        </div>
-                        <div className='lessons-tab__comments-item-date'>12 сен в 12:40</div>
-                     </div>
-                     <div className='lessons-tab__comments-item-text'>
-                        Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem turpis?
-                     </div>
-                     <div className='lessons-tab__comments-item-title'>
-                        <span>01</span>
-                        <span>Название урока</span>
-                     </div>
-                  </div>
-                  <div className='lessons-tab__comments-item'>
-                     <div className='lessons-tab__comments-item-top'>
-                        <div className='lessons-tab__comments-item-user'>
-                           <img src='/assets/img/avatar2.jpg' alt='' />
-                           <span>Мария Мариева</span>
-                        </div>
-                        <div className='lessons-tab__comments-item-date'>12 сен в 12:40</div>
-                     </div>
-                     <div className='lessons-tab__comments-item-text'>
-                        Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem turpis?
-                     </div>
-                     <div className='lessons-tab__comments-item-title'>
-                        <span>01</span>
-                        <span>Название урока</span>
-                     </div>
-                  </div>
-                  <div className='lessons-tab__comments-item'>
-                     <div className='lessons-tab__comments-item-top'>
-                        <div className='lessons-tab__comments-item-user'>
-                           <img src='/assets/img/avatar2.jpg' alt='' />
-                           <span>Мария Мариева</span>
-                        </div>
-                        <div className='lessons-tab__comments-item-date'>12 сен в 12:40</div>
-                     </div>
-                     <div className='lessons-tab__comments-item-text'>
-                        Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem turpis?
-                     </div>
-                     <div className='lessons-tab__comments-item-title'>
-                        <span>01</span>
-                        <span>Название урока</span>
-                     </div>
-                  </div>
-                  <div className='lessons-tab__comments-item'>
-                     <div className='lessons-tab__comments-item-top'>
-                        <div className='lessons-tab__comments-item-user'>
-                           <img src='/assets/img/avatar2.jpg' alt='' />
-                           <span>Мария Мариева</span>
-                        </div>
-                        <div className='lessons-tab__comments-item-date'>12 сен в 12:40</div>
-                     </div>
-                     <div className='lessons-tab__comments-item-text'>
-                        Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem turpis?
-                     </div>
-                     <div className='lessons-tab__comments-item-title'>
-                        <span>01</span>
-                        <span>Название урока</span>
-                     </div>
-                  </div>
-                  <div className='lessons-tab__comments-item'>
-                     <div className='lessons-tab__comments-item-top'>
-                        <div className='lessons-tab__comments-item-user'>
-                           <img src='/assets/img/avatar2.jpg' alt='' />
-                           <span>Мария Мариева</span>
-                        </div>
-                        <div className='lessons-tab__comments-item-date'>12 сен в 12:40</div>
-                     </div>
-                     <div className='lessons-tab__comments-item-text'>
-                        Accumsan tortor augue velit est amet lobortis. Sit pretium, urna, lobortis eget vitae sit aliquet id. Enim vitae aenean est, pharetra quis volutpat etiam lorem turpis?
-                     </div>
-                     <div className='lessons-tab__comments-item-title'>
-                        <span>01</span>
-                        <span>Название урока</span>
-                     </div>
-                  </div>
-               </div>
-               <div className='lessons-tab__comments-bottom'>
-                  <button className='lessons-tab__comments-more btn'>
-                     <svg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
-                        <path d='M12.6673 5.66675L8.00065 10.3334L3.33398 5.66675' stroke='#7481E0' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round' />
-                     </svg>
-                     <span>Показать больше</span>
-                  </button>
-               </div>
-            </div>
+            <CommentsBoard isLoading={fetchCommentsRequest.isLoading} items={comments} newTotal={total} isShowBtn={last_page !== current_page} onShowMore={onShowMoreComments} />
          </div>
       </div>
    )

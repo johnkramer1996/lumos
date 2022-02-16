@@ -25,7 +25,8 @@ export const trainerCoursesURL = {
    FETCH_INFO: ({ courseId }) => `/cabinet/courses/${courseId}/info`,
    EDIT_INFO: ({ courseId }) => `/cabinet/courses/${courseId}/info`,
    DELETE_INFO: ({ courseId }) => `/cabinet/courses/${courseId}/info/delete`,
-   FETCH_COURSE_USER: ({ courseId }) => `/cabinet/courses/${courseId}/users`,
+   FETCH_USERS: ({ courseId }) => `/cabinet/courses/${courseId}/users`,
+   FETCH_COMMENTS: ({ courseId }) => `/cabinet/courses/${courseId}/comments`,
 }
 export const trainerCoursesModulesURL = {
    FETCH_MODULES: ({ courseId }) => `/cabinet/courses/${courseId}/moduls`,
