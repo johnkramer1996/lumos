@@ -14,7 +14,7 @@ const AddCourseLessonEditTest = () => {
    const questions = useSelector(coursesSelectors.getLessonQuestions)
    const questionsData = useSelector(coursesSelectors.getLessonQuestionsData)
 
-   const count_answers = useInput({ initialValue: lesson.count_answers, bind: { name: 'count_answers' }, is: { isRequired: true } })
+   const count_answers = useInput({ initialValue: lesson.count_answers, is: { isRequired: true } })
    const count_answersList = new Array(questions.length).fill(0).map((_, i) => ({ name: i + 1 }))
 
    questionsData.count_answers = count_answers

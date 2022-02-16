@@ -36,6 +36,7 @@ const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, 
       return !!error
    }, [])
    const hasError = useCallback((value) => {
+      if (Array.isArray(value) && !value.length) return 'Обязательное поле'
       if (value === '') return 'Обязательное поле'
       if (isPassword && !validatePassword(value)) return 'Некорректный пароль'
       if (isName && !validateName(value)) return 'Некорректное имя'
@@ -52,6 +53,7 @@ const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, 
       value,
       prevValueRef,
       setValue,
+      setError,
       update,
       clear,
       ref: inputRef,

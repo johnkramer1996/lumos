@@ -1,6 +1,6 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
-const useInputFile = ({ initialValue = '', callbackHandler = () => {} } = {}) => {
+const useInputFile = ({ initialValue = '' } = {}) => {
    const [value, setValue] = useState(initialValue)
    const [isError, setIsError] = useState(false)
    const ref = useRef()
@@ -13,13 +13,12 @@ const useInputFile = ({ initialValue = '', callbackHandler = () => {} } = {}) =>
       remove(ref, setValue)
       open && ref.current.click()
    }, [])
+   const onOpen = useCallback(() => ref.current.click(), [])
    const check = useCallback((value) => {
       const isError = !value
       setIsError(isError)
       return isError
    }, [])
-   const onOpen = useCallback(() => ref.current.click(), [])
-
    const upload = (inputRef, setValue) => {
       const file = inputRef.current.files[0]
       if (!file) return
