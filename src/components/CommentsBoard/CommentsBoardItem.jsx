@@ -9,11 +9,11 @@ const CommentsBoardItem = ({ id, text, user = {}, user_id, updated_at }) => {
    return (
       <div className='lessons-tab__comments-item lessons-tab__comments-item--new'>
          <div className='lessons-tab__comments-item-top'>
-            <Link to={getURL.parseURL(RouteNames.USERS_ITEM, { userId: user_id })} className='lessons-tab__comments-item-user'>
+            <Link to={getURL.usersItem({ userId: user_id })} className='lessons-tab__comments-item-user'>
                <img src={getURL.avatar(user.avatar)} alt='' />
                <span>{getFullName(user)}</span>
             </Link>
-            <div className='lessons-tab__comments-item-date'>{getDate(updated_at, true)}</div>
+            <div className='lessons-tab__comments-item-date'>{getDate(updated_at)}</div>
          </div>
          <div className='lessons-tab__comments-item-text'>{text}</div>
          <div className='lessons-tab__comments-item-title'>

@@ -11,7 +11,7 @@ const FooterTop = () => {
    const { themes } = useSelector(systemSelectors.getReferences)
    const pages = useSelector(frontStaticSelectors.getPages)
 
-   const pagesItems = pages.map(({ id, name }) => ({ href: `${getURL.parseURL(RouteNames.PAGES_ITEM, { pageId: id })}`, name }))
+   const pagesItems = pages.map(({ id, name }) => ({ href: `${getURL.pagesItem({ pageId: id })}`, name }))
    const themesItems = themes.map(({ id, name }) => ({ href: `${RouteNames.COURSES}/?themes=${id}`, name }))
 
    const items = [

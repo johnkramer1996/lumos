@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom'
 import React from 'react'
-import { declOfNum, getDeclOfArray, getFullName, getURL, hasAccess } from 'utils'
-import { useSelector } from 'react-redux'
-import { authSelectors } from 'store/selectors'
+import { declOfNum, getDeclOfArray, getFullName, getRequest, getURL, hasAccess } from 'utils'
 import { ReactComponent as BookmarkSvg } from 'svg/bookmark.svg'
 import { ROLES } from 'constants'
 
-const CoursesItem3 = ({ rolesId, id = 1, image, name, all_users, all_new_users, trainer = {}, status, ...rest }) => {
+const CoursesItem3 = ({ rolesId, id = 1, image, name, all_users, all_new_users, trainer = {}, status, isToCabinet }) => {
+   const nameRoute = isToCabinet ? getRequest(['cabinetCoursesLessons', 'cabinetCoursesItem'], rolesId) : 'coursesItem'
+
    return (
-      <Link to={getURL.cabinetCoursesItem({ courseId: id }, rolesId)} className='course-card3'>
+      <Link to={getURL[nameRoute]({ courseId: id })} className='course-card3'>
          <div className='course-card3__img img img--cover'>
             <img src={getURL.img(image)} alt='' />
          </div>
@@ -17,7 +17,7 @@ const CoursesItem3 = ({ rolesId, id = 1, image, name, all_users, all_new_users, 
             {hasAccess(rolesId, [ROLES.EMPLOYEE]) && (
                <div className='course-card3__user'>
                   <img src={getURL.avatar(trainer.avatar)} alt='' />
-                  <span>{getFullName(trainer) || 'иМЯ'}</span>
+                  <span>{getFullName(trainer)}</span>
                </div>
             )}
             {status && (

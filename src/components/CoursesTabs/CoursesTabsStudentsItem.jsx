@@ -1,11 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { RouteNames } from 'routes'
 import { getDate, getFullName, getURL } from 'utils'
 
 const CoursesTabsStudentsItem = ({ id, avatar, first_name, last_name, name, email, updated_at }) => {
    return (
-      <Link to={getURL.parseURL(RouteNames.USERS_ITEM, { userId: id })} className='students-tab__item'>
+      <Link to={getURL.usersItem({ userId: id })} className='students-tab__item'>
          <div className='students-tab__item-img'>
             <img src={getURL.avatar(avatar)} alt='' />
          </div>
@@ -17,7 +16,7 @@ const CoursesTabsStudentsItem = ({ id, avatar, first_name, last_name, name, emai
                {email}
             </div>
          </div>
-         <div className='students-tab__item-date'>{getDate(updated_at, true)}</div>
+         <div className='students-tab__item-date'>{getDate(updated_at)}</div>
       </Link>
    )
 }

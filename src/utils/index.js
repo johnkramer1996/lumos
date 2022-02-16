@@ -84,12 +84,12 @@ export const crateActionCreator = (Service) => {
 
 export const namesMonth = ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря']
 
-export const getDate = (date, monthNames = false) => {
+export const getDate = (date, { monthNames = true, isYear = true, isDayFirst = true } = {}) => {
    date = new Date(date)
-   const year = date.getFullYear()
+   const year = isYear ? date.getFullYear() : ''
    const month = monthNames ? namesMonth[date.getMonth()] : addZerro(date.getMonth() + 1)
    const day = addZerro(date.getDate())
-   return monthNames ? `${day} ${month} ${year}` : `${year}-${month}-${day}`
+   return isDayFirst ? `${day} ${month} ${year}` : `${year}-${month}-${day}`
 }
 
 export const addZerro = (number) => (number <= 9 ? '0' : '') + number
@@ -134,7 +134,7 @@ export const formatBytes = (bytes, decimals = 2) => {
    return (parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) || 'Нет данных') + ' ' + (sizes[i] || '')
 }
 
-export const hasAccess = (rolesId, availables = []) => !![...availables, ROLES.ADMIN].find((i) => rolesId.find((id) => i === id))
+export const hasAccess = (rolesId = [1], availables = []) => !![...availables, ROLES.ADMIN].find((i) => rolesId.find((id) => i === id))
 
 export const getRequest = (requests, rolesId) => {
    if (requests.length < rolesId.sort((a, b) => a - b)[rolesId.length - 1]) return requests[requests.length - 1]
@@ -151,16 +151,20 @@ export const getURL = {
    defaultImg: () => '/assets/img/course2.jpg',
    avatar: (src, rolesId) => (src ? `${SITE_URL}/${src}` : getURL.defaultAvatar(rolesId)),
    defaultAvatar: (rolesId = []) => '/assets/img/' + ['avatar-user.png', 'avatar-trainer.png', 'avatar-employee.webp', 'avatar-admin.png'][rolesId[rolesId.length - 1] - 1 || 0],
-   courses: (params, rolesId) => getURL.getURLRoles([RouteNames.COURSES, RouteNames.COURSES, RouteNames.COURSES], rolesId, params),
-   coursesItem: (params, rolesId) => getURL.getURLRoles([RouteNames.COURSES_ITEM, RouteNames.COURSES_ITEM, RouteNames.COURSES_ITEM], rolesId, params),
-   cabinetEventsItem: (params, rolesId) => getURL.getURLRoles([RouteNames.EVENTS_ITEM, RouteNames.CABINET_EVENTS_ITEM, RouteNames.CABINET_EVENTS_ITEM], rolesId, params),
-   cabinetCourses: (params, rolesId) => getURL.getURLRoles([RouteNames.CABINET_COURSES, RouteNames.CABINET_COURSES, RouteNames.CABINET_COURSES], rolesId, params),
-   cabinetCoursesItem: (params, rolesId) => getURL.getURLRoles([RouteNames.CABINET_COURSES_LESSONS, RouteNames.CABINET_COURSES_ITEM, RouteNames.CABINET_COURSES_ITEM], rolesId, params),
-   cabinetCoursesLesson: (params, rolesId) => getURL.getURLRoles([RouteNames.CABINET_COURSES_LESSON, RouteNames.CABINET_COURSES_LESSON, RouteNames.CABINET_COURSES_LESSON], rolesId, params),
-   cabinetCoursesLessonTest: (params, rolesId) =>
-      getURL.getURLRoles([RouteNames.CABINET_COURSES_LESSON_TEST, RouteNames.CABINET_COURSES_LESSON_TEST, RouteNames.CABINET_COURSES_LESSON_TEST], rolesId, params),
-   cabinetCoursesEditLessonTest: (params, rolesId) =>
-      getURL.getURLRoles([RouteNames.CABINET_COURSES_LESSON_EDIT, RouteNames.CABINET_COURSES_LESSON_EDIT, RouteNames.CABINET_COURSES_LESSON_EDIT], rolesId, params),
+   courses: () => RouteNames.COURSES,
+   coursesItem: (params) => getURL.parseURL(RouteNames.COURSES_ITEM, params),
+   cabinetEventsItem: (params) => getURL.parseURL(RouteNames.CABINET_EVENTS_ITEM, params),
+   cabinetCourses: (params) => getURL.parseURL(RouteNames.CABINET_COURSES, params),
+   cabinetCoursesItem: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_ITEM, params),
+   cabinetCoursesEdit: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_EDIT, params),
+   cabinetCoursesLessons: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_LESSONS, params),
+   cabinetCoursesLesson: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_LESSON, params),
+   cabinetCoursesLessonTest: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_LESSON_TEST, params),
+   cabinetCoursesLessonEdit: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_LESSON_EDIT, params),
+   usersItem: (params) => getURL.parseURL(RouteNames.USERS_ITEM, params),
+   trainersItem: (params) => getURL.parseURL(RouteNames.TRAINERS_ITEM, params),
+   pagesItem: (params) => getURL.parseURL(RouteNames.PAGES_ITEM, params),
+   blogItem: (params) => getURL.parseURL(RouteNames.BLOG_ITEM, params),
 }
 
 export const joinData = (arr1, arr2, id1, id2, prop1, prop2) => {

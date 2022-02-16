@@ -5,17 +5,19 @@ import { frontStaticSelectors } from 'store/selectors'
 import CabinetTitle from './CabinetTitle'
 
 const CabinetUser = ({ isLoading }) => {
-   const { courses, events } = useSelector(frontStaticSelectors.getUser)
+   const { user, courses, events } = useSelector(frontStaticSelectors.getUser)
+
+   console.log(user)
 
    return (
       <div className='cabinet-student'>
          <div className='cabinet-page__group'>
             <CabinetTitle title={'Курсы'} isVisibleBtn={false} total={courses.length} />
-            <CoursesItemWrapper items={courses} isLoading={isLoading} className={`cabinet-page__items`} numberComponent={2} />
+            <CoursesItemWrapper items={courses} isLoading={isLoading} className={`cabinet-page__items`} numberComponent={2} rolesId={[1]} />
          </div>
          <div className='cabinet-page__group'>
             <CabinetTitle title={'Мероприятия'} type='events' isVisibleBtn={false} total={events.length} />
-            <CoursesItemWrapper items={events} type='events' isLoading={isLoading} className={`cabinet-page__items`} numberComponent={1} />
+            <CoursesItemWrapper items={events} type='events' isLoading={isLoading} className={`cabinet-page__items`} numberComponent={1} rolesId={[1]} />
          </div>
       </div>
    )

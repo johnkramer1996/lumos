@@ -72,11 +72,11 @@ const CabinetCoursesLessonTest = () => {
                   <div className='test-page__right'>
                      {hasAccess(rolesId, [ROLES.TRAINER]) && (
                         <div className='lesson-page__nav card-bg'>
-                           <Button to={getURL.cabinetCoursesEditLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__edit' outline link>
+                           <Button to={getURL.parseURL(RouteNames.CABINET_COURSES_LESSON_EDIT, { courseId, lessonId })} className='lesson-page__edit' outline link>
                               <EditSvg />
                               <span>Редактировать урок</span>
                            </Button>
-                           <Button to={getURL.cabinetCoursesLesson({ courseId, lessonId }, rolesId)} className='lesson-page__test' link>
+                           <Button to={getURL.parseURL(RouteNames.CABINET_COURSES_LESSON, { courseId, lessonId })} className='lesson-page__test' link>
                               Вернуться к уроку
                            </Button>
                         </div>

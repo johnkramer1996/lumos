@@ -21,7 +21,7 @@ const AddCourseTabMain = ({ refTabs, onUpdateListener }, ref) => {
    const format_study = useInput({ bind: { name: 'format_study' }, is: { isRequired: true } })
    const anytime = useInput({ initialValue: '0', bind: { name: 'anytime' }, is: { isCheckbox: true } })
    const sale_subscribe = useInput({ initialValue: '0', bind: { name: 'sale_subscribe' }, is: { isCheckbox: true } })
-   const timing = useInput({ initialValue: getDate(new Date()), bind: { name: 'timing' }, is: { isDate: true } })
+   const timing = useInput({ initialValue: getDate(new Date(), { monthNames: false, isDayFirst: false }), bind: { name: 'timing' }, is: { isDate: true } })
    const width = useInput({ bind: { name: 'width' }, is: { isRequired: true } })
    const img = useInputFile()
 

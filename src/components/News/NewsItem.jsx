@@ -13,7 +13,7 @@ const NewsItem = ({ id, image, category, title, description, user = {}, views })
             </div>
             <div className='blog-card__content'>
                <div className='blog-card__category'>{category}</div>
-               <Link to={getURL.parseURL(RouteNames.BLOG_ITEM, { blogId: id })} className='blog-card__title'>
+               <Link to={getURL.blogItem({ blogId: id })} className='blog-card__title'>
                   {title}
                </Link>
                <div className='blog-card__desc'>{description}</div>

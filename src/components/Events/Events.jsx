@@ -99,7 +99,7 @@ const Events = ({ event }) => {
                   <div className='event-page__badges'>
                      <div className='event-page__badge'>
                         <span>Дата</span>
-                        <strong>{getDate(edate, true)}</strong>
+                        <strong>{getDate(edate)}</strong>
                      </div>
                      <div className='event-page__badge'>
                         <span>Тип</span>

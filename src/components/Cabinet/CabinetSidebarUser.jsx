@@ -1,5 +1,3 @@
-import CoursesItemLoader from 'components/Courses/CoursesItemLoader'
-import { Loader } from 'components/ui'
 import { ROLES } from 'constants'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -35,7 +33,7 @@ const CabinetSidebarUser = ({ isLoading }) => {
                         {email}
                      </a>
                   </div>
-                  {hasAccess(rolesId, [ROLES.EMPLOYEE]) && (
+                  {hasAccess(rolesId, [ROLES.TRAINER, ROLES.EMPLOYEE]) && (
                      <div className='cabinet-student__card-item'>
                         <span className='cabinet-student__card-item-title'>Телефон</span>
                         <a className='cabinet-student__card-item-link' href={`tel:${phone}`}>
@@ -43,11 +41,12 @@ const CabinetSidebarUser = ({ isLoading }) => {
                         </a>
                      </div>
                   )}
-                  {hasAccess(rolesId, [ROLES.TRAINER, ROLES.EMPLOYEE]) && (
+                  {hasAccess(rolesId, [ROLES.TRAINER, ROLES.EMPLOYEE]) && vacation_start && vacation_end && (
                      <div className='cabinet-student__card-item'>
                         <span className='cabinet-student__card-item-title'>Отпуск</span>
                         <p className='cabinet-student__card-item-text'>
-                           с {getDate(vacation_start)} до {vacation_end}
+                           с {getDate(vacation_start, { isYear: false })}
+                           до {getDate(vacation_end, { isYear: false })}
                         </p>
                      </div>
                   )}

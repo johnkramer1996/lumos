@@ -8,8 +8,7 @@ import CoursesItemLoader from './CoursesItemLoader'
 import { useSelector } from 'react-redux'
 import { authSelectors } from 'store/selectors'
 
-const CoursesItemWrapper = ({ items = [], amount = items.length, isLoading = false, className = '', numberComponent = 0, type = 'course' }) => {
-   const rolesId = useSelector(authSelectors.getRolesId)
+const CoursesItemWrapper = ({ items = [], amount = items.length, isLoading = false, className = '', numberComponent = 0, type = 'course', rolesId, isToCabinet }) => {
    const ActiveComponent = useMemo(
       () =>
          ({
@@ -18,8 +17,6 @@ const CoursesItemWrapper = ({ items = [], amount = items.length, isLoading = fal
          }[type][numberComponent]),
       [numberComponent],
    )
-
-   console.log(rolesId)
 
    return (
       <>
@@ -32,7 +29,9 @@ const CoursesItemWrapper = ({ items = [], amount = items.length, isLoading = fal
                   ))}
             </div>
          ) : items.length ? (
-            <div className={`${className}`}>{items.slice(0, amount).map(({ ...props }) => React.createElement(ActiveComponent || EventsItem2, { key: props.id, rolesId, ...props }, null))}</div>
+            <div className={`${className}`}>
+               {items.slice(0, amount).map(({ ...props }) => React.createElement(ActiveComponent || EventsItem2, { key: props.id, rolesId, isToCabinet, ...props }, null))}
+            </div>
          ) : (
             <CoursesEmpty />
          )}

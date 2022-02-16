@@ -11,6 +11,7 @@ import { ReactComponent as DocumentSvg } from 'svg/document.svg'
 import { addZerro, formatBytes, getRequest, getURL, hasAccess } from 'utils'
 import { Comments } from 'components'
 import { ROLES } from 'constants'
+import { RouteNames } from 'routes'
 
 const CabinetCoursesLesson = () => {
    const { courseId, lessonId } = useParams()
@@ -89,14 +90,13 @@ const CabinetCoursesLesson = () => {
                      </div>
                      <div className='lesson-page__right'>
                         <div className='lesson-page__nav card-bg'>
-                           {hasAccess(rolesId, [ROLES.TRAINER]) && (
-                              // TODO DO IT SIMPLE
+                           {hasAccess(rolesId, [ROLES.TRAINER, ROLES.EMPLOYEE]) && (
                               <>
-                                 <Button to={getURL.cabinetCoursesEditLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__edit' outline link>
+                                 <Button to={getURL.parseURL(RouteNames.CABINET_COURSES_LESSON_EDIT, { courseId, lessonId })} className='lesson-page__edit' outline link>
                                     <EditSvg />
                                     <span>Редактировать урок</span>
                                  </Button>
-                                 <Button to={getURL.cabinetCoursesLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__test' link>
+                                 <Button to={getURL.parseURL(RouteNames.CABINET_COURSES_LESSON_TEST, { courseId, lessonId })} className='lesson-page__test' link>
                                     Страница теста
                                  </Button>
                               </>
@@ -133,13 +133,13 @@ const CabinetCoursesLesson = () => {
                               <div className='lesson-page__test card-bg'>
                                  <div className='lesson-page__test-title display-4'>Тест</div>
                                  <div className='lesson-page__test-desc'>Для того, чтобы открыть следующий урок необходимо пройти тест для закрепления ваших знаний.</div>
-                                 <Button to={getURL.cabinetCoursesLessonTest({ courseId, lessonId }, rolesId)} className='lesson-page__test-btn' link>
+                                 <Button to={getURL.cabinetCoursesLessonTest({ courseId, lessonId })} className='lesson-page__test-btn' link>
                                     Пройти тест
                                  </Button>
                               </div>
                            ) : (
                               <div className='lesson-page__test card-bg'>
-                                 <Button to={getURL.cabinetCoursesItem({ courseId, lessonId }, rolesId)} className='lesson-page__test-btn' link>
+                                 <Button to={getURL.cabinetCoursesLessons({ courseId })} className='lesson-page__test-btn' link>
                                     Вернуться к урокам
                                  </Button>
                               </div>

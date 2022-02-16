@@ -32,7 +32,7 @@ const CabinetCourses = () => {
       const _nomoderated = query.getAll('nomoderated') ?? []
       const _moderated = query.getAll('moderated') ?? []
       const favorite = query.getAll('favorite') ?? []
-      fetchCoursesRequests.call({ page: 1, _limit: 30, _features, _ended, _nomoderated, _moderated, favorite })
+      fetchCoursesRequests.call({ page: 1, _limit: 9, _features, _ended, _nomoderated, _moderated, favorite })
 
       setFilter({ ...filter, _features, _ended, _nomoderated, _moderated, favorite })
 
@@ -41,10 +41,6 @@ const CabinetCourses = () => {
          resetCourses()
       }
    }, [location])
-
-   //  const title = cabinetLinks.find(({ link }) => {
-   //     return search === location.search
-   //  })
 
    console.log(cabinetLinks)
 
@@ -55,8 +51,15 @@ const CabinetCourses = () => {
             <CabinetTitle title={'Мои курсы'} isBtnAll={false} />
             {/* {title} */}
             {/* // TODO REMAKE TO HOC */}
-            {!fetchCoursesRequests.isLoading && <CabinetNav total={data.total} />}
-            <CoursesItemWrapper items={courses} isLoading={fetchCoursesRequests.isLoading} className={`cabinet-page__items cabinet-page__items--${typeShow}`} numberComponent={2} />
+            <CabinetNav total={data.total} />
+            <CoursesItemWrapper
+               isLoading={fetchCoursesRequests.isLoading}
+               items={courses}
+               rolesId={rolesId}
+               numberComponent={2}
+               isToCabinet={true}
+               className={`cabinet-page__items cabinet-page__items--${typeShow}`}
+            />
          </div>
       </>
    )

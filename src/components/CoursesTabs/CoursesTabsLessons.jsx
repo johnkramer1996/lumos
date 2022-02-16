@@ -53,7 +53,7 @@ const CoursesTabsLessons = () => {
                   </div>
                   <div className='lessons-tab__module-items'>
                      {lessons.map(({ id, name }) => (
-                        <Link key={id} to={getURL.parseURL(RouteNames.CABINET_COURSES_LESSON, { courseId, lessonId: id })} className='lessons-tab__module-item'>
+                        <Link key={id} to={getURL.cabinetCoursesLesson({ courseId, lessonId: id })} className='lessons-tab__module-item'>
                            <span className='lessons-tab__module-item-num'>01</span>
                            <span className='lessons-tab__module-item-title'>{name}</span>
                            {/* <span className='lessons-tab__module-item-notification'>1</span> */}
