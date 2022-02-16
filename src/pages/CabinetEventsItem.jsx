@@ -7,7 +7,7 @@ import { authSelectors, eventsSelectors } from 'store/selectors'
 
 const CabinetEventsItem = () => {
    const { eventId } = useParams()
-   const { toItems } = useNavigate()
+   const { toEventssItem } = useNavigate()
    const { resetEvents, fetchEvent } = useDispatch()
    const user = useSelector(authSelectors.getUser)
    const event = useSelector(eventsSelectors.getEvent)
@@ -25,7 +25,7 @@ const CabinetEventsItem = () => {
 
    useEffect(() => {
       const isUserPage = user_id === page_user_id
-      if (!fetchEventRequest.isLoading && !isUserPage) toItems({ eventId, type: 'events' })
+      if (!fetchEventRequest.isLoading && !isUserPage) toEventssItem({ eventId, type: 'events' })
    }, [fetchEventRequest.isLoading])
 
    return <Events event={event} />

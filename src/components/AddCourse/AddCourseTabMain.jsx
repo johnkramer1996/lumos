@@ -9,7 +9,7 @@ import { coursesSelectors } from 'store/selectors'
 
 const AddCourseTabMain = ({ refTabs, onUpdateListener }, ref) => {
    const { courseId } = useParams()
-   const { toCabinetItemsEdit } = useNavigate()
+   const { toCabinetCoursesEdit } = useNavigate()
    const { setContent, setIsShow, setCourse, addCourse, putCourse } = useDispatch()
    const { themes = [], type_study: typeStudy = [], format = [] } = useSelector(({ system }) => system.references)
    const course = useSelector(coursesSelectors.getCourse)
@@ -50,7 +50,7 @@ const AddCourseTabMain = ({ refTabs, onUpdateListener }, ref) => {
          setIsShow(true)
          setContent({ title: 'Основная информация о курсе  - добавлена,', descr: 'теперь заполните Уроки' })
          refTabs.current.nextItems()
-         toCabinetItemsEdit({ id: data.course.id })
+         toCabinetCoursesEdit({ id: data.course.id })
       },
    })
    const putCourseRequest = useRequest({

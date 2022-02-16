@@ -9,8 +9,6 @@ const Cabinet = () => {
 
    const { pathname } = location
 
-   console.log(location)
-
    const getActivePage = () => {
       switch (pathname) {
          case RouteNames.CABINET_COURSES:
@@ -28,17 +26,9 @@ const Cabinet = () => {
       }
    }
 
-   const getActiveSidebar = () => {
-      switch (pathname) {
-         default:
-            return <CabinetSidebar />
-      }
-   }
-
-   const activeSidebar = getActiveSidebar()
    const activePage = getActivePage()
 
-   return <CabinetComponent sidebar={activeSidebar} page={activePage} />
+   return <CabinetComponent sidebar={<CabinetSidebar />} page={activePage} />
 }
 
 export default Cabinet

@@ -17,7 +17,7 @@ import { ROLES } from 'constants'
 
 const CabinetCoursesItem = () => {
    const { courseId } = useParams()
-   const { toItems } = useNavigate()
+   const { toCoursesItem } = useNavigate()
    const { resetCourses, fetchInfo } = useDispatch()
    const role = useSelector(authSelectors.getRolesId)
    const user = useSelector(authSelectors.getUser)
@@ -37,7 +37,7 @@ const CabinetCoursesItem = () => {
 
    useEffect(() => {
       const isUserPage = user_id === page_user_id
-      if (!fetchInfoRequest.isLoading && !isUserPage) toItems({ courseId })
+      if (!fetchInfoRequest.isLoading && !isUserPage) toCoursesItem({ courseId })
    }, [fetchInfoRequest.isLoading])
 
    const tabItems = useMemo(

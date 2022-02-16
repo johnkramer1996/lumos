@@ -8,7 +8,7 @@ import { getDate, getURL } from 'utils'
 const CabinetEventsAdd = () => {
    const { eventId } = useParams()
    const isEditPage = !!eventId
-   const { toCabinetItems, toCabinetItemsEdit } = useNavigate()
+   const { toCabinetEvents, toCabinetEventsEdit } = useNavigate()
    const { fetchEvent, addEvent, putEvent, deleteEvent, setEvent, setIsShow, setContent } = useDispatch()
    const event = useSelector(({ events }) => events.event)
    const hasEvent = event && !(Object.keys(event).length === 0)
@@ -55,7 +55,7 @@ const CabinetEventsAdd = () => {
    const addEventRequest = useRequest({
       request: addEvent,
       success: ({ response, data }) => {
-         toCabinetItemsEdit({ type: 'event', id: data.course.id })
+         toCabinetEventsEdit({ type: 'event', id: data.course.id })
          setIsShow(true)
          setContent({ title: 'Информация о мероприятии  - добавлена' })
       },
@@ -74,7 +74,7 @@ const CabinetEventsAdd = () => {
       success: ({ response, data }) => {
          setIsShow(true)
          setContent({ title: 'Мероприятие удалено' })
-         toCabinetItems({ type: 'event' })
+         toCabinetEvents({ type: 'event' })
       },
    })
 
