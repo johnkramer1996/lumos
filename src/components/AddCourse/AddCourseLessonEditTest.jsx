@@ -12,15 +12,16 @@ const AddCourseLessonEditTest = () => {
    const { setLessonQuestions } = useDispatch()
    const lesson = useSelector(coursesSelectors.getLesson)
    const questions = useSelector(coursesSelectors.getLessonQuestions)
+   const questionsData = useSelector(coursesSelectors.getLessonQuestionsData)
+
    const count_answers = useInput({ initialValue: lesson.count_answers, bind: { name: 'count_answers' }, is: { isRequired: true } })
    const count_answersList = new Array(questions.length).fill(0).map((_, i) => ({ name: i + 1 }))
 
-   questions.count_answers = count_answers
+   questionsData.count_answers = count_answers
 
    const onAdd = () => {
       const newQuestions = [...questions, { hidden_id: uid(), answers: [{}] }]
       setLessonQuestions(newQuestions)
-      newQuestions.count_answers = questions.count_answers
    }
 
    return (

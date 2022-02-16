@@ -12,23 +12,29 @@ const CommentsBoard = ({ isLoading, items = [], newTotal, onShowMore, isShowBtn 
          ) : (
             <>
                <div className='lessons-tab__comments-top'>
-                  <div className='lessons-tab__comments-title'>Комментарии</div>
-                  <div className='lessons-tab__comments-new'>
-                     {newTotal} {declOfNum(newTotal, getDeclOfArray['new'])}
-                  </div>
+                  <div className='lessons-tab__comments-title'>{items.length ? 'Комментарии' : 'Комментарии еще не добавлены'}</div>
+                  {!!items.length && (
+                     <div className='lessons-tab__comments-new'>
+                        {newTotal} {declOfNum(newTotal, getDeclOfArray['new'])}
+                     </div>
+                  )}
                </div>
-               <div className='lessons-tab__comments-items'>
-                  {items.map((props, index) => (
-                     <CommentsBoardItem key={props.id || index} {...props} />
-                  ))}
-                  {isLoading && <Loader />}
-               </div>
-               {isShowBtn && (
-                  <div className='lessons-tab__comments-bottom'>
-                     <Button className='lessons-tab__comments-more' color='transparent' onClick={onShowMore}>
-                        <ArrowDownSvg />
-                        <span>Показать больше</span>
-                     </Button>
+               {!!items.length && (
+                  <div>
+                     <div className='lessons-tab__comments-items'>
+                        {items.map((props, index) => (
+                           <CommentsBoardItem key={props.id || index} {...props} />
+                        ))}
+                        {isLoading && <Loader />}
+                     </div>
+                     {isShowBtn && (
+                        <div className='lessons-tab__comments-bottom'>
+                           <Button className='lessons-tab__comments-more' color='transparent' onClick={onShowMore}>
+                              <ArrowDownSvg />
+                              <span>Показать больше</span>
+                           </Button>
+                        </div>
+                     )}
                   </div>
                )}
             </>

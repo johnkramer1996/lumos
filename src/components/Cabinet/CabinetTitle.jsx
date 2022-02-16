@@ -7,7 +7,7 @@ import { authSelectors } from 'store/selectors'
 import { ROLES } from 'constants'
 
 const CabinetTitle = ({ title, type = 'courses', isVisibleBtn = true, isBtnAll = true, btnHref = '', total = 0 }) => {
-   const { toCabinetItemsAdd, toCabinetCoursesAdd, toCabinetEventsAdd } = useNavigate()
+   const { toCabinetCoursesAdd, toCabinetEventsAdd } = useNavigate()
    const rolesId = useSelector(authSelectors.getRolesId)
 
    return (

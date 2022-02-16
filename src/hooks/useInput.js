@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { maskDate, toBoolean, validateEmail, validateName, validatePassword, validatePhone } from 'utils'
+import { toBoolean, validateEmail, validateName, validatePassword, validatePhone } from 'utils'
 
 const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, isDisabled, isDate, isCheckbox, isName, isNumbers, isEmail, isTextarea, isPassword, isTime } = {} } = {}) => {
    const [value, setValue] = useState(initialValue)
@@ -12,7 +12,6 @@ const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, 
       let newValue = !isCheckbox ? e.target.value : e.target.checked
       if (isNumbers) newValue = patternNumbers(newValue)
       // if (isTime) newValue = patternTime(newValue)
-      console.log(patternTime(newValue))
       setValue(newValue)
    }, [])
    const onFocus = useCallback((e) => {
@@ -72,7 +71,7 @@ const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, 
          onChange,
          onFocus,
          onBlur,
-         disabled: isDisabled || false,
+         disabled: !!isDisabled,
          ...bind,
       },
    }

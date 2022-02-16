@@ -1,5 +1,13 @@
 import { coursesTypes } from './types'
 
+const initialLessonQuestionsData = {
+   questions_to_delete: [],
+   ansvers_to_delete: [],
+   questionsInputs: {},
+   answerInputs: {},
+   count_answers: {},
+}
+
 const initialState = {
    data: {},
    courses: [],
@@ -8,6 +16,7 @@ const initialState = {
    modules: [],
    lessons: [],
    lesson: {},
+   lessonQuestionsData: initialLessonQuestionsData,
    lessonQuestions: [],
    lessonFiles: [],
    prices: [],
@@ -35,6 +44,8 @@ export default function coursesReducer(state = initialState, action) {
          return { ...state, lessons: action.payload }
       case coursesTypes.SET_LESSON:
          return { ...state, lesson: action.payload }
+      case coursesTypes.RESET_LESSON_QUESTIONS_DATA:
+         return { ...state, lessonQuestionsData: { ...initialLessonQuestionsData } }
       case coursesTypes.SET_LESSON_QUESTIONS:
          return { ...state, lessonQuestions: action.payload }
       case coursesTypes.SET_LESSON_FILES:

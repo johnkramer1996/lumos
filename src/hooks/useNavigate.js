@@ -17,8 +17,8 @@ const useDispatch = () => {
          toCabinetEvents: () => navigate(getURL.cabinetEvents()),
          toCabinetCoursesAdd: () => navigate(getURL.cabinetCoursesAdd()),
          toCabinetEventsAdd: () => navigate(getURL.cabinetEventsAdd()),
-         toCabinetCoursesEdit: () => navigate(getURL.cabinetCoursesEdit()),
-         toCabinetEventsEdit: () => navigate(getURL.cabinetEventsEdit()),
+         toCabinetCoursesEdit: (params) => navigate(getURL.cabinetCoursesEdit(params)),
+         toCabinetEventsEdit: (params) => navigate(getURL.cabinetEventsEdit(params)),
       }),
       [],
    )

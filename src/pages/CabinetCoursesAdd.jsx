@@ -4,7 +4,6 @@ import { useDispatch, useNavigate, useRequest } from 'hooks/'
 import { AddCourseTabMain, AddCourseTabLesson, AddCourseTabDescription, Tabs } from 'components'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { isActiveClass } from 'utils'
 import { coursesSelectors } from 'store/selectors'
 import AddCourseLessonEdit from 'components/AddCourse/AddCourseLessonEdit'
 
@@ -15,11 +14,11 @@ const CabinetAddCourse = () => {
    const { resetCourses, setIsShow, setContent, setCourse, setModules, fetchInfo } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
-   console.log(modules)
    const hasCourse = !(Object.keys(course).length === 0)
    const hasModules = !(Object.keys(modules).length === 0)
 
    const [hasSave, setHasSave] = useState(false)
+   const [activeTabIndex, setActiveTabIndex] = useState(0)
 
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
@@ -27,14 +26,9 @@ const CabinetAddCourse = () => {
    })
 
    useEffect(() => {
-      if (isEditPage) {
-         //  fetchCourseRequest.call({ courseId })
-         //  fetchModulesRequest.call({ courseId })
-         fetchInfoRequest.call({ courseId })
-      }
-      return () => {
-         resetCourses({})
-      }
+      if (isEditPage) fetchInfoRequest.call({ courseId })
+
+      return () => resetCourses()
    }, [])
 
    useEffect(() => {
@@ -119,7 +113,7 @@ const CabinetAddCourse = () => {
       if (hasSave) {
          setIsShow(true)
          setContent({ title: 'Сохраните или Отмените' })
-         return false
+         return
       }
       if (index === 0) return true
       if ((index === 1 || index === 2) && !hasCourse) {
@@ -133,6 +127,7 @@ const CabinetAddCourse = () => {
          return
       }
       setHasSave(false)
+      setActiveTabIndex(index)
       return true
    }
 
@@ -155,6 +150,7 @@ const CabinetAddCourse = () => {
                            isLoading={fetchInfoRequest.isLoading}
                            onChangeListener={onChangeTabsListener}
                            isAvaibleIndex={isAvaibleTabIndex}
+                           activeTabIndex={activeTabIndex}
                         />
                      </>
                   )}

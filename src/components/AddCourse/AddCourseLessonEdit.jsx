@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useImperativeHandle } from 'react'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { useDispatch, useInput, useRequest } from 'hooks'
+import { useDispatch, useInput, useNavigate, useRequest } from 'hooks'
 import { coursesSelectors } from 'store/selectors'
 import { Checkbox, Input, Loader } from 'components/ui'
 import { forwardRef } from 'react'
@@ -10,9 +10,13 @@ import AddCourseLessonEditTest from './AddCourseLessonEditTest'
 
 const AddCourseLessonEdit = (_, ref) => {
    const { courseId, lessonId } = useParams()
-   const { fetchLesson, setLesson, setLessonQuestions, setLessonFiles, putLesson } = useDispatch()
+   const { toCabinetCoursesEdit } = useNavigate()
+   const { setIsShow, setContent, fetchLesson, setLesson, setLessonQuestions, resetLessonQuestionsData, setLessonFiles, putLesson } = useDispatch()
    const lesson = useSelector(coursesSelectors.getLesson)
    const questions = useSelector(coursesSelectors.getLessonQuestions)
+   const questionsData = useSelector(coursesSelectors.getLessonQuestionsData)
+
+   const { count_answers, questions_to_delete, ansvers_to_delete, questionsInputs, answerInputs } = questionsData
 
    const name = useInput({ bind: { name: 'name' }, is: { isRequired: true, isName: true } })
    const can_comment = useInput({ bind: { name: 'can_comment' }, is: { isCheckbox: true } })
@@ -33,6 +37,12 @@ const AddCourseLessonEdit = (_, ref) => {
    })
    const putLessonRequest = useRequest({
       request: putLesson,
+      success: () => {
+         setIsShow(true)
+         setContent({ title: 'Урок обновлен', descr: '' })
+         toCabinetCoursesEdit({ courseId })
+         resetLessonQuestionsData()
+      },
    })
    useEffect(() => {
       fetchLessonRequest.call({ courseId, lessonId })
@@ -47,31 +57,29 @@ const AddCourseLessonEdit = (_, ref) => {
       update: () => getAllInputs().filter((i) => i.update()),
       check: () => !getAllInputs().filter((i) => i.check(i.value)).length,
       send: () => {
-         console.log('2')
          if (!ref.current.check()) return
-         console.log('2')
+
+         console.log(answerInputs)
+
          const body = {
-            count_answers: questions['count_answers'].value || 0,
-            questions_to_delete: questions['questions_to_delete'] || [],
-            ansvers_to_delete: questions['ansvers_to_delete'] || [],
-            questions: questions.map((q, i) => {
+            count_answers: count_answers.value || 0,
+            questions_to_delete,
+            ansvers_to_delete,
+            questions: questions.map((quest, indexQuestion) => {
                const inputs =
-                  q.answers?.map((a, i) => ({
-                     ...a,
-                     ...a.inputs.reduce((prev, i) => ((prev[i.bind.name] = i.isCheckbox ? !!i.value : i.value), prev), {}),
-                     inputs: null,
-                     hidden_id: null,
+                  quest.answers?.map((answer, indexAnswer) => ({
+                     ...answer,
+                     ...answerInputs[indexQuestion + '' + indexAnswer].reduce((prev, i) => ((prev[i.ref.current.name] = i.isCheckbox ? !!i.value : i.value), prev), {}),
                   })) || []
                return {
-                  ...q,
+                  ...quest,
+                  question: questionsInputs[indexQuestion]?.value,
                   ansvers: inputs,
                   amount_answers: inputs.filter((i) => i.is_true).length,
-                  inputQuestion: null,
-                  answers: null,
                }
             }),
+            ...getAllInputs().reduce((prev, i) => ((prev[i.ref.current.name] = i.isCheckbox ? !!i.value : i.value), prev), {}),
          }
-         getAllInputs().forEach((i) => (body[i.bind.name] = i.isCheckbox ? !!i.value : i.value))
 
          putLessonRequest.call({ courseId, lessonId, body })
       },
