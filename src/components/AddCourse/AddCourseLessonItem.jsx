@@ -5,6 +5,7 @@ import { ReactComponent as LinkSvg } from 'svg/link.svg'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { RouteNames } from 'routes'
 import { Link, useParams } from 'react-router-dom'
+import { getURL } from 'utils'
 
 const AddCourseLessonItem = ({ id, indexModule, name, index, setName, onDelete, modulesState }) => {
    const { courseId } = useParams()
@@ -25,7 +26,7 @@ const AddCourseLessonItem = ({ id, indexModule, name, index, setName, onDelete, 
             <button className='create-module__drag'>
                <DragSvg />
             </button>
-            <Link to={`${RouteNames.CABINET_COURSES}/${courseId}/edit/lessons/${id}`} className='create-module__link'>
+            <Link to={getURL.parseURL(RouteNames.CABINET_COURSES_LESSON_EDIT, { courseId, lessonId: id })} className='create-module__link'>
                <LinkSvg />
             </Link>
             <input type='text' placeholder='Название урока' {...input.bind} onChange={onChange} />
