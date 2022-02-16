@@ -11,6 +11,7 @@ const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
    const course = useSelector(frontCoursesSelectors.getCourse)
    const modules = useSelector(frontCoursesSelectors.getModules)
    const prices = useSelector(frontCoursesSelectors.getPrices)
+   const whoms = useSelector(frontCoursesSelectors.getWhoms)
 
    const { description } = course
    const descriptions = course.descriptions || []
@@ -59,7 +60,7 @@ const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
                   <div className='course-whom course-info2__group'>
                      <h3 className='course-info2__title'>Кому подойдет курс</h3>
                      {/* // TODO MODILE VERSION */}
-                     {descriptions.map(({ name, text, image }, index) => (
+                     {whoms.map(({ name, text, image }, index) => (
                         <div key={index} className='course-info2__group-hidden'>
                            <div className='course-whom__item'>
                               <div className='course-whom__item-img'>

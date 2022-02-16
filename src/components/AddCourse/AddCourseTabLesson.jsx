@@ -17,6 +17,7 @@ const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
    const modules = useSelector(coursesSelectors.getModules)
    const descriptions = useSelector(coursesSelectors.getDescriptions)
    const prices = useSelector(coursesSelectors.getPrices)
+
    const hasModules = modules && !(Object.keys(modules).length === 0)
    const hasInfo = !(Object.keys(descriptions).length === 0 && Object.keys(prices).length === 0)
 
