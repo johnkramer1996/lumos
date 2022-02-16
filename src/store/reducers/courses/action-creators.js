@@ -78,7 +78,7 @@ export const courseHandlers = {
    fetchComments: {
       ...defaultHandlers.fetchComments,
       success: ({ dispatch, response, prevData, data }) => {
-         dispatch(CoursesActionCreators.setCommentsData(prevData || {}))
+         dispatch(CoursesActionCreators.setCommentsData(response.data || {}))
          dispatch(CoursesActionCreators.setComments(data || []))
       },
    },

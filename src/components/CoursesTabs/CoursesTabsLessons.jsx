@@ -16,7 +16,8 @@ const CoursesTabsLessons = () => {
    const commentsData = useSelector(coursesSelectors.getCommentsData)
    const comments = useSelector(coursesSelectors.getComments)
 
-   const { current_page, last_page, total } = commentsData
+   const { current_page, last_page, total } = commentsData.data || {}
+   const { count_new, lesson_new = [] } = commentsData
 
    const [page, setPage] = useState(1)
 
@@ -38,6 +39,8 @@ const CoursesTabsLessons = () => {
       setPage(page + 1)
    }
 
+   modules.forEach(({ lessons }) => lessons.forEach((lesson) => (lesson.countNewComments = lesson_new.find(({ course_lesson_id }) => course_lesson_id === lesson.id)?.new_count || 0)))
+
    console.log(commentsData)
 
    return (
@@ -52,11 +55,11 @@ const CoursesTabsLessons = () => {
                      </div>
                   </div>
                   <div className='lessons-tab__module-items'>
-                     {lessons.map(({ id, name }) => (
+                     {lessons.map(({ id, name, countNewComments }) => (
                         <Link key={id} to={getURL.cabinetCoursesLesson({ courseId, lessonId: id })} className='lessons-tab__module-item'>
                            <span className='lessons-tab__module-item-num'>01</span>
                            <span className='lessons-tab__module-item-title'>{name}</span>
-                           {/* <span className='lessons-tab__module-item-notification'>1</span> */}
+                           {!!countNewComments && <span className='lessons-tab__module-item-notification'>{countNewComments}</span>}
                         </Link>
                      ))}
                   </div>
@@ -64,7 +67,7 @@ const CoursesTabsLessons = () => {
             ))}
          </div>
          <div className='lessons-tab__right'>
-            <CommentsBoard isLoading={fetchCommentsRequest.isLoading} items={comments} newTotal={total} isShowBtn={last_page !== current_page} onShowMore={onShowMoreComments} />
+            <CommentsBoard isLoading={fetchCommentsRequest.isLoading} items={comments} newTotal={count_new} isShowBtn={last_page !== current_page} onShowMore={onShowMoreComments} />
          </div>
       </div>
    )

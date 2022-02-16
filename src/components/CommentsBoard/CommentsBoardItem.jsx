@@ -1,15 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
-import { getDate, getFullName, getURL } from 'utils'
+import { addZerro, getDate, getFullName, getURL } from 'utils'
 
-const CommentsBoardItem = ({ id, text, user = {}, user_id, updated_at }) => {
-   console.log(user)
-
+const CommentsBoardItem = ({ id, text, user, lesson, updated_at }) => {
+   const { id: userId } = user || {}
+   const { name: lessonName, number: numberLesson } = lesson || {}
    return (
       <div className='lessons-tab__comments-item lessons-tab__comments-item--new'>
          <div className='lessons-tab__comments-item-top'>
-            <Link to={getURL.usersItem({ userId: user_id })} className='lessons-tab__comments-item-user'>
+            <Link to={getURL.usersItem({ userId })} className='lessons-tab__comments-item-user'>
                <img src={getURL.avatar(user.avatar)} alt='' />
                <span>{getFullName(user)}</span>
             </Link>
@@ -17,8 +17,8 @@ const CommentsBoardItem = ({ id, text, user = {}, user_id, updated_at }) => {
          </div>
          <div className='lessons-tab__comments-item-text'>{text}</div>
          <div className='lessons-tab__comments-item-title'>
-            <span>01</span>
-            <span>Название урока</span>
+            <span>{addZerro(numberLesson + 1)}</span>
+            <span>{lessonName}</span>
          </div>
       </div>
    )

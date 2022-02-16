@@ -16,6 +16,7 @@ const BlogItem = ({ isLoading, title, image, text, interested = [] }) => {
             <Loader />
          ) : (
             <div className='container'>
+               // TODO UI COMPONENT
                <div className='breadcrumbs'>
                   <Link to='/' className='breadcrumbs__item'>
                      Главная

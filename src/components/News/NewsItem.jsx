@@ -4,7 +4,7 @@ import { getFullName, getURL } from 'utils'
 import { ReactComponent as CommentsSvg } from 'svg/comments.svg'
 import { Link } from 'react-router-dom'
 
-const NewsItem = ({ id, image, category, title, description, user = {}, views }) => {
+const NewsItem = ({ id, image, category, title, description, user, views }) => {
    return (
       <div className='blog__item'>
          <div className='blog-card'>
@@ -20,7 +20,7 @@ const NewsItem = ({ id, image, category, title, description, user = {}, views })
                <div className='blog-card__bottom'>
                   <div className='blog-card__name'>
                      <img src='/assets/img/avatar5.jpg' alt='' />
-                     <span>{getFullName(user)}</span>
+                     {/* <span>{getFullName(user)}</span> */}
                   </div>
                   <div className='blog-card__comments'>
                      <CommentsSvg />
