@@ -50,7 +50,7 @@ const CabinetCourses = () => {
 
    return (
       <>
-         <div className='lkt-courses'>
+         <div className='cabinet-page'>
             {/* {hasAccess(rolesId, [ROLES.USER]) && <CabinetGreet />} */}
             <CabinetTitle title={'Мои курсы'} isBtnAll={false} />
             {/* {title} */}

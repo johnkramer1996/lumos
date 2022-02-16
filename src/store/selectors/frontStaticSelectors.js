@@ -10,6 +10,7 @@ const frontStaticSelectors = {
    getPagesData: ({ frontStatic }) => frontStatic.pagesData,
    getPages: ({ frontStatic }) => frontStatic.pages,
    getPage: ({ frontStatic }) => frontStatic.page,
+   getUser: ({ frontStatic }) => frontStatic.user,
 }
 
 export default frontStaticSelectors

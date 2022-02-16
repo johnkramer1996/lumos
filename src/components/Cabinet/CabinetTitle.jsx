@@ -1,19 +1,19 @@
 import React from 'react'
 import { Button } from 'components/ui'
 import { useNavigate } from 'hooks'
-import { hasAccess } from 'utils'
+import { declOfNum, getDeclOfArray, hasAccess } from 'utils'
 import { useSelector } from 'react-redux'
 import { authSelectors } from 'store/selectors'
 import { ROLES } from 'constants'
 
-const CabinetTitle = ({ title, type = 'courses', isVisibleBtn = true, isBtnAll = true, btnHref = '' }) => {
+const CabinetTitle = ({ title, type = 'courses', isVisibleBtn = true, isBtnAll = true, btnHref = '', total = 0 }) => {
    const { toCabinetItemsAdd } = useNavigate()
    const rolesId = useSelector(authSelectors.getRolesId)
 
    return (
       <div className='cabinet-page__top'>
          <h1 className='lkt-courses__title display-3'>{title}</h1>
-         {isVisibleBtn && (
+         {isVisibleBtn ? (
             <>
                {isBtnAll ? (
                   <Button to={btnHref} className='courses__all' outline link>
@@ -33,6 +33,10 @@ const CabinetTitle = ({ title, type = 'courses', isVisibleBtn = true, isBtnAll =
                   </div>
                )}
             </>
+         ) : (
+            <div className='cabinet-page__nav-title'>
+               {total} {declOfNum(total, getDeclOfArray[type])}
+            </div>
          )}
       </div>
    )

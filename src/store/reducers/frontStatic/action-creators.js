@@ -15,6 +15,7 @@ export const FrontStaticActionCreators = {
    setFrontStaticPagesData: (payload) => ({ type: frontStaticTypes.SET_FRONT_BLOG_CATEGORY_DATA, payload }),
    setFrontStaticPages: (payload) => ({ type: frontStaticTypes.SET_FRONT_PAGES, payload }),
    setFrontStaticPage: (payload) => ({ type: frontStaticTypes.SET_FRONT_PAGE, payload }),
+   setFrontStaticUser: (payload) => ({ type: frontStaticTypes.SET_FRONT_USER, payload }),
    ...crateActionCreator(FrontStaticService),
 }
 
@@ -72,6 +73,22 @@ export const frontStaticHandlers = {
       ...defaultHandlers.fetchFrontPage,
       success: ({ dispatch, response, prevData, data }) => {
          dispatch(FrontStaticActionCreators.setFrontStaticPage(data || {}))
+      },
+   },
+   fetchFrontUser: {
+      ...defaultHandlers.fetchFrontUser,
+      success: ({ dispatch, response, prevData, data }) => {
+         const user = data?.user || {}
+         const courses = data?.courses || []
+         const events = data?.events || []
+         dispatch(
+            FrontStaticActionCreators.setFrontStaticUser({
+               ...data,
+               user,
+               courses,
+               events,
+            }),
+         )
       },
    },
 }

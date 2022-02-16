@@ -25,4 +25,8 @@ export default class FrontStaticService {
    static async fetchFrontPage({ pageId = 0 } = {}) {
       return await axios.get(frontStaticURL.FETCH_PAGE({ pageId }))
    }
+   static async fetchFrontUser({ userId = 0 } = {}) {
+      console.log('2')
+      return await axios.get(frontStaticURL.FETCH_USER({ userId }))
+   }
 }

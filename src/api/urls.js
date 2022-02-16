@@ -92,4 +92,5 @@ export const frontStaticURL = {
    FETCH_BLOG: ({ blogId }) => `/front/blog/${blogId}`,
    FETCH_PAGES: '/front/pages',
    FETCH_PAGE: ({ pageId }) => `/front/pages/${pageId}`,
+   FETCH_USER: ({ userId }) => `/front/users/${userId}`,
 }

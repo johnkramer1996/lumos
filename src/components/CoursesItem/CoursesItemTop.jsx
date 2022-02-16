@@ -23,7 +23,7 @@ const CoursesItemTop = ({ className }) => {
             <div className='course-top__title display-3'>{name}</div>
             <div className='course-top__bottom'>
                <div className='course-top__left'>
-                  <Link to={getURL.parseURL(RouteNames.TRAINERS_ITEM, { trainerId })} className='course-top__user'>
+                  <Link to={getURL.parseURL(RouteNames.TRAINERS_ITEM, { userId: trainerId })} className='course-top__user'>
                      <img src={getURL.avatar(avatar, ROLES.TRAINER)} alt='' />
                      <span>{getFullName(trainer)}</span>
                   </Link>

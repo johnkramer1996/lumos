@@ -24,8 +24,8 @@ import {
    CabinetCoursesLessons,
    Logout,
    PagesItem,
-   TrainersItem,
    BlogItem,
+   UsersItem,
 } from 'pages/'
 
 export const RouteNames = {
@@ -71,7 +71,7 @@ export const RouteNames = {
    SUBSCRIBE: '/subscribe',
    LOGOUT: '/logout',
    PAGES_ITEM: '/pages/:pageId',
-   TRAINERS_ITEM: '/trainers/:trainerId',
+   TRAINERS_ITEM: '/trainers/:userId',
    USERS_ITEM: '/users/:userId',
 }
 export const publicRoutes = [
@@ -93,8 +93,8 @@ export const publicRoutes = [
    { path: RouteNames.SUBSCRIBE, element: <Subscribe /> },
    { path: RouteNames.ERROR, element: <Error /> },
    { path: RouteNames.LOGOUT, element: <Logout /> },
-   { path: RouteNames.TRAINERS_ITEM, element: <TrainersItem /> },
-   { path: RouteNames.USERS_ITEM, element: <TrainersItem /> },
+   { path: RouteNames.TRAINERS_ITEM, element: <UsersItem /> },
+   { path: RouteNames.USERS_ITEM, element: <UsersItem /> },
 ]
 export const privateRoutes = [
    ...publicRoutes,

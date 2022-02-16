@@ -12,6 +12,7 @@ const initialState = {
    pagesData: {},
    pages: [],
    page: {},
+   user: { user: {}, courses: [], events: [] },
 }
 
 export default function frontStaicReducer(state = initialState, action) {
@@ -40,6 +41,8 @@ export default function frontStaicReducer(state = initialState, action) {
          return { ...state, pages: action.payload }
       case frontStaticTypes.SET_FRONT_PAGE:
          return { ...state, page: action.payload }
+      case frontStaticTypes.SET_FRONT_USER:
+         return { ...state, user: action.payload }
       default:
          return state
    }
