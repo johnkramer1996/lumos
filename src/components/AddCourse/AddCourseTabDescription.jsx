@@ -149,7 +149,7 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
          <div className='create-whom card-bg'>
             <h3 className='create-whom__title display-4'>Кому подойдет курс</h3>
             {whoms.map((props, index) => (
-               <AddCourseBlock array={whoms} key={index} {...props} index={index} onDelete={onDeleteBlock.bind(null, whoms, setWhoms, 'whoms')} onDeleteImg={onDeleteImg} />
+               <AddCourseBlock array={whoms} key={index} {...props} index={index} onDelete={onDeleteBlock.bind(null, whoms, setWhoms, 'whom')} onDeleteImg={onDeleteImg} />
             ))}
             <Button className='create-whom__add' onClick={onAddBlockItem.bind(null, whoms, setWhoms)} outline>
                <AddSvg />

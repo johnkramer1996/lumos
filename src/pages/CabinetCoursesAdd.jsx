@@ -18,7 +18,7 @@ const CabinetAddCourse = () => {
    const hasModules = !(Object.keys(modules).length === 0)
 
    const [hasSave, setHasSave] = useState(false)
-   const [activeTabIndex, setActiveTabIndex] = useState(2)
+   const [activeTabIndex, setActiveTabIndex] = useState(0)
 
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
