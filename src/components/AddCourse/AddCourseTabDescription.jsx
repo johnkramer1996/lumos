@@ -20,8 +20,8 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
    // TODO THINK IT OVER
    const hasDescriptions = false
    const hasPrices = false
-   if (!descriptions.length) whoms.push({})
-   if (!prices.length) whoms.push({})
+   if (!descriptions.length) descriptions.push({})
+   if (!prices.length) prices.push({})
    if (!whoms.length) whoms.push({})
 
    const courseDescription = useInput({ bind: { name: 'courseDescription' }, is: { isRequired: true, isTextarea: true } })
@@ -71,20 +71,23 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
          return !getAllInputs().filter((i) => i.check(i.value)).length
       },
       send: () => {
-         const createId = (id, index) => (id !== undefined ? id : 'new_' + index)
+         const createId = (id, index) => {
+            console.log(id, index)
+            return id !== undefined ? id : 'new_' + index
+         }
          const createField = (id, index, body, inputs, fieldName) => {
-            id = createId(id, index)
+            const newId = createId(id, index)
             inputs.forEach((input) => {
                if (Array.isArray(input.value)) {
                   input.value.forEach((val) => {
                      console.log(fieldName, input)
-                     body.append(`${fieldName}[${input.bind.name}][]`, val)
+                     body.append(`${fieldName}[${newId}][${input.bind.name}][]`, val)
                   })
 
                   return
                }
 
-               body.append(`${fieldName}[${input.ref.current.name}]`, input.ref.current.name !== 'image' ? input.value : input.ref.current?.files[0])
+               body.append(`${fieldName}[${newId}][${input.ref.current.name}]`, input.ref.current.name !== 'image' ? input.value : input.ref.current?.files[0])
             })
          }
 
@@ -93,9 +96,10 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
          body.append('course_description', courseDescription.value)
          body.append('result_learn_text', result_learn_text.value)
 
-         descriptions.forEach(({ id, inputs }, index) => createField(id, index, body, inputs, `descriptions[${id}]`))
-         prices.forEach(({ id, inputs }, index) => createField(id, index, body, inputs, `prices[${id}]`))
-         whoms.forEach(({ id, inputs }, index) => createField(id, index, body, inputs, `whoms[${id}]`))
+         descriptions.forEach(({ id, inputs }, index) => createField(id, index, body, inputs, `descriptions`))
+         prices.forEach(({ id, inputs }, index) => createField(id, index, body, inputs, `prices`))
+         whoms.forEach(({ id, inputs }, index) => createField(id, index, body, inputs, `whoms`))
+         console.log(whoms)
          // checkboxs.value.forEach((item) => body.append(`prices[${id}][moduls][]`, item))
          for (const [key, value] of body.entries()) console.log(key, value)
 
@@ -105,7 +109,7 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
 
    const onAddBlockItem = (state, setState) => {
       if (state.filter((item) => item.inputs.filter((i) => i.check(i.value)).length).length) return
-      setState([...descriptions, {}])
+      setState([...state, {}])
    }
    const onDeleteBlock = (state, setState, type, id, index) => {
       if (state.length === 1) {
@@ -115,18 +119,11 @@ const AddCourseTabDescription = ({ onUpdateListener }, ref) => {
       }
       // id && deleteInfoRequest.call({ courseId, id, type: 'desc' })
       id && deleteInfoRequest.call({ courseId, id, type })
-      setState(descriptions.filter((item, inx) => inx !== index))
+      setState([...state.filter((item, inx) => inx !== index)])
    }
    const onDeleteImg = (id) => id && deleteInfoRequest.call({ courseId, id, type: 'image' })
-   //  const onDeletePrices = (id, index) => {
-   //     if (prices.length === 1) {
-   //        setIsShow(true)
-   //        setContent({ title: 'Нельзя удалить единственный блок' })
-   //        return
-   //     }
-   //     id && deleteInfoRequest.call({ courseId, id, type: 'price' })
-   //     setPrices(prices.filter((item, inx) => inx !== index))
-   //  }
+
+   console.log(whoms)
 
    return (
       <>
