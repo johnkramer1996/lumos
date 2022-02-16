@@ -8,6 +8,7 @@ const coursesSelectors = {
    getInfo: ({ courses }) => courses.info,
    getDescriptions: ({ courses }) => courses.descriptions,
    getPrices: ({ courses }) => courses.prices,
+   getWhoms: ({ courses }) => courses.whoms,
    getLessons: ({ courses }) => courses.lessons,
    getLesson: ({ courses }) => courses.lesson,
    getLessonQuestionsData: ({ courses }) => courses.lessonQuestionsData,

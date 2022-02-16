@@ -8,12 +8,15 @@ import { Button } from 'components/ui'
 
 const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
    const { courseId } = useParams()
-   const { descriptions = [], description, result_learn_text } = useSelector(frontCoursesSelectors.getCourse)
    const course = useSelector(frontCoursesSelectors.getCourse)
    const modules = useSelector(frontCoursesSelectors.getModules)
    const prices = useSelector(frontCoursesSelectors.getPrices)
-   const { price, price_with_sale } = prices[0] || {}
+
+   const { description } = course
+   const descriptions = course.descriptions || []
+   const result_learn_text = course.result_learn_text || []
    const { id: lessonId } = course.test_lesson || {}
+   const { price, price_with_sale } = prices[0] || {}
 
    const days = useRef()
    const hours = useRef()
@@ -80,7 +83,7 @@ const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
                   <div className='course-result course-info2__group'>
                      <h3 className='course-info2__title'>Результаты обучения</h3>
                      <div className='course-result__wrap'>
-                        {[...new Array(6).fill(...(result_learn_text || []))].map((item, index) => (
+                        {result_learn_text.map((item, index) => (
                            <div key={index} className='course-result__item'>
                               <i></i>
                               <span>{item}</span>

@@ -13,6 +13,7 @@ export const CoursesActionCreators = {
    addComment: (payload) => ({ type: coursesTypes.ADD_COMMENT, payload }),
    setModules: (payload) => ({ type: coursesTypes.SET_MODULES, payload }),
    setDescriptions: (payload) => ({ type: coursesTypes.SET_DESCRIPTIONS, payload }),
+   setWhoms: (payload) => ({ type: coursesTypes.SET_WHOMS, payload }),
    setPrices: (payload) => ({ type: coursesTypes.SET_PRICES, payload }),
    setLessons: (payload) => ({ type: coursesTypes.SET_LESSONS, payload }),
    setLesson: (payload) => ({ type: coursesTypes.SET_LESSON, payload }),
@@ -24,8 +25,6 @@ export const CoursesActionCreators = {
 }
 
 const defaultHandlers = crateHandles(CoursesService)
-
-console.log(defaultHandlers)
 
 export const courseHandlers = {
    ...defaultHandlers,
@@ -62,6 +61,7 @@ export const courseHandlers = {
          dispatch(CoursesActionCreators.setLessons(data?.course?.lessons || []))
          dispatch(CoursesActionCreators.setDescriptions(data?.descriptions || []))
          dispatch(CoursesActionCreators.setPrices(data?.prices || []))
+         dispatch(CoursesActionCreators.setWhoms(data?.course?.whoms || []))
       },
    },
    editInfo: {

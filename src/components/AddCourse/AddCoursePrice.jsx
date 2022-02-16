@@ -5,7 +5,8 @@ import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 
-const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, moduls = [], onDelete, prices }) => {
+const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, moduls = [], onDelete }) => {
+   const prices = useSelector(coursesSelectors.getPrices)
    const modules = useSelector(coursesSelectors.getModules)
 
    const inputName = useInput({ initialValue: name, bind: { name: 'name' }, is: { isRequired: true } })
@@ -15,8 +16,7 @@ const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, 
    const inputText = useInput({ initialValue: text, bind: { name: 'text' }, is: { isRequired: true, isTextarea: true } })
    const inputModuls = useInput({ initialValue: [...moduls], bind: { name: 'moduls' }, is: { isRequired: true } })
 
-   prices[index].inputs = [inputName, inputWidth, inputPriceWithSale, inputPrice, inputText]
-   prices[index].checkboxs = inputModuls
+   prices[index].inputs = [inputName, inputWidth, inputPriceWithSale, inputPrice, inputText, inputModuls]
 
    const onChangeModule = (value, checked) => {
       inputModuls.update()
