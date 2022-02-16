@@ -20,11 +20,8 @@ const CoursesItemVariansts = () => {
          <div className='container'>
             <div className='course-variants__inner'>
                <h2 className='course-variants__title display-2'>Выберите вариант участия </h2>
-               {/* {prices.map(({ id, name, width, price, price_with_sale, modules, countLesson }, index) => (
-               
-               ))} */}
                <div className='course-variants__slider'>
-                  <Swiper items={prices} className={''} prefix={'course-variants'} options={{ slidesPerView: 3 }}>
+                  <Swiper items={prices} className={''} prefix={'course-variants'} options={{ slidesPerView: 3, loop: false }}>
                      {({ id, name, width, price, price_with_sale, modules, countLesson }, index) => (
                         <div key={id} className='swiper-slide'>
                            <div className='tarif-card'>
