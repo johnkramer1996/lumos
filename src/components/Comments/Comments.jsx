@@ -10,55 +10,74 @@ import CommentsItem from './CommentsItem'
 
 const Comments = () => {
    const { courseId, lessonId } = useParams()
-   const { fetchUserLessonComments, addComment, setIsShow, setContent } = useDispatch()
+   const { resetComments, fetchUserLessonComments, addComment, readComments, setIsShow, setContent } = useDispatch()
    const commentsData = useSelector(coursesSelectors.getCommentsData)
    const comments = useSelector(coursesSelectors.getComments)
    const user = useSelector(authSelectors.getUser)
+
    const { avatar } = user
+   const { current_page, last_page, total } = commentsData || {}
+   const isLastPage = current_page === last_page
+   const limit = 4
+   const countShowAdd = comments.length + limit < total ? 4 : total - comments.length
+   comments[0]?.user_id === user.id && (comments[0].user = user) // added comment
 
    const comment = useInput({ is: { isTextarea: true } })
-   const [countVisible, setCountVisible] = useState(5)
-   const countShowAdd = 4
-
-   const newestComments = [...comments].reverse().map((comment) => (!comment.user && comment.user_id === user.id ? { ...comment, user } : comment))
+   const [page, setPage] = useState(1)
 
    const fetchUserLessonCommentsRequest = useRequest({
       request: fetchUserLessonComments,
+      success: ({ response, prevData, data }) => {
+         const comments_id = data.comments.data.filter(({ id, readed_at }) => !readed_at).map(({ id }) => id)
+         comments_id.length && readCommentsRequest.call({ courseId, comments_id })
+      },
+   })
+   const readCommentsRequest = useRequest({
+      request: readComments,
+      success: (data) => {
+         console.log(data)
+      },
    })
    const addCommentRequest = useRequest({
       request: addComment,
       success: () => {
-         setIsShow(true)
-         setContent({ title: 'Комментарий добавлен', descr: '' })
          comment.clear()
       },
    })
 
+   useEffect(
+      () => () => {
+         console.log('unmount')
+         resetComments()
+      },
+      [],
+   )
+
    useEffect(() => {
-      fetchUserLessonCommentsRequest.call({ courseId, lessonId })
-   }, [courseId, lessonId])
+      console.log('call')
+      fetchUserLessonCommentsRequest.call({ courseId, lessonId, page, _limit: limit })
+   }, [page])
 
    const onAddComment = (e) => {
       e.preventDefault()
+      const text = comment.value
+      if (!text) return
+      if (text.length < 5) return
+      addCommentRequest.call({ courseId, lessonId, text })
+   }
 
-      const body = {
-         text: comment.value,
-      }
-
-      if (!body.text) return
-      if (body.text.length < 5) return
-
-      addCommentRequest.call({ courseId, lessonId, body })
+   const onShowMoreComments = () => {
+      setPage(page + 1)
    }
 
    return (
       <div>
-         {fetchUserLessonCommentsRequest.isLoading ? (
+         {!comments.length && fetchUserLessonCommentsRequest.isLoading ? (
             <Loader />
          ) : (
             <div className='blog-comments'>
                <h2 className='blog-comments__title'>
-                  {newestComments.length} {declOfNum(newestComments.length, getDeclOfArray['comments'])}
+                  {total} {declOfNum(total, getDeclOfArray['comments'])}
                </h2>
                <div className='blog-comments__inner'>
                   <form className='blog-comments__top' onSubmit={onAddComment}>
@@ -69,18 +88,19 @@ const Comments = () => {
                   </form>
                   <div className='blog-comments__group'>
                      <div className='blog-comments__main'>
-                        {newestComments.slice(0, countVisible).map((props, index) => (
+                        {comments.map((props, index) => (
                            <CommentsItem key={props.id || index} {...props} />
                         ))}
                      </div>
+                     {fetchUserLessonCommentsRequest.isLoading && <Loader />}
                      {/* <div className='blog-comments__sub'>
 							 <CommentsItem />
 							 <CommentsItem />
 							 <CommentsItem />
 						</div> */}
-                     {newestComments.length > countVisible && (
+                     {!isLastPage && (
                         <div className='blog-comments__sub'>
-                           <button className='blog-comments__more' onClick={() => setCountVisible(countVisible + countShowAdd)}>
+                           <button className='blog-comments__more' onClick={onShowMoreComments}>
                               <ArrowDownSvg />
                               <span>Показать еще {countShowAdd} комментария</span>
                            </button>

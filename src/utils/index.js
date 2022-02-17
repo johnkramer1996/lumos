@@ -46,7 +46,7 @@ export const getData = (response, prev = false) => {
 
 // TODO
 // request/success/error - action-creators
-// dispatchEvent - useRequest
+// callbackHandler - useRequest
 
 export const asyncAction =
    ({ data, callbackHandler, request, success = () => {}, error = () => {} } = {}) =>
@@ -143,7 +143,8 @@ export const getRequest = (requests, rolesId) => {
 }
 
 export const getURL = {
-   parseURL: (url = '', params = {}) => {
+   parseURL: (url = '', params) => {
+      params = params ? params : {}
       return Object.entries(params).reduce((prev, [key, value]) => prev.replace(`:${key}`, value), url)
    },
    getURLRoles: (routeNames = [], rolesId = [], params) => getURL.parseURL(routeNames[rolesId[rolesId.length - 1] - 1 || 0], params) || '/',

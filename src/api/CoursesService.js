@@ -57,6 +57,9 @@ export default class CoursesService {
          params,
       })
    }
+   static async readComments({ courseId = 0, ...body } = {}) {
+      return await axios.post(trainerCoursesURL.READ_COMMENTS({ courseId }), body)
+   }
    static async fetchModules({ courseId = 0 } = {}) {
       return await axios.get(trainerCoursesModulesURL.FETCH_MODULES({ courseId }))
    }
@@ -121,13 +124,15 @@ export default class CoursesService {
    static async fetchUserLessonTest({ courseId = 0, lessonId = 0 } = {}) {
       return await axios.get(userCoursesURL.FETCH_LESSON_TEST({ courseId, lessonId }))
    }
-   static async fetchUserLessonComments({ courseId = 0, lessonId = 0 } = {}) {
-      return await axios.get(userCoursesURL.FETCH_LESSON_COMMENTS({ courseId, lessonId }))
+   static async fetchUserLessonComments({ courseId = 0, lessonId = 0, ...params } = {}) {
+      return await axios.get(userCoursesURL.FETCH_LESSON_COMMENTS({ courseId, lessonId }), {
+         params,
+      })
    }
    static async sendLessonTest({ body = {} } = {}) {
       return await axios.post(userCoursesURL.SEND_LESSON_TEST, body)
    }
-   static async addComment({ courseId = 0, lessonId = 0, body = {} } = {}) {
+   static async addComment({ courseId = 0, lessonId = 0, ...body } = {}) {
       return await axios.post(userCoursesURL.ADD_COMMENT({ courseId, lessonId }), body)
    }
    static async addLike({ courseId = 0 }) {

@@ -17,10 +17,6 @@ const CabinetCoursesLessonTest = () => {
    const lesson = useSelector(coursesSelectors.getLesson)
    const questions = useSelector(coursesSelectors.getLessonQuestions)
 
-   const fetchUserLessonTestRequest = useRequest({
-      request: fetchUserLessonTest,
-   })
-
    const roleRequests = useRequest({
       request: getRequest([fetchUserLessonTest, fetchLesson], rolesId),
    })

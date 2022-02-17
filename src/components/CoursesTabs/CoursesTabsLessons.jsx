@@ -6,11 +6,11 @@ import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { RouteNames } from 'routes'
 import { authSelectors, coursesSelectors } from 'store/selectors'
-import { declOfNum, getDeclOfArray, getURL } from 'utils'
+import { addZerro, declOfNum, getDeclOfArray, getURL } from 'utils'
 
 const CoursesTabsLessons = () => {
    const { courseId } = useParams()
-   const { resetComments, fetchComments } = useDispatch()
+   const { resetComments, fetchComments, readComments } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
    const commentsData = useSelector(coursesSelectors.getCommentsData)
@@ -18,21 +18,29 @@ const CoursesTabsLessons = () => {
 
    const { current_page, last_page, total } = commentsData.data || {}
    const { count_new, lesson_new = [] } = commentsData
+   const isLastPage = current_page === last_page
+   const limit = 4
 
    const [page, setPage] = useState(1)
 
-   const fetchCommentsRequest = useRequest({ request: fetchComments })
+   const fetchCommentsRequest = useRequest({
+      request: fetchComments,
+      success: ({ response, prevData, data }) => {
+         const comments_id = data.filter(({ id, readed_at }) => !readed_at).map(({ id }) => id)
+         comments_id.length && readCommentsRequest.call({ courseId, comments_id })
+      },
+   })
+   const readCommentsRequest = useRequest({
+      request: readComments,
+      success: (data) => {
+         console.log(data)
+      },
+   })
+
+   useEffect(() => () => resetComments(), [])
 
    useEffect(() => {
-      return () => {
-         console.log('unmount')
-         resetComments()
-      }
-   }, [])
-
-   useEffect(() => {
-      // TODO ADD LIMIT AND PAGE!!!
-      fetchCommentsRequest.call({ courseId, page, _limit: 4 })
+      fetchCommentsRequest.call({ courseId, page, _limit: limit })
    }, [page])
 
    const onShowMoreComments = () => {
@@ -40,8 +48,6 @@ const CoursesTabsLessons = () => {
    }
 
    modules.forEach(({ lessons }) => lessons.forEach((lesson) => (lesson.countNewComments = lesson_new.find(({ course_lesson_id }) => course_lesson_id === lesson.id)?.new_count || 0)))
-
-   console.log(commentsData)
 
    return (
       <div className='lessons-tab'>
@@ -55,9 +61,9 @@ const CoursesTabsLessons = () => {
                      </div>
                   </div>
                   <div className='lessons-tab__module-items'>
-                     {lessons.map(({ id, name, countNewComments }) => (
+                     {lessons.map(({ id, name, countNewComments, number }) => (
                         <Link key={id} to={getURL.cabinetCoursesLesson({ courseId, lessonId: id })} className='lessons-tab__module-item'>
-                           <span className='lessons-tab__module-item-num'>01</span>
+                           <span className='lessons-tab__module-item-num'>{addZerro(number + 1)}</span>
                            <span className='lessons-tab__module-item-title'>{name}</span>
                            {!!countNewComments && <span className='lessons-tab__module-item-notification'>{countNewComments}</span>}
                         </Link>
@@ -67,7 +73,7 @@ const CoursesTabsLessons = () => {
             ))}
          </div>
          <div className='lessons-tab__right'>
-            <CommentsBoard isLoading={fetchCommentsRequest.isLoading} items={comments} newTotal={count_new} isShowBtn={last_page !== current_page} onShowMore={onShowMoreComments} />
+            <CommentsBoard isLoading={fetchCommentsRequest.isLoading} items={comments} newTotal={count_new} isLastPage={isLastPage} onShowMore={onShowMoreComments} />
          </div>
       </div>
    )

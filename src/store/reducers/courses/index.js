@@ -61,8 +61,8 @@ export default function coursesReducer(state = initialState, action) {
          return { ...state, commentsData: action.payload }
       case coursesTypes.SET_COMMENTS:
          return { ...state, comments: [...state.comments, ...action.payload] }
-      case coursesTypes.ADD_COMMENT:
-         return { ...state, comments: [...state.comments, action.payload] }
+      case coursesTypes.SET_COMMENT_ADDED:
+         return { ...state, comments: [action.payload, ...state.comments] }
       default:
          return state
    }

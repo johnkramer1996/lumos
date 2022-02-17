@@ -1,39 +1,30 @@
-import { Button, Loader } from 'components/ui'
+import { Loader } from 'components/ui'
 import { useDispatch, useRequest } from 'hooks'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { authSelectors, coursesSelectors } from 'store/selectors'
-import { ReactComponent as EditSvg } from 'svg/edit.svg'
-import { ReactComponent as DownloadSvg } from 'svg/download.svg'
-import { ReactComponent as DocumentSvg } from 'svg/document.svg'
-import { addZerro, formatBytes, getRequest, getURL, hasAccess } from 'utils'
-import { Comments } from 'components'
-import { ROLES } from 'constants'
-import { RouteNames } from 'routes'
+import { getRequest, getURL } from 'utils'
+import { Comments, CoursesLesson } from 'components'
 
 const CabinetCoursesLesson = () => {
    const { courseId, lessonId } = useParams()
    const { fetchLesson, resetCourses, fetchUserLesson } = useDispatch()
    const rolesId = useSelector(authSelectors.getRolesId)
-   const { prev_lesson = {}, next_lesson = {} } = useSelector(coursesSelectors.getData)
-   const { name: courseName } = useSelector(coursesSelectors.getCourse)
-   const lessons = useSelector(coursesSelectors.getLessons)
+   const course = useSelector(coursesSelectors.getCourse)
    const lesson = useSelector(coursesSelectors.getLesson)
-   const { id, number, name, description, can_comment, has_text } = lesson
-   const files = useSelector(coursesSelectors.getLessonFiles)
 
-   const fetchUserLessonRequest = useRequest({
-      request: fetchUserLesson,
-   })
+   const { name: courseName } = course
+   const { can_comment } = lesson
+
+   const roleRequest = useMemo(() => getRequest([fetchUserLesson, fetchLesson], rolesId), [])
    const fetchLessonRequest = useRequest({
-      request: fetchLesson,
+      request: roleRequest,
    })
-   const roleRequests = getRequest([fetchUserLessonRequest, fetchLessonRequest], rolesId)
 
    useEffect(() => {
-      roleRequests.call({ courseId, lessonId })
+      fetchLessonRequest.call({ courseId, lessonId })
       return () => resetCourses([])
    }, [courseId, lessonId])
 
@@ -41,114 +32,22 @@ const CabinetCoursesLesson = () => {
       <section className='lesson-page'>
          <div className='container'>
             <div className='breadcrumbs'>
-               <Link to={getURL.cabinetCourses({}, rolesId)} className='breadcrumbs__item'>
+               <Link to={getURL.cabinetCourses(null, rolesId)} className='breadcrumbs__item'>
                   Мои курсы
                </Link>
                <Link to={getURL.cabinetCoursesItem({ courseId }, rolesId)} className='breadcrumbs__item'>
-                  {courseName}
+                  {/* // TODO REMOVE HARDCODE */}
+                  {courseName || 'Название курса HARDCODE'}
                </Link>
             </div>
-            {roleRequests.isLoading ? (
+            {fetchLessonRequest.isLoading ? (
                <Loader />
             ) : (
                <>
-                  <div className='lesson-page__top'>
-                     <div className='lesson-page__top-left'>
-                        {prev_lesson.id && (
-                           <Link to={getURL.cabinetCoursesLesson({ courseId, lessonId: prev_lesson.id }, rolesId)}>
-                              <span className='lesson-page__top-link'> Предыдущий урок</span>
-                              <div className='lesson-page__top-subtitle'>
-                                 <span>{addZerro(prev_lesson?.number)}</span>
-                                 <strong>{prev_lesson.name}</strong>
-                              </div>
-                           </Link>
-                        )}
-                     </div>
-                     <div className='lesson-page__top-center'>
-                        <div className='lesson-page__top-title'>{name}</div>
-                        <div className='lesson-page__top-num'>
-                           {number + 1} из {lessons.length || 1}
-                        </div>
-                     </div>
-                     <div className='lesson-page__top-right'>
-                        {next_lesson.id && (
-                           <Link to={getURL.cabinetCoursesLesson({ courseId, lessonId: next_lesson.id }, rolesId)}>
-                              <span className='lesson-page__top-link'>Следующий урок</span>
-                              <div className='lesson-page__top-subtitle'>
-                                 <span>{addZerro(next_lesson?.number)}</span>
-                                 <strong>{next_lesson.name}</strong>
-                              </div>
-                           </Link>
-                        )}
-                     </div>
-                  </div>
-                  <div className='lesson-page__wrap'>
-                     <div className='lesson-page__left'>
-                        <div className='blog-page__text'>
-                           <p className='blog-page__text-desc'>{description}</p>
-                        </div>
-                     </div>
-                     <div className='lesson-page__right'>
-                        <div className='lesson-page__nav card-bg'>
-                           {hasAccess(rolesId, [ROLES.TRAINER, ROLES.EMPLOYEE]) && (
-                              <>
-                                 <Button to={getURL.parseURL(RouteNames.CABINET_COURSES_LESSON_EDIT, { courseId, lessonId })} className='lesson-page__edit' outline link>
-                                    <EditSvg />
-                                    <span>Редактировать урок</span>
-                                 </Button>
-                                 <Button to={getURL.parseURL(RouteNames.CABINET_COURSES_LESSON_TEST, { courseId, lessonId })} className='lesson-page__test' link>
-                                    Страница теста
-                                 </Button>
-                              </>
-                           )}
-                        </div>
-                        <div className='lesson-page__files card-bg'>
-                           {files.length === 0 ? (
-                              <>
-                                 <div className='lesson-page__files-title display-4'>Файлы не добавлены</div>
-                              </>
-                           ) : (
-                              <div className='lesson-page__files-items'>
-                                 <div className='lesson-page__files-title display-4'>Файлы</div>
-                                 {files.map(({ id, name, file, file_size }, index) => (
-                                    <div key={id || index} className='lesson-page__files-item'>
-                                       <i className='lesson-page__files-item-icon'>
-                                          <DocumentSvg />
-                                       </i>
-                                       <div className='lesson-page__files-item-info'>
-                                          <div className='lesson-page__files-item-name'>{name}</div>
-                                          <div className='lesson-page__files-item-weight'>{formatBytes(file_size)}</div>
-                                       </div>
-                                    </div>
-                                 ))}
-                                 <Button className='lesson-page__files-btn' outline>
-                                    <DownloadSvg />
-                                    <span>Скачать все ({formatBytes(files.reduce((pr, v) => pr + +v.file_size, 0))})</span>
-                                 </Button>
-                              </div>
-                           )}
-                        </div>
-                        {hasAccess(rolesId, [ROLES.USER]) &&
-                           (has_text ? (
-                              <div className='lesson-page__test card-bg'>
-                                 <div className='lesson-page__test-title display-4'>Тест</div>
-                                 <div className='lesson-page__test-desc'>Для того, чтобы открыть следующий урок необходимо пройти тест для закрепления ваших знаний.</div>
-                                 <Button to={getURL.cabinetCoursesLessonTest({ courseId, lessonId })} className='lesson-page__test-btn' link>
-                                    Пройти тест
-                                 </Button>
-                              </div>
-                           ) : (
-                              <div className='lesson-page__test card-bg'>
-                                 <Button to={getURL.cabinetCoursesLessons({ courseId })} className='lesson-page__test-btn' link>
-                                    Вернуться к урокам
-                                 </Button>
-                              </div>
-                           ))}
-                     </div>
-                  </div>
-                  {can_comment && <Comments />}
+                  <CoursesLesson />
                </>
             )}
+            {can_comment && <Comments />}
          </div>
       </section>
    )

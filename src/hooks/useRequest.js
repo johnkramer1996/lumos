@@ -7,7 +7,7 @@ const useRequest = ({ request = () => {}, success = () => {}, error = () => {}, 
    const [errorText, setErrorText] = useState('')
 
    const call = (data) => {
-      request({
+      const args = {
          data,
          callbackHandler: (type, data) => {
             if (!isMounted) return
@@ -31,7 +31,8 @@ const useRequest = ({ request = () => {}, success = () => {}, error = () => {}, 
                   break
             }
          },
-      })
+      }
+      request(args)
    }
 
    useEffect(() => () => (isMounted = false), [])

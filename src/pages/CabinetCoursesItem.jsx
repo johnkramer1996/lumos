@@ -27,7 +27,6 @@ const CabinetCoursesItem = () => {
 
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
-      success: () => {},
    })
 
    useEffect(() => {
