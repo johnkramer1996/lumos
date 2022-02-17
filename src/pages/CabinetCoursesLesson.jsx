@@ -17,7 +17,6 @@ const CabinetCoursesLesson = () => {
    const lesson = useSelector(coursesSelectors.getLesson)
 
    const { name: courseName } = course
-   const { can_comment } = lesson
 
    const roleRequest = useMemo(() => getRequest([fetchUserLesson, fetchLesson], rolesId), [])
    const fetchLessonRequest = useRequest({
@@ -41,14 +40,9 @@ const CabinetCoursesLesson = () => {
                   {courseName || 'Название курса HARDCODE'}
                </Link>
             </div>
-            {fetchLessonRequest.isLoading ? (
-               <Loader />
-            ) : (
-               <>
-                  <CoursesLesson />
-               </>
-            )}
-            {can_comment && <CoursesLessonComments />}
+
+            <CoursesLesson isLoading={fetchLessonRequest.isLoading} />
+            <CoursesLessonComments />
          </div>
       </section>
    )

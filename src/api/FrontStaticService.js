@@ -19,6 +19,14 @@ export default class FrontStaticService {
    static async fetchFrontBlog({ blogId = 0 } = {}) {
       return await axios.get(frontStaticURL.FETCH_BLOG({ blogId }))
    }
+   static async fetchFrontBlogComments({ blogId = 0, ...params } = {}) {
+      return await axios.get(frontStaticURL.FETCH_BLOG_COMMENTS({ blogId }), {
+         params,
+      })
+   }
+   static async addFrontBlogComment({ blogId = 0, ...body } = {}) {
+      return await axios.post(frontStaticURL.ADD_BLOG_COMMENT({ blogId }), body)
+   }
    static async fetchFrontPages() {
       return await axios.get(frontStaticURL.FETCH_PAGES)
    }
@@ -26,7 +34,6 @@ export default class FrontStaticService {
       return await axios.get(frontStaticURL.FETCH_PAGE({ pageId }))
    }
    static async fetchFrontUser({ userId = 0 } = {}) {
-      console.log('2')
       return await axios.get(frontStaticURL.FETCH_USER({ userId }))
    }
 }

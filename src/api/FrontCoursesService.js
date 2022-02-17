@@ -8,7 +8,6 @@ export default class FrontCoursesService {
    static async fetchFrontCourse({ courseId = 1 } = {}) {
       return await axios.get(frontCoursesURL.FETCH_COURSE({ courseId }))
    }
-
    static async fetchFrontAuthCourses({ body = {} } = {}) {
       return await axios.post(frontCoursesURL.FETCH_AUTH_COURSES, body)
    }

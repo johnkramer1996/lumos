@@ -2,14 +2,17 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { frontStaticSelectors } from 'store/selectors'
 import { useDispatch, useRequest } from 'hooks'
-import { useParams } from 'react-router-dom'
-import { BlogItem as BlogItemComponent } from 'components'
+import { Link, useParams } from 'react-router-dom'
+import { BlogItem as BlogItemComponent, Comments } from 'components'
+import BlogItemComments from 'components/BlogItem/BlogItemComments'
 
 const BlogItem = () => {
    const { blogId } = useParams()
    const { fetchFrontBlog } = useDispatch()
    const blog = useSelector(frontStaticSelectors.getBlog)
    const interested = useSelector(frontStaticSelectors.getInterested)
+
+   const { title } = blog
 
    const fetchFrontBlogRequest = useRequest({ request: fetchFrontBlog })
 
@@ -19,9 +22,19 @@ const BlogItem = () => {
    }, [blogId])
 
    return (
-      <div>
-         <BlogItemComponent isLoading={fetchFrontBlogRequest.isLoading} {...blog} interested={interested} />
-      </div>
+      <section className='blog-page'>
+         <div className='container'>
+            // TODO UI COMPONENT
+            <div className='breadcrumbs'>
+               <Link to='/' className='breadcrumbs__item'>
+                  Главная
+               </Link>
+               <span className='breadcrumbs__item'>{title}</span>
+            </div>
+            <BlogItemComponent isLoading={fetchFrontBlogRequest.isLoading} {...blog} interested={interested} />
+            <BlogItemComments />
+         </div>
+      </section>
    )
 }
 

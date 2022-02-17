@@ -1,0 +1,52 @@
+import { Comments } from 'components'
+import { LIMIT } from 'constants'
+import { useDispatch, useInput, useRequest } from 'hooks'
+import React, { useEffect, useState } from 'react'
+import { useRef } from 'react'
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { coursesSelectors } from 'store/selectors'
+
+const BlogItemComments = () => {
+   const { blogId } = useParams()
+   const { fetchFrontBlogComments, addFrontBlogComment } = useDispatch()
+   const commentsData = useSelector(coursesSelectors.getCommentsData)
+   const comments = useSelector(coursesSelectors.getComments)
+
+   const { current_page, last_page, total } = commentsData || {}
+   const isLastPage = current_page === last_page
+   const can_comment = true
+   const limit = LIMIT.LESSON_COMMENTS
+   const [page, setPage] = useState(1)
+   const valueLastPage = useRef()
+
+   const fetchFrontBlogCommentsRequest = useRequest({
+      request: fetchFrontBlogComments,
+      success: ({ response, prevData, data }) => {
+         //  const comments_id = data.comments.data.filter(({ readed_at }) => !readed_at).map(({ id }) => id)
+         //  comments_id.length && readCommentsRequest.call({ courseId, comments_id })
+      },
+   })
+   //  const readCommentsRequest = useRequest({ request: readComments })
+   const addFrontBlogCommentRequest = useRequest({ request: addFrontBlogComment })
+
+   useEffect(() => {
+      if (valueLastPage.current === page) return
+      valueLastPage.current = page
+      // fetchFrontBlogCommentsRequest.call({ blogId, page, _limit: limit })
+   }, [page])
+
+   const onAddHandle = (text) => {
+      addFrontBlogCommentRequest.call({ blogId, text })
+   }
+
+   return (
+      <>
+         {can_comment && (
+            <Comments isLoading={false && fetchFrontBlogCommentsRequest.isLoading} items={comments} limit={limit} total={total} isLastPage={isLastPage} onAddHandle={onAddHandle} setPage={setPage} />
+         )}
+      </>
+   )
+}
+
+export default BlogItemComments

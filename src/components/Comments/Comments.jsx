@@ -1,18 +1,27 @@
 import { Input, Loader } from 'components/ui'
-import { useInput } from 'hooks'
-import React from 'react'
+import { useDispatch, useInput } from 'hooks'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { authSelectors } from 'store/selectors'
 import { ReactComponent as ArrowDownSvg } from 'svg/edit.svg'
 import { declOfNum, getDeclOfArray, getURL } from 'utils'
 import CommentsItem from './CommentsItem'
 
-const Comments = ({ isLoading, items = [], total, isLastPage, limit = 4, onAddHandle, onShowMore }) => {
+const Comments = ({ isLoading, items = [], total = 0, isLastPage = true, limit = 4, onAddHandle, setPage }) => {
+   const { resetComments } = useDispatch()
    const user = useSelector(authSelectors.getUser)
+   const rolesId = useSelector(authSelectors.getRolesId)
    const { avatar } = user
    items[0]?.user_id === user.id && (items[0].user = user) // added comment
    const comment = useInput({ is: { isTextarea: true } })
    const countShowAdd = items.length + limit < total ? limit : total - items.length
+
+   useEffect(
+      () => () => {
+         resetComments()
+      },
+      [],
+   )
 
    const onAdd = (e) => {
       e.preventDefault()
@@ -22,6 +31,10 @@ const Comments = ({ isLoading, items = [], total, isLastPage, limit = 4, onAddHa
       comment.clear()
    }
 
+   const onShowMore = () => {
+      setPage((page) => page + 1)
+   }
+
    return (
       <div>
          {!items.length && isLoading ? (
@@ -29,12 +42,18 @@ const Comments = ({ isLoading, items = [], total, isLastPage, limit = 4, onAddHa
          ) : (
             <div className='blog-comments'>
                <h2 className='blog-comments__title'>
-                  {total} {declOfNum(total, getDeclOfArray['comments'])}
+                  {total ? (
+                     <>
+                        {total} {declOfNum(total, getDeclOfArray['comments'])}
+                     </>
+                  ) : (
+                     'Комментарии еще не добавлены'
+                  )}
                </h2>
                <div className='blog-comments__inner'>
                   <form className='blog-comments__top'>
                      <div className='blog-comments__avatar'>
-                        <img src={getURL.avatar(avatar)} alt='' />
+                        <img src={getURL.avatar(avatar, rolesId)} alt='' />
                      </div>
                      <Input input={comment} placeholder='Написать комментарий или задать вопрос...' onBlur={onAdd} withoutWrapper />
                   </form>
@@ -69,4 +88,4 @@ const Comments = ({ isLoading, items = [], total, isLastPage, limit = 4, onAddHa
    )
 }
 
-export default Comments
+export default React.memo(Comments)

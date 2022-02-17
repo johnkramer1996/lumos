@@ -62,6 +62,13 @@ export const frontStaticHandlers = {
          dispatch(FrontStaticActionCreators.setFrontStaticInterested(data?.interested || []))
       },
    },
+   fetchFrontBlogComments: {
+      ...defaultHandlers.fetchFrontBlogComments,
+      success: ({ dispatch, response, prevData, data }) => {
+         console.log(data)
+      },
+   },
+   //addFrontBlogcomment
    fetchFrontPages: {
       ...defaultHandlers.fetchFrontPages,
       success: ({ dispatch, response, prevData, data }) => {

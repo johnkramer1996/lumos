@@ -3,7 +3,7 @@ import { useDispatch, useRequest } from 'hooks'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
-import { addZerro, getURL, isActiveClass } from 'utils'
+import { addZerro, getURL } from 'utils'
 import { ReactComponent as NextSvg } from 'svg/next.svg'
 import { authSelectors, coursesSelectors } from 'store/selectors'
 import { Button, Loader } from 'components/ui'
@@ -30,7 +30,7 @@ const CabinetCoursesLessons = () => {
 
       return () => resetCourses()
    }, [])
-
+   // TODO
    return (
       <>
          {fetchUserCourseRequest.isLoading ? (
