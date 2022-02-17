@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
-import CoursesTabsStudentsItem from './CoursesTabsStudentsItem'
+import CoursesItemTabStudentsItem from './CoursesItemTabStudentsItem'
 import { ReactComponent as ArrowChangeSvg } from 'svg/arrow-change.svg'
 import { declOfNum, getDeclOfArray, isActiveClass } from 'utils'
 
-const CoursesTabsStudents = () => {
+const CoursesItemTabStudents = () => {
    const course = useSelector(coursesSelectors.getCourse)
    const users = course.users || []
    const [isSort, setIsSort] = useState(false)
@@ -25,11 +25,11 @@ const CoursesTabsStudents = () => {
          </div>
          <div className='students-tab__items'>
             {sortedUsers.map((props, index) => (
-               <CoursesTabsStudentsItem key={props.id} {...props} />
+               <CoursesItemTabStudentsItem key={props.id} {...props} />
             ))}
          </div>
       </div>
    )
 }
 
-export default CoursesTabsStudents
+export default CoursesItemTabStudents

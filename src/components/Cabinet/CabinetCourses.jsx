@@ -42,8 +42,6 @@ const CabinetCourses = () => {
       }
    }, [location])
 
-   console.log(cabinetLinks)
-
    return (
       <>
          <div className='cabinet-page'>

@@ -8,3 +8,8 @@ export const ROLES = {
 export const THEME_COLORS = {
    ACCENT: '#5e61da',
 }
+
+export const LIMIT = {
+   LESSON_COMMENTS: 4,
+   COURSE_COMMENTS: 4,
+}

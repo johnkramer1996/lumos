@@ -1,5 +1,5 @@
 import axios from './axios'
-import { trainerCoursesLessonsURL, trainerCoursesModulesURL, trainerCoursesURL, userCoursesURL } from './URLS'
+import { trainerCoursesLessonsURL, trainerCoursesModulesURL, trainerCoursesURL, userCoursesURL, userURL } from './URLS'
 
 export default class CoursesService {
    static async fetchCourses(params = {}) {
@@ -141,5 +141,14 @@ export default class CoursesService {
    }
    static async addFavorite({ courseId = 0 }) {
       return await axios.post(userCoursesURL.ADD_FAVORITE({ courseId }))
+   }
+   // TODO USER SERVICE ???
+   static async fetchUserNotifications(params) {
+      return await axios.get(userURL.FETCH_NOTIFICATIONS, {
+         params,
+      })
+   }
+   static async readUserNotifications(body = {}) {
+      return await axios.post(userURL.FETCH_NOTIFICATIONS_READ, body)
    }
 }

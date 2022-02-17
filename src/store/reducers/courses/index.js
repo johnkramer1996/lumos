@@ -23,6 +23,9 @@ const initialState = {
    lessonFiles: [],
    commentsData: {},
    comments: [],
+   notificationsData: {},
+   notifications: [],
+   notificationsNew: [],
 }
 
 export default function coursesReducer(state = initialState, action) {
@@ -63,6 +66,12 @@ export default function coursesReducer(state = initialState, action) {
          return { ...state, comments: [...state.comments, ...action.payload] }
       case coursesTypes.SET_COMMENT_ADDED:
          return { ...state, comments: [action.payload, ...state.comments] }
+      case coursesTypes.SET_NOTIFICATIONS_DATA:
+         return { ...state, notificationsData: action.payload }
+      case coursesTypes.SET_NOTIFICATIONS:
+         return { ...state, notifications: action.payload }
+      case coursesTypes.SET_NOTIFICATIONS_NEW:
+         return { ...state, notificationsNew: action.payload }
       default:
          return state
    }

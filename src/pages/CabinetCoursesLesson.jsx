@@ -7,6 +7,7 @@ import { Link, useParams } from 'react-router-dom'
 import { authSelectors, coursesSelectors } from 'store/selectors'
 import { getRequest, getURL } from 'utils'
 import { Comments, CoursesLesson } from 'components'
+import CoursesLessonComments from 'components/CoursesLesson/CoursesLessonComments'
 
 const CabinetCoursesLesson = () => {
    const { courseId, lessonId } = useParams()
@@ -25,7 +26,7 @@ const CabinetCoursesLesson = () => {
 
    useEffect(() => {
       fetchLessonRequest.call({ courseId, lessonId })
-      return () => resetCourses([])
+      return () => resetCourses()
    }, [courseId, lessonId])
 
    return (
@@ -47,7 +48,7 @@ const CabinetCoursesLesson = () => {
                   <CoursesLesson />
                </>
             )}
-            {can_comment && <Comments />}
+            {can_comment && <CoursesLessonComments />}
          </div>
       </section>
    )

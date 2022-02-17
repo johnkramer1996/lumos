@@ -21,6 +21,9 @@ export const CoursesActionCreators = {
    setLessonQuestions: (payload) => ({ type: coursesTypes.SET_LESSON_QUESTIONS, payload }),
    setLessonFiles: (payload) => ({ type: coursesTypes.SET_LESSON_FILES, payload }),
    addLessonFile: (payload) => ({ type: coursesTypes.ADD_LESSON_FILE, payload }),
+   setNotificationsData: (payload) => ({ type: coursesTypes.SET_NOTIFICATIONS_DATA, payload }),
+   setNotifications: (payload) => ({ type: coursesTypes.SET_NOTIFICATIONS, payload }),
+   setNotificationsNew: (payload) => ({ type: coursesTypes.SET_NOTIFICATIONS_NEW, payload }),
    ...crateActionCreator(CoursesService),
 }
 
@@ -192,8 +195,17 @@ export const courseHandlers = {
          dispatch(CoursesActionCreators.setCommentAdded(data?.comments[0] || []))
       },
    },
-   addLike: {
-      ...defaultHandlers.addLike,
-   },
+   //  addLike
    // addFavorite
+
+   //  TODO USER STORE
+   fetchUserNotifications: {
+      ...defaultHandlers.fetchUserNotifications,
+      success: ({ dispatch, response, prevData, data }) => {
+         dispatch(CoursesActionCreators.setNotificationsData(data || {}))
+         dispatch(CoursesActionCreators.setNotifications(data?.all.data || []))
+         dispatch(CoursesActionCreators.setNotificationsNew(data?.new.data || []))
+      },
+   },
+   //  readUserNotifications
 }

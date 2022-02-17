@@ -25,7 +25,7 @@ const CabinetSettingsNotifications = ({ onChange }) => {
 
    useEffect(() => {
       user && setNovifications(createNotifications(user.notifications))
-   }, [user])
+   }, [user, user_notify_sourses, user_notify_types])
 
    return (
       <div className='account-settings__group card-bg'>

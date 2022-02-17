@@ -15,7 +15,7 @@ const AddCourseTabMain = ({ refTabs, onUpdateListener }, ref) => {
    const course = useSelector(coursesSelectors.getCourse)
    const hasCourse = !(Object.keys(course).length === 0)
 
-   const name = useInput({ bind: { name: 'name' }, is: { isRequired: true, isName: true } })
+   const name = useInput({ bind: { name: 'name' }, is: { isRequired: true } })
    const category_id = useInput({ bind: { name: 'category_id' }, is: { isRequired: true } })
    const type_study = useInput({ bind: { name: 'type_study' }, is: { isRequired: true } })
    const format_study = useInput({ bind: { name: 'format_study' }, is: { isRequired: true } })

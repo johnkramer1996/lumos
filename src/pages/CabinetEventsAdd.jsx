@@ -13,7 +13,7 @@ const CabinetEventsAdd = () => {
    const event = useSelector(({ events }) => events.event)
    const hasEvent = event && !(Object.keys(event).length === 0)
 
-   const inputName = useInput({ initialValue: 'test', bind: { name: 'name' }, is: { isRequired: true, isName: true } })
+   const inputName = useInput({ initialValue: 'test', bind: { name: 'name' }, is: { isRequired: true } })
    const inputType = useInput({ initialValue: 1, bind: { name: 'event_type_id' }, is: { isRequired: true } })
    const inputEDate = useInput({ initialValue: getDate(new Date(2022, 11, 31), { monthNames: false, isDayFirst: false }), bind: { name: 'edate' }, is: { isRequired: true, isDate: true } })
    const inputETime = useInput({ initialValue: '12:00:00', bind: { name: 'etime' }, is: { isRequired: true, isTime: true } })

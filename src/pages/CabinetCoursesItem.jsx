@@ -5,10 +5,10 @@ import { Button, Loader } from 'components/ui'
 import { useDispatch, useNavigate, useRequest } from 'hooks'
 import { RouteNames } from 'routes'
 import { Tabs } from 'components'
-import CoursesTabsLessons from 'components/CoursesTabs/CoursesTabsLessons'
-import CoursesTabsStudents from 'components/CoursesTabs/CoursesTabsStudents'
-import CoursesTabsReport from 'components/CoursesTabs/CoursesTabsReport'
-import CoursesTabsNotifications from 'components/CoursesTabs/CoursesTabsNotifications'
+import CoursesItemTabLessons from 'components/CoursesItemTabLessons/CoursesItemTabLessons'
+import CoursesItemTabStudents from 'components/CoursesItemTabStudents/CoursesItemTabStudents'
+import CoursesItemTabReport from 'components/CoursesItemTabReport/CoursesItemTabReport'
+import CoursesItemTabNotifications from 'components/CoursesItemTabNotifications/CoursesItemTabNotifications'
 import { useMemo } from 'react'
 import { ReactComponent as EditSvg } from 'svg/edit.svg'
 import { authSelectors, coursesSelectors } from 'store/selectors'
@@ -41,16 +41,17 @@ const CabinetCoursesItem = () => {
 
    const tabItems = useMemo(
       () => [
-         { title: 'Уроки', notifications: 0, component: <CoursesTabsLessons /> },
-         { title: 'Ученики', notifications: 0, component: <CoursesTabsStudents /> },
-         { title: 'Статистика', notifications: 0, component: <CoursesTabsReport /> },
-         { title: 'Уведомления', notifications: 1, component: <CoursesTabsNotifications />, hasAccess: hasAccess(role, [ROLES.TRAINER]) },
+         { title: 'Уроки', notifications: 0, component: <CoursesItemTabLessons /> },
+         { title: 'Ученики', notifications: 0, component: <CoursesItemTabStudents /> },
+         { title: 'Статистика', notifications: 0, component: <CoursesItemTabReport /> },
+         { title: 'Уведомления', notifications: 1, component: <CoursesItemTabNotifications />, hasAccess: hasAccess(role, [ROLES.TRAINER]) },
       ],
       [],
    )
 
    return (
       <>
+         {/* // TODO EACH  BLOCKS LOADER  */}
          {fetchInfoRequest.isLoading ? (
             <Loader />
          ) : (

@@ -2,17 +2,16 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { authSelectors, coursesSelectors } from 'store/selectors'
-import { addZerro, getURL, hasAccess } from 'utils'
-import { ROLES } from 'constants'
+import { addZerro, getURL } from 'utils'
 
 const CoursesLessonTop = () => {
-   const { courseId, lessonId } = useParams()
+   const { courseId } = useParams()
    const rolesId = useSelector(authSelectors.getRolesId)
    const data = useSelector(coursesSelectors.getData)
    const lessons = useSelector(coursesSelectors.getLessons)
    const lesson = useSelector(coursesSelectors.getLesson)
 
-   const { number, name, description } = lesson
+   const { number, name } = lesson
    const prev_lesson = data || {}
    const next_lesson = data || {}
 

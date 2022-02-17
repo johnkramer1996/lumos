@@ -18,7 +18,7 @@ const AddCourseLessonEdit = (_, ref) => {
 
    const { count_answers, questions_to_delete, ansvers_to_delete, questionsInputs, answerInputs } = questionsData
 
-   const name = useInput({ bind: { name: 'name' }, is: { isRequired: true, isName: true } })
+   const name = useInput({ bind: { name: 'name' }, is: { isRequired: true } })
    const can_comment = useInput({ bind: { name: 'can_comment' }, is: { isCheckbox: true } })
    const has_text = useInput({ bind: { name: 'has_text' }, is: { isCheckbox: true } })
    const description = useInput({ bind: { name: 'description' }, is: { isRequired: true, isTextarea: true } })

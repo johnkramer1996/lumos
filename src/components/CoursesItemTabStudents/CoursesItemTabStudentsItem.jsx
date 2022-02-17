@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { getDate, getFullName, getURL } from 'utils'
 
-const CoursesTabsStudentsItem = ({ id, avatar, first_name, last_name, name, email, updated_at }) => {
+const CoursesItemTabStudentsItem = ({ id, avatar, first_name, last_name, name, email, updated_at }) => {
    return (
       <Link to={getURL.usersItem({ userId: id })} className='students-tab__item'>
          <div className='students-tab__item-img'>
@@ -21,4 +21,4 @@ const CoursesTabsStudentsItem = ({ id, avatar, first_name, last_name, name, emai
    )
 }
 
-export default CoursesTabsStudentsItem
+export default CoursesItemTabStudentsItem

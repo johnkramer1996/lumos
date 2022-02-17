@@ -67,6 +67,10 @@ export const userCoursesURL = {
    ADD_LIKE: ({ courseId }) => `/users/courses/${courseId}/like`,
    ADD_FAVORITE: ({ courseId }) => `/users/courses/${courseId}/favorite`,
 }
+export const userURL = {
+   FETCH_NOTIFICATIONS: '/users/notifications',
+   FETCH_NOTIFICATIONS_READ: '/users/notifications/read',
+}
 export const userEventsURL = {
    ADD_USER: '/users/events/add_user',
    FETCH_EVENTS: '/users/events',
