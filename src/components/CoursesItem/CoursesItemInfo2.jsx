@@ -42,9 +42,7 @@ const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
                            <div className='course-about__img'>
                               <img src={getURL.img(image)} alt='' />
                            </div>
-                           <div className='course-about__desc'>
-                              <p>{text}</p>
-                           </div>
+                           <div className='course-about__desc' dangerouslySetInnerHTML={{ __html: text }} />
                         </div>
                      ))}
                      <button className='course-info2__show'>
@@ -66,7 +64,7 @@ const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
                               </div>
                               <div className='course-whom__item-content'>
                                  <div className='course-whom__item-title truncate'>{name}</div>
-                                 <div className='course-whom__item-desc'>{text}</div>
+                                 <div className='course-whom__item-desc' dangerouslySetInnerHTML={{ __html: text }} />
                               </div>
                            </div>
                         </div>
