@@ -55,7 +55,7 @@ const CabinetEventsAdd = () => {
    const addEventRequest = useRequest({
       request: addEvent,
       success: ({ response, data }) => {
-         toCabinetEventsEdit({ type: 'event', id: data.course.id })
+         toCabinetEventsEdit({ type: 'event', eventId: data.course.id })
          setIsShow(true)
          setContent({ title: 'Информация о мероприятии  - добавлена' })
       },
