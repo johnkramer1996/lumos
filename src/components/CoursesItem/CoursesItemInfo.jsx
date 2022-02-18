@@ -34,7 +34,7 @@ const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
 
                <div className='course-info__right'>
                   <h1 className='course-info__title display-2'>{name}</h1>
-                  <div className='course-info__desc'>{short_desc}</div>
+                  <div className='course-info__desc' dangerouslySetInnerHTML={{ __html: short_desc }} />
                   <div className='course-info__badges'>
                      <div className='course-info__badge'>
                         <span>Длительность</span>
