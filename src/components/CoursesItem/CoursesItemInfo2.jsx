@@ -33,9 +33,7 @@ const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
                   <div className='course-about course-info2__group'>
                      <div className='course-info2__group-show'>
                         <h3 className='course-info2__title'>О курсе</h3>
-                        <div className='course-about__desc'>
-                           <p>{description}</p>
-                        </div>
+                        <div className='course-about__desc' dangerouslySetInnerHTML={{ __html: description }} />
                      </div>
                      {/* // TODO MODILE VERSION */}
                      {descriptions.map(({ name, text, image }, index) => (
@@ -63,7 +61,7 @@ const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
                      {whoms.map(({ name, text, image }, index) => (
                         <div key={index} className='course-info2__group-hidden'>
                            <div className='course-whom__item'>
-                              <div className='course-whom__item-img'>
+                              <div className='course-whom__item-img img img--cover'>
                                  <img src={getURL.img(image)} alt='' />
                               </div>
                               <div className='course-whom__item-content'>

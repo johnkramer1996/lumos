@@ -20,6 +20,7 @@
    display: block;
    position: relative;
    background-color: #f7f7fd;
+   align-self: flex-start;
 }
 
 .img::before,
@@ -261,4 +262,11 @@
 
 .students-tab__btn--active svg {
    transform: rotate(180deg);
+}
+
+.course-whom__item-img {
+   border-radius: 10px;
+}
+.course-whom__item-img::before {
+   padding-top: 70%;
 }

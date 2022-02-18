@@ -24,7 +24,7 @@ const BlogItem = () => {
    return (
       <section className='blog-page'>
          <div className='container'>
-            // TODO UI COMPONENT
+            {/* // TODO UI COMPONENT */}
             <div className='breadcrumbs'>
                <Link to='/' className='breadcrumbs__item'>
                   Главная
