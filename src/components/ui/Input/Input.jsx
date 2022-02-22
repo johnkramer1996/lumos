@@ -2,7 +2,7 @@ import React from 'react'
 import { DatePicker } from '..'
 import { isActiveClass, isFunction } from 'utils'
 
-const Input = ({ form, label, registerOptions = {}, options = [], classNameWrapper = '', withoutWrapper, datepicker, textarea, email, password, time, number, ...props }) => {
+const Input = ({ form, label, registerOptions = {}, options, classNameWrapper = '', withoutWrapper, datepicker, textarea, email, password, time, number, ...props }) => {
    if (!form || !props['name']) return <input type='text' placeholder='Error Input' />
    //  const onChangeHandle = (e) => {
    //     input.bind.onChange(e)
@@ -53,7 +53,7 @@ const Input = ({ form, label, registerOptions = {}, options = [], classNameWrapp
          {label && <label>{label}</label>}
          {datepicker ? (
             <DatePicker props={props} />
-         ) : !options.length ? (
+         ) : !Array.isArray(options) ? (
             !textarea ? (
                <input type='text' {...props} autoComplete='off' />
             ) : (

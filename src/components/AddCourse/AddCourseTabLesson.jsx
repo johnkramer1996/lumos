@@ -46,10 +46,8 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
    const {
       control,
       register,
-      handleSubmit,
       getValues,
       formState: { errors },
-      reset,
       setValue,
    } = form
 
@@ -59,13 +57,13 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
       if (hasCourse) {
          ;(async () => {
             // ;(await getEntries()).forEach(([key]) => form.setValue(key, course[key] !== '0' ? course[key] : false ?? ''))
-            const newModules = course.moduls.map((m) => ({ ...m, lessons: m.lessons.map((l) => ({ name: '', ...l, module: null })) }))
+            const newModules = course.moduls.map((m) => ({ ...m, _id: m.id, lessons: m.lessons.map((l) => ({ name: '', ...l, _id: l.id, module: null })) }))
             form.setValue('short_desc', course.short_desc)
             form.setValue('modules', newModules)
-
-            console.log(newModules)
-
-            // form.setValue('test_lesson', course.test_lesson?.hidden_id)
+            if (course.test_lesson?.hidden_id) {
+               form.reset('test_lesson')
+               form.setValue('test_lesson', course.test_lesson?.hidden_id, { shouldValidate: true })
+            }
          })()
       }
    }, [course])
@@ -73,9 +71,6 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
    const addModulesMassRequest = useRequest({
       request: addModulesMass,
       success: ({ response, data }) => {
-         console.log(response, data)
-         //TODO RETURN COURSE OBJECT FROM SERVER
-         // fetchModulesRequest.call({ courseId })
          setIsShow(true)
          !hasModules && !hasInfo
             ? setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' })
@@ -102,20 +97,35 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
       },
    })
 
+   const onDeleteModule = (id) => {
+      console.log(id)
+      id && deleteModuleRequest.call({ courseId, id })
+   }
+
+   const onDeleteLesson = (lessonId) => lessonId && deleteLessonRequest.call({ courseId, lessonId })
+
    const submit = async () => {
       if (!(await form.trigger())) return false
 
       const body = {}
       ;(await getEntries()).forEach(([key, value]) => (body[key] = typeof value === 'boolean' ? +value : value))
-      body.moduls = body.modules.map((m) => ({ ...m, lessons: m.lessons.map((l, i) => ({ ...l, number: i, hidden_id: uid() })) }))
+      body.moduls = body.modules.map((m) => ({ ...m, lessons: m.lessons.map((l, i) => ({ ...l, number: i, is_test: body.test_lesson === l.hidden_id })) }))
 
-      body.modules = null
+      delete body.modules
+      // delete body.text_lesson
+
+      console.log(body)
+      return
 
       addModulesMassRequest.call({ courseId, body })
    }
 
    useImperativeHandle(ref, () => ({ submit }))
 
+   const modulesFields = form.watch('modules')
+   //  const lessons = modulesFields.map((m) => m.lessons).flat()
+
+   const test_lesson = form.watch('test_lesson')
    return (
       <>
          <div className='course-edit__small-desc card-bg'>
@@ -123,7 +133,7 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
             <Input form={form} name='short_desc' label='Описание' textarea />
          </div>
 
-         <AddCourseModule {...{ control, register, defaultValues, getValues, setValue, errors, form }} />
+         <AddCourseModule {...{ control, register, defaultValues, getValues, setValue, errors, form, onDeleteModule, onDeleteLesson }} />
 
          <div className='create-module card-bg'>
             <div className='create-module__top'>
@@ -138,15 +148,15 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
                         Выберите тестовый урок
                      </option>
                      <option value='0'>Без тестового урока</option>
-                     {/* {modules.map((item) =>
+                     {modulesFields.map((item) =>
                         item?.lessons
                            ?.filter(({ name }) => name !== '')
-                           .map(({ id, name, hidden_id }, indexLesson) => (
-                              <option key={id ?? hidden_id ?? indexLesson} value={hidden_id}>
+                           .map(({ _id, name, hidden_id }, indexLesson) => (
+                              <option key={_id ?? hidden_id ?? indexLesson} value={hidden_id}>
                                  {name}
                               </option>
                            )),
-                     )} */}
+                     )}
                   </select>
                </div>
             </div>

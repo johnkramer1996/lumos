@@ -1,10 +1,9 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { Button, Input } from 'components/ui'
 import { useSelector } from 'react-redux'
-import AddCourseLesson from './AddCourseLesson'
 import { useDispatch, useInput, useRequest } from 'hooks'
 import { Link, useParams } from 'react-router-dom'
-import { asyncFind, declOfNum, getURL, timeout, uid } from 'utils'
+import { asyncFind, declOfNum, getDeclOfArray, getURL, timeout, uid } from 'utils'
 import { coursesSelectors } from 'store/selectors/'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
@@ -12,7 +11,8 @@ import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { ReactComponent as DragSvg } from 'svg/drag.svg'
 import { ReactComponent as LinkSvg } from 'svg/link.svg'
 
-const AddCourseModule = ({ control, register, setValue, getValues, form }) => {
+const AddCourseModule = ({ control, register, setValue, getValues, form, onDeleteModule, onDeleteLesson }) => {
+   const { setIsShow, setContent } = useDispatch()
    const { fields, append, remove } = useFieldArray({
       control,
       name: 'modules',
@@ -21,6 +21,17 @@ const AddCourseModule = ({ control, register, setValue, getValues, form }) => {
    const onAdd = async () => {
       if (!(await form.trigger('modules'))) return
       append({ name: '' })
+   }
+
+   const onRemove = async (index) => {
+      if (fields[index].lessons.length) {
+         setIsShow(true)
+         setContent({ title: 'У модуля есть уроки, ', descr: 'удалите уроки, потом удалите модуль' })
+         return
+      }
+
+      onDeleteModule(fields[index]._id)
+      remove(index)
    }
 
    return (
@@ -34,7 +45,7 @@ const AddCourseModule = ({ control, register, setValue, getValues, form }) => {
                         <label>Название модуля {index + 1}</label>
                         <div className='create-module__input'>
                            <Input form={form} name={`modules.${index}.name`} placeholder='Название модуля' withoutWrapper />
-                           <button className='create-module__delete' onClick={() => remove(index)}>
+                           <button className='create-module__delete' onClick={() => onRemove(index)}>
                               <DeleteSvg />
                            </button>
                         </div>
@@ -50,7 +61,7 @@ const AddCourseModule = ({ control, register, setValue, getValues, form }) => {
          </div>
 
          {fields.map((item, index) => {
-            return <NestedFieldArray key={item.id} nestIndex={index} {...{ control, register }} {...item} form={form} />
+            return <AddCourseLesson key={item.id} nestIndex={index} {...{ control, register }} {...item} form={form} onDeleteLesson={onDeleteLesson} />
          })}
       </>
    )
@@ -58,18 +69,36 @@ const AddCourseModule = ({ control, register, setValue, getValues, form }) => {
 
 export default AddCourseModule
 
-const NestedFieldArray = ({ nestIndex, control, register, name, form }) => {
+const AddCourseLesson = ({ nestIndex, control, register, name, form, onDeleteLesson }) => {
    const { courseId } = useParams()
    const { fields, remove, append } = useFieldArray({
       control,
       name: `modules.${nestIndex}.lessons`,
    })
 
+   const onAdd = async () => {
+      if (!(await form.trigger('modules'))) return
+      append({
+         name: '',
+         number: fields.length,
+         hidden_id: uid(),
+      })
+   }
+
+   const onRemove = async (index) => {
+      onDeleteLesson(fields[index]._id)
+      remove(index)
+   }
+
+   const name1 = form.watch(`modules.${nestIndex}.name`)
+
    return (
       <div className='create-module card-bg'>
          <div className='create-module__top'>
-            <h3 className='create-module__title display-4'>{name || 'Модуль ' + (nestIndex + 1)}</h3>
-            <div className='create-module__num'>{/* {lessons?.length} {declOfNum(lessons?.length, getDeclOfArray['lessons'])} */}</div>
+            <h3 className='create-module__title display-4'>{name1 || 'Модуль ' + (nestIndex + 1)}</h3>
+            <div className='create-module__num'>
+               {fields.length} {declOfNum(fields.length, getDeclOfArray['lessons'])}
+            </div>
          </div>
          {fields.map((item, k) => {
             return (
@@ -82,7 +111,9 @@ const NestedFieldArray = ({ nestIndex, control, register, name, form }) => {
                         <LinkSvg />
                      </Link>
                      <Input form={form} name={`modules.${nestIndex}.lessons.${k}.name`} placeholder='Название урока' withoutWrapper />
-                     <button className='create-module__delete' onClick={() => remove(k)}>
+                     <Input form={form} name={`modules.${nestIndex}.lessons.${k}.number`} withoutWrapper />
+                     <Input form={form} name={`modules.${nestIndex}.lessons.${k}.hidden_id`} withoutWrapper />
+                     <button className='create-module__delete' onClick={() => onRemove(k)}>
                         <DeleteSvg />
                      </button>
                   </div>
@@ -90,15 +121,7 @@ const NestedFieldArray = ({ nestIndex, control, register, name, form }) => {
             )
          })}
 
-         <Button
-            className='create-module__add'
-            onClick={() =>
-               append({
-                  name: '',
-               })
-            }
-            outline
-         >
+         <Button className='create-module__add' onClick={onAdd} outline>
             <AddSvg />
             <span>Добавить урок</span>
          </Button>
