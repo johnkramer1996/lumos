@@ -18,7 +18,10 @@ const AddCourseModule = ({ control, register, setValue, getValues, form }) => {
       name: 'modules',
    })
 
-   console.log(form)
+   const onAdd = async () => {
+      if (!(await form.trigger('modules'))) return
+      append({ name: '' })
+   }
 
    return (
       <>
@@ -40,13 +43,7 @@ const AddCourseModule = ({ control, register, setValue, getValues, form }) => {
                })}
             </div>
 
-            <Button
-               className='create-module__add'
-               onClick={() => {
-                  append({ name: '' })
-               }}
-               outline
-            >
+            <Button className='create-module__add' onClick={onAdd} outline>
                <AddSvg />
                <span>Добавить модуль</span>
             </Button>

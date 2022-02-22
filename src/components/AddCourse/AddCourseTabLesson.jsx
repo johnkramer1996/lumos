@@ -17,11 +17,11 @@ const defaultValues = {
    modules: [
       {
          name: 'Модуль 1',
-         lessons: [{ name: '' }],
+         lessons: [],
       },
       {
          name: 'Модуль 2',
-         lessons: [{ name: '' }],
+         lessons: [],
       },
    ],
 }
@@ -59,6 +59,12 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
       if (hasCourse) {
          ;(async () => {
             // ;(await getEntries()).forEach(([key]) => form.setValue(key, course[key] !== '0' ? course[key] : false ?? ''))
+            const newModules = course.moduls.map((m) => ({ ...m, lessons: m.lessons.map((l) => ({ name: '', ...l, module: null })) }))
+            form.setValue('short_desc', course.short_desc)
+            form.setValue('modules', newModules)
+
+            console.log(newModules)
+
             // form.setValue('test_lesson', course.test_lesson?.hidden_id)
          })()
       }
@@ -101,10 +107,9 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
 
       const body = {}
       ;(await getEntries()).forEach(([key, value]) => (body[key] = typeof value === 'boolean' ? +value : value))
+      body.moduls = body.modules.map((m) => ({ ...m, lessons: m.lessons.map((l, i) => ({ ...l, number: i, hidden_id: uid() })) }))
 
-      console.log(body)
-
-      return
+      body.modules = null
 
       addModulesMassRequest.call({ courseId, body })
    }
