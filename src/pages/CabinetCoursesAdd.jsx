@@ -105,7 +105,7 @@ const CabinetAddCourse = () => {
                         <h1 className='course-edit__title display-3'>
                            <span>{isEditPage ? 'Редактирование' : 'Добавление'} курса</span>
                         </h1>
-                        <Tabs ref={refTabs} items={tabItems} classPrefix={'course-edit'} isLoading={fetchInfoRequest.isLoading} activeTabIndex={1} isAvaibleIndex={isAvaibleTabIndex}>
+                        <Tabs ref={refTabs} items={tabItems} classPrefix={'course-edit'} isLoading={fetchInfoRequest.isLoading} activeTabIndex={0} isAvaibleIndex={isAvaibleTabIndex}>
                            {({ activeStep }) => tabItems[activeStep].component}
                         </Tabs>
                      </>

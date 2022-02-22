@@ -31,7 +31,6 @@ const AddCourseModule = ({ control, register, setValue, getValues, form }) => {
                         <label>Название модуля {index + 1}</label>
                         <div className='create-module__input'>
                            <Input form={form} name={`modules.${index}.name`} placeholder='Название модуля' withoutWrapper />
-                           {/* <input {...register(`modules.${index}.name`)} placeholder='Название модуля' /> */}
                            <button className='create-module__delete' onClick={() => remove(index)}>
                               <DeleteSvg />
                            </button>
