@@ -1,30 +1,45 @@
-import { Component, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useDispatch, useNavigate, useRequest } from 'hooks'
 import { useSelector } from 'react-redux'
+import { authStepTypes } from 'store/reducers/auth/types'
+import { authSelectors } from 'store/selectors'
+import { ReactComponent as ArrowLeftSvg } from 'svg/arrow-left.svg'
+import { modalsContentTypes } from 'store/reducers/modals/types'
 import ModalLoginBottom from './ModalLoginBottom'
 import ModalLoginForm from './ModalLoginForm'
-import { authStepTypes } from 'store/reducers/auth/types'
-import { ReactComponent as CloseSvg } from 'svg/close.svg'
 
-const ModalLogin = ({ onContinue }) => {
+const ModalLogin = ({ isModal = true }) => {
    const { toCabinet } = useNavigate()
-   const { setStep, checkEmail, login, register, restore } = useDispatch()
-   const step = useSelector(({ auth }) => auth.step)
+   const { setStep, checkEmail, setBack, login, register, restore } = useDispatch()
+   const step = useSelector(authSelectors.getStep)
 
-   const checkEmailRequest = useRequest({ request: checkEmail, success: ({ response, prevData, data }) => (data.exists === 1 ? setStep('LOGIN') : setStep('REGISTER')) })
+   console.log(step)
+
+   const checkEmailRequest = useRequest({
+      request: checkEmail,
+      success: ({ response, prevData, data }) => setStep(data.exists === 1 ? authStepTypes.LOGIN : authStepTypes.REGISTER),
+   })
    const loginRequest = useRequest({
       request: login,
       success: () => toCabinet(),
+      error: () => isModal && setBack(modalsContentTypes.LOGIN),
    })
-   const registerRequest = useRequest({ request: register, success: ({ response, prevData, data }) => setStep('LOGIN') })
-   const restoreRequest = useRequest({ request: restore, success: ({ response, prevData, data }) => setStep('LOGIN') })
+   const registerRequest = useRequest({
+      request: register,
+      success: ({ response, prevData, data }) => setStep(modalsContentTypes.LOGIN),
+      error: () => isModal && setBack(modalsContentTypes.LOGIN),
+   })
+   const restoreRequest = useRequest({
+      request: restore,
+      success: ({ response, prevData, data }) => setStep(modalsContentTypes.LOGIN),
+      error: () => isModal && setBack(modalsContentTypes.LOGIN),
+   })
 
    const steps = useMemo(
       () => ({
          [authStepTypes.CHECK_EMAIL]: {
             title: 'Вход или регистрация',
             btn: 'Продолжить',
-            onPrev: () => {},
             onNext: checkEmailRequest.call,
          },
          [authStepTypes.LOGIN]: {
@@ -52,19 +67,10 @@ const ModalLogin = ({ onContinue }) => {
    return (
       <>
          <div className='modal__top'>
-            <div className='modal__title'>
-               {step !== 'CHECK_EMAIL' && (
-                  <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg' onClick={steps[step].onPrev}>
-                     <path d='M15.5 19L8.5 12L15.5 5' stroke='#1B2C3E' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
-                  </svg>
-               )}
+            <div className='modal__title' onClick={steps[step]?.onPrev ? steps[step].onPrev : () => {}}>
+               {steps[step]?.onPrev && <ArrowLeftSvg />}
                <span>{steps[step].title}</span>
             </div>
-            {onContinue && (
-               <button className='modal__close' onClick={onContinue}>
-                  <CloseSvg />
-               </button>
-            )}
          </div>
          <div className='modal__content'>
             <ModalLoginForm steps={steps} />

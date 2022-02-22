@@ -1,3 +1,4 @@
+import { Button } from 'components/ui'
 import { useDispatch } from 'hooks'
 import useQuery from 'hooks/useQuery'
 import React, { useEffect, useMemo } from 'react'
@@ -51,11 +52,12 @@ const Filter = () => {
                {filtersItems.map((props, index) => (
                   <FilterItems key={index} {...props} items={props.items} onChange={onChangeFilter} />
                ))}
-               <button className='filter__save btn btn-blue'>Применить</button>
+               <Button className='filter__save'>Применить</Button>
             </div>
          </div>
          <div className='filter-bg'></div>
-         <div className='filter-mob filter-mob--selected'>
+         {/* // TODO MOBILE VERSION */}
+         {/* <div className='filter-mob filter-mob--selected'>
             <span>Фильтр</span>
             <i>2</i>
          </div>
@@ -72,7 +74,7 @@ const Filter = () => {
                <span>Формат обучения</span>
                <i>1</i>
             </div>
-         </div>
+         </div> */}
       </>
    )
 }

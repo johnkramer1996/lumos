@@ -7,9 +7,9 @@ import { authSelectors } from 'store/selectors'
 
 const CabinetSettingsPersonalInformation = ({ onBlur }) => {
    const user = useSelector(authSelectors.getUser)
-   const firstName = useInput({ is: { isRequired: true, isName: true } })
-   const lastName = useInput({ is: { isRequired: true, isName: true } })
-   const phone = useInput({ is: { isRequired: true, isDisabled: true, isNumbers: true } })
+   const firstName = useInput({ is: { isName: true } })
+   const lastName = useInput({ is: { isName: true } })
+   const phone = useInput({ is: { isDisabled: true, isNumbers: true } })
 
    useEffect(() => {
       user.first_name && firstName.setValue(user.first_name)

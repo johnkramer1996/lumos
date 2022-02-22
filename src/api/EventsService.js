@@ -3,7 +3,6 @@ import { trainerEventsURL, userEventsURL } from './URLS'
 
 export default class EventsService {
    static async fetchEvents(params) {
-      console.log(params)
       return await axios.get(trainerEventsURL.FETCH_EVENTS, {
          params,
       })

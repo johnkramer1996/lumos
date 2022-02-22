@@ -1,5 +1,5 @@
 import { Share } from 'components'
-import { Loader } from 'components/ui'
+import { Loader, LoaderWrapper } from 'components/ui'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -9,9 +9,7 @@ import BlogGroup from './BlogGroup'
 const BlogItem = ({ isLoading, title, image, text, interested = [] }) => {
    return (
       <>
-         {isLoading ? (
-            <Loader />
-         ) : (
+         <LoaderWrapper isLoading={isLoading}>
             <>
                <h1 className='blog-page__title display-3'>{title}</h1>
                {image && (
@@ -27,7 +25,7 @@ const BlogItem = ({ isLoading, title, image, text, interested = [] }) => {
                </div>
                <BlogGroup items={interested} title='Вам может быть интересно' />
             </>
-         )}
+         </LoaderWrapper>
       </>
    )
 }

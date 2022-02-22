@@ -1,28 +1,23 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { Courses as CoursesComponent, Filter } from 'components/'
+import React, { useEffect, useMemo } from 'react'
+import { CoursesCardsWrapper, CoursesCardFront, Filter } from 'components/'
 import { useDispatch, useRequest } from 'hooks'
-import { useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 import CabinetTitle from 'components/Cabinet/CabinetTitle'
-import { authSelectors, frontCoursesSelectors } from 'store/selectors'
+import { authSelectors, frontCoursesSelectors, settingsSelectors } from 'store/selectors'
 
 const Courses = () => {
    const { resetFrontCourses, fetchFrontCourses, fetchFrontAuthCourses } = useDispatch()
    const isAuth = useSelector(authSelectors.getIsAuth)
    const courses = useSelector(frontCoursesSelectors.getCourses)
-   const filter = useSelector(({ settings }) => settings.filter)
+   const filter = useSelector(settingsSelectors.getFilter)
 
-   const fetchFrontAuthCoursesRequest = useRequest({
-      request: fetchFrontAuthCourses,
+   const authRequest = useRequest({
+      request: isAuth ? fetchFrontAuthCourses : fetchFrontCourses,
+      loading: true,
    })
-   const fetchFrontCoursesRequest = useRequest({
-      request: fetchFrontCourses,
-   })
-   const authRequest = isAuth ? fetchFrontAuthCoursesRequest : fetchFrontCoursesRequest
 
    useEffect(() => {
-      authRequest.call()
+      authRequest.call({ _limit: 9, _themes: 10, themes: 10 })
       return () => resetFrontCourses()
    }, [])
 
@@ -48,9 +43,13 @@ const Courses = () => {
                   </aside>
                   <main className='categories-page__main'>
                      <div className='courses'>
-                        <CabinetTitle title={'Популярные курсы'} btnHref={'/'} />
+                        <CabinetTitle title={'Курсы'} btnHref={'/'} />
 
-                        <CoursesItemWrapper items={filteredCourses} isLoading={authRequest.isLoading} numberComponent={1} className={'courses__items'} />
+                        <CoursesCardsWrapper isLoading={authRequest.isLoading} className={`courses__items`} items={filteredCourses}>
+                           {filteredCourses.map((props, index) => (
+                              <CoursesCardFront key={props.id || index} {...props} />
+                           ))}
+                        </CoursesCardsWrapper>
                      </div>
                   </main>
                </div>

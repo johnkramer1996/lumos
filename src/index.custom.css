@@ -270,3 +270,13 @@
 .course-whom__item-img::before {
    padding-top: 70%;
 }
+
+.modal__desc {
+   margin-top: 20px;
+}
+.course-edit__form-upload-delete {
+   display: none;
+}
+.course-edit__form-upload--uploaded .course-edit__form-upload-delete {
+   display: block;
+}

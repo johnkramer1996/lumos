@@ -7,23 +7,24 @@ import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 import { authSelectors, coursesSelectors, settingsSelectors } from 'store/selectors'
 import { getRequest } from 'utils'
 import { useLocation } from 'react-router-dom'
-import { useRef } from 'react'
-import { cabinetLinks } from 'routes'
+import { CoursesCardCabinet, CoursesCardsWrapper } from 'components'
 
 const CabinetCourses = () => {
    const location = useLocation()
    const query = useQuery()
-   const { resetCourses, fetchCourses, fetchUserCourses } = useDispatch()
-   const { setFilter } = useDispatch()
-   const filter = useSelector(({ settings }) => settings.filter)
+   const { resetCourses, fetchCourses, fetchUserCourses, setFilter } = useDispatch()
    const rolesId = useSelector(authSelectors.getRolesId)
+   const filter = useSelector(settingsSelectors.getFilter)
+   const typeShow = useSelector(settingsSelectors.getTypeShow)
    const courses = useSelector(coursesSelectors.getCourses)
    const data = useSelector(coursesSelectors.getData)
-   const typeShow = useSelector(settingsSelectors.getTypeShow)
+
+   const routeName = getRequest(['cabinetCoursesLessons', 'cabinetCoursesItem'], rolesId)
 
    const roleRequest = useMemo(() => getRequest([fetchUserCourses, fetchCourses], rolesId), [])
    const fetchCoursesRequests = useRequest({
       request: roleRequest,
+      loading: true,
    })
 
    useEffect(() => {
@@ -48,16 +49,12 @@ const CabinetCourses = () => {
             {/* {hasAccess(rolesId, [ROLES.USER]) && <CabinetGreet />} */}
             <CabinetTitle title={'Мои курсы'} isBtnAll={false} />
             {/* {title} */}
-            {/* // TODO REMAKE TO HOC */}
             <CabinetNav total={data.total} />
-            <CoursesItemWrapper
-               isLoading={fetchCoursesRequests.isLoading}
-               items={courses}
-               rolesId={rolesId}
-               numberComponent={2}
-               isToCabinet={true}
-               className={`cabinet-page__items cabinet-page__items--${typeShow}`}
-            />
+            <CoursesCardsWrapper isLoading={fetchCoursesRequests.isLoading} className={`cabinet-page__items cabinet-page__items--${typeShow}`} items={courses}>
+               {courses.map((props, index) => (
+                  <CoursesCardCabinet key={props.id || index} {...props} rolesId={rolesId} routeName={routeName} />
+               ))}
+            </CoursesCardsWrapper>
          </div>
       </>
    )

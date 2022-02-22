@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 import { CoursesItemFeedback, CoursesItemInfo, CoursesItemInfo2, CoursesItemPopular, CoursesItemSeo, CoursesItemTop, CoursesItemVariants } from 'components'
-import { Loader } from 'components/ui'
+import { Loader, LoaderWrapper } from 'components/ui'
 import { useSelector } from 'react-redux'
 import { authSelectors, frontCoursesSelectors } from 'store/selectors'
 
@@ -24,6 +24,7 @@ const CoursesItem = () => {
 
    const fetchFrontCourseRequest = useRequest({
       request: isAuth ? fetchFrontAuthCourse : fetchFrontCourse,
+      loading: true,
    })
    const addUserToCourseRequest = useRequest({
       request: addUserToCourse,
@@ -56,9 +57,7 @@ const CoursesItem = () => {
 
    return (
       <>
-         {fetchFrontCourseRequest.isLoading ? (
-            <Loader />
-         ) : (
+         <LoaderWrapper isLoading={fetchFrontCourseRequest.isLoading}>
             <>
                <CoursesItemTop />
                <CoursesItemInfo onEnroll={onEnroll} isEnrolledPage={isEnrolledPage} />
@@ -68,7 +67,7 @@ const CoursesItem = () => {
                <CoursesItemVariants />
                <CoursesItemSeo />
             </>
-         )}
+         </LoaderWrapper>
       </>
    )
 }

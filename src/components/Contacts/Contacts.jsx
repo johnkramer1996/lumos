@@ -10,9 +10,9 @@ const Contacts = ({ title = 'Контакты' }) => {
    const { sendFrontContacts, setIsShow, setContent } = useDispatch()
    const contacts = useSelector(frontStaticSelectors.getContacts)
 
-   const name = useInput({ is: { isRequired: true, isName: true } })
-   const email = useInput({ is: { isRequired: true, isEmail: true } })
-   const text = useInput({ is: { isRequired: true, isTextarea: true } })
+   const name = useInput({ is: { isName: true } })
+   const email = useInput({ is: { isEmail: true } })
+   const text = useInput()
 
    const inputs = useMemo(() => [name, email, text], [name, email, text])
 
@@ -65,6 +65,7 @@ const Contacts = ({ title = 'Контакты' }) => {
                            input={text}
                            label='Связаться с нами'
                            placeholder='Напишите свой вопрос или опишите проблему'
+                           textarea
                         />
                      </div>
                      <Button className='contacts__form-btn'>Отправить</Button>

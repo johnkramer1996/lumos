@@ -30,9 +30,7 @@ export const eventBus = {
    },
 }
 
-const timeout = (time) => {
-   return new Promise((res) => setTimeout(() => res(true), time))
-}
+export const timeout = (func, time = 0) => new Promise((res) => setTimeout(() => res(func()), time))
 
 export const getData = (response, prev = false) => {
    let data = response.data
@@ -59,10 +57,11 @@ export const asyncAction =
          if (response.status === 200) success({ dispatch, ...successArgs })
          if (response.status === 200) callbackHandler('success', successArgs)
       } catch (e) {
-         console.dir(request, 'error request')
-         console.log(e, e.response || e.message || 'Unknown error')
-         error({ dispatch, error: e.response || e.message || 'Unknown error' })
-         callbackHandler('error', { dispatch, error: e.response || e.message || 'Unknown error' })
+         const errorObj = JSON.stringify(e.response?.data || {})
+         alert(errorObj)
+         console.log(e.response)
+         error({ dispatch, error: errorObj })
+         callbackHandler('error', { dispatch, error: errorObj })
       } finally {
          callbackHandler('finnally', { dispatch })
       }
@@ -102,25 +101,17 @@ export const toBoolean = (value) => (value === '0' ? false : !!value)
 
 export const isCheckbox = (input) => input.type === 'radio' || input.type === 'checkbox'
 
-export const maskDate = (e) => {
-   if (e.keyCode < 47 || e.keyCode > 57) e.preventDefault()
-   const len = e.target.value.length
-   if (len !== 1 || len !== 3) if (e.keyCode === 47) e.preventDefault()
-   if (len === 4) e.target.value += '-'
-   if (len === 7) e.target.value += '-'
-   if (len > 9) e.preventDefault()
-}
-
-export const validatePassword = (value) => {
-   if (!value) return
-   return value.length > 7
-}
+export const validatePassword = (value) => value && value.length > 7
 
 export const validateName = (value) => /^[a-zа-яёїієґ ,.'-]+$/i.test(value)
 
 export const validatePhone = (value) => !value.includes('_')
 
 export const validateEmail = (value) => /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/.test(value)
+
+export const patternNumbers = (val) => val.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')
+// TODO
+//  const patternTime = (val) => val.replace(/^([01]?[0-9]|2[0-3]):[0-5][0-9]/g, '')
 
 export const formatBytes = (bytes, decimals = 2) => {
    if (bytes === 0) return '0 Bytes'
@@ -153,7 +144,9 @@ export const getURL = {
    avatar: (src, rolesId) => (src ? `${SITE_URL}/${src}` : getURL.defaultAvatar(rolesId)),
    defaultAvatar: (rolesId = []) => '/assets/img/' + ['avatar-user.png', 'avatar-trainer.png', 'avatar-employee.webp', 'avatar-admin.png'][rolesId[rolesId.length - 1] - 1 || 0],
    courses: () => RouteNames.COURSES,
+   events: () => RouteNames.EVENTS,
    coursesItem: (params) => getURL.parseURL(RouteNames.COURSES_ITEM, params),
+   eventsItem: (params) => getURL.parseURL(RouteNames.EVENTS_ITEM, params),
    cabinet: (params) => getURL.parseURL(RouteNames.CABINET, params),
    cabinetCourses: (params) => getURL.parseURL(RouteNames.CABINET_COURSES, params),
    cabinetCoursesItem: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_ITEM, params),
@@ -208,3 +201,8 @@ export const timer = (days = {}, hours = {}, minutes = {}, seconds = {}) => {
       if (seconds.current) seconds.current.innerHTML = addZerro(Math.floor((distance % _minute) / _second))
    }, 1000)
 }
+
+export const isFunction = (func) => typeof func === 'function'
+
+export const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then((results) => arr.filter((_v, index) => results[index]))
+export const asyncFind = async (arr, predicate) => Promise.all(arr.map(predicate)).then((results) => arr.find((_v, index) => results[index]))

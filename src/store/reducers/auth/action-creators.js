@@ -33,20 +33,19 @@ export const authHandlers = {
          localStorage.setItem('token', data?.token)
       },
       error: ({ dispatch, error }) => {
-         dispatch(ModalsActionCreators.setBack(modalsContentTypes.LOGIN))
          dispatch(ModalsActionCreators.setIsShow(true))
          dispatch(ModalsActionCreators.setContent({ title: 'Недействительные учетные данные' }))
+         // перенести в компонент
       },
    },
    restore: {
       ...defaultHandlers.restore,
       success: ({ dispatch, response, prevData, data }) => {
-         dispatch(ModalsActionCreators.setBack(modalsContentTypes.LOGIN))
+         //  dispatch(ModalsActionCreators.setBack(modalsContentTypes.LOGIN))
          dispatch(ModalsActionCreators.setIsShow(true))
          dispatch(ModalsActionCreators.setContent({ title: 'Мы отправили новый пароль на почту' }))
       },
       error: ({ dispatch, error }) => {
-         dispatch(ModalsActionCreators.setBack(modalsContentTypes.LOGIN))
          dispatch(ModalsActionCreators.setIsShow(true))
          dispatch(ModalsActionCreators.setContent({ title: 'Недействительные учетные данные' }))
       },
@@ -60,7 +59,6 @@ export const authHandlers = {
          localStorage.setItem('token', data?.token)
       },
       error: ({ dispatch, error }) => {
-         dispatch(ModalsActionCreators.setBack(modalsContentTypes.LOGIN))
          dispatch(ModalsActionCreators.setIsShow(true))
          dispatch(ModalsActionCreators.setContent({ title: 'Произошла ошибка при регистрации' }))
       },

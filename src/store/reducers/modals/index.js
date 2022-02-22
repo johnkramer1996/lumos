@@ -1,23 +1,23 @@
 import { modalsTypes, modalsContentTypes } from './types'
 
 const initialState = {
-    isShow: false,
-    content: {},
-    type: '',
-    back: '',
+   isShow: false,
+   content: {},
+   type: '',
+   back: '',
 }
 
 export default function modalsReducer(state = initialState, action) {
-    switch (action.type) {
-        case modalsTypes.SET_IS_SHOW:
-            return { ...state, isShow: action.payload }
-        case modalsTypes.SET_CONTENT:
-            return { ...state, type: modalsContentTypes.NOTIFICATIONS, content: action.payload }
-        case modalsTypes.SET_TYPE:
-            return { ...state, type: action.payload }
-        case modalsTypes.SET_BACK:
-            return { ...state, back: action.payload }
-        default:
-            return state
-    }
+   switch (action.type) {
+      case modalsTypes.SET_IS_SHOW:
+         return { ...state, isShow: action.payload }
+      case modalsTypes.SET_CONTENT:
+         return { ...state, type: modalsContentTypes.NOTIFICATIONS, content: { ...state.content, ...action.payload } }
+      case modalsTypes.SET_TYPE:
+         return { ...state, type: action.payload }
+      case modalsTypes.SET_BACK:
+         return { ...state, back: action.payload }
+      default:
+         return state
+   }
 }

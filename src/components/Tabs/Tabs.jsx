@@ -1,37 +1,49 @@
+import { Loader, LoaderWrapper } from 'components/ui'
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
-import PropTypes from 'prop-types'
-import { Loader } from 'components/ui'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { isFunction } from 'utils'
 
-const Tabs = ({ items = [], isLoading = false, classPrefix = 'course-report', onChangeListener = () => {}, isAvaibleIndex = () => true, activeTabIndex = 0 }, ref) => {
-   const [itemsState, setItems] = useState(items)
-   const [activeIndex, setAtiveIndex] = useState(activeTabIndex)
+const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-report', isAvaibleIndex, activeTabIndex }, ref) => {
+   const location = useLocation()
+   const navigate = useNavigate()
+   const { activeStep = 0 } = location?.state || {}
 
    useEffect(() => {
-      setItems([...items])
-   }, [items])
+      activeTabIndex && changeStep(activeTabIndex)
+   }, [])
 
    const events = {
-      setItemsByIndex: (activeIndex) => {
-         setAtiveIndex(activeIndex)
-         onChangeListener(activeIndex)
-      },
-      nextItems: () => events.setItemsByIndex(activeIndex + 1 >= itemsState.length ? 0 : activeIndex + 1),
-      changeTab: (index) => isAvaibleIndex(index) && events.setItemsByIndex(index),
-      getIndex: () => activeIndex,
+      setItemsByIndex: (activeIndex) => changeStep(activeIndex),
+      nextItems: () => events.setItemsByIndex(activeStep + 1 >= items.length ? 0 : activeStep + 1),
+      changeTab: (index) => !(isFunction(isAvaibleIndex) && !isAvaibleIndex(index)) && events.setItemsByIndex(index),
+      getIndex: () => activeStep,
    }
 
    useImperativeHandle(ref, () => events)
 
+   const changeStep = (index) => {
+      navigate(
+         {
+            ...location,
+         },
+         {
+            state: {
+               activeStep: index,
+            },
+         },
+      )
+   }
+
    return (
       <>
-         {!!itemsState.length && (
+         {!!items.length && (
             <>
                <div className={`${classPrefix}__nav`}>
                   <div className={`${classPrefix}__tabs`}>
-                     {itemsState.map(({ title, notifications }, index) => (
+                     {items.map(({ title, notifications }, index) => (
                         <div
                            key={index}
-                           className={`${classPrefix}__tab${activeIndex === index ? ` ${classPrefix}__tab--active` : ''} ${classPrefix}__tab${
+                           className={`${classPrefix}__tab${activeStep === index ? ` ${classPrefix}__tab--active` : ''} ${classPrefix}__tab${
                               notifications ? ` ${classPrefix}__tab--notification` : ''
                            }`}
                            onClick={() => events.changeTab(index)}
@@ -41,23 +53,10 @@ const Tabs = ({ items = [], isLoading = false, classPrefix = 'course-report', on
                         </div>
                      ))}
                   </div>
-                  {/* <div className={`${classPrefix}__selects`}>
-                    <select>
-                        <option>За месяц</option>
-                        <option>За месяц 2</option>
-                    </select>
-                </div> */}
                </div>
-               {isLoading ? (
-                  <Loader />
-               ) : (
-                  <div className={`${classPrefix}__content  ${classPrefix}__content--active`}>{itemsState[activeIndex].component}</div>
-                  // itemsState.items.map(({ component }, index) => (
-                  //     <div key={index} className={`${classPrefix}__content${itemsState.activeIndex === index ? ` ${classPrefix}__content--active` : ''}`}>
-                  //         {component}
-                  //     </div>
-                  // ))
-               )}
+               <LoaderWrapper isLoading={isLoading}>
+                  <div className={`${classPrefix}__content ${classPrefix}__content--active`}>{isFunction(children) ? children({ activeStep }) : children ? children : items[activeStep].component}</div>
+               </LoaderWrapper>
             </>
          )}
       </>
@@ -65,3 +64,12 @@ const Tabs = ({ items = [], isLoading = false, classPrefix = 'course-report', on
 }
 
 export default forwardRef(Tabs)
+
+// itemsState.items.map(({ component }, index) => (
+//     <div key={index} className={`${classPrefix}__content${itemsState.activeIndex === index ? ` ${classPrefix}__content--active` : ''}`}>
+//         {component}
+//     </div>
+// ))
+
+{
+}

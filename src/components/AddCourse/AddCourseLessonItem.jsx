@@ -5,19 +5,24 @@ import { ReactComponent as LinkSvg } from 'svg/link.svg'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { Link, useParams } from 'react-router-dom'
 import { getURL } from 'utils'
+import { useSelector } from 'react-redux'
+import { coursesSelectors } from 'store/selectors'
+import { useForm } from 'react-hook-form'
+import { Input } from 'components/ui'
 
-const AddCourseLessonItem = ({ id, indexModule, name, index, setName, onDelete, modulesState }) => {
+const AddCourseLessonItem = ({ id, indexModule, name, index, onDelete }) => {
    const { courseId } = useParams()
-   const input = useInput({ is: { isRequired: true } })
-   modulesState[indexModule].lessons[index].input = input
+   const modules = useSelector(coursesSelectors.getModules)
 
-   useEffect(() => name && input.setValue(name), [])
+   const form = useForm({
+      mode: 'onBlur',
+      defaultValues: {
+         name: name || 'name test',
+      },
+   })
 
-   const onChange = (e) => {
-      input.bind.onChange(e)
-      if (!input.isNewValue(e.target.value)) return
-      setName(indexModule, index, e.target.value)
-   }
+   const input = useInput({})
+   modules[indexModule].lessons[index].input = input
 
    return (
       <div className='create-module__item form-group'>
@@ -28,7 +33,7 @@ const AddCourseLessonItem = ({ id, indexModule, name, index, setName, onDelete, 
             <Link to={getURL.cabinetCoursesLessonEdit({ courseId, lessonId: id })} className='create-module__link'>
                <LinkSvg />
             </Link>
-            <input type='text' placeholder='Название урока' {...input.bind} onChange={onChange} />
+            <Input form={form} name='name' placeholder='Название урока' withoutWrapper />
             <button className='create-module__delete' onClick={() => onDelete(id, indexModule, index)}>
                <DeleteSvg />
             </button>

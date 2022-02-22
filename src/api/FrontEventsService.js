@@ -12,7 +12,6 @@ export default class FrontEventsService {
       return await axios.post(frontEventsURL.FETCH_AUTH_EVENTS, body)
    }
    static async fetchFrontAuthEvent({ eventId = 1 } = {}) {
-      console.log(frontEventsURL.FETCH_AUTH_EVENT({ eventId }))
       return await axios.get(frontEventsURL.FETCH_AUTH_EVENT({ eventId }))
    }
 }

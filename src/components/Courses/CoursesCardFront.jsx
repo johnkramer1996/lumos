@@ -1,13 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { declOfNum, getDeclOfArray, getFullName, getURL } from 'utils'
-import { useSelector } from 'react-redux'
-import { authSelectors } from 'store/selectors'
 
-const CoursesItem2 = ({ id = 0, image = '', name = '', all_users = 0, width = '', trainer = {}, rolesId }) => {
+// cabinet user
+const CoursesCardFront = ({ id = 0, image = '', name = '', all_users = 0, width = '', trainer = {} }) => {
    return (
-      // <Link to={getURL.cabinetCoursesItem({ courseId: id }, rolesId)} className='course-card2'>
       <Link to={getURL.coursesItem({ courseId: id })} className='course-card2'>
          <div className='course-card2__img img img--cover'>
             <img src={getURL.img(image)} alt='' />
@@ -26,8 +23,4 @@ const CoursesItem2 = ({ id = 0, image = '', name = '', all_users = 0, width = ''
    )
 }
 
-CoursesItem2.propTypes = {
-   id: PropTypes.number.isRequired,
-}
-
-export default CoursesItem2
+export default CoursesCardFront

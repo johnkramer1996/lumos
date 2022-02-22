@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { declOfNum, getDeclOfArray, getURL } from 'utils'
 
-const EventsItem2 = ({ id, image, edate = '', etime = '', name = '', all_users = 0, new_users = 0, rolesId }) => {
+const EventsCardCabinet = ({ id, image, edate = '', etime = '', name = '', all_users = 0, new_users = 0, rolesId }) => {
    return (
       <Link to={getURL.cabinetEventsItem({ eventId: id }, rolesId)} className='event-card2'>
          <div className='event-card2__img img img--md img--cover'>
@@ -29,4 +29,4 @@ const EventsItem2 = ({ id, image, edate = '', etime = '', name = '', all_users =
    )
 }
 
-export default EventsItem2
+export default EventsCardCabinet

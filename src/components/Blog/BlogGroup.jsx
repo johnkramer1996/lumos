@@ -1,8 +1,6 @@
-import NewsItem from 'components/News/NewsItem'
+import BlogCard from 'components/Blog/BlogCard'
 import { Button } from 'components/ui'
 import React from 'react'
-import { useSelector } from 'react-redux'
-import { frontStaticSelectors } from 'store/selectors'
 
 const BlogGroup = ({ items = [], title = '' }) => {
    return (
@@ -16,7 +14,7 @@ const BlogGroup = ({ items = [], title = '' }) => {
 
          <div className='blog__items'>
             {items.map(({ category, ...props }) => (
-               <NewsItem key={props.id} {...props} />
+               <BlogCard key={props.id} {...props} />
             ))}
          </div>
       </div>

@@ -15,7 +15,7 @@ const AddCourseLessonEditTestItem = ({ id, index }) => {
 
    const { questions_to_delete, ansvers_to_delete, questionsInputs } = questionsData
    const { answers = [] } = questions[index]
-   const question = useInput({ initialValue: questions[index].question, bind: { name: 'question' }, is: { isRequired: true, isTextarea: true } })
+   const question = useInput({ initialValue: questions[index].question, name: 'question' })
 
    questionsInputs[index] = question
 
@@ -45,7 +45,7 @@ const AddCourseLessonEditTestItem = ({ id, index }) => {
                <DeleteSvg />
             </button>
          </div>
-         <Input className='lesson-test__form-group' input={question} label='Вопрос' />
+         <Input className='lesson-test__form-group' input={question} label='Вопрос' textarea />
          <div className='lesson-test__variants'>
             <div className='lesson-test__variants-title'>Введите варианты ответов и выберите правильный</div>
             <div className='lesson-test__variants-items'>

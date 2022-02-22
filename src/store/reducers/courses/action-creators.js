@@ -19,6 +19,7 @@ export const CoursesActionCreators = {
    setLesson: (payload) => ({ type: coursesTypes.SET_LESSON, payload }),
    resetLessonQuestionsData: (payload) => ({ type: coursesTypes.RESET_LESSON_QUESTIONS_DATA, payload }),
    setLessonQuestions: (payload) => ({ type: coursesTypes.SET_LESSON_QUESTIONS, payload }),
+   setLessonAnswers: (payload) => ({ type: coursesTypes.SET_LESSON_ANSWERS, payload }),
    setLessonFiles: (payload) => ({ type: coursesTypes.SET_LESSON_FILES, payload }),
    addLessonFile: (payload) => ({ type: coursesTypes.ADD_LESSON_FILE, payload }),
    setNotificationsData: (payload) => ({ type: coursesTypes.SET_NOTIFICATIONS_DATA, payload }),

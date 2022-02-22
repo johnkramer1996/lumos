@@ -5,40 +5,63 @@ import AddCourseLesson from './AddCourseLesson'
 import AddCourseModule from './AddCourseModule'
 import { useDispatch, useInput, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
-import { uid } from 'utils'
+import { asyncFind, declOfNum, timeout, uid } from 'utils'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
-import { useCallback } from 'react'
 import { coursesSelectors } from 'store/selectors/'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 
-const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
+const defaultValues = {
+   short_desc: '',
+   test_lesson: '',
+   modules: [
+      {
+         name: 'Модуль 1',
+         lessons: [{ name: '' }],
+      },
+      {
+         name: 'Модуль 2',
+         lessons: [{ name: '' }],
+      },
+   ],
+}
+
+const AddCourseTabLesson = ({ refTabs }, ref) => {
    const { courseId } = useParams()
-   const { setContent, setIsShow, deleteModule, deleteLesson, addModulesMass } = useDispatch()
+   const { setContent, setIsShow, setModules, deleteModule, deleteLesson, addModulesMass } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
    const descriptions = useSelector(coursesSelectors.getDescriptions)
    const prices = useSelector(coursesSelectors.getPrices)
 
+   const hasCourse = !(Object.keys(course).length === 0)
    const hasModules = modules && !(Object.keys(modules).length === 0)
    const hasInfo = !(Object.keys(descriptions).length === 0 && Object.keys(prices).length === 0)
 
-   const shortDescr = useInput({ bind: { name: 'shortDescr' }, is: { isRequired: true, isTextarea: true } })
-   const hidden_id = useInput({ bind: { name: 'hidden_id' }, is: { isRequired: true } })
-   const [modulesState, setModules] = useState([])
+   const form = useForm({
+      defaultValues,
+      mode: 'onBlur',
+   })
 
-   const getAllInputs = useCallback(() => {
-      const modulesInputs = modulesState.map(({ input = {}, name, lessons }) => [{ ...input, value: name }, ...(lessons?.map(({ input = {}, name }) => ({ ...input, value: name })) || [])]).flat()
-      return [shortDescr, hidden_id, ...modulesInputs]
-   }, [shortDescr, hidden_id, modulesState])
+   const {
+      control,
+      register,
+      handleSubmit,
+      getValues,
+      formState: { errors },
+      reset,
+      setValue,
+   } = form
 
-   useEffect(() => onUpdateListener(-2), [])
-   useEffect(() => onUpdateListener(1), [getAllInputs().reduce((prev, { value }) => prev + String(value), '')])
+   const getEntries = async () => timeout(() => Object.entries(form.getValues()).filter(([key]) => !(key === 'inputFile' || key === 'inputFileValue')))
 
    useEffect(() => {
-      modules && setModules([...modules])
-   }, [modules])
-   useEffect(() => {
-      course && shortDescr.setValue(course.short_desc ?? '')
-      course.test_lesson && hidden_id.setValue(course?.test_lesson.hidden_id ?? '')
+      if (hasCourse) {
+         ;(async () => {
+            // ;(await getEntries()).forEach(([key]) => form.setValue(key, course[key] !== '0' ? course[key] : false ?? ''))
+            // form.setValue('test_lesson', course.test_lesson?.hidden_id)
+         })()
+      }
    }, [course])
 
    const addModulesMassRequest = useRequest({
@@ -73,109 +96,30 @@ const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
       },
    })
 
-   useImperativeHandle(ref, () => ({
-      update: () => getAllInputs().filter((i) => i.update()),
-      check: () => !getAllInputs().filter((i) => i.check(i.value)).length,
-      send: () => {
-         if (!ref.current.check()) return
-         const body = {
-            name: course?.name,
-            short_desc: shortDescr.value,
-            format_study: course?.format_study,
-            type_study: course?.type_study,
-            category_id: course?.category_id,
-            moduls: modulesState.map((m) => ({
-               id: m.id,
-               name: m.name,
-               lessons: m.lessons.map((l, index) => ({
-                  id: l.id,
-                  name: l.name,
-                  hidden_id: l.hidden_id,
-                  number: index,
-                  is_test: l.hidden_id === hidden_id.value,
-               })),
-            })),
-         }
+   const submit = async () => {
+      if (!(await form.trigger())) return false
 
-         addModulesMassRequest.call({ courseId, body })
-      },
-   }))
+      const body = {}
+      ;(await getEntries()).forEach(([key, value]) => (body[key] = typeof value === 'boolean' ? +value : value))
 
-   const onAddModule = () => {
-      const isError = modulesState.filter(({ input }) => input.check(input.value))
-      if (isError.length) return
-      setModules([...modulesState, { name: '', lessons: [], hidden_id: uid() }])
+      console.log(body)
+
+      return
+
+      addModulesMassRequest.call({ courseId, body })
    }
-   const onDeleteModule = (id, index) => {
-      if (modulesState[index].lessons.length) {
-         setIsShow(true)
-         setContent({ title: 'У модуля есть уроки, ', descr: 'удалите уроки, потом удалите модуль' })
-         return
-      }
-      id && deleteModuleRequest.call({ courseId, id })
-      setModules(modulesState.filter((item, inx) => inx !== index))
-   }
-   const setModuleName = (index, name) => {
-      setModules(modulesState.map((item, inx) => (inx === index ? { ...item, name } : item)))
-   }
-   const onAddLesson = (index) => {
-      const isError = modulesState[index].lessons.filter(({ input }) => input.check(input.value))
-      if (isError.length) return
-      const newModules = [...modulesState]
-      newModules[index].lessons.push({ name: '', hidden_id: uid() })
-      setModules([...newModules])
-   }
-   const onDeleteLesson = (lessonId, indexModule, indexLesson) => {
-      lessonId && deleteLessonRequest.call({ courseId, lessonId })
-      const newModules = modulesState.map((m, inxModule) =>
-         inxModule !== indexModule
-            ? m
-            : {
-                 ...m,
-                 lessons: m.lessons.filter((l, inxLesson) => {
-                    return inxLesson !== indexLesson
-                 }),
-              },
-      )
-      setModules(newModules)
-   }
-   const setLessonName = (indexModule, indexLesson, value) => {
-      const newModules = [...modulesState]
-      newModules[indexModule].lessons[indexLesson].name = value
-      setModules([...newModules])
-   }
+
+   useImperativeHandle(ref, () => ({ submit }))
+
    return (
       <>
          <div className='course-edit__small-desc card-bg'>
             <div className='course-edit__small-desc-title display-4'>Короткое описание</div>
-            <Input className='' input={shortDescr} label='Описание' />
+            <Input form={form} name='short_desc' label='Описание' textarea />
          </div>
-         <div className='create-module card-bg'>
-            <h3 className='create-module__title display-4'>Модули</h3>
-            <div className='create-module__items'>
-               {modulesState.map((props, index) => (
-                  <div key={props.id ?? props.hidden_id}>
-                     <AddCourseModule {...props} index={index} modulesState={modulesState} setName={setModuleName} onDelete={onDeleteModule} />
-                  </div>
-               ))}
-            </div>
-            <Button className='create-module__add' onClick={onAddModule} outline>
-               <AddSvg />
-               <span>Добавить модуль</span>
-            </Button>
-         </div>
-         {modulesState.map((props, index) => (
-            <AddCourseLesson
-               key={props.id ?? props.hidden_id}
-               {...props}
-               lessons={props.lessons}
-               modulesState={modulesState}
-               index={index}
-               setName={setLessonName}
-               onAdd={onAddLesson}
-               onDelete={onDeleteLesson}
-            />
-         ))}
+
+         <AddCourseModule {...{ control, register, defaultValues, getValues, setValue, errors, form }} />
+
          <div className='create-module card-bg'>
             <div className='create-module__top'>
                <h3 className='create-module__title display-4'>Тестовый урок</h3>
@@ -183,20 +127,21 @@ const AddCourseTabLesson = ({ refTabs, onUpdateListener }, ref) => {
             <div className='create-module__items'>
                <div className='create-module__item form-group'>
                   <label htmlFor='test_lesson'>Выберите тестовый урок</label>
-                  <select id='test_lesson' {...hidden_id.bind}>
+                  {}
+                  <select id='test_lesson' {...form.register('test_lesson')}>
                      <option defaultValue hidden>
                         Выберите тестовый урок
                      </option>
                      <option value='0'>Без тестового урока</option>
-                     {modulesState.map((item, index) =>
+                     {/* {modules.map((item) =>
                         item?.lessons
                            ?.filter(({ name }) => name !== '')
                            .map(({ id, name, hidden_id }, indexLesson) => (
-                              <option key={id || hidden_id} value={hidden_id}>
+                              <option key={id ?? hidden_id ?? indexLesson} value={hidden_id}>
                                  {name}
                               </option>
                            )),
-                     )}
+                     )} */}
                   </select>
                </div>
             </div>

@@ -17,9 +17,9 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
    const rolesId = useSelector(authSelectors.getRolesId)
 
    const avatar = useInputFile({ initialValue: getURL.avatar(user.avatar, rolesId) })
-   const email = useInput({ is: { isRequired: true, isDisabled: true, isEmail: true } })
+   const email = useInput({ is: { isDisabled: true, isEmail: true } })
    const createdAt = useInput({ is: { isDisabled: true } })
-   const password = useInput({ initialValue: 'password', is: { isRequired: true, isDisabled: true, isPassword: true } })
+   const password = useInput({ initialValue: 'password', is: { isDisabled: true, isPassword: true } })
    const vacationStart = useInput({ initialValue: user.vacation[0], is: { isDate: true } })
    const vacationEnd = useInput({ initialValue: user.vacation[1], is: { isDate: true } })
 

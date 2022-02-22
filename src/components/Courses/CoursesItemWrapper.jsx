@@ -1,19 +1,18 @@
 import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
-import { CoursesEmpty, EventsItem, EventsItem2 } from 'components'
-import CoursesItem from './CoursesItem'
-import CoursesItem2 from './CoursesItem2'
-import CoursesItem3 from './CoursesItem3'
+import { CoursesEmpty, EventsCardCabinet } from 'components'
+import CoursesCardSlider from './CoursesCardSlider'
+import CoursesCardFront from './CoursesCardFront'
+import CoursesCardCabinet from './CoursesCardCabinet'
 import CoursesItemLoader from './CoursesItemLoader'
-import { useSelector } from 'react-redux'
-import { authSelectors } from 'store/selectors'
 
 const CoursesItemWrapper = ({ items = [], amount = items.length, isLoading = false, className = '', numberComponent = 0, type = 'course', rolesId, isToCabinet }) => {
    const ActiveComponent = useMemo(
       () =>
          ({
-            course: [CoursesItem, CoursesItem2, CoursesItem3],
-            events: [EventsItem, EventsItem2],
+            // TODO REMAKE IT
+            course: [CoursesCardSlider, CoursesCardFront, CoursesCardCabinet],
+            events: [EventsCardCabinet, EventsCardCabinet, EventsCardCabinet],
          }[type][numberComponent]),
       [numberComponent],
    )
@@ -30,7 +29,7 @@ const CoursesItemWrapper = ({ items = [], amount = items.length, isLoading = fal
             </div>
          ) : items.length ? (
             <div className={`${className}`}>
-               {items.slice(0, amount).map(({ ...props }) => React.createElement(ActiveComponent || EventsItem2, { key: props.id, rolesId, isToCabinet, ...props }, null))}
+               {items.slice(0, amount).map(({ ...props }) => React.createElement(ActiveComponent || EventsCardCabinet, { key: props.id, rolesId, isToCabinet, ...props }, null))}
             </div>
          ) : (
             <CoursesEmpty />

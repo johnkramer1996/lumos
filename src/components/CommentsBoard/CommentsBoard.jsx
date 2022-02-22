@@ -1,15 +1,13 @@
 import React from 'react'
 import CommentsBoardItem from './CommentsBoardItem'
 import { ReactComponent as ArrowDownSvg } from 'svg/arrow-down.svg'
-import { Button, Loader } from 'components/ui'
+import { Button, Loader, LoaderWrapper } from 'components/ui'
 import { declOfNum, getDeclOfArray } from 'utils'
 
 const CommentsBoard = ({ isLoading, items = [], newTotal, onShowMore, isLastPage }) => {
    return (
       <div className='lessons-tab__comments'>
-         {!items.length && isLoading ? (
-            <Loader />
-         ) : (
+         <LoaderWrapper isLoading={!items.length && isLoading}>
             <>
                <div className='lessons-tab__comments-top'>
                   <div className='lessons-tab__comments-title'>{items.length ? 'Комментарии' : 'Комментарии еще не добавлены'}</div>
@@ -20,7 +18,7 @@ const CommentsBoard = ({ isLoading, items = [], newTotal, onShowMore, isLastPage
                   )}
                </div>
                {!!items.length && (
-                  <div>
+                  <>
                      <div className='lessons-tab__comments-items'>
                         {items.map((props, index) => (
                            <CommentsBoardItem key={props.id || index} {...props} />
@@ -35,10 +33,10 @@ const CommentsBoard = ({ isLoading, items = [], newTotal, onShowMore, isLastPage
                            </Button>
                         </div>
                      )}
-                  </div>
+                  </>
                )}
             </>
-         )}
+         </LoaderWrapper>
       </div>
    )
 }

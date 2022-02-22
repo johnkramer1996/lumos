@@ -8,17 +8,15 @@ const UsersItem = () => {
    const { userId } = useParams()
    const { fetchFrontUser } = useDispatch()
 
-   const fetchFrontUserRequest = useRequest({ request: fetchFrontUser })
+   const fetchFrontUserRequest = useRequest({ request: fetchFrontUser, loading: true })
 
    useEffect(() => {
       fetchFrontUserRequest.call({ userId })
    }, [])
 
-   return (
-      <>
-         <CabinetComponent sidebar={<CabinetSidebarUser isLoading={fetchFrontUserRequest.isLoading} />} page={<CabinetUser isLoading={fetchFrontUserRequest.isLoading} />} />
-      </>
-   )
+   const isLoading = fetchFrontUserRequest.isLoading
+
+   return <CabinetComponent sidebar={<CabinetSidebarUser isLoading={isLoading} />} page={<CabinetUser isLoading={isLoading} />} />
 }
 
 export default UsersItem

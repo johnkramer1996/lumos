@@ -1,5 +1,5 @@
 import React from 'react'
-import CourseItem from '../Courses/CoursesItem'
+import CoursesCardSlider from '../Courses/CoursesCardSlider'
 import { Swiper } from 'components/ui/'
 
 const Course = ({ title = 'Курсы', items = [], className }) => {
@@ -21,7 +21,7 @@ const Course = ({ title = 'Курсы', items = [], className }) => {
 
                <div className='course-slider__wrap'>
                   <Swiper items={items[0]?.items} className={''} prefix={'course-slider'} options={{ slidesPerView: 3 }}>
-                     {(props) => <CourseItem {...props} />}
+                     {(props) => <CoursesCardSlider {...props} />}
                   </Swiper>
                </div>
             </div>

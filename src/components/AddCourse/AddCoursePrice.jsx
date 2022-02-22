@@ -1,27 +1,43 @@
 import { Checkbox, Input } from 'components/ui'
 import { useInput } from 'hooks'
 import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 
-const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, moduls = [], onDelete }) => {
-   const prices = useSelector(coursesSelectors.getPrices)
+const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, moduls = [], onDelete, state }) => {
    const modules = useSelector(coursesSelectors.getModules)
 
-   const inputName = useInput({ initialValue: name, bind: { name: 'name' }, is: { isRequired: true } })
-   const inputWidth = useInput({ initialValue: width, bind: { name: 'width' }, is: { isRequired: true } })
-   const inputPriceWithSale = useInput({ initialValue: price_with_sale, bind: { name: 'price_with_sale' }, is: { isRequired: true, isNumbers: true } })
-   const inputPrice = useInput({ initialValue: price, bind: { name: 'price' }, is: { isRequired: true, isNumbers: true } })
-   const inputText = useInput({ initialValue: text, bind: { name: 'text' }, is: { isRequired: true, isTextarea: true } })
-   const inputModuls = useInput({ initialValue: [...moduls], bind: { name: 'moduls' }, is: { isRequired: true } })
+   const form = useForm({
+      mode: 'onBlur',
+      defaultValues: {
+         name: name || 'name test',
+         width: width || 'width test',
+         price_with_sale: price_with_sale || '1213',
+         price: price || '456',
+         text: text || 'text test',
+         moduls: [...moduls],
+      },
+   })
 
-   prices[index].inputs = [inputName, inputWidth, inputPriceWithSale, inputPrice, inputText, inputModuls]
+   //  const inputName = useInput({ initialValue: name, name: 'name' })
+   //  const inputWidth = useInput({ initialValue: width, name: 'width' })
+   //  const inputPriceWithSale = useInput({ initialValue: price_with_sale, name: 'price_with_sale', is: { isNumbers: true } })
+   //  const inputPrice = useInput({ initialValue: price, name: 'price', is: { isNumbers: true } })
+   //  const inputText = useInput({ initialValue: text, name: 'text' })
+   //  const inputModuls = useInput({ initialValue: [...moduls], name: 'moduls' })
 
-   const onChangeModule = (value, checked) => {
-      inputModuls.update()
-      checked ? inputModuls.value.push(String(value)) : (inputModuls.value = inputModuls.value.filter((item) => +item !== +value))
-      inputModuls.setValue([...inputModuls.value])
+   state[index].form = form
+
+   const onChangeModule = async (value, checked) => {
+      const moduls = await state[index].form.getValues('moduls')
+      checked
+         ? form.setValue('moduls', (moduls.push(String(value)), moduls))
+         : form.setValue(
+              'moduls',
+              moduls.filter((item) => +item !== +value),
+           )
    }
 
    return (
@@ -33,10 +49,10 @@ const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, 
             </button>
          </div>
          <div className='create-price__grid'>
-            <Input classNameWrapper='create-price__form-group' input={inputName} label={'Название'} />
-            <Input classNameWrapper='create-price__form-group' input={inputWidth} label={'Длительность обучения'} />
-            <Input classNameWrapper='create-price__form-group' input={inputPriceWithSale} label={'Стоимость без скидки (в рублях)'} />
-            <Input classNameWrapper='create-price__form-group' input={inputPrice} label={'Стоимость со скидкой (в рублях)'} />
+            <Input form={form} name='name' label='Название' classNameWrapper='create-price__form-group' />
+            <Input form={form} name='width' label='Длительность обучения' classNameWrapper='create-price__form-group' />
+            <Input form={form} name='price_with_sale' label='Стоимость без скидки (в рублях)' classNameWrapper='create-price__form-group' number />
+            <Input form={form} name='price' label='Стоимость со скидкой (в рублях)' classNameWrapper='create-price__form-group' number />
          </div>
          <div className='create-price__checks'>
             {modules.map(({ name }, mIndex) => (
@@ -47,14 +63,16 @@ const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, 
                      id={`module-${index}-${mIndex}`}
                      value={mIndex}
                      defaultChecked={moduls.find((item) => +item === mIndex)}
-                     onChange={(e) => onChangeModule(mIndex, e.target.checked)}
+                     {...form.register('modules' + mIndex, {
+                        onChange: (e) => onChangeModule(mIndex, e.target.checked),
+                     })}
                   />
                   <label htmlFor={`module-${index}-${mIndex}`}>{name}</label>
                </div>
             ))}
          </div>
-         <div className='input-error-text'>{inputModuls.error}</div>
-         <Input classNameWrapper='create-price__text' input={inputText} label={'Описание (новый пункт через Enter)'} />
+         <div className='input-error-text'>{form.formState.errors['modules']}</div>
+         <Input form={form} name='text' label='Описание (новый пункт через Enter)' classNameWrapper='create-price__text' textarea />
       </div>
    )
 }

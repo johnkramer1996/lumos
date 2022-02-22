@@ -1,4 +1,3 @@
-import { CoursesItem2 } from 'components'
 import CoursesItemWrapper from 'components/Courses/CoursesItemWrapper'
 import { Button } from 'components/ui'
 import React from 'react'

@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo } from 'react'
-import { EventsItem2 } from 'components'
+import { EventsCardCabinet } from 'components'
 import { useSelector } from 'react-redux'
 import CabinetTitle from './CabinetTitle'
 import CabinetNav from './CabinetNav'
 import { useDispatch, useQuery, useRequest } from 'hooks'
 import { authSelectors, eventsSelectors } from 'store/selectors'
 import { getRequest } from 'utils'
-import { Loader } from 'components/ui'
+import { Loader, LoaderWrapper } from 'components/ui'
 import { useLocation } from 'react-router-dom'
 
 const CabinetEvents = () => {
@@ -41,19 +41,15 @@ const CabinetEvents = () => {
    return (
       <div className='cabinet-page__group'>
          <CabinetTitle title={'Мои мероприятия'} type={'events'} isBtnAll={false} />
-         {fetchEventsRequest.isLoading ? (
-            <Loader />
-         ) : (
-            <>
-               <CabinetNav type={'events'} total={data.total} />
-               <div className='cabinet-page__items'>
-                  {events.map((props) => (
-                     <EventsItem2 key={props.id} {...props} />
-                  ))}
-               </div>
-               {/* <CoursesItemWrapper items={events} isLoading={fetchEventsRequest.isLoading} className={`cabinet-page__items cabinet-page__items--${typeShow}`} /> */}
-            </>
-         )}
+         <CabinetNav type={'events'} total={data.total} visibleTypeShow={false} />
+         <LoaderWrapper isLoading={fetchEventsRequest.isLoading}>
+            <div className='cabinet-page__items'>
+               {events.map((props) => (
+                  <EventsCardCabinet key={props.id} {...props} />
+               ))}
+            </div>
+            {/* <CoursesItemWrapper items={events} isLoading={fetchEventsRequest.isLoading} className={`cabinet-page__items cabinet-page__items--${typeShow}`} /> */}
+         </LoaderWrapper>
       </div>
    )
 }

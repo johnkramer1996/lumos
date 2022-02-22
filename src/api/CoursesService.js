@@ -129,8 +129,9 @@ export default class CoursesService {
          params,
       })
    }
-   static async sendLessonTest({ body = {} } = {}) {
-      return await axios.post(userCoursesURL.SEND_LESSON_TEST, body)
+   static async sendLessonTest({ courseId, lessonId, body = {} } = {}) {
+      console.log(userCoursesURL.SEND_LESSON_TEST)
+      return await axios.post(userCoursesURL.SEND_LESSON_TEST({ courseId, lessonId }), body)
    }
    static async addComment({ courseId = 0, lessonId = 0, ...body } = {}) {
       return await axios.post(userCoursesURL.ADD_COMMENT({ courseId, lessonId }), body)

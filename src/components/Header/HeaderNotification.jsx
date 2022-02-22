@@ -4,10 +4,11 @@ import { useDispatch, useEvent, useRequest } from 'hooks'
 import { isActiveClass } from 'utils'
 import { ReactComponent as NotificationSvg } from 'svg/notification.svg'
 import { useSelector } from 'react-redux'
-import { Loader } from 'components/ui'
+import { Loader, LoaderWrapper } from 'components/ui'
 
 const HeaderNotification = () => {
    const { fetchUserNotifications, readUserNotifications } = useDispatch()
+   //TODO OWN STATE FOR NOTIFICATIONS
    const notifications = useSelector(({ courses }) => courses.notifications)
    const notificationsNew = useSelector(({ courses }) => courses.notificationsNew)
    const notificationsData = useSelector(({ courses }) => courses.notificationsData)
@@ -15,7 +16,7 @@ const HeaderNotification = () => {
    const { new_count } = notificationsData
    const [isActive, setIsActive] = useState(false)
 
-   const fetchUserNotificationsRequest = useRequest({ request: fetchUserNotifications })
+   const fetchUserNotificationsRequest = useRequest({ request: fetchUserNotifications, loading: true })
    const readUserNotificationsRequest = useRequest({ request: readUserNotifications })
 
    useEffect(() => {
@@ -38,9 +39,7 @@ const HeaderNotification = () => {
             {!!new_count && <i>{new_count}</i>}
          </div>
          <div className='header__notification-dropdown'>
-            {fetchUserNotificationsRequest.isLoading ? (
-               <Loader />
-            ) : (
+            <LoaderWrapper isLoading={fetchUserNotificationsRequest.isLoading}>
                <>
                   <div className='header__notification-top'>
                      <div className='header__notification-title'>{new_count ? 'Уведомления' : 'Нет новых уведомлений'}</div>
@@ -59,7 +58,7 @@ const HeaderNotification = () => {
                      <button className='header__notification-all'>Показать все</button>
                   </div>
                </>
-            )}
+            </LoaderWrapper>
          </div>
       </div>
    )

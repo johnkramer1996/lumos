@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
+import { isFunction } from 'utils'
 
-const useRequest = ({ request = () => {}, success = () => {}, error = () => {}, isLoadingDefault = true } = {}) => {
-   let isMounted = true
-   const [state, setState] = useState({})
-   const [isLoading, setIsLoading] = useState(isLoadingDefault)
-   const [errorText, setErrorText] = useState('')
+const useRequest = ({ request, success, error, loading } = {}) => {
+   const [isLoading, setIsLoading] = useState(loading)
+   //  const [state, setState] = useState({})
+   //  const [errorText, setErrorText] = useState('')
 
    const call = (data) => {
       const args = {
@@ -13,18 +13,18 @@ const useRequest = ({ request = () => {}, success = () => {}, error = () => {}, 
             if (!isMounted) return
             switch (type) {
                case 'before':
-                  isLoadingDefault && setIsLoading(true)
+                  loading && setIsLoading(true)
                   break
                case 'success':
-                  success(data)
-                  setState(data.data)
+                  isFunction(success) && success(data)
+                  // setState(data.data)
                   break
                case 'error':
-                  error(data)
-                  setErrorText(data.data)
+                  isFunction(error) && error(data)
+                  // setErrorText(data.data)
                   break
                case 'finnally':
-                  setIsLoading(false)
+                  loading && setIsLoading(false)
                   break
 
                default:
@@ -35,9 +35,10 @@ const useRequest = ({ request = () => {}, success = () => {}, error = () => {}, 
       request(args)
    }
 
+   let isMounted = true
    useEffect(() => () => (isMounted = false), [])
 
-   return { call, state, isLoading, errorText }
+   return { call, isLoading }
 }
 
 export default useRequest

@@ -1,12 +1,12 @@
-import { Loader } from 'components/ui'
+import { Breadcrumbs, Loader } from 'components/ui'
 import { useDispatch, useRequest } from 'hooks'
 import React, { useMemo } from 'react'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { authSelectors, coursesSelectors } from 'store/selectors'
 import { getRequest, getURL } from 'utils'
-import { Comments, CoursesLesson } from 'components'
+import { CoursesLesson } from 'components'
 import CoursesLessonComments from 'components/CoursesLesson/CoursesLessonComments'
 
 const CabinetCoursesLesson = () => {
@@ -17,11 +17,10 @@ const CabinetCoursesLesson = () => {
    const lesson = useSelector(coursesSelectors.getLesson)
 
    const { name: courseName } = course
+   const { can_comment } = lesson
 
    const roleRequest = useMemo(() => getRequest([fetchUserLesson, fetchLesson], rolesId), [])
-   const fetchLessonRequest = useRequest({
-      request: roleRequest,
-   })
+   const fetchLessonRequest = useRequest({ request: roleRequest, loading: true })
 
    useEffect(() => {
       fetchLessonRequest.call({ courseId, lessonId })
@@ -31,18 +30,14 @@ const CabinetCoursesLesson = () => {
    return (
       <section className='lesson-page'>
          <div className='container'>
-            <div className='breadcrumbs'>
-               <Link to={getURL.cabinetCourses(null, rolesId)} className='breadcrumbs__item'>
-                  Мои курсы
-               </Link>
-               <Link to={getURL.cabinetCoursesItem({ courseId }, rolesId)} className='breadcrumbs__item'>
-                  {/* // TODO REMOVE HARDCODE */}
-                  {courseName || 'Название курса HARDCODE'}
-               </Link>
-            </div>
-
+            <Breadcrumbs
+               items={[
+                  { to: getURL.cabinetCourses(null), title: 'Мои курсы' },
+                  { to: getURL.cabinetCoursesItem({ courseId }), title: courseName },
+               ]}
+            />
             <CoursesLesson isLoading={fetchLessonRequest.isLoading} />
-            <CoursesLessonComments />
+            {!!can_comment && <CoursesLessonComments />}
          </div>
       </section>
    )

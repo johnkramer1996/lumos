@@ -1,18 +1,25 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { toBoolean, validateEmail, validateName, validatePassword, validatePhone } from 'utils'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { patternNumbers, toBoolean, validateEmail, validateName, validatePassword, validatePhone } from 'utils'
 
-const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, isDisabled, isDate, isCheckbox, isName, isNumbers, isEmail, isTextarea, isPassword, isTime } = {} } = {}) => {
+const useInput = ({ initialValue = '', name, is, required = true } = {}) => {
    const [value, setValue] = useState(initialValue)
    const [error, setError] = useState('')
    const prevValueRef = useRef(initialValue)
    const propertyRef = useRef()
    const inputRef = useRef()
 
+   const { isDisabled, isCheckbox, isNumbers, isPassword } = is || {}
+
    const onChange = useCallback((e) => {
+      console.log(e.target)
       let newValue = !isCheckbox ? e.target.value : e.target.checked
       if (isNumbers) newValue = patternNumbers(newValue)
       // if (isTime) newValue = patternTime(newValue)
-      setValue(newValue)
+
+      if (prevValueRef.current !== value) {
+         setValue(newValue)
+         return true
+      }
    }, [])
    const onFocus = useCallback((e) => {
       propertyRef.current.update()
@@ -28,45 +35,32 @@ const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, 
       inputRef.current.value = ''
       !isPassword && setTimeout(() => (inputRef.current.value = prevValueRef.current), 0)
    }, [])
-   const clear = useCallback(() => setValue(''), [])
-   const check = useCallback((value) => {
-      if (!isRequired) return
-      const error = hasError(value)
-      setError(error)
-      return !!error
-   }, [])
-   const hasError = useCallback((value) => {
-      if (Array.isArray(value) && !value.length) return 'Обязательное поле'
-      if (value === '') return 'Обязательное поле'
-      if (isPassword && !validatePassword(value)) return 'Некорректный пароль'
-      if (isName && !validateName(value)) return 'Некорректное имя'
-      // if (isPhone && !validatePhone(value)) return 'Некорректный телефон'
-      if (isEmail && !validateEmail(value)) return 'Некорректный E-mail'
-      return ''
-   }, [])
-   const update = () => setError('')
-   const isNewValue = (val) => prevValueRef.current !== val
-   const patternNumbers = (val) => val.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1')
-   const patternTime = (val) => val.replace(/^([01]?[0-9]|2[0-3]):[0-5][0-9]/g, '')
+   const clear = useCallback(() => setValue(initialValue), [])
+   const check = useCallback(
+      (value) => {
+         if (!required) return
+         const newError = hasError(value)
+         if (error !== newError) setError(newError)
+         return !!error
+      },
+      [error],
+   )
+
+   const hasError = useMemo(() => checkInput.bind(null, is || {}), [])
+   const update = useCallback(() => setError(''), [])
+   //  const isNewValue = useCallback((val) => prevValueRef.current !== val, [])
 
    propertyRef.current = {
       value,
-      prevValueRef,
+      error,
       setValue,
-      setError,
       update,
       clear,
       ref: inputRef,
-      isDisabled,
       onDisabledRemove,
-      onBlur,
-      error,
       check,
-      label,
-      isDate,
-      isTextarea,
       isCheckbox,
-      isNewValue,
+      name,
       bind: {
          ref: inputRef,
          value,
@@ -74,7 +68,7 @@ const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, 
          onFocus,
          onBlur,
          disabled: !!isDisabled,
-         ...bind,
+         name,
       },
    }
 
@@ -84,3 +78,13 @@ const useInput = ({ initialValue = '', label = '', bind = {}, is: { isRequired, 
    return propertyRef.current
 }
 export default useInput
+
+const checkInput = ({ isPassword, isName, isEmail }, value) => {
+   if (Array.isArray(value) && !value.length) return 'Обязательное поле'
+   if (value === '') return 'Обязательное поле'
+   if (isPassword && !validatePassword(value)) return 'Некорректный пароль'
+   if (isName && !validateName(value)) return 'Некорректное имя'
+   if (isEmail && !validateEmail(value)) return 'Некорректный E-mail'
+   // if (isPhone && !validatePhone(value)) return 'Некорректный телефон'
+   return ''
+}

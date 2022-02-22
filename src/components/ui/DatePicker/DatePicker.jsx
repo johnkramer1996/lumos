@@ -16,23 +16,27 @@ Datepicker.locales.ru = {
    monthsTitle: 'Месяцы',
 }
 
-const DatePicker = ({ input, onBlur, ...props }) => {
+const DatePicker = ({ props: { ref, ...props } }) => {
+   const myRef = useRef()
    useEffect(() => {
-      input.ref.current &&
-         new Datepicker(input.ref.current, {
+      myRef.current &&
+         new Datepicker(myRef.current, {
             language: 'ru',
-            updateOnBlur: false,
+            // updateOnBlur: false,
          })
    }, [])
 
-   const onBlurHandle = (e) => {
-      setTimeout(() => {
-         input.setValue(e.target.value)
-         onBlur(e, input)
-      }, 0)
-   }
-
-   return <input type='text' {...input.bind} {...props} className={`${props.className}${isActiveClass(input.error, 'input-error')}`} onBlur={onBlurHandle}></input>
+   return (
+      <input
+         type='text'
+         ref={(e) => {
+            ref(e)
+            myRef.current = e
+         }}
+         autoComplete='off'
+         {...props}
+      ></input>
+   )
 }
 
 export default DatePicker

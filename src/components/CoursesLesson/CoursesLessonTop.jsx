@@ -12,8 +12,8 @@ const CoursesLessonTop = () => {
    const lesson = useSelector(coursesSelectors.getLesson)
 
    const { number, name } = lesson
-   const prev_lesson = data || {}
-   const next_lesson = data || {}
+   const { prev_lesson } = data || {}
+   const { next_lesson } = data || {}
 
    return (
       <>
@@ -22,7 +22,7 @@ const CoursesLessonTop = () => {
                <Link to={getURL.cabinetCoursesLesson({ courseId, lessonId: prev_lesson.id }, rolesId)}>
                   <span className='lesson-page__top-link'> Предыдущий урок</span>
                   <div className='lesson-page__top-subtitle'>
-                     <span>{addZerro(prev_lesson?.number)}</span>
+                     <span>{addZerro(prev_lesson?.number + 1)}</span>
                      <strong>{prev_lesson.name}</strong>
                   </div>
                </Link>
@@ -31,7 +31,7 @@ const CoursesLessonTop = () => {
          <div className='lesson-page__top-center'>
             <div className='lesson-page__top-title'>{name}</div>
             <div className='lesson-page__top-num'>
-               {number + 1} из {lessons.length || 1}
+               {(number || 0) + 1} из {lessons.length || 1}
             </div>
          </div>
          <div className='lesson-page__top-right'>
@@ -39,7 +39,7 @@ const CoursesLessonTop = () => {
                <Link to={getURL.cabinetCoursesLesson({ courseId, lessonId: next_lesson.id }, rolesId)}>
                   <span className='lesson-page__top-link'>Следующий урок</span>
                   <div className='lesson-page__top-subtitle'>
-                     <span>{addZerro(next_lesson?.number)}</span>
+                     <span>{addZerro(next_lesson?.number + 1)}</span>
                      <strong>{next_lesson.name}</strong>
                   </div>
                </Link>

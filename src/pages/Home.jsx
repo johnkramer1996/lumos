@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Main, CourseDetail, CoursesSlider } from 'components/'
+import { Main, CoursesDetail, CoursesSlider } from 'components/'
 import { useSelector } from 'react-redux'
 import { useDispatch, useRequest } from 'hooks'
 import { authSelectors, frontCoursesSelectors, systemSelectors } from 'store/selectors'
@@ -31,7 +31,7 @@ const Home = () => {
 
          <CoursesSlider className={'course-slider1'} title={'Популярные курсы'} items={items} />
 
-         <CourseDetail
+         <CoursesDetail
             items={[
                {
                   id: 1,

@@ -1,10 +1,9 @@
-import { Events } from 'components'
-import { Loader } from 'components/ui'
 import { useDispatch, useRequest } from 'hooks'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { authSelectors, frontEventsSelectors } from 'store/selectors'
+import { EventsItem as EventsItemComponent } from 'components'
 
 const EventsItem = () => {
    const { eventId } = useParams()
@@ -14,6 +13,7 @@ const EventsItem = () => {
 
    const authRequest = useRequest({
       request: isAuth ? fetchFrontAuthEvent : fetchFrontEvent,
+      loading: true,
    })
 
    useEffect(() => {
@@ -21,7 +21,7 @@ const EventsItem = () => {
       return () => resetFrontEvents()
    }, [])
 
-   return <div>{authRequest.isLoading ? <Loader /> : <Events event={event} />}</div>
+   return <EventsItemComponent event={event} isLoading={authRequest.isLoading} />
 }
 
 export default EventsItem

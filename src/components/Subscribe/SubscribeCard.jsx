@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { RouteNames } from 'routes'
 import { declOfNum, getDeclOfArray } from 'utils'
 
-const SubscribeItem = ({ title, number, price, color }) => {
+const SubscribeCard = ({ title, number, price, color }) => {
    return (
       <div className='sub__item'>
          <div className='sub__item-title'>{title}</div>
@@ -19,4 +19,4 @@ const SubscribeItem = ({ title, number, price, color }) => {
    )
 }
 
-export default SubscribeItem
+export default SubscribeCard

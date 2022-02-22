@@ -4,7 +4,7 @@ import { getFullName, getURL } from 'utils'
 import { ReactComponent as CommentsSvg } from 'svg/comments.svg'
 import { Link } from 'react-router-dom'
 
-const NewsItem = ({ id, image, category, title, description, user, count_comments }) => {
+const BlogCard = ({ id, image, category, title, description, user, count_comments }) => {
    return (
       <Link to={getURL.blogItem({ blogId: id })} className='blog__item'>
          <div className='blog-card'>
@@ -31,4 +31,4 @@ const NewsItem = ({ id, image, category, title, description, user, count_comment
    )
 }
 
-export default NewsItem
+export default BlogCard

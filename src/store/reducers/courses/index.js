@@ -20,6 +20,7 @@ const initialState = {
    lesson: {},
    lessonQuestionsData: initialLessonQuestionsData,
    lessonQuestions: [],
+   lessonAnswers: [],
    lessonFiles: [],
    commentsData: {},
    comments: [],
@@ -54,10 +55,14 @@ export default function coursesReducer(state = initialState, action) {
          return { ...state, lessonQuestionsData: { ...initialLessonQuestionsData } }
       case coursesTypes.SET_LESSON_QUESTIONS:
          return { ...state, lessonQuestions: action.payload }
+      case coursesTypes.SET_LESSON_ANSWERS:
+         return { ...state, lessonAnswers: action.payload }
       case coursesTypes.SET_LESSON_FILES:
          return { ...state, lessonFiles: action.payload }
       case coursesTypes.ADD_LESSON_FILE:
          return { ...state, lessonFiles: [...state.lessonFiles, ...action.payload] }
+
+      // TODO OWN STATE FOR COMMENTS
       case coursesTypes.RESET_COMMENTS:
          return { ...state, commentsData: {}, comments: [] }
       case coursesTypes.SET_COMMENTS_DATA:
@@ -66,6 +71,8 @@ export default function coursesReducer(state = initialState, action) {
          return { ...state, comments: [...state.comments, ...action.payload] }
       case coursesTypes.SET_COMMENT_ADDED:
          return { ...state, comments: [action.payload, ...state.comments] }
+
+      // TODO OWN STATE FOR NOTIFICATIONS
       case coursesTypes.SET_NOTIFICATIONS_DATA:
          return { ...state, notificationsData: action.payload }
       case coursesTypes.SET_NOTIFICATIONS:

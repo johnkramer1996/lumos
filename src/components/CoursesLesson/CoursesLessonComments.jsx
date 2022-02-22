@@ -12,11 +12,9 @@ const CoursesLessonComments = () => {
    const { fetchUserLessonComments, addComment, readComments } = useDispatch()
    const commentsData = useSelector(coursesSelectors.getCommentsData)
    const comments = useSelector(coursesSelectors.getComments)
-   const lesson = useSelector(coursesSelectors.getLesson)
 
    const { current_page, last_page, total } = commentsData || {}
    const isLastPage = current_page === last_page
-   const { can_comment } = lesson
    const limit = LIMIT.LESSON_COMMENTS
    const [page, setPage] = useState(1)
    const valueLastPage = useRef()
@@ -41,9 +39,7 @@ const CoursesLessonComments = () => {
 
    return (
       <>
-         {can_comment && (
-            <Comments isLoading={fetchUserLessonCommentsRequest.isLoading} items={comments} limit={limit} total={total} isLastPage={isLastPage} onAddHandle={onAddHandle} setPage={setPage} />
-         )}
+         <Comments isLoading={fetchUserLessonCommentsRequest.isLoading} items={comments} limit={limit} total={total} isLastPage={isLastPage} onAddHandle={onAddHandle} setPage={setPage} />
       </>
    )
 }

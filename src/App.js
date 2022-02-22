@@ -7,26 +7,25 @@ import { frontStaticSelectors } from 'store/selectors'
 import { useSelector } from 'react-redux'
 
 const App = () => {
-   const { pathname } = useLocation()
-   const { fetchReferences, fetchSocUrls, fetchFrontContacts, fetchFrontPages, fetchFrontPage } = useDispatch()
+   const location = useLocation()
+   const { pathname } = location
+   const { fetchReferences, fetchSocUrls, fetchFrontContacts, fetchFrontPages } = useDispatch()
 
    const fetchReferencesRequest = useRequest({ request: fetchReferences })
    const fetchSocUrlsRequest = useRequest({ request: fetchSocUrls })
    const fetchFrontContactsRequest = useRequest({ request: fetchFrontContacts })
    const fetchFrontPagesRequest = useRequest({ request: fetchFrontPages })
-   const fetchFrontPageRequest = useRequest({ request: fetchFrontPage })
 
    useEffect(() => {
       fetchReferencesRequest.call()
       fetchSocUrlsRequest.call()
+      fetchFrontContactsRequest.call()
+      fetchFrontPagesRequest.call()
    }, [])
 
    useEffect(() => window.scrollTo(0, 0), [pathname])
 
-   useEffect(() => {
-      fetchFrontContactsRequest.call()
-      fetchFrontPagesRequest.call()
-   }, [])
+   console.log('update App', location)
 
    return (
       <>

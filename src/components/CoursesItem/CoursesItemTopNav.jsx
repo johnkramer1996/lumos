@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 // import { ReactComponent as LikeSvg } from 'svg/like.svg'
 import { ReactComponent as ShareSvg } from 'svg/share.svg'
 import Like from 'svg/Like'
@@ -11,9 +11,15 @@ const CoursesItemTopNav = ({ course = {} }) => {
    const { courseId } = useParams()
    const { addLike, addFavorite } = useDispatch()
    const { count_likes = 0, is_liked, isfavorite } = course
-   const [isLike, setIsLike] = useState(is_liked)
-   const [countLikes, setCountLikes] = useState(count_likes)
-   const [isFavorite, setIsFavorite] = useState(isfavorite)
+   const [isLike, setIsLike] = useState(false)
+   const [countLikes, setCountLikes] = useState(0)
+   const [isFavorite, setIsFavorite] = useState(false)
+
+   useEffect(() => {
+      setCountLikes(count_likes)
+      setIsLike(is_liked)
+      setIsFavorite(isfavorite)
+   }, [course])
 
    const addLikeRequest = useRequest({ request: addLike })
    const addFavoriteRequest = useRequest({ request: addFavorite })
@@ -27,8 +33,6 @@ const CoursesItemTopNav = ({ course = {} }) => {
       setIsFavorite(!isFavorite)
       addFavoriteRequest.call({ courseId })
    }
-
-   console.log(course)
 
    return (
       <div className='course-top__nav'>

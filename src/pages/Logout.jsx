@@ -1,5 +1,5 @@
+import React from 'react'
 import ModalLogin from 'components/Modal/ModalLogin'
-import React, { useCallback } from 'react'
 
 const Logout = () => {
    return (
@@ -8,7 +8,9 @@ const Logout = () => {
             <div className='modal-wrapper'>
                <div className='modal'>
                   <div className='modal-dialog'>
-                     <ModalLogin />
+                     <div className='modal__content'>
+                        <ModalLogin isModal={false} />
+                     </div>
                   </div>
                </div>
             </div>

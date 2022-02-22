@@ -11,8 +11,8 @@ const AddCourseLessonEditTestItemVariant = ({ id, index, indexQuestion, ansver, 
 
    const { answerInputs } = questionsData
 
-   const input_ansver = useInput({ initialValue: ansver, bind: { name: 'ansver' }, is: { isRequired: true } })
-   const input_is_true = useInput({ initialValue: is_true, bind: { name: 'is_true' }, is: { isCheckbox: true } })
+   const input_ansver = useInput({ initialValue: ansver, name: 'ansver' })
+   const input_is_true = useInput({ initialValue: is_true, name: 'is_true', is: { isCheckbox: true } })
 
    answerInputs[indexQuestion + '' + index] = [input_ansver, input_is_true]
 

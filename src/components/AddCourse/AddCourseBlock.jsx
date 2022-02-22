@@ -1,29 +1,22 @@
-import { useInput, useInputFile } from 'hooks'
+import { Button } from 'components/ui'
 import React from 'react'
-import { getURL } from 'utils'
-import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
-import { ImgUpload, Input } from 'components/ui'
+import AddCourseBlockItem from './AddCourseBlockItem'
+import { ReactComponent as AddSvg } from 'svg/add.svg'
 
-const AddCourseBlock = ({ id, index, image, name, text, onDelete, onDeleteImg, array }) => {
-   const inputName = useInput({ initialValue: name, bind: { name: 'name' }, is: { isRequired: true } })
-   const inputText = useInput({ initialValue: text, bind: { name: 'text' }, is: { isRequired: true, isTextarea: true } })
-   const img = useInputFile({ initialValue: getURL.img(image, false) })
-
-   array[index].inputs = [inputName, inputText, img]
-
+const AddCourseBlock = ({ children, title, state, setState, onAddBlockItem, onDeleteBlock, onDeleteImg }) => {
    return (
-      <div className='create-whom__group'>
-         <div className='create-whom__group-top'>
-            <div className='create-whom__subtitle'>Описание {index + 1}</div>
-            <button className='create-whom__delete' onClick={() => onDelete(id, index)}>
-               <DeleteSvg />
-            </button>
-         </div>
-         <ImgUpload img={img} size={'sm'} onDelete={onDeleteImg.bind(null, id)} imgClass={'img--md'} ratio={'1/1'} recommend={'248x248'} max={'1 МБ'} />
-         <Input classNameWrapper='create-whom__form-group' input={inputName} label={'Заголовок'} />
-         <Input classNameWrapper='create-price__text' input={inputText} label={'Описание (новый пункт через Enter)'} />
+      <div className='create-whom card-bg'>
+         <h3 className='create-whom__title display-4'>{title}</h3>
+         {state.map((props, index) => children({ ...props, state, index, onDelete: onDeleteBlock.bind(null, state, setState), onDeleteImg }))}
+         <Button className='create-whom__add' onClick={onAddBlockItem.bind(null, state, setState)} outline>
+            <AddSvg />
+            <span>Добавить описание</span>
+         </Button>
       </div>
    )
 }
 
 export default AddCourseBlock
+{
+   /* // <AddCourseBlockItem state={state} key={index} {...props} index={index} onDelete={} onDeleteImg={onDeleteImg} /> */
+}
