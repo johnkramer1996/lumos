@@ -10,6 +10,7 @@ const useDispatch = () => {
       () => ({
          toError: () => navigate(RouteNames.ERROR),
          toContacts: () => navigate(RouteNames.CONTACTS),
+         toCourses: () => navigate(getURL.courses()),
          toCoursesItem: (params) => navigate(getURL.coursesItem(params)),
          toEventsItem: (params) => navigate(getURL.eventsItem(params)),
          toCabinet: () => navigate(getURL.cabinet()),

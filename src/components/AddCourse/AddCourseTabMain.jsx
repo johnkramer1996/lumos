@@ -8,7 +8,7 @@ import { useCallback } from 'react'
 import { coursesSelectors, systemSelectors } from 'store/selectors'
 import { useForm, useWatch } from 'react-hook-form'
 
-const AddCourseTabMain = ({ refTabs }, ref) => {
+const AddCourseTabMain = ({ refTabs, refTab }) => {
    const { courseId } = useParams()
    const { toCabinetCoursesEdit } = useNavigate()
    const { setContent, setIsShow, addCourse, putCourse } = useDispatch()
@@ -46,8 +46,7 @@ const AddCourseTabMain = ({ refTabs }, ref) => {
       success: ({ response, data }) => {
          setIsShow(true)
          setContent({ title: 'Основная информация о курсе  - добавлена,', descr: 'теперь заполните Уроки' })
-         // TODO NEXT ITEM
-         //  refTabs.current.nextItems()
+         refTabs.current.nextItems()
          toCabinetCoursesEdit({ courseId: data.course.id })
       },
    })
@@ -71,7 +70,7 @@ const AddCourseTabMain = ({ refTabs }, ref) => {
       hasCourse ? putCourseRequest.call({ courseId, body }) : addCourseRequest.call({ body })
    }
 
-   useImperativeHandle(ref, () => ({ submit }))
+   useImperativeHandle(refTab, () => ({ submit }))
 
    return (
       <form className='course-edit__form'>
@@ -94,4 +93,4 @@ const AddCourseTabMain = ({ refTabs }, ref) => {
    )
 }
 
-export default forwardRef(AddCourseTabMain)
+export default AddCourseTabMain

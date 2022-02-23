@@ -34,6 +34,8 @@ const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-r
       )
    }
 
+   const Component = items[activeStep].component
+
    return (
       <>
          {!!items.length && (
@@ -55,7 +57,9 @@ const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-r
                   </div>
                </div>
                <LoaderWrapper isLoading={isLoading}>
-                  <div className={`${classPrefix}__content ${classPrefix}__content--active`}>{isFunction(children) ? children({ activeStep }) : children ? children : items[activeStep].component}</div>
+                  <div className={`${classPrefix}__content ${classPrefix}__content--active`}>
+                     {isFunction(children) ? children({ activeStep, refTabs: ref }) : children ? children : typeof Component === 'object' ? Component : <Component {...items[activeStep].props} />}
+                  </div>
                </LoaderWrapper>
             </>
          )}

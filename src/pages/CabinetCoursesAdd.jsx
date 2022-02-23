@@ -4,19 +4,23 @@ import { useDispatch, useNavigate, useRequest } from 'hooks/'
 import { AddCourseTabMain, AddCourseTabLesson, AddCourseTabDescription, Tabs } from 'components'
 import { useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { coursesSelectors } from 'store/selectors'
+import { authSelectors, coursesSelectors } from 'store/selectors'
 import AddCourseLessonEdit from 'components/AddCourse/AddCourseLessonEdit'
 
 const CabinetAddCourse = () => {
    const { courseId, lessonId } = useParams()
    const location = useLocation()
+   const { toCourses } = useNavigate()
    const isEditPage = !!courseId
    const isLessonPage = !!lessonId
    const { resetCourses, setIsShow, setContent, setCourse, setModules, fetchInfo } = useDispatch()
+   const user = useSelector(authSelectors.getUser)
+   const { id: user_id } = user
    const course = useSelector(coursesSelectors.getCourse)
    const modules = useSelector(coursesSelectors.getModules)
    const hasCourse = !(Object.keys(course).length === 0)
    const hasModules = !(Object.keys(modules).length === 0)
+   const { user_id: page_user_id } = course
 
    const [hasSave, setHasSave] = useState(false)
 
@@ -30,6 +34,11 @@ const CabinetAddCourse = () => {
 
       return () => resetCourses()
    }, [])
+
+   useEffect(() => {
+      const isUserPage = user_id === page_user_id
+      if (!fetchInfoRequest.isLoading && !isUserPage) toCourses()
+   }, [fetchInfoRequest.isLoading])
 
    useEffect(() => {
       setHasSave(isLessonPage)
@@ -62,21 +71,29 @@ const CabinetAddCourse = () => {
    const tabItems = [
       {
          title: 'Основная информация',
-         component: <AddCourseTabMain ref={refTabMain} />,
+         component: AddCourseTabMain,
+         props: {
+            refTab: refTabMain,
+            refTabs: refTabs,
+         },
       },
       {
          title: 'Уроки',
-         component: <AddCourseTabLesson ref={refTabLesson} />,
+         component: AddCourseTabLesson,
+         props: {
+            refTab: refTabLesson,
+            refTabs: refTabs,
+         },
       },
       {
          title: 'Страница курса',
-         component: <AddCourseTabDescription ref={refTabDescription} />,
+         component: AddCourseTabDescription,
+         props: {
+            refTab: refTabDescription,
+            refTabs: refTabs,
+         },
       },
    ]
-
-   //  const onChangeTabsListener = (activeIndex) => {
-   //     setHasSave(false)
-   //  }
 
    const isAvaibleTabIndex = (index) => {
       if (index === 0) return true
@@ -106,7 +123,10 @@ const CabinetAddCourse = () => {
                            <span>{isEditPage ? 'Редактирование' : 'Добавление'} курса</span>
                         </h1>
                         <Tabs ref={refTabs} items={tabItems} classPrefix={'course-edit'} isLoading={fetchInfoRequest.isLoading} activeTabIndex={0} isAvaibleIndex={isAvaibleTabIndex}>
-                           {({ activeStep }) => tabItems[activeStep].component}
+                           {({ activeStep }) => {
+                              const Component = tabItems[activeStep].component
+                              return <Component {...tabItems[activeStep].props} />
+                           }}
                         </Tabs>
                      </>
                   )}

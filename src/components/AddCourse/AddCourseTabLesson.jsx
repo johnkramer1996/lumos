@@ -12,7 +12,7 @@ import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { useCallback } from 'react'
 
-const AddCourseTabLesson = ({ refTabs }, ref) => {
+const AddCourseTabLesson = ({ refTabs, refTab }) => {
    const { courseId } = useParams()
    const { setContent, setIsShow, setModules, deleteModule, deleteLesson, addModulesMass } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
@@ -117,7 +117,7 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
       addModulesMassRequest.call({ courseId, body })
    }
 
-   useImperativeHandle(ref, () => ({ submit }))
+   useImperativeHandle(refTab, () => ({ submit }))
 
    return (
       <>
@@ -126,14 +126,14 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
             <Input form={form} name='short_desc' label='Описание' textarea />
          </div>
 
-         <AddCourseModule {...{ control, register, getValues, setValue, errors, form, onDeleteModule, onDeleteLesson }} />
+         <AddCourseModule {...{ form, onDeleteModule, onDeleteLesson }} />
 
          <TestLesson {...{ form }} />
       </>
    )
 }
 
-export default forwardRef(AddCourseTabLesson)
+export default AddCourseTabLesson
 
 const TestLesson = ({ form }) => {
    const modules = useWatch({

@@ -4,14 +4,13 @@ import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import AddCoursePrice from './AddCoursePrice'
-import { ReactComponent as AddSvg } from 'svg/add.svg'
 import { coursesSelectors } from 'store/selectors'
 import AddCourseBlockItem from './AddCourseBlockItem'
 import AddCourseBlock from './AddCourseBlock'
 import { useForm } from 'react-hook-form'
-import { asyncFind, getURL, timeout } from 'utils'
+import { asyncFind, timeout } from 'utils'
 
-const AddCourseTabDescription = (_, ref) => {
+const AddCourseTabDescription = ({ refTabs, refTab }) => {
    const { courseId } = useParams()
    const { setIsShow, setContent, setDescriptions, setWhoms, setPrices, editInfo, deleteInfo } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
@@ -81,7 +80,6 @@ const AddCourseTabDescription = (_, ref) => {
       })
       const inputFile = form.getValues('inputFile')
       inputFile && inputFile[0] && body.append(`${fieldName}[${newId}][${'image'}]`, inputFile[0])
-      // entries.forEach(([key, value]) => body.append(`${fieldName}[${newId}][${key}]`, typeof value === 'boolean' ? +value : value))
    }
 
    const submit = async () => {
@@ -100,7 +98,7 @@ const AddCourseTabDescription = (_, ref) => {
       editInfoRequest.call({ courseId, body })
    }
 
-   useImperativeHandle(ref, () => ({ submit }))
+   useImperativeHandle(refTab, () => ({ submit }))
 
    const onAddBlockItem = useCallback(async (state, setState) => {
       if (await asyncFind(state, async ({ form }) => !(await form.trigger()))) return
@@ -135,7 +133,6 @@ const AddCourseTabDescription = (_, ref) => {
          <AddCourseBlock title={'Стоимость'} state={prices} setState={setPrices} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'price')} onDeleteImg={onDeleteImg}>
             {(props) => <AddCoursePrice key={props.id || props.index} {...props} />}
          </AddCourseBlock>
-         {/* <AddCourseBlock title={'Кому подойдет курс'} state={whoms} setState={setWhoms} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'whom')} onDeleteImg={onDeleteImg} /> */}
          <div className='create-price card-bg'>
             <div className='course-edit__form-group form-group'>
                <h3 className='create-price__title display-4'>Результаты обучения</h3>
@@ -144,18 +141,8 @@ const AddCourseTabDescription = (_, ref) => {
                </div>
             </div>
          </div>
-         {/* <div className='create-price card-bg'>
-            <h3 className='create-price__title display-4'>Стоимость</h3>
-            {prices.map((props, index) => (
-               <AddCoursePrice key={index} {...props} index={index} onDelete={onDeleteBlock.bind(null, 'price', prices, setPrices)} />
-            ))}
-            <Button className='create-whom__add' onClick={() => onAddBlockItem(prices, setPrices)} outline>
-               <AddSvg />
-               <span>Добавить вариант участия</span>
-            </Button>
-         </div> */}
       </>
    )
 }
 
-export default forwardRef(AddCourseTabDescription)
+export default AddCourseTabDescription

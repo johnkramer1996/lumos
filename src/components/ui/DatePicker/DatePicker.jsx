@@ -1,6 +1,5 @@
 import React, { forwardRef, useRef } from 'react'
 import { useEffect } from 'react'
-import { isActiveClass } from 'utils'
 import { Datepicker } from 'vanillajs-datepicker'
 
 Datepicker.locales.ru = {
@@ -23,6 +22,7 @@ const DatePicker = ({ props: { ref, ...props } }) => {
          new Datepicker(myRef.current, {
             language: 'ru',
             // updateOnBlur: false,
+            autohide: true,
          })
    }, [])
 
