@@ -5,7 +5,7 @@ import { useDispatch, useInput, useRequest } from 'hooks'
 import { Link, useParams } from 'react-router-dom'
 import { asyncFind, declOfNum, getDeclOfArray, getURL, timeout, uid } from 'utils'
 import { coursesSelectors } from 'store/selectors/'
-import { useFieldArray, useForm } from 'react-hook-form'
+import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { ReactComponent as DragSvg } from 'svg/drag.svg'
@@ -69,6 +69,8 @@ const AddCourseModule = ({ control, register, setValue, getValues, form, onDelet
 
 export default AddCourseModule
 
+let render = 0
+
 const AddCourseLesson = ({ nestIndex, control, register, form, onDeleteLesson }) => {
    const { courseId } = useParams()
    const { setIsShow, setContent } = useDispatch()
@@ -77,8 +79,14 @@ const AddCourseLesson = ({ nestIndex, control, register, form, onDeleteLesson })
       name: `modules.${nestIndex}.lessons`,
    })
 
+   const name = useWatch({
+      control: form.control,
+      name: `modules.${nestIndex}.name`,
+   })
+
    const onAdd = async () => {
       if (!(await form.trigger('modules'))) return
+      console.log(fields)
       append({
          name: '',
          number: fields.length,
@@ -91,15 +99,10 @@ const AddCourseLesson = ({ nestIndex, control, register, form, onDeleteLesson })
       remove(index)
    }
 
-   const addLesson = (index) => {
-      // if (!lessonId) {
-      //    return
-      // }
+   const addLesson = () => {
       setIsShow(true)
-      setContent({ title: 'Сначала сохраните ' })
+      setContent({ title: 'Сначала нужно сохранить ' })
    }
-
-   const name = form.watch(`modules.${nestIndex}.name`)
 
    return (
       <div className='create-module card-bg'>

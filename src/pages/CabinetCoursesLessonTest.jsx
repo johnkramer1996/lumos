@@ -24,6 +24,9 @@ const CabinetCoursesLessonTest = () => {
       fetchLessonRequests.call({ courseId, lessonId })
       return () => resetCourses()
    }, [])
+   // TODO
+   //  https://codesandbox.io/s/checkbox-min-checked-forked-0tkjz?file=/src/App.js:235-247
+   // at least one
 
    return (
       <section className='test-page'>

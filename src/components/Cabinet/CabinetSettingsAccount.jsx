@@ -31,6 +31,9 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
       user.vacation[1] && vacationEnd.setValue(user.vacation[1])
    }, [user])
 
+   //  TODO COMPARE PASSWORD
+   // https://codesandbox.io/s/react-hook-form-getvalues-compare-field-values-orf0p?file=/src/index.js:842-865
+
    useEffect(() => {}, [])
 
    return (

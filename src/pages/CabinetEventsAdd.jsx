@@ -15,7 +15,7 @@ const CabinetEventsAdd = () => {
    const event = useSelector(eventsSelectors.getEvent)
    const hasEvent = !(Object.keys(event).length === 0)
 
-   const form = useForm({ mode: 'onBlur' })
+   const form = useForm()
    const inputFileObj = useInputFileNew({ form })
    // TODO ADD VIDEO KEY
    const getEntries = async () => timeout(() => Object.entries(form.getValues()).filter(([key]) => !(key === 'video_key' || key === 'inputFile' || key === 'inputFileValue')))
@@ -86,7 +86,7 @@ const CabinetEventsAdd = () => {
    return (
       <section className='edit-event'>
          <div className='container'>
-            <div className='edit-event__inner'>
+            <form onSubmit={form.handleSubmit(onSave)} className='edit-event__inner'>
                <div className='edit-event__left'>
                   <LoaderWrapper isLoading={fetchEventRequest.isLoading}>
                      <h1 className='edit-event__title display-3'>
@@ -120,9 +120,7 @@ const CabinetEventsAdd = () => {
                </div>
                <div className='edit-event__right'>
                   <div className='edit-event__nav card-bg'>
-                     <Button className='edit-event__save' onClick={onSave}>
-                        {isEditPage ? 'Сохранить' : 'Создать'}
-                     </Button>
+                     <Button className='edit-event__save'>{isEditPage ? 'Сохранить' : 'Создать'}</Button>
                      <div className='edit-event__hint'>Ваши изменения будут отправлены на модерацию.</div>
                   </div>
                   {isEditPage && (
@@ -131,7 +129,7 @@ const CabinetEventsAdd = () => {
                      </Button>
                   )}
                </div>
-            </div>
+            </form>
          </div>
       </section>
    )
