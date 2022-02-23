@@ -1,9 +1,9 @@
 import { Button } from 'components/ui'
 import React from 'react'
-import AddCourseBlockItem from './AddCourseBlockItem'
+import CoursesEditBlockItem from './CoursesEditBlockItem'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 
-const AddCourseBlock = ({ children, title, state, setState, onAddBlockItem, onDeleteBlock, onDeleteImg }) => {
+const CoursesEditBlock = ({ children, title, state, setState, onAddBlockItem, onDeleteBlock, onDeleteImg }) => {
    return (
       <div className='create-whom card-bg'>
          <h3 className='create-whom__title display-4'>{title}</h3>
@@ -16,7 +16,4 @@ const AddCourseBlock = ({ children, title, state, setState, onAddBlockItem, onDe
    )
 }
 
-export default AddCourseBlock
-{
-   /* // <AddCourseBlockItem state={state} key={index} {...props} index={index} onDelete={} onDeleteImg={onDeleteImg} /> */
-}
+export default CoursesEditBlock

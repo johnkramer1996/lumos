@@ -3,7 +3,7 @@ import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { ReactComponent as DocumentSvg } from 'svg/document.svg'
 import { formatBytes } from 'utils'
 
-const AddCourseLessonEditFilesItem = ({ id, index, name, file_size, onDelete }) => {
+const CoursesLessonEditFilesItem = ({ id, index, name, file_size, onDelete }) => {
    return (
       <>
          <div className='lesson-edit__files-item'>
@@ -22,4 +22,4 @@ const AddCourseLessonEditFilesItem = ({ id, index, name, file_size, onDelete }) 
    )
 }
 
-export default AddCourseLessonEditFilesItem
+export default CoursesLessonEditFilesItem

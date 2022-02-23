@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from 'components/ui'
 import { useDispatch, useNavigate, useRequest } from 'hooks/'
-import { AddCourseTabMain, AddCourseTabLesson, AddCourseTabDescription, Tabs } from 'components'
+import { CoursesEditTabMain, CoursesEditTabLesson, CoursesEditTabDescription, Tabs } from 'components'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
-import AddCourseLessonEdit from 'components/AddCourse/AddCourseLessonEdit'
+import CoursesEditLessonEdit from 'components/CoursesLessonEdit/CoursesLessonEdit'
 
-const CabinetAddCourse = () => {
+const CabinetCoursesEdit = () => {
    const { courseId, lessonId } = useParams()
    const isEditPage = !!courseId
    const isLessonPage = !!lessonId
@@ -91,15 +91,15 @@ const CabinetAddCourse = () => {
    const tabItems = [
       {
          title: 'Основная информация',
-         component: <AddCourseTabMain ref={refTabMain} refTabs={refTabs} />,
+         component: <CoursesEditTabMain ref={refTabMain} refTabs={refTabs} />,
       },
       {
          title: 'Уроки',
-         component: <AddCourseTabLesson ref={refTabLesson} refTabs={refTabs} />,
+         component: <CoursesEditTabLesson ref={refTabLesson} refTabs={refTabs} />,
       },
       {
          title: 'Страница курса',
-         component: <AddCourseTabDescription ref={refTabDescription} refTabs={refTabs} />,
+         component: <CoursesEditTabDescription ref={refTabDescription} refTabs={refTabs} />,
       },
    ]
 
@@ -136,7 +136,7 @@ const CabinetAddCourse = () => {
             <div className='course-edit__inner'>
                <div className='course-edit__left'>
                   {isLessonPage ? (
-                     <AddCourseLessonEdit ref={refLesson} />
+                     <CoursesEditLessonEdit ref={refLesson} />
                   ) : (
                      <>
                         <h1 className='course-edit__title display-3'>
@@ -178,4 +178,4 @@ const CabinetAddCourse = () => {
    )
 }
 
-export default CabinetAddCourse
+export default CabinetCoursesEdit

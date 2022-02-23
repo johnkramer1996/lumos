@@ -8,10 +8,10 @@ import { useCallback } from 'react'
 import { coursesSelectors, systemSelectors } from 'store/selectors'
 import { useForm, useWatch } from 'react-hook-form'
 
-const AddCourseTabMain = ({ refTabs, refTab }) => {
+const CoursesEditTabMain = ({ refTabs, refTab }) => {
    const { courseId } = useParams()
    const { toCabinetCoursesEdit } = useNavigate()
-   const { setContent, setIsShow, addCourse, putCourse } = useDispatch()
+   const { setContent, setIsShow, CoursesEdit, putCourse } = useDispatch()
    const { themes = [], type_study = [], format = [] } = useSelector(systemSelectors.getReferences)
    const course = useSelector(coursesSelectors.getCourse)
    const hasCourse = !(Object.keys(course).length === 0)
@@ -41,8 +41,8 @@ const AddCourseTabMain = ({ refTabs, refTab }) => {
       }
    }, [course])
 
-   const addCourseRequest = useRequest({
-      request: addCourse,
+   const CoursesEditRequest = useRequest({
+      request: CoursesEdit,
       success: ({ response, data }) => {
          setIsShow(true)
          setContent({ title: 'Основная информация о курсе  - добавлена,', descr: 'теперь заполните Уроки' })
@@ -67,7 +67,7 @@ const AddCourseTabMain = ({ refTabs, refTab }) => {
       const inputFile = form.getValues('inputFile')
       inputFile[0] && body.append('image', inputFile[0])
 
-      hasCourse ? putCourseRequest.call({ courseId, body }) : addCourseRequest.call({ body })
+      hasCourse ? putCourseRequest.call({ courseId, body }) : CoursesEditRequest.call({ body })
    }
 
    useImperativeHandle(refTab, () => ({ submit }))
@@ -93,4 +93,4 @@ const AddCourseTabMain = ({ refTabs, refTab }) => {
    )
 }
 
-export default AddCourseTabMain
+export default CoursesEditTabMain

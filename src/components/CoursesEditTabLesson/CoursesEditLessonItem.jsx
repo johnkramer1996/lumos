@@ -10,7 +10,7 @@ import { coursesSelectors } from 'store/selectors'
 import { useForm } from 'react-hook-form'
 import { Input } from 'components/ui'
 
-const AddCourseLessonItem = ({ id, indexModule, name, index, onDelete }) => {
+const CoursesEditLessonItem = ({ id, indexModule, name, index, onDelete }) => {
    const { courseId } = useParams()
    const modules = useSelector(coursesSelectors.getModules)
 
@@ -42,4 +42,4 @@ const AddCourseLessonItem = ({ id, indexModule, name, index, onDelete }) => {
    )
 }
 
-export default AddCourseLessonItem
+export default CoursesEditLessonItem

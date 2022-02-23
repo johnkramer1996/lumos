@@ -9,7 +9,7 @@ import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { ReactComponent as DragSvg } from 'svg/drag.svg'
 import { ReactComponent as LinkSvg } from 'svg/link.svg'
 
-const AddCourseModule = ({ form, onDeleteModule, onDeleteLesson }) => {
+const CoursesEditModule = ({ form, onDeleteModule, onDeleteLesson }) => {
    const { setIsShow, setContent } = useDispatch()
    const { fields, append, remove } = useFieldArray({
       control: form.control,
@@ -61,15 +61,15 @@ const AddCourseModule = ({ form, onDeleteModule, onDeleteLesson }) => {
          </div>
 
          {fields.map((props, index) => {
-            return <AddCourseLesson key={props.id} nestIndex={index} {...{ form }} {...props} onDeleteLesson={onDeleteLesson} />
+            return <CoursesEditLesson key={props.id} nestIndex={index} {...{ form }} {...props} onDeleteLesson={onDeleteLesson} />
          })}
       </>
    )
 }
 
-export default AddCourseModule
+export default CoursesEditModule
 
-const AddCourseLesson = ({ nestIndex, form, onDeleteLesson }) => {
+const CoursesEditLesson = ({ nestIndex, form, onDeleteLesson }) => {
    const { courseId } = useParams()
    const { setIsShow, setContent } = useDispatch()
    const { fields, remove, append } = useFieldArray({

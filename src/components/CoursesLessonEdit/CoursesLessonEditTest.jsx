@@ -4,11 +4,11 @@ import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { ReactComponent as AddSvg } from 'svg/add-sm.svg'
 import { Button, Input } from 'components/ui'
 import { declOfNum, getDeclOfArray, uid } from 'utils'
-import AddCourseLessonEditTestItem from './AddCourseLessonEditTestItem'
+import CoursesLessonEditTestItem from './CoursesLessonEditTestItem'
 import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
 
-const AddCourseLessonEditTest = () => {
+const CoursesLessonEditTest = () => {
    const { setLessonQuestions } = useDispatch()
    const lesson = useSelector(coursesSelectors.getLesson)
    const questions = useSelector(coursesSelectors.getLessonQuestions)
@@ -34,7 +34,7 @@ const AddCourseLessonEditTest = () => {
          </div>
 
          {questions.map((props, index) => (
-            <AddCourseLessonEditTestItem key={props.id || props.hidden_id || index} {...props} index={index} />
+            <CoursesLessonEditTestItem key={props.id || props.hidden_id || index} {...props} index={index} />
          ))}
 
          <Button className='lesson-test__add' onClick={onAdd} outline>
@@ -53,4 +53,4 @@ const AddCourseLessonEditTest = () => {
    )
 }
 
-export default AddCourseLessonEditTest
+export default CoursesLessonEditTest

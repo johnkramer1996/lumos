@@ -3,14 +3,14 @@ import { useDispatch, useInput, useInputFileNew, useRequest } from 'hooks'
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import AddCoursePrice from './AddCoursePrice'
+import CoursesEditPrice from './CoursesEditPrice'
 import { coursesSelectors } from 'store/selectors'
-import AddCourseBlockItem from './AddCourseBlockItem'
-import AddCourseBlock from './AddCourseBlock'
+import CoursesEditBlockItem from './CoursesEditBlockItem'
+import CoursesEditBlock from './CoursesEditBlock'
 import { useForm } from 'react-hook-form'
 import { asyncFind, timeout } from 'utils'
 
-const AddCourseTabDescription = ({ refTabs, refTab }) => {
+const CoursesEditTabDescription = ({ refTabs, refTab }) => {
    const { courseId } = useParams()
    const { setIsShow, setContent, setDescriptions, setWhoms, setPrices, editInfo, deleteInfo } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
@@ -124,15 +124,15 @@ const AddCourseTabDescription = ({ refTabs, refTab }) => {
                <Input form={form} name='course_description' textarea />
             </div>
          </div>
-         <AddCourseBlock title={'О курсе'} state={descriptions} setState={setDescriptions} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'desc')} onDeleteImg={onDeleteImg}>
-            {(props) => <AddCourseBlockItem key={props.id || props.index} {...props} />}
-         </AddCourseBlock>
-         <AddCourseBlock title={'Кому подойдет курс'} state={whoms} setState={setWhoms} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'whom')} onDeleteImg={onDeleteImg}>
-            {(props) => <AddCourseBlockItem key={props.id || props.index} {...props} />}
-         </AddCourseBlock>
-         <AddCourseBlock title={'Стоимость'} state={prices} setState={setPrices} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'price')} onDeleteImg={onDeleteImg}>
-            {(props) => <AddCoursePrice key={props.id || props.index} {...props} />}
-         </AddCourseBlock>
+         <CoursesEditBlock title={'О курсе'} state={descriptions} setState={setDescriptions} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'desc')} onDeleteImg={onDeleteImg}>
+            {(props) => <CoursesEditBlockItem key={props.id || props.index} {...props} />}
+         </CoursesEditBlock>
+         <CoursesEditBlock title={'Кому подойдет курс'} state={whoms} setState={setWhoms} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'whom')} onDeleteImg={onDeleteImg}>
+            {(props) => <CoursesEditBlockItem key={props.id || props.index} {...props} />}
+         </CoursesEditBlock>
+         <CoursesEditBlock title={'Стоимость'} state={prices} setState={setPrices} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'price')} onDeleteImg={onDeleteImg}>
+            {(props) => <CoursesEditPrice key={props.id || props.index} {...props} />}
+         </CoursesEditBlock>
          <div className='create-price card-bg'>
             <div className='course-edit__form-group form-group'>
                <h3 className='create-price__title display-4'>Результаты обучения</h3>
@@ -145,4 +145,4 @@ const AddCourseTabDescription = ({ refTabs, refTab }) => {
    )
 }
 
-export default AddCourseTabDescription
+export default CoursesEditTabDescription

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 
-const AddCourseLessonEditTestItemVariant = ({ id, index, indexQuestion, ansver, is_true, onDelete, onChange }) => {
+const CoursesLessonEditTestItemVariant = ({ id, index, indexQuestion, ansver, is_true, onDelete, onChange }) => {
    const questions = useSelector(coursesSelectors.getLessonQuestions)
    const questionsData = useSelector(coursesSelectors.getLessonQuestionsData)
 
@@ -27,4 +27,4 @@ const AddCourseLessonEditTestItemVariant = ({ id, index, indexQuestion, ansver, 
    )
 }
 
-export default AddCourseLessonEditTestItemVariant
+export default CoursesLessonEditTestItemVariant

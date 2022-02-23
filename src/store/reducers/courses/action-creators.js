@@ -43,8 +43,8 @@ export const courseHandlers = {
       ...defaultHandlers.fetchCourse,
       success: ({ dispatch, response, prevData, data }) => dispatch(CoursesActionCreators.setCourse(data || {})),
    },
-   addCourse: {
-      ...defaultHandlers.addCourse,
+   CoursesEdit: {
+      ...defaultHandlers.CoursesEdit,
       success: ({ dispatch, response, prevData, data }) => dispatch(CoursesActionCreators.setCourse(data?.course || {})),
    },
    putCourse: {

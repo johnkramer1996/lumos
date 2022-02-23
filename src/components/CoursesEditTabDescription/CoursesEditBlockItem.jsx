@@ -5,7 +5,7 @@ import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { ImgUploadNew, Input } from 'components/ui'
 import { useForm } from 'react-hook-form'
 
-const AddCourseBlockItem = ({ id, index, image, name, text, onDelete, onDeleteImg, state }) => {
+const CoursesEditBlockItem = ({ id, index, image, name, text, onDelete, onDeleteImg, state }) => {
    const form = useForm({
       mode: 'onBlur',
       defaultValues: {
@@ -33,4 +33,4 @@ const AddCourseBlockItem = ({ id, index, image, name, text, onDelete, onDeleteIm
    )
 }
 
-export default AddCourseBlockItem
+export default CoursesEditBlockItem

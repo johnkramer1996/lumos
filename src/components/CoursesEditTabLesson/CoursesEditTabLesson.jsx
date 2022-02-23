@@ -1,8 +1,8 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { Button, Input } from 'components/ui'
 import { useSelector } from 'react-redux'
-import AddCourseLesson from './AddCourseLesson'
-import AddCourseModule from './AddCourseModule'
+import CoursesEditLesson from './CoursesEditLesson'
+import CoursesEditModule from './CoursesEditModule'
 import { useDispatch, useInput, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 import { asyncFind, declOfNum, timeout, uid } from 'utils'
@@ -12,7 +12,7 @@ import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { useCallback } from 'react'
 
-const AddCourseTabLesson = ({ refTabs, refTab }) => {
+const CoursesEditTabLesson = ({ refTabs, refTab }) => {
    const { courseId } = useParams()
    const { setContent, setIsShow, setModules, deleteModule, deleteLesson, addModulesMass } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
@@ -126,14 +126,14 @@ const AddCourseTabLesson = ({ refTabs, refTab }) => {
             <Input form={form} name='short_desc' label='Описание' textarea />
          </div>
 
-         <AddCourseModule {...{ form, onDeleteModule, onDeleteLesson }} />
+         <CoursesEditModule {...{ form, onDeleteModule, onDeleteLesson }} />
 
          <TestLesson {...{ form }} />
       </>
    )
 }
 
-export default AddCourseTabLesson
+export default CoursesEditTabLesson
 
 const TestLesson = ({ form }) => {
    const modules = useWatch({

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { Button, Loader, LoaderWrapper } from 'components/ui'
-import { useDispatch, useNavigate, useRequest } from 'hooks'
+import { useDispatch, useNavigate, usePageAccess, useRequest } from 'hooks'
 import { RouteNames } from 'routes'
 import { Tabs } from 'components'
 import CoursesItemTabLessons from 'components/CoursesItemTabLessons/CoursesItemTabLessons'
@@ -35,17 +35,14 @@ const CabinetCoursesItem = () => {
       return () => resetCourses()
    }, [])
 
-   useEffect(() => {
-      const isUserPage = user_id === page_user_id
-      if (!fetchInfoRequest.isLoading && !isUserPage) toCoursesItem({ courseId })
-   }, [fetchInfoRequest.isLoading])
+   usePageAccess(user_id, page_user_id, toCoursesItem.bind(null, { courseId }), fetchInfoRequest.isLoading)
 
    const tabItems = useMemo(
       () => [
-         { title: 'Уроки', notifications: 0, component: <CoursesItemTabLessons /> },
-         { title: 'Ученики', notifications: 0, component: <CoursesItemTabStudents /> },
-         { title: 'Статистика', notifications: 0, component: <CoursesItemTabReport /> },
-         { title: 'Уведомления', notifications: 1, component: <CoursesItemTabNotifications />, hasAccess: hasAccess(rolesId, [ROLES.TRAINER]) },
+         { title: 'Уроки', notifications: 0, component: CoursesItemTabLessons },
+         { title: 'Ученики', notifications: 0, component: CoursesItemTabStudents },
+         { title: 'Статистика', notifications: 0, component: CoursesItemTabReport },
+         { title: 'Уведомления', notifications: 1, component: CoursesItemTabNotifications, hasAccess: hasAccess(rolesId, [ROLES.TRAINER]) },
       ],
       [],
    )

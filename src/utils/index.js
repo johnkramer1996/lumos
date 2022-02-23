@@ -150,7 +150,7 @@ export const getURL = {
    cabinet: (params) => getURL.parseURL(RouteNames.CABINET, params),
    cabinetCourses: (params) => getURL.parseURL(RouteNames.CABINET_COURSES, params),
    cabinetCoursesItem: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_ITEM, params),
-   cabinetCoursesAdd: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_ADD, params),
+   CabinetCoursesEdit: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_ADD, params),
    cabinetCoursesEdit: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_EDIT, params),
    cabinetCoursesLessons: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_LESSONS, params),
    cabinetCoursesLesson: (params) => getURL.parseURL(RouteNames.CABINET_COURSES_LESSON, params),
@@ -176,7 +176,10 @@ export const joinData = (arr1, arr2, id1, id2, prop1, prop2) => {
    )
 }
 
-export const getFullName = ({ first_name = '', last_name = '', name = '' } = {}) => `${first_name || name || 'No name'} ${last_name || ''}`
+export const getFullName = (names) => {
+   const { first_name = '', last_name = '', name = '' } = names ?? {}
+   return `${first_name || name || 'No name'} ${last_name || ''}`
+}
 
 export const timer = (days = {}, hours = {}, minutes = {}, seconds = {}) => {
    const end = new Date('02/19/2022 10:1 AM')

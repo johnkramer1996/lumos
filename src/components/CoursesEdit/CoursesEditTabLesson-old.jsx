@@ -1,8 +1,8 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { Button, Input } from 'components/ui'
 import { useSelector } from 'react-redux'
-import AddCourseLesson from './AddCourseLesson'
-import AddCourseModule from './AddCourseModule'
+import CoursesEditLesson from './CoursesEditLesson'
+import CoursesEditModule from './CoursesEditModule'
 import { useDispatch, useInput, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 import { asyncFind, timeout, uid } from 'utils'
@@ -11,7 +11,7 @@ import { useCallback } from 'react'
 import { coursesSelectors } from 'store/selectors/'
 import { useForm } from 'react-hook-form'
 
-const AddCourseTabLesson = ({ refTabs }, ref) => {
+const CoursesEditTabLesson = ({ refTabs }, ref) => {
    const { courseId } = useParams()
    const { setContent, setIsShow, setModules, deleteModule, deleteLesson, addModulesMass } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
@@ -150,7 +150,7 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
             <h3 className='create-module__title display-4'>Модули</h3>
             <div className='create-module__items'>
                {modules.map((props, index) => (
-                  <AddCourseModule key={index} {...props} index={index} onDelete={onDeleteModule} />
+                  <CoursesEditModule key={index} {...props} index={index} onDelete={onDeleteModule} />
                ))}
             </div>
             <Button className='create-module__add' onClick={onAddBlockItem.bind(null, modules, setModules)} outline>
@@ -159,7 +159,7 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
             </Button>
          </div>
          {/* {modules.map((props, index) => (
-            <AddCourseLesson key={props.id ?? props.hidden_id} {...props} lessons={props.lessons} index={index} onAdd={onAddLesson.bind(null, modules, setModules)} onDelete={onDeleteLesson} />
+            <CoursesEditLesson key={props.id ?? props.hidden_id} {...props} lessons={props.lessons} index={index} onAdd={onAddLesson.bind(null, modules, setModules)} onDelete={onDeleteLesson} />
          ))} */}
          <div className='create-module card-bg'>
             <div className='create-module__top'>
@@ -191,4 +191,4 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
    )
 }
 
-export default forwardRef(AddCourseTabLesson)
+export default forwardRef(CoursesEditTabLesson)

@@ -3,12 +3,12 @@ import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { ReactComponent as AddSvg } from 'svg/add-sm.svg'
 import { useDispatch, useInput } from 'hooks'
 import { Button, Input } from 'components/ui'
-import AddCourseLessonEditTestItemVariant from './AddCourseLessonEditTestItemVariant'
+import CoursesLessonEditTestItemVariant from './CoursesLessonEditTestItemVariant'
 import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
 import { uid } from 'utils'
 
-const AddCourseLessonEditTestItem = ({ id, index }) => {
+const CoursesLessonEditTestItem = ({ id, index }) => {
    const { setLessonQuestions } = useDispatch()
    const questions = useSelector(coursesSelectors.getLessonQuestions)
    const questionsData = useSelector(coursesSelectors.getLessonQuestionsData)
@@ -50,7 +50,7 @@ const AddCourseLessonEditTestItem = ({ id, index }) => {
             <div className='lesson-test__variants-title'>Введите варианты ответов и выберите правильный</div>
             <div className='lesson-test__variants-items'>
                {answers.map((props, indexAnswer) => (
-                  <AddCourseLessonEditTestItemVariant key={props.id || props.hidden_id || index} {...props} index={indexAnswer} indexQuestion={index} onDelete={onDelete} />
+                  <CoursesLessonEditTestItemVariant key={props.id || props.hidden_id || index} {...props} index={indexAnswer} indexQuestion={index} onDelete={onDelete} />
                ))}
             </div>
             <Button className='lesson-test__variants-add' onClick={onAdd} light>
@@ -69,4 +69,4 @@ const AddCourseLessonEditTestItem = ({ id, index }) => {
    )
 }
 
-export default AddCourseLessonEditTestItem
+export default CoursesLessonEditTestItem

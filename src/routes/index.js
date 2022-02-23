@@ -10,7 +10,7 @@ import {
    //  NewsItem,
    Subscribe,
    Cabinet,
-   CabinetCoursesAdd,
+   CabinetCoursesEdit,
    Blog,
    Partners,
    Reviews,
@@ -26,6 +26,7 @@ import {
    PagesItem,
    BlogItem,
    UsersItem,
+   CabinetCoursesLessonEdit,
 } from 'pages/'
 
 export const RouteNames = {
@@ -105,13 +106,13 @@ export const privateRoutes = [
    { path: RouteNames.CABINET_COURSES_PLANNED, element: <Cabinet /> },
    { path: RouteNames.CABINET_COURSES_MODERATION, element: <Cabinet /> },
    { path: RouteNames.CABINET_COURSES_COMPLETED, element: <Cabinet /> },
-   { path: RouteNames.CABINET_COURSES_ADD, element: <CabinetCoursesAdd /> },
+   { path: RouteNames.CABINET_COURSES_ADD, element: <CabinetCoursesEdit /> },
    { path: RouteNames.CABINET_COURSES_ITEM, element: <CabinetCoursesItem /> },
    { path: RouteNames.CABINET_COURSES_LESSONS, element: <CabinetCoursesLessons /> },
    { path: RouteNames.CABINET_COURSES_LESSON, element: <CabinetCoursesLesson /> },
    { path: RouteNames.CABINET_COURSES_LESSON_TEST, element: <CabinetCoursesLessonTest /> },
-   { path: RouteNames.CABINET_COURSES_EDIT, element: <CabinetCoursesAdd /> },
-   { path: RouteNames.CABINET_COURSES_LESSON_EDIT, element: <CabinetCoursesAdd /> },
+   { path: RouteNames.CABINET_COURSES_EDIT, element: <CabinetCoursesEdit /> },
+   { path: RouteNames.CABINET_COURSES_LESSON_EDIT, element: <CabinetCoursesLessonEdit /> },
    { path: RouteNames.CABINET_EVENTS_PLANNED, element: <Cabinet /> },
    { path: RouteNames.CABINET_EVENTS_MODERATION, element: <Cabinet /> },
    { path: RouteNames.CABINET_EVENTS_COMPLETED, element: <Cabinet /> },

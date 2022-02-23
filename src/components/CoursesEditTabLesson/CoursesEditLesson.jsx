@@ -1,9 +1,9 @@
 import { Button } from 'components/ui'
 import React from 'react'
-import AddCourseLessonItem from './AddCourseLessonItem'
+import CoursesEditLessonItem from './CoursesEditLessonItem'
 import { declOfNum, getDeclOfArray } from 'utils'
 
-const AddCourseLesson = ({ index, name, onAdd, lessons, onDelete }) => {
+const CoursesEditLesson = ({ index, name, onAdd, lessons, onDelete }) => {
    return (
       <div className='create-module card-bg'>
          <div className='create-module__top'>
@@ -14,7 +14,7 @@ const AddCourseLesson = ({ index, name, onAdd, lessons, onDelete }) => {
          </div>
          <div className='create-module__items'>
             {lessons?.map((props, indexLesson) => (
-               <AddCourseLessonItem key={props.id ?? props.hidden_id} {...props} index={indexLesson} indexModule={index} onDelete={onDelete} />
+               <CoursesEditLessonItem key={props.id ?? props.hidden_id} {...props} index={indexLesson} indexModule={index} onDelete={onDelete} />
             ))}
          </div>
          <Button className='create-module__add' onClick={() => onAdd(index)} outline>
@@ -28,4 +28,4 @@ const AddCourseLesson = ({ index, name, onAdd, lessons, onDelete }) => {
    )
 }
 
-export default AddCourseLesson
+export default CoursesEditLesson

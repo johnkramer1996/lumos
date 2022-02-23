@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from 'components/ui'
-import { useDispatch, useNavigate, useRequest } from 'hooks/'
-import { AddCourseTabMain, AddCourseTabLesson, AddCourseTabDescription, Tabs } from 'components'
+import { useDispatch, useNavigate, useRequest, usePageAccess } from 'hooks/'
+import { CoursesEditTabMain, CoursesEditTabLesson, CoursesEditTabDescription, Tabs } from 'components'
 import { useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { authSelectors, coursesSelectors } from 'store/selectors'
-import AddCourseLessonEdit from 'components/AddCourse/AddCourseLessonEdit'
+import CoursesEditLessonEdit from 'components/CoursesLessonEdit/CoursesLessonEdit'
 
-const CabinetAddCourse = () => {
+const CabinetCoursesEdit = () => {
    const { courseId, lessonId } = useParams()
    const location = useLocation()
    const { toCourses } = useNavigate()
@@ -29,16 +29,18 @@ const CabinetAddCourse = () => {
       loading: isEditPage,
    })
 
+   usePageAccess(user_id, page_user_id, toCourses, fetchInfoRequest.isLoading)
+
    useEffect(() => {
       if (isEditPage) fetchInfoRequest.call({ courseId })
 
       return () => resetCourses()
    }, [])
 
-   useEffect(() => {
-      const isUserPage = user_id === page_user_id
-      if (!fetchInfoRequest.isLoading && !isUserPage) toCourses()
-   }, [fetchInfoRequest.isLoading])
+   //  useEffect(() => {
+   //     const isUserPage = user_id === page_user_id
+   //     if (!fetchInfoRequest.isLoading && !isUserPage) toCourses()
+   //  }, [fetchInfoRequest.isLoading])
 
    useEffect(() => {
       setHasSave(isLessonPage)
@@ -71,7 +73,7 @@ const CabinetAddCourse = () => {
    const tabItems = [
       {
          title: 'Основная информация',
-         component: AddCourseTabMain,
+         component: CoursesEditTabMain,
          props: {
             refTab: refTabMain,
             refTabs: refTabs,
@@ -79,7 +81,7 @@ const CabinetAddCourse = () => {
       },
       {
          title: 'Уроки',
-         component: AddCourseTabLesson,
+         component: CoursesEditTabLesson,
          props: {
             refTab: refTabLesson,
             refTabs: refTabs,
@@ -87,7 +89,7 @@ const CabinetAddCourse = () => {
       },
       {
          title: 'Страница курса',
-         component: AddCourseTabDescription,
+         component: CoursesEditTabDescription,
          props: {
             refTab: refTabDescription,
             refTabs: refTabs,
@@ -115,21 +117,15 @@ const CabinetAddCourse = () => {
          <div className='container'>
             <div className='course-edit__inner'>
                <div className='course-edit__left'>
-                  {isLessonPage ? (
-                     <AddCourseLessonEdit ref={refLesson} />
-                  ) : (
-                     <>
-                        <h1 className='course-edit__title display-3'>
-                           <span>{isEditPage ? 'Редактирование' : 'Добавление'} курса</span>
-                        </h1>
-                        <Tabs ref={refTabs} items={tabItems} classPrefix={'course-edit'} isLoading={fetchInfoRequest.isLoading} activeTabIndex={0} isAvaibleIndex={isAvaibleTabIndex}>
-                           {({ activeStep }) => {
-                              const Component = tabItems[activeStep].component
-                              return <Component {...tabItems[activeStep].props} />
-                           }}
-                        </Tabs>
-                     </>
-                  )}
+                  <h1 className='course-edit__title display-3'>
+                     <span>{isEditPage ? 'Редактирование' : 'Добавление'} курса</span>
+                  </h1>
+                  <Tabs ref={refTabs} items={tabItems} classPrefix={'course-edit'} isLoading={fetchInfoRequest.isLoading} activeTabIndex={0} isAvaibleIndex={isAvaibleTabIndex}>
+                     {({ activeStep }) => {
+                        const Component = tabItems[activeStep].component
+                        return <Component {...tabItems[activeStep].props} />
+                     }}
+                  </Tabs>
                </div>
                <div className='course-edit__right'>
                   <div className='course-edit__hint'>
@@ -152,4 +148,4 @@ const CabinetAddCourse = () => {
    )
 }
 
-export default CabinetAddCourse
+export default CabinetCoursesEdit

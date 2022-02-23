@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 
-const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, moduls = [], onDelete, state }) => {
+const CoursesEditPrice = ({ id, index, name, width, price_with_sale, price, text, moduls = [], onDelete, state }) => {
    const modules = useSelector(coursesSelectors.getModules)
 
    const form = useForm({
@@ -77,4 +77,4 @@ const AddCoursePrice = ({ id, index, name, width, price_with_sale, price, text, 
    )
 }
 
-export default AddCoursePrice
+export default CoursesEditPrice

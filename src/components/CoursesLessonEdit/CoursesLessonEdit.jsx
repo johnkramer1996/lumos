@@ -1,18 +1,17 @@
 import React, { useCallback, useEffect, useImperativeHandle, useMemo } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { useDispatch, useInput, useNavigate as useNavigateMy, useRequest } from 'hooks'
+import { useDispatch, useInput, useNavigate, useRequest } from 'hooks'
 import { coursesSelectors } from 'store/selectors'
 import { Checkbox, Input, Loader, LoaderWrapper } from 'components/ui'
 import { forwardRef } from 'react'
-import AddCourseLessonEditFiles from './AddCourseLessonEditFiles'
-import AddCourseLessonEditTest from './AddCourseLessonEditTest'
+import CoursesLessonEditFiles from './CoursesLessonEditFiles'
+import CoursesLessonEditTest from './CoursesLessonEditTest'
 import { useForm } from 'react-hook-form'
 
-const AddCourseLessonEdit = (_, ref) => {
-   const navigate = useNavigate()
+const CoursesLessonEdit = (_, ref) => {
    const { courseId, lessonId } = useParams()
-   const { toCabinetCoursesEdit } = useNavigateMy()
+   const { navigate } = useNavigate()
    const { setIsShow, setContent, fetchLesson, resetCourses, resetLessonQuestionsData, putLesson } = useDispatch()
    const lesson = useSelector(coursesSelectors.getLesson)
    const questions = useSelector(coursesSelectors.getLessonQuestions)
@@ -25,8 +24,8 @@ const AddCourseLessonEdit = (_, ref) => {
    useEffect(() => {
       form.setValue('name', lesson.name ?? '')
       form.setValue('description', lesson.description ?? '')
-      form.setValue('can_comment', lesson.can_comment ?? '')
-      form.setValue('has_text', lesson.has_text ?? '')
+      form.setValue('can_comment', lesson.can_comment ?? false)
+      form.setValue('has_text', lesson.has_text ?? false)
    }, [lesson])
 
    const fetchLessonRequest = useRequest({ request: fetchLesson, loading: true })
@@ -82,8 +81,6 @@ const AddCourseLessonEdit = (_, ref) => {
                <Input form={form} name='name' label='Название' />
                <Checkbox form={form} name='can_comment' label='Комментарии' type='switch' className='lesson-edit__switch' />
                <Checkbox form={form} name='has_text' label='Тест' type='switch' className='lesson-edit__switch' />
-               {/* <Checkbox className='lesson-edit__switch' input={can_comment} label={'Комментарии'} type={'switch'} /> */}
-               {/* <Checkbox className='lesson-edit__switch' input={has_text} label={'Тест'} type='switch' /> */}
             </div>
             <div className='create-about card-bg'>
                <h3 className='create-about__title display-4'>Урок</h3>
@@ -92,11 +89,11 @@ const AddCourseLessonEdit = (_, ref) => {
                </div>
             </div>
 
-            <AddCourseLessonEditFiles />
-            <AddCourseLessonEditTest />
+            {/* <CoursesLessonEditFiles /> */}
+            <CoursesLessonEditTest form={form} />
          </LoaderWrapper>
       </>
    )
 }
 
-export default forwardRef(AddCourseLessonEdit)
+export default forwardRef(CoursesLessonEdit)

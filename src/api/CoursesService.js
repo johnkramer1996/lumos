@@ -10,7 +10,7 @@ export default class CoursesService {
    static async fetchCourse({ courseId = 0 } = {}) {
       return await axios.get(trainerCoursesURL.FETCH_COURSE({ courseId }))
    }
-   static async addCourse({ body = {} } = {}) {
+   static async CoursesEdit({ body = {} } = {}) {
       return await axios.post(trainerCoursesURL.ADD_COURSE, body, {
          headers: {
             'Content-Type': 'multipart/form-data',
