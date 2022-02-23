@@ -29,14 +29,15 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
       },
    })
    const anytime = form.watch('anytime')
-   const inputFileObj = useInputFileNew({ form })
+   //  const inputFileObj = useInputFileNew({ form })
    const getEntries = async () => timeout(() => Object.entries(form.getValues()).filter(([key]) => !(key === 'timing' || key === 'inputFile' || key === 'inputFileValue')))
 
    useEffect(() => {
       if (hasCourse) {
          ;(async () => {
             ;(await getEntries()).forEach(([key]) => form.setValue(key, course[key] !== '0' ? course[key] : false ?? ''))
-            inputFileObj.setValueImg(getURL.img(course.image, false) ?? '')
+            // inputFileObj.setValueImg(getURL.img(course.image, false) ?? '')
+            form.setValue('inputFileValue', getURL.img(course['image'], false) ?? '')
          })()
       }
    }, [course])
@@ -88,7 +89,8 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
             <Input form={form} name='width' label='Длительность' className='course-edit__form-group' />
             <Checkbox form={form} name='sale_subscribe' label='Разрешить продавать по подписке' className='course-edit__form-checkbox' />
          </div>
-         <ImgUploadNew inputFileObj={inputFileObj} title={'Изображение'} />
+         {console.log(form.getValues(`inputFileValue`))}
+         <ImgUploadNew form={form} image={form.getValues(`inputFileValue`)} title={'Изображение'} />
       </form>
    )
 }

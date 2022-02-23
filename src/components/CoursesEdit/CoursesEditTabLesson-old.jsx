@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import { Button, Input } from 'components/ui'
 import { useSelector } from 'react-redux'
-import CoursesEditLesson from './CoursesEditLesson'
+import CoursesEditLesson from '../CoursesEditTabLesson/CoursesEditLesson'
 import CoursesEditModule from './CoursesEditModule'
 import { useDispatch, useInput, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'

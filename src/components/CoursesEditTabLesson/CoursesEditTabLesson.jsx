@@ -1,8 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
-import { Button, Input } from 'components/ui'
+import { Button, CardBg, Input } from 'components/ui'
 import { useSelector } from 'react-redux'
-import CoursesEditLesson from './CoursesEditLesson'
-import CoursesEditModule from './CoursesEditModule'
 import { useDispatch, useInput, useRequest } from 'hooks'
 import { useParams } from 'react-router-dom'
 import { asyncFind, declOfNum, timeout, uid } from 'utils'
@@ -11,6 +9,9 @@ import { coursesSelectors } from 'store/selectors/'
 import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { useCallback } from 'react'
+import CoursesEditArrayFields from '../CoursesEdit/CoursesEditArrayFields'
+import CoursesEditTabLessonTestLesson from './CoursesEditTabLessonTestLesson'
+import CoursesEditTabLessonLesson from './CoursesEditTabLessonLesson'
 
 const CoursesEditTabLesson = ({ refTabs, refTab }) => {
    const { courseId } = useParams()
@@ -19,42 +20,35 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
    const modules = useSelector(coursesSelectors.getModules)
    const descriptions = useSelector(coursesSelectors.getDescriptions)
    const prices = useSelector(coursesSelectors.getPrices)
+   const whoms = useSelector(coursesSelectors.getWhoms)
 
    const hasCourse = !(Object.keys(course).length === 0)
    const hasModules = modules && !(Object.keys(modules).length === 0)
-   const hasInfo = !(Object.keys(descriptions).length === 0 && Object.keys(prices).length === 0)
+   const hasDescriptions = !(Object.keys(descriptions).length === 0)
+   const hasWhoms = !(Object.keys(whoms).length === 0)
+   const hasPrices = !(Object.keys(prices).length === 0)
+   const hasInfo = hasDescriptions && hasWhoms && hasPrices
 
    const form = useForm({
+      mode: 'onBlur',
       defaultValues: {
          short_desc: '',
          test_lesson: '',
          modules: [],
       },
-      mode: 'onBlur',
-      // reValidateMode: 'onChange',
    })
-
-   console.log()
-
-   const {
-      control,
-      register,
-      getValues,
-      formState: { errors },
-      setValue,
-   } = form
 
    const getEntries = async () => timeout(() => Object.entries(form.getValues()).filter(([key]) => !(key === 'inputFile' || key === 'inputFileValue')))
 
    useEffect(() => {
       if (hasCourse) {
          ;(async () => {
+            form.reset()
             const newModules = modules.map((m) => ({
                name: m.name,
                id: m.id,
                lessons: m.lessons.map((l) => ({ name: l.name, number: l.number, id: l.id, hidden_id: l.hidden_id })),
             }))
-            form.reset()
             setTimeout(() => {
                form.setValue('short_desc', course.short_desc)
                form.setValue('modules', newModules)
@@ -119,41 +113,47 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
 
    useImperativeHandle(refTab, () => ({ submit }))
 
+   const { fields } = useFieldArray({
+      control: form.control,
+      name: 'modules',
+   })
+
    return (
       <>
-         <div className='course-edit__small-desc card-bg'>
+         <CardBg className='course-edit__small-desc'>
             <div className='course-edit__small-desc-title display-4'>Короткое описание</div>
             <Input form={form} name='short_desc' label='Описание' textarea />
-         </div>
+         </CardBg>
 
-         <CoursesEditModule {...{ form, onDeleteModule, onDeleteLesson }} />
+         <CardBg className='create-module'>
+            <h3 className='create-module__title display-4'>Модули</h3>
+            <div className='create-module__items'>
+               <CoursesEditArrayFields name='modules' onDelete={onDeleteModule} form={form} appendFields={{ name: '', lessons: [] }} btnText='Добавить модуль'>
+                  {({ id, index, onRemove, name, form }) => (
+                     <div key={id} className='create-module__item form-group'>
+                        <label>Название модуля {index + 1}</label>
+                        <div className='create-module__input'>
+                           <Input form={form} name={`${name}.${index}.name`} placeholder='Название модуля' isErrorText={false} withoutWrapper />
+                           <Input form={form} name={`${name}.${index}.id`} type='hidden' withoutWrapper />
+                           <button className='create-module__delete' onClick={() => onRemove(index)}>
+                              <DeleteSvg />
+                           </button>
+                        </div>
+                     </div>
+                  )}
+               </CoursesEditArrayFields>
+            </div>
+         </CardBg>
 
-         <TestLesson {...{ form }} />
+         {fields.map((props, index) => {
+            return <CoursesEditTabLessonLesson key={props.id} nestIndex={index} form={form} onDeleteLesson={onDeleteLesson} {...props} />
+         })}
+
+         <CardBg className='create-module'>
+            <CoursesEditTabLessonTestLesson {...{ form }} />
+         </CardBg>
       </>
    )
 }
 
 export default CoursesEditTabLesson
-
-const TestLesson = ({ form }) => {
-   const modules = useWatch({
-      control: form.control,
-      name: 'modules',
-   })
-   const lessons = modules
-      .map((m) => m.lessons.map((l) => ({ name: l.name, id: l.hidden_id })))
-      .flat()
-      .filter(({ name }) => name !== '')
-   lessons.unshift({ name: 'Без тестового урока', id: 0 })
-
-   return (
-      <div className='create-module card-bg'>
-         <div className='create-module__top'>
-            <h3 className='create-module__title display-4'>Тестовый урок</h3>
-         </div>
-         <div className='create-module__items'>
-            <Input form={form} name='test_lesson' label='Выберите тестовый урок' options={lessons} classNameWrapper='create-module__item' />
-         </div>
-      </div>
-   )
-}

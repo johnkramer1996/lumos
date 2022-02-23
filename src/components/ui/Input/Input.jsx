@@ -38,6 +38,7 @@ const Input = ({ form, label, registerOptions = {}, options, classNameWrapper = 
          message: 'Время в формате 00:00:00',
       }
    if (number) registerOptions.onChange = (e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ''))
+   if (props.type === 'hidden') registerOptions.required = false
 
    const spl = name.split('.')
    const error = errors[name] || (spl.length > 1 && errors && spl.reduce((prev, value) => (Array.isArray(prev) || typeof prev === 'object') && prev[value], errors))

@@ -1,11 +1,17 @@
-import React, { Fragment, useMemo, useRef } from 'react'
+import { useInputFileNew } from 'hooks'
+import React, { Fragment, useEffect, useMemo, useRef } from 'react'
 import { useCallback } from 'react'
-import { isActiveClass, isFunction } from 'utils'
+import { getURL, isActiveClass, isFunction } from 'utils'
 import { Button } from '..'
 
-const ImgUpload = ({ inputFileObj, onChange, onDelete, imgClass, title, size = 'md', ratio = '16:9', recommend = '1280x720', max = '5 MБ' }) => {
-   const { onOpen, inputFileValue, inputFile, inputFileRef, inputFileValueRef, wrapperRef, form } = inputFileObj
+const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, title, size = 'md', ratio = '16:9', recommend = '1280x720', max = '5 MБ' }) => {
+   const inputFileObj = useInputFileNew({ form, name })
+   const { onOpen, inputFileValue, inputFile, inputFileRef, inputFileValueRef, wrapperRef } = inputFileObj
    const descr = useMemo(() => ['Соотношение сторон: ', ratio, ' (рекомендуемое разрешение: ', recommend, <br />, 'PNG, JPG до ', max].map((s, index) => <Fragment key={index}>{s}</Fragment>), [])
+
+   useEffect(() => {
+      inputFileObj.setValueImg(image ?? '')
+   }, [image])
 
    const onDeleteHandler = (e) => {
       inputFileObj.onDelete()
@@ -18,12 +24,18 @@ const ImgUpload = ({ inputFileObj, onChange, onDelete, imgClass, title, size = '
       isFunction(onChange) && onChange(e)
    }
 
+   const {
+      formState: { errors },
+   } = form
+   const spl = inputFileValue.name.split('.')
+   const error = errors[name] || (spl.length > 1 && errors && spl.reduce((prev, value) => (Array.isArray(prev) || typeof prev === 'object') && prev[value], errors))
+
    return (
       <div ref={wrapperRef} className={`course-edit__form-upload ${size && `course-edit__form-upload--${size}`}`}>
          {title && <div className='course-edit__form-upload-title'>{title}</div>}
          <div className='course-edit__form-upload-desc'>{descr}</div>
          <div className='course-edit__form-upload-wrap'>
-            <div className={`course-edit__form-upload-img img img--cover img--upload${isActiveClass(form.formState.errors.inputFileValue, 'img--error')} ${imgClass}`} onClick={onOpen}>
+            <div className={`course-edit__form-upload-img img img--cover img--upload${isActiveClass(error, 'img--error')} ${imgClass}`} onClick={onOpen}>
                {<img ref={inputFileValueRef} src='' alt='' />}
                <input type='hidden' {...inputFileValue} />
             </div>
@@ -45,8 +57,7 @@ const ImgUpload = ({ inputFileObj, onChange, onDelete, imgClass, title, size = '
                         type='file'
                         accept='image/png, image/gif, image/jpeg'
                      />
-                     {/* //TODO DONT UPDATE  */}
-                     Загрузить {inputFileValueRef.current ? 'новое' : 'изображение'}
+                     Загрузить изображение
                   </Button>
                   <Button className='course-edit__form-upload-delete' onClick={onDeleteHandler} outline>
                      Удалить
@@ -58,4 +69,4 @@ const ImgUpload = ({ inputFileObj, onChange, onDelete, imgClass, title, size = '
    )
 }
 
-export default ImgUpload
+export default ImgUploadNew

@@ -5,30 +5,29 @@ import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { ImgUploadNew, Input } from 'components/ui'
 import { useForm } from 'react-hook-form'
 
-const CoursesEditBlockItem = ({ id, index, image, name, text, onDelete, onDeleteImg, state }) => {
-   const form = useForm({
-      mode: 'onBlur',
-      defaultValues: {
-         name: name || 'name test',
-         text: text || 'text test',
-      },
-   })
-   const inputFileObj = useInputFileNew({ form })
-   inputFileObj.setValueImg(getURL.img(image, false) ?? '')
-
-   state[index].form = form
-
+const CoursesEditBlockItem = ({ id, index, onRemove, onDeleteImg, name, form, image }) => {
    return (
       <div className='create-whom__group'>
          <div className='create-whom__group-top'>
             <div className='create-whom__subtitle'>Описание {index + 1}</div>
-            <button className='create-whom__delete' onClick={() => onDelete(id, index)}>
+            <button className='create-whom__delete' onClick={() => onRemove(index)}>
                <DeleteSvg />
             </button>
          </div>
-         <ImgUploadNew inputFileObj={inputFileObj} size={'sm'} onDelete={onDeleteImg.bind(null, id)} imgClass={'img--md'} ratio={'1/1'} recommend={'248x248'} max={'1 МБ'} />
-         <Input form={form} name='name' label='Заголовок' classNameWrapper='create-whom__form-group' />
-         <Input form={form} name='text' label='Описание (новый пункт через Enter)' classNameWrapper='create-price__text' textarea />
+         <ImgUploadNew
+            form={form}
+            name={`${name}.${index}.`}
+            image={form.getValues(`${name}.${index}.inputFileValue`)}
+            size={'sm'}
+            onDelete={onDeleteImg.bind(null, id)}
+            imgClass={'img--md'}
+            ratio={'1/1'}
+            recommend={'248x248'}
+            max={'1 МБ'}
+         />
+         <Input form={form} name={`${name}.${index}.name`} label='Заголовок' />
+         <Input form={form} name={`${name}.${index}.text`} label='Описание (новый пункт через Enter)' classNameWrapper='create-price__text' textarea />
+         <Input form={form} name={`${name}.${index}.id`} type='hidden' withoutWrapper />
       </div>
    )
 }

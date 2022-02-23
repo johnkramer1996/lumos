@@ -6,6 +6,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { authSelectors, coursesSelectors } from 'store/selectors'
 import CoursesEditLessonEdit from 'components/CoursesLessonEdit/CoursesLessonEdit'
+import CoursesEditHint from 'components/CoursesEdit/CoursesEditHint'
 
 const CabinetCoursesEdit = () => {
    const { courseId, lessonId } = useParams()
@@ -22,8 +23,6 @@ const CabinetCoursesEdit = () => {
    const hasModules = !(Object.keys(modules).length === 0)
    const { user_id: page_user_id } = course
 
-   const [hasSave, setHasSave] = useState(false)
-
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
       loading: isEditPage,
@@ -37,38 +36,11 @@ const CabinetCoursesEdit = () => {
       return () => resetCourses()
    }, [])
 
-   //  useEffect(() => {
-   //     const isUserPage = user_id === page_user_id
-   //     if (!fetchInfoRequest.isLoading && !isUserPage) toCourses()
-   //  }, [fetchInfoRequest.isLoading])
-
-   useEffect(() => {
-      setHasSave(isLessonPage)
-   }, [isLessonPage])
-
    const refTabs = useRef()
    const refTabMain = useRef()
    const refTabLesson = useRef()
    const refTabDescription = useRef()
-   const refLesson = useRef()
    const refsTab = useMemo(() => [refTabMain, refTabLesson, refTabDescription], [])
-
-   const onSave = (e) => {
-      e?.preventDefault()
-      save()
-   }
-
-   const save = async () => {
-      if (isLessonPage) return refLesson.current.submit()
-      const indexActive = refTabs.current.getIndex()
-      if ((await refsTab[indexActive]?.current.submit()) === false) {
-         setIsShow(true)
-         setContent({ title: 'Заполните все поля' })
-         return
-      }
-   }
-
-   const onCancel = () => {}
 
    const tabItems = [
       {
@@ -112,6 +84,17 @@ const CabinetCoursesEdit = () => {
       return true
    }
 
+   const onSubmit = async () => {
+      const indexActive = refTabs.current.getIndex()
+      if ((await refsTab[indexActive]?.current.submit()) === false) {
+         setIsShow(true)
+         setContent({ title: 'Заполните все поля' })
+         return
+      }
+   }
+
+   const onCancel = () => {}
+
    return (
       <section className='course-edit'>
          <div className='container'>
@@ -128,19 +111,7 @@ const CabinetCoursesEdit = () => {
                   </Tabs>
                </div>
                <div className='course-edit__right'>
-                  <div className='course-edit__hint'>
-                     <Button className={`course-edit__hint-btn`} onClick={onSave}>
-                        {isEditPage || hasCourse ? 'Сохранить' : 'Добавить'}
-                     </Button>
-                     {isEditPage && hasSave && (
-                        <>
-                           <Button className='course-edit__hint-cancel' onClick={onCancel} outline>
-                              Отменить
-                           </Button>
-                           <div className='course-edit__hint-desc'>Ваши изменения будут отправлены на модерацию.</div>
-                        </>
-                     )}
-                  </div>
+                  <CoursesEditHint onSubmit={onSubmit} onCancel={onCancel} isResetBtn={isEditPage && false} textBtn={isEditPage || hasCourse ? 'Сохранить' : 'Добавить'} />
                </div>
             </div>
          </div>

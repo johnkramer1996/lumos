@@ -1,8 +1,8 @@
 import { useRef } from 'react'
 
-const useInputFileNew = ({ initialValue = '', form } = {}) => {
-   const inputFileValue = form.register('inputFileValue', { required: true })
-   const inputFile = form.register('inputFile')
+const useInputFileNew = ({ initialValue = '', form, name = '' } = {}) => {
+   const inputFileValue = form.register(`${name}inputFileValue`, { required: true })
+   const inputFile = form.register(`${name}inputFile`)
    const inputFileRef = useRef()
    const inputFileValueRef = useRef()
    const wrapperRef = useRef()
@@ -25,15 +25,15 @@ const useInputFileNew = ({ initialValue = '', form } = {}) => {
 
    const setValueImg = (src) => {
       if (!src) return
-      form.setValue('inputFileValue', src)
-      form.formState.errors.inputFileValue && form.clearErrors('inputFileValue')
+      form.setValue(`${name}inputFileValue`, src)
+      form.formState.errors.inputFileValue && form.clearErrors(`${name}inputFileValue`)
       setTimeout(() => inputFileValueRef.current?.setAttribute('src', src), 0)
       wrapperRef.current?.classList.add('course-edit__form-upload--uploaded')
    }
 
    const onDelete = (e) => {
-      form.setValue('inputFile', '')
-      form.setValue('inputFileValue', '')
+      form.setValue(`${name}inputFile`, '')
+      form.setValue(`${name}inputFileValue`, '')
       inputFileRef.current.value = ''
       inputFileValueRef.current?.setAttribute('src', '')
       wrapperRef.current?.classList.remove('course-edit__form-upload--uploaded')
