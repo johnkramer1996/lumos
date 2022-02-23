@@ -7,7 +7,6 @@ const CoursesEditTabLessonTestLesson = ({ form }) => {
       control: form.control,
       name: 'modules',
    })
-   console.log(modules)
    const lessons = modules
       .map((m) => m.lessons.map((l) => ({ name: l.name, id: l.hidden_id })))
       .flat()

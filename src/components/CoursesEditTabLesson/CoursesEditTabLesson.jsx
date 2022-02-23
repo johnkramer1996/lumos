@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { Button, CardBg, Input } from 'components/ui'
 import { useSelector } from 'react-redux'
 import { useDispatch, useInput, useRequest } from 'hooks'
@@ -34,28 +34,32 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
       defaultValues: {
          short_desc: '',
          test_lesson: '',
-         modules: [],
+         modules: [
+            { name: '1', text: '2', lessons: [] },
+            { name: '1', text: '2', lessons: [] },
+         ],
       },
    })
 
    const getEntries = async () => timeout(() => Object.entries(form.getValues()).filter(([key]) => !(key === 'inputFile' || key === 'inputFileValue')))
 
    useEffect(() => {
-      if (hasCourse) {
+      if (hasCourse && false) {
          ;(async () => {
-            form.reset()
+            // form.reset()
             const newModules = modules.map((m) => ({
                name: m.name,
                id: m.id,
-               lessons: m.lessons.map((l) => ({ name: l.name, number: l.number, id: l.id, hidden_id: l.hidden_id })),
+               lessons: m.lessons.map((l) => ({ name: l.name, number: l.number, id: l.id, hidden_id: l.hidden_id })) || [],
             }))
-            setTimeout(() => {
-               form.setValue('short_desc', course.short_desc)
-               form.setValue('modules', newModules)
-               if (course.test_lesson) {
-                  form.setValue('test_lesson', course.test_lesson?.hidden_id || '')
-               }
-            })
+            console.log(newModules)
+            // setTimeout(() => {
+            form.setValue('short_desc', course.short_desc)
+            newModules.length && form.setValue('modules', newModules)
+            if (course.test_lesson) {
+               form.setValue('test_lesson', course.test_lesson?.hidden_id || '')
+            }
+            // })
          })()
       }
    }, [modules, course])
@@ -113,9 +117,11 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
 
    useImperativeHandle(refTab, () => ({ submit }))
 
-   const { fields } = useFieldArray({
-      control: form.control,
+   const ref = useRef()
+
+   const value = useWatch({
       name: 'modules',
+      control: form.control,
    })
 
    return (
@@ -128,7 +134,15 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
          <CardBg className='create-module'>
             <h3 className='create-module__title display-4'>Модули</h3>
             <div className='create-module__items'>
-               <CoursesEditArrayFields name='modules' onDelete={onDeleteModule} form={form} appendFields={{ name: '', lessons: [] }} btnText='Добавить модуль'>
+               <CoursesEditArrayFields
+                  myRef={ref}
+                  isNestComponent={true}
+                  name='modules'
+                  onDelete={onDeleteModule}
+                  form={form}
+                  appendFields={{ name: '', text: '', lessons: [] }}
+                  btnText='Добавить модуль'
+               >
                   {({ id, index, onRemove, name, form }) => (
                      <div key={id} className='create-module__item form-group'>
                         <label>Название модуля {index + 1}</label>
@@ -145,8 +159,8 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
             </div>
          </CardBg>
 
-         {fields.map((props, index) => {
-            return <CoursesEditTabLessonLesson key={props.id} nestIndex={index} form={form} onDeleteLesson={onDeleteLesson} {...props} />
+         {value.map((props, index) => {
+            return <CoursesEditTabLessonLesson key={props.id || index} nestIndex={index} form={form} onDeleteLesson={onDeleteLesson} {...props} />
          })}
 
          <CardBg className='create-module'>

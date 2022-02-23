@@ -4,8 +4,9 @@ import { useDispatch } from 'hooks'
 import { declOfNum, getDeclOfArray, getURL, uid } from 'utils'
 import { useFieldArray, useWatch } from 'react-hook-form'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
+import CoursesEditTabLessonLesson from 'components/CoursesEditTabLesson/CoursesEditTabLessonLesson'
 
-const CoursesEditArrayFields = ({ children, form, onDelete, appendFields, name = '', btnText = '' }) => {
+const CoursesEditArrayFields = ({ myRef, isNestComponent = false, children, form, onDelete, onDeleteLesson, appendFields, name = '', btnText = '' }) => {
    const { setIsShow, setContent } = useDispatch()
    const { fields, append, remove } = useFieldArray({
       control: form.control,
@@ -15,12 +16,11 @@ const CoursesEditArrayFields = ({ children, form, onDelete, appendFields, name =
 
    const onAdd = async () => {
       if (!(await form.trigger(name))) return
-      console.log(name, form)
       append(appendFields)
    }
 
    const onRemove = (index) => {
-      console.log(array[index].id)
+      console.log(fields[index].lessons)
       // TODO RETURN CONDITION
       if (fields[index].lessons?.length) {
          setIsShow(true)
@@ -30,6 +30,7 @@ const CoursesEditArrayFields = ({ children, form, onDelete, appendFields, name =
       onDelete(array[index].id)
       remove(index)
    }
+   console.log(fields)
 
    return (
       <>
@@ -38,8 +39,14 @@ const CoursesEditArrayFields = ({ children, form, onDelete, appendFields, name =
             <AddSvg />
             <span>{btnText}</span>
          </Button>
+
+         {isNestComponent && <NestArray {...{ fields, form, onDeleteLesson }} />}
       </>
    )
 }
 
 export default CoursesEditArrayFields
+
+const NestArray = ({ fields, form, onDeleteLesson }) => {
+   return <></>
+}
