@@ -69,8 +69,9 @@ const AddCourseModule = ({ control, register, setValue, getValues, form, onDelet
 
 export default AddCourseModule
 
-const AddCourseLesson = ({ nestIndex, control, register, name, form, onDeleteLesson }) => {
+const AddCourseLesson = ({ nestIndex, control, register, form, onDeleteLesson }) => {
    const { courseId } = useParams()
+   const { setIsShow, setContent } = useDispatch()
    const { fields, remove, append } = useFieldArray({
       control,
       name: `modules.${nestIndex}.lessons`,
@@ -90,30 +91,46 @@ const AddCourseLesson = ({ nestIndex, control, register, name, form, onDeleteLes
       remove(index)
    }
 
-   const name1 = form.watch(`modules.${nestIndex}.name`)
+   const addLesson = (index) => {
+      // if (!lessonId) {
+      //    return
+      // }
+      setIsShow(true)
+      setContent({ title: 'Сначала сохраните ' })
+   }
+
+   const name = form.watch(`modules.${nestIndex}.name`)
 
    return (
       <div className='create-module card-bg'>
          <div className='create-module__top'>
-            <h3 className='create-module__title display-4'>{name1 || 'Модуль ' + (nestIndex + 1)}</h3>
+            <h3 className='create-module__title display-4'>{name || 'Модуль ' + (nestIndex + 1)}</h3>
             <div className='create-module__num'>
                {fields.length} {declOfNum(fields.length, getDeclOfArray['lessons'])}
             </div>
          </div>
-         {fields.map((item, k) => {
+         {fields.map((item, index) => {
+            const lessonId = fields[index]._id
             return (
                <div key={item.id} className='create-module__item form-group'>
                   <div className='create-module__input'>
                      <button className='create-module__drag'>
                         <DragSvg />
                      </button>
-                     <Link to={getURL.cabinetCoursesLessonEdit({ courseId, lessonId: 1 })} className='create-module__link'>
-                        <LinkSvg />
-                     </Link>
-                     <Input form={form} name={`modules.${nestIndex}.lessons.${k}.name`} placeholder='Название урока' withoutWrapper />
-                     <Input form={form} name={`modules.${nestIndex}.lessons.${k}.number`} withoutWrapper />
-                     <Input form={form} name={`modules.${nestIndex}.lessons.${k}.hidden_id`} withoutWrapper />
-                     <button className='create-module__delete' onClick={() => onRemove(k)}>
+
+                     {lessonId ? (
+                        <Link to={getURL.cabinetCoursesLessonEdit({ courseId, lessonId })} className='create-module__link'>
+                           <LinkSvg />
+                        </Link>
+                     ) : (
+                        <div className='create-module__link' onClick={addLesson}>
+                           <LinkSvg />
+                        </div>
+                     )}
+                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.name`} placeholder='Название урока' withoutWrapper />
+                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.number`} withoutWrapper />
+                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.hidden_id`} withoutWrapper />
+                     <button className='create-module__delete' onClick={() => onRemove(index)}>
                         <DeleteSvg />
                      </button>
                   </div>

@@ -58,11 +58,11 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
          ;(async () => {
             // ;(await getEntries()).forEach(([key]) => form.setValue(key, course[key] !== '0' ? course[key] : false ?? ''))
             const newModules = course.moduls.map((m) => ({ ...m, _id: m.id, lessons: m.lessons.map((l) => ({ name: '', ...l, _id: l.id, module: null })) }))
+            form.reset()
             form.setValue('short_desc', course.short_desc)
             form.setValue('modules', newModules)
             if (course.test_lesson?.hidden_id) {
-               form.reset('test_lesson')
-               form.setValue('test_lesson', course.test_lesson?.hidden_id, { shouldValidate: true })
+               form.setValue('test_lesson', course.test_lesson?.hidden_id || '')
             }
          })()
       }
@@ -114,18 +114,18 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
       delete body.modules
       // delete body.text_lesson
 
-      console.log(body)
-      return
-
       addModulesMassRequest.call({ courseId, body })
    }
 
    useImperativeHandle(ref, () => ({ submit }))
 
    const modulesFields = form.watch('modules')
-   //  const lessons = modulesFields.map((m) => m.lessons).flat()
+   console.log(modulesFields)
+   const lessons = modulesFields
+      ?.map((m) => m.lessons.map((l) => ({ ...l, id: l.hidden_id })))
+      .flat()
+      ?.filter(({ name }) => name !== '')
 
-   const test_lesson = form.watch('test_lesson')
    return (
       <>
          <div className='course-edit__small-desc card-bg'>
@@ -140,25 +140,23 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
                <h3 className='create-module__title display-4'>Тестовый урок</h3>
             </div>
             <div className='create-module__items'>
-               <div className='create-module__item form-group'>
+               <Input form={form} name='test_lesson' label='Выберите тестовый урок' options={lessons} classNameWrapper='create-module__item' />
+               {/*  <div className='create-module__item form-group'>
                   <label htmlFor='test_lesson'>Выберите тестовый урок</label>
-                  {}
-                  <select id='test_lesson' {...form.register('test_lesson')}>
+
+              <select {...form.register('test_lesson', { required: true })}>
                      <option defaultValue hidden>
                         Выберите тестовый урок
                      </option>
                      <option value='0'>Без тестового урока</option>
-                     {modulesFields.map((item) =>
-                        item?.lessons
-                           ?.filter(({ name }) => name !== '')
-                           .map(({ _id, name, hidden_id }, indexLesson) => (
-                              <option key={_id ?? hidden_id ?? indexLesson} value={hidden_id}>
-                                 {name}
-                              </option>
-                           )),
-                     )}
+                     {lessons.map(({ _id, name, hidden_id }, indexLesson) => (
+                        <option key={_id ?? hidden_id ?? indexLesson} value={hidden_id}>
+                           {name}
+                        </option>
+                     ))}
                   </select>
-               </div>
+                  {errors.test_lesson && 'errror'} 
+               </div>*/}
             </div>
          </div>
       </>
