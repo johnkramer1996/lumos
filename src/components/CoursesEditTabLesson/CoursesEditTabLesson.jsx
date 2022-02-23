@@ -68,7 +68,7 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
             ? setContent({ title: 'Уроки добавлены,', descr: 'Заполните описание курса и его стоимость.' })
             : !hasInfo
             ? setContent({ title: 'Уроки обновлены,', descr: 'Заполните описание курса и его стоимость.' })
-            : setContent({ title: 'Уроки обновлены,', descr: '' })
+            : setContent({ title: 'Уроки обновлены', descr: '' })
 
          !hasInfo && refTabs?.current?.nextItems()
       },

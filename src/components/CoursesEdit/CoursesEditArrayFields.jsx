@@ -7,6 +7,7 @@ import { useFieldArray, useWatch } from 'react-hook-form'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 
 const CoursesEditArrayFields = ({ children, form, onDelete, appendFields, name = '', btnText = '' }) => {
+   const { setIsShow, setContent } = useDispatch()
    const { fields, append, remove } = useFieldArray({
       control: form.control,
       name,
@@ -20,16 +21,15 @@ const CoursesEditArrayFields = ({ children, form, onDelete, appendFields, name =
    }
 
    const onRemove = (index) => {
+      // TODO RETURN CONDITION
+      if (fields[index].lessons?.length) {
+         setIsShow(true)
+         setContent({ title: 'У модуля есть уроки, ', descr: 'удалите уроки, потом удалите модуль' })
+         return
+      }
       onDelete(array[index].id)
       remove(index)
    }
-   // TODO RETURN CONDITION
-   //  const { setIsShow, setContent } = useDispatch()
-   // if (fields[index].lessons?.length) {
-   //    setIsShow(true)
-   //    setContent({ title: 'У модуля есть уроки, ', descr: 'удалите уроки, потом удалите модуль' })
-   //    return
-   // }
 
    return (
       <>
