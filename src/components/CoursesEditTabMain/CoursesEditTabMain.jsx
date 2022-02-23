@@ -89,7 +89,6 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
             <Input form={form} name='width' label='Длительность' className='course-edit__form-group' />
             <Checkbox form={form} name='sale_subscribe' label='Разрешить продавать по подписке' className='course-edit__form-checkbox' />
          </div>
-         {console.log(form.getValues(`inputFileValue`))}
          <ImgUploadNew form={form} image={form.getValues(`inputFileValue`)} title={'Изображение'} />
       </form>
    )
