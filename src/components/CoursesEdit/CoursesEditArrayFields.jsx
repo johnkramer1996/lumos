@@ -1,7 +1,6 @@
 import React from 'react'
 import { Button, CardBg, Input } from 'components/ui'
 import { useDispatch } from 'hooks'
-import { Link, useParams } from 'react-router-dom'
 import { declOfNum, getDeclOfArray, getURL, uid } from 'utils'
 import { useFieldArray, useWatch } from 'react-hook-form'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
@@ -21,6 +20,7 @@ const CoursesEditArrayFields = ({ children, form, onDelete, appendFields, name =
    }
 
    const onRemove = (index) => {
+      console.log(array[index].id)
       // TODO RETURN CONDITION
       if (fields[index].lessons?.length) {
          setIsShow(true)

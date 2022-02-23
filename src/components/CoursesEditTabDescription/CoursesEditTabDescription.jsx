@@ -44,7 +44,6 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
    useEffect(() => {
       // if (hasCourse) {
       ;(async () => {
-         //  ;(await getEntries()).forEach(([key]) => form.setValue(key, course[key] !== '0' ? course[key] : false ?? ''))
          form.setValue(
             'descriptions',
             course.descriptions.map(({ id, name, text, image }) => ({ id, name, text, inputFileValue: getURL.img(image, false) ?? '' })),
@@ -83,7 +82,7 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
       },
    })
 
-   const onDeleteBlock = useCallback((type, state, setState, id, index) => id && deleteInfoRequest.call({ courseId, id, type }), [])
+   const onDeleteBlock = useCallback((type, id) => id && deleteInfoRequest.call({ courseId, id, type }), [])
 
    const onDeleteImg = useCallback((id) => id && deleteInfoRequest.call({ courseId, id, type: 'image' }), [])
 
@@ -141,7 +140,7 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
          <CardBg className='create-price'>
             <h3 className='create-module__title display-4'>Кому подойдет курс</h3>
             <div className='create-module__items'>
-               <CoursesEditArrayFields name='whoms' onDelete={onDeleteBlock.bind(null, 'whoms')} form={form} appendFields={{ name: '', text: '' }} btnText='Добавить описание'>
+               <CoursesEditArrayFields name='whoms' onDelete={onDeleteBlock.bind(null, 'whom')} form={form} appendFields={{ name: '', text: '' }} btnText='Добавить описание'>
                   {(props) => <CoursesEditBlockItem key={props.id || props.index} {...props} onDeleteImg={onDeleteImg} />}
                </CoursesEditArrayFields>
             </div>

@@ -24,6 +24,7 @@ const CoursesEditPrice = ({ id, index, onRemove, onDeleteImg, name, form, moduls
             <Input form={form} name={`${name}.${index}.price`} label='Стоимость со скидкой (в рублях)' classNameWrapper='create-price__form-group' number />
          </div>
          <div className='create-price__checks'>
+            {console.log(moduls)}
             {modules.map(({ name: label }, mIndex) => (
                <div key={mIndex} className='create-price__check checkbox'>
                   <input
@@ -31,7 +32,7 @@ const CoursesEditPrice = ({ id, index, onRemove, onDeleteImg, name, form, moduls
                      className='checkbox'
                      id={`module-${index}-${mIndex}`}
                      value={mIndex}
-                     defaultChecked={moduls.find((item) => +item === mIndex)}
+                     defaultChecked={moduls?.find((item) => +item === mIndex)}
                      {...form.register(`${name}.${index}.moduls`)}
                   />
                   <label htmlFor={`module-${index}-${mIndex}`}>{label}</label>
