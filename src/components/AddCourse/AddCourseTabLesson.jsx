@@ -78,7 +78,7 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
             ? setContent({ title: 'Уроки обновлены,', descr: 'Заполните описание курса и его стоимость.' })
             : setContent({ title: 'Уроки обновлены,', descr: '' })
 
-         !hasInfo && refTabs.current.nextItems()
+         !hasInfo && refTabs?.current?.nextItems()
       },
    })
 

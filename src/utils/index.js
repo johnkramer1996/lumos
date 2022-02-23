@@ -59,7 +59,7 @@ export const asyncAction =
       } catch (e) {
          const errorObj = JSON.stringify(e.response?.data || {})
          alert(errorObj)
-         console.log(e.response)
+         console.log(errorObj, e, e.response)
          error({ dispatch, error: errorObj })
          callbackHandler('error', { dispatch, error: errorObj })
       } finally {
