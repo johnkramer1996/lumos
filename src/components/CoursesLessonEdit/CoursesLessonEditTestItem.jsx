@@ -58,15 +58,20 @@ const CoursesLessonEditTestItem = ({ id, index }) => {
                <span>Добавить вариант</span>
             </Button>
          </div>
-         {/* // TODO WHY? */}
-         {/* <div className='lesson-test__form-group form-group'>
-                <select>
-                    <option defaultValue>Сколько правильных ответов</option>
-                    <option>Один правильный вариант</option>
-                </select>
-            </div> */}
       </div>
    )
 }
 
 export default CoursesLessonEditTestItem
+
+{
+   /* // TODO WHY? */
+}
+{
+   /* <div className='lesson-test__form-group form-group'>
+                <select>
+                    <option defaultValue>Сколько правильных ответов</option>
+                    <option>Один правильный вариант</option>
+                </select>
+            </div> */
+}

@@ -112,8 +112,7 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
 
    useImperativeHandle(refTab, () => ({ submit }))
 
-   const ref = useRef()
-
+   // TODO CREATE COMPONENT
    const value = useWatch({
       name: 'modules',
       control: form.control,
@@ -129,15 +128,7 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
          <CardBg className='create-module'>
             <h3 className='create-module__title display-4'>Модули</h3>
             <div className='create-module__items'>
-               <CoursesEditArrayFields
-                  myRef={ref}
-                  isNestComponent={true}
-                  name='modules'
-                  onDelete={onDeleteModule}
-                  form={form}
-                  appendFields={{ name: '', text: '', lessons: [] }}
-                  btnText='Добавить модуль'
-               >
+               <CoursesEditArrayFields isNestComponent={true} name='modules' onDelete={onDeleteModule} form={form} appendFields={{ name: '', text: '', lessons: [] }} btnText='Добавить модуль'>
                   {({ id, index, onRemove, name, form }) => (
                      <div key={id} className='create-module__item form-group'>
                         <label>Название модуля {index + 1}</label>

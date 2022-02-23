@@ -10,7 +10,7 @@ import CoursesLessonEditTest from 'components/CoursesLessonEdit/CoursesLessonEdi
 import CoursesLessonEditFiles from 'components/CoursesLessonEdit/CoursesLessonEditFiles'
 import CoursesEditHint from 'components/CoursesEdit/CoursesEditHint'
 
-const CoursesLessonEdit = (_, ref) => {
+const CoursesLessonEdit = () => {
    const { courseId, lessonId } = useParams()
    const { navigate } = useNavigate()
    const { setIsShow, setContent, fetchLesson, resetCourses, resetLessonQuestionsData, putLesson } = useDispatch()
@@ -18,16 +18,25 @@ const CoursesLessonEdit = (_, ref) => {
    const questions = useSelector(coursesSelectors.getLessonQuestions)
    const questionsData = useSelector(coursesSelectors.getLessonQuestionsData)
 
-   const { count_answers, questions_to_delete, ansvers_to_delete, questionsInputs, answerInputs } = questionsData
-
-   const form = useForm({ mode: 'onBlur' })
+   const form = useForm({
+      // mode: 'onBlur',
+      defaultValues: {
+         questions_to_delete: [],
+         ansvers_to_delete: [],
+         questions: [{ id: null, answers: [] }],
+      },
+   })
 
    useEffect(() => {
+      // setTimeout(() => {
       form.setValue('name', lesson.name ?? '')
-      form.setValue('description', lesson.description ?? '')
+      form.setValue('description', lesson.description ?? 'Описание')
       form.setValue('can_comment', lesson.can_comment ?? false)
       form.setValue('has_text', lesson.has_text ?? false)
-   }, [lesson])
+      form.setValue('count_answers', lesson.count_answers ?? '')
+      form.setValue('questions', questions ?? [])
+      // })
+   }, [lesson, questions])
 
    const fetchLessonRequest = useRequest({ request: fetchLesson, loading: true })
    const putLessonRequest = useRequest({
@@ -44,32 +53,31 @@ const CoursesLessonEdit = (_, ref) => {
       return () => resetCourses()
    }, [])
 
-   useImperativeHandle(ref, () => ({}))
-
    const onSubmit = () => {
       const inputs = Object.entries(form.getValues()).reduce((prev, [key, value]) => ((prev[key] = value), prev), {})
 
       const body = {
-         count_answers: count_answers.value || 0,
-         questions_to_delete,
-         ansvers_to_delete,
-         questions: questions.map((quest, indexQuestion) => {
-            const inputs =
-               quest.answers?.map((answer, indexAnswer) => ({
-                  ...answer,
-                  ...answerInputs[indexQuestion + '' + indexAnswer].reduce((prev, i) => ((prev[i.name] = i.value), prev), {}),
-               })) || []
+         ...inputs,
+         count_answers: +inputs.count_answers,
+         questions: inputs.questions.map((q, i) => {
+            !q.id && delete q.id
+
             return {
-               ...quest,
-               question: questionsInputs[indexQuestion]?.value,
-               ansvers: inputs,
-               amount_answers: inputs.filter((i) => i.is_true).length,
+               ...q,
+               amount_answers: 0,
+               ansvers: q.answers.map(
+                  (a, i) => (
+                     !a.id && delete a.id,
+                     {
+                        ...a,
+                     }
+                  ),
+               ),
             }
          }),
-         ...inputs,
       }
-      console.log(inputs)
-      return
+
+      console.log(body)
 
       putLessonRequest.call({ courseId, lessonId, body })
    }
@@ -95,11 +103,11 @@ const CoursesLessonEdit = (_, ref) => {
                         </div>
                      </div>
 
-                     {/* <CoursesLessonEditFiles form={form} /> */}
-                     {/* <CoursesLessonEditTest form={form} /> */}
+                     <CoursesLessonEditFiles form={form} />
+                     <CoursesLessonEditTest form={form} />
                   </div>
                   <div className='course-edit__right'>
-                     <CoursesEditHint onSubmit={onSubmit} onCancel={onCancel} isResetBtn={false} />
+                     <CoursesEditHint onCancel={onCancel} isResetBtn={false} />
                   </div>
                </LoaderWrapper>
             </form>

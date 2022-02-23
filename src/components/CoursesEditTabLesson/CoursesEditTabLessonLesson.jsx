@@ -24,8 +24,7 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
    })
 
    const onAdd = async () => {
-      if (!(await form.trigger('modules'))) return
-      console.log(fields)
+      if (!(await form.trigger(`modules.${nestIndex}.lessons`))) return
       append({
          name: '',
          number: fields.length,

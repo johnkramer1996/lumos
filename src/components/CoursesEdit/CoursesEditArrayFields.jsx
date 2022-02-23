@@ -6,7 +6,7 @@ import { useFieldArray, useWatch } from 'react-hook-form'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 import CoursesEditTabLessonLesson from 'components/CoursesEditTabLesson/CoursesEditTabLessonLesson'
 
-const CoursesEditArrayFields = ({ myRef, isNestComponent = false, children, form, onDelete, onDeleteLesson, appendFields, name = '', btnText = '' }) => {
+const CoursesEditArrayFields = ({ children, form, onDelete, onDeleteLesson, appendFields, name = '', btnText = '' }) => {
    const { setIsShow, setContent } = useDispatch()
    const { fields, append, remove } = useFieldArray({
       control: form.control,
@@ -14,7 +14,8 @@ const CoursesEditArrayFields = ({ myRef, isNestComponent = false, children, form
    })
    const array = form.getValues(name)
 
-   const onAdd = async () => {
+   const onAdd = async (e) => {
+      e.preventDefault()
       if (!(await form.trigger(name))) return
       append(appendFields)
    }
@@ -30,17 +31,14 @@ const CoursesEditArrayFields = ({ myRef, isNestComponent = false, children, form
       onDelete(array[index].id)
       remove(index)
    }
-   console.log(fields)
 
    return (
       <>
-         <div className='create-module__items'>{fields.map((props, index) => children({ ...props, index, onRemove, name, form }))}</div>
+         <div className='create-module__items'>{fields.map((props, index) => children({ ...props, index, onRemove, name, form, fields }))}</div>
          <Button className='create-module__add' onClick={onAdd} outline>
             <AddSvg />
             <span>{btnText}</span>
          </Button>
-
-         {isNestComponent && <NestArray {...{ fields, form, onDeleteLesson }} />}
       </>
    )
 }
