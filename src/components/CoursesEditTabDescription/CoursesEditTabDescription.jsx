@@ -149,7 +149,7 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
          <CardBg className='create-price'>
             <h3 className='create-module__title display-4'>Стоимость</h3>
             <div className='create-module__items'>
-               <CoursesEditArrayFields name='prices' onDelete={onDeleteBlock.bind(null, 'prices')} form={form} appendFields={{ name: '', text: '' }} btnText='Добавить описание'>
+               <CoursesEditArrayFields name='prices' onDelete={onDeleteBlock.bind(null, 'price')} form={form} appendFields={{ name: '', text: '' }} btnText='Добавить описание'>
                   {(props) => <CoursesEditPrice key={props.id || props.index} {...props} />}
                </CoursesEditArrayFields>
             </div>
