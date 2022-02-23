@@ -1,20 +1,18 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
+import React from 'react'
 import { Button, Input } from 'components/ui'
-import { useSelector } from 'react-redux'
-import { useDispatch, useInput, useRequest } from 'hooks'
+import { useDispatch } from 'hooks'
 import { Link, useParams } from 'react-router-dom'
-import { asyncFind, declOfNum, getDeclOfArray, getURL, timeout, uid } from 'utils'
-import { coursesSelectors } from 'store/selectors/'
-import { useFieldArray, useForm, useWatch } from 'react-hook-form'
+import { declOfNum, getDeclOfArray, getURL, uid } from 'utils'
+import { useFieldArray, useWatch } from 'react-hook-form'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { ReactComponent as DragSvg } from 'svg/drag.svg'
 import { ReactComponent as LinkSvg } from 'svg/link.svg'
 
-const AddCourseModule = ({ control, register, setValue, getValues, form, onDeleteModule, onDeleteLesson }) => {
+const AddCourseModule = ({ form, onDeleteModule, onDeleteLesson }) => {
    const { setIsShow, setContent } = useDispatch()
    const { fields, append, remove } = useFieldArray({
-      control,
+      control: form.control,
       name: 'modules',
    })
 
@@ -24,7 +22,8 @@ const AddCourseModule = ({ control, register, setValue, getValues, form, onDelet
    }
 
    const onRemove = async (index) => {
-      if (fields[index].lessons.length) {
+      console.log(fields[index].lessons?.length)
+      if (fields[index].lessons?.length) {
          setIsShow(true)
          setContent({ title: 'У модуля есть уроки, ', descr: 'удалите уроки, потом удалите модуль' })
          return
@@ -39,12 +38,13 @@ const AddCourseModule = ({ control, register, setValue, getValues, form, onDelet
          <div className='create-module card-bg'>
             <h3 className='create-module__title display-4'>Модули</h3>
             <div className='create-module__items'>
-               {fields.map((item, index) => {
+               {fields.map(({ id, _id }, index) => {
                   return (
-                     <div key={item.id} className='create-module__item form-group'>
+                     <div key={id || _id} className='create-module__item form-group'>
                         <label>Название модуля {index + 1}</label>
                         <div className='create-module__input'>
                            <Input form={form} name={`modules.${index}.name`} placeholder='Название модуля' withoutWrapper />
+                           <Input form={form} name={`modules.${index}.id`} registerOptions={{ required: false }} type='hidden' withoutWrapper />
                            <button className='create-module__delete' onClick={() => onRemove(index)}>
                               <DeleteSvg />
                            </button>
@@ -60,8 +60,8 @@ const AddCourseModule = ({ control, register, setValue, getValues, form, onDelet
             </Button>
          </div>
 
-         {fields.map((item, index) => {
-            return <AddCourseLesson key={item.id} nestIndex={index} {...{ control, register }} {...item} form={form} onDeleteLesson={onDeleteLesson} />
+         {fields.map((props, index) => {
+            return <AddCourseLesson key={props.id} nestIndex={index} {...{ form }} {...props} onDeleteLesson={onDeleteLesson} />
          })}
       </>
    )
@@ -69,13 +69,11 @@ const AddCourseModule = ({ control, register, setValue, getValues, form, onDelet
 
 export default AddCourseModule
 
-let render = 0
-
-const AddCourseLesson = ({ nestIndex, control, register, form, onDeleteLesson }) => {
+const AddCourseLesson = ({ nestIndex, form, onDeleteLesson }) => {
    const { courseId } = useParams()
    const { setIsShow, setContent } = useDispatch()
    const { fields, remove, append } = useFieldArray({
-      control,
+      control: form.control,
       name: `modules.${nestIndex}.lessons`,
    })
 
@@ -113,7 +111,8 @@ const AddCourseLesson = ({ nestIndex, control, register, form, onDeleteLesson })
             </div>
          </div>
          {fields.map((item, index) => {
-            const lessonId = fields[index]._id
+            const lessonId = form.getValues(`modules.${nestIndex}.lessons.${index}.id`)
+            console.log(lessonId)
             return (
                <div key={item.id} className='create-module__item form-group'>
                   <div className='create-module__input'>
@@ -130,9 +129,10 @@ const AddCourseLesson = ({ nestIndex, control, register, form, onDeleteLesson })
                            <LinkSvg />
                         </div>
                      )}
-                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.name`} placeholder='Название урока' withoutWrapper />
-                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.number`} withoutWrapper />
-                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.hidden_id`} withoutWrapper />
+                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.name`} placeholder='Название урока' isErrorText={false} withoutWrapper />
+                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.number`} registerOptions={{ required: false }} type='hidden' withoutWrapper />
+                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.hidden_id`} registerOptions={{ required: false }} type='hidden' withoutWrapper />
+                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.id`} registerOptions={{ required: false }} type='hidden' withoutWrapper />
                      <button className='create-module__delete' onClick={() => onRemove(index)}>
                         <DeleteSvg />
                      </button>

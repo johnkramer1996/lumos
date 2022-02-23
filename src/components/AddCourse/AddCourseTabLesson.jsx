@@ -12,21 +12,6 @@ import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { useCallback } from 'react'
 
-const defaultValues = {
-   short_desc: '',
-   test_lesson: '',
-   modules: [
-      {
-         name: 'Модуль 1',
-         lessons: [],
-      },
-      {
-         name: 'Модуль 2',
-         lessons: [],
-      },
-   ],
-}
-
 const AddCourseTabLesson = ({ refTabs }, ref) => {
    const { courseId } = useParams()
    const { setContent, setIsShow, setModules, deleteModule, deleteLesson, addModulesMass } = useDispatch()
@@ -40,10 +25,16 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
    const hasInfo = !(Object.keys(descriptions).length === 0 && Object.keys(prices).length === 0)
 
    const form = useForm({
-      defaultValues,
-      // mode: 'onBlur',
-      reValidateMode: 'onChange',
+      defaultValues: {
+         short_desc: '',
+         test_lesson: '',
+         modules: [],
+      },
+      mode: 'onBlur',
+      // reValidateMode: 'onChange',
    })
+
+   console.log()
 
    const {
       control,
@@ -58,14 +49,19 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
    useEffect(() => {
       if (hasCourse) {
          ;(async () => {
-            const newModules = modules.map((m) => ({ name: m.name, _id: m.id, lessons: m.lessons.map((l) => ({ name: l.name, number: l.number, _id: l.id, hidden_id: l.hidden_id })) }))
+            const newModules = modules.map((m) => ({
+               name: m.name,
+               id: m.id,
+               lessons: m.lessons.map((l) => ({ name: l.name, number: l.number, id: l.id, hidden_id: l.hidden_id })),
+            }))
             form.reset()
-            form.setValue('short_desc', course.short_desc)
-            form.setValue('modules', newModules)
-            if (course.test_lesson?.hidden_id) form.setValue('test_lesson', course.test_lesson.hidden_id || '')
-
-            console.log(course.test_lesson?.hidden_id, 'test_lesson')
-            console.log(newModules, 'modules update')
+            setTimeout(() => {
+               form.setValue('short_desc', course.short_desc)
+               form.setValue('modules', newModules)
+               if (course.test_lesson) {
+                  form.setValue('test_lesson', course.test_lesson?.hidden_id || '')
+               }
+            })
          })()
       }
    }, [modules, course])
@@ -106,26 +102,22 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
    const submit = async () => {
       if (!(await form.trigger())) return false
 
-      const body = {}
+      const body = {
+         modules: [],
+         moduls: [],
+         test_lesson: '',
+      }
       ;(await getEntries()).forEach(([key, value]) => (body[key] = typeof value === 'boolean' ? +value : value))
-      body.moduls = body.modules.map((m) => ({ ...m, lessons: m.lessons.map((l, i) => ({ ...l, number: i, is_test: body.test_lesson === l.hidden_id })) }))
+
+      body.moduls = body.modules.map((m) => ({ ...m, lessons: m.lessons.map((l) => ({ ...l, is_test: l.hidden_id === body.test_lesson })) }))
 
       delete body.modules
-      // delete body.text_lesson
+      delete body.test_lesson
 
       addModulesMassRequest.call({ courseId, body })
    }
 
    useImperativeHandle(ref, () => ({ submit }))
-
-   //  form.watch('modules')
-   const modulesFields = []
-   const lessons = []
-   //  form.watch('modules')
-   //  const lessons = modulesFields
-   //     ?.map((m) => m.lessons.map((l) => ({ ...l, id: l.hidden_id })))
-   //     .flat()
-   //     ?.filter(({ name }) => name !== '')
 
    return (
       <>
@@ -134,9 +126,9 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
             <Input form={form} name='short_desc' label='Описание' textarea />
          </div>
 
-         <AddCourseModule {...{ control, register, defaultValues, getValues, setValue, errors, form, onDeleteModule, onDeleteLesson }} />
+         <AddCourseModule {...{ control, register, getValues, setValue, errors, form, onDeleteModule, onDeleteLesson }} />
 
-         <TestLesson {...{ form, control }} />
+         <TestLesson {...{ form }} />
       </>
    )
 }
@@ -144,16 +136,15 @@ const AddCourseTabLesson = ({ refTabs }, ref) => {
 export default forwardRef(AddCourseTabLesson)
 
 const TestLesson = ({ form }) => {
-   //  form.watch('modules')
-
    const modules = useWatch({
       control: form.control,
       name: 'modules',
    })
    const lessons = modules
-      ?.map((m) => m.lessons.map((l) => ({ ...l, id: l.hidden_id })))
+      .map((m) => m.lessons.map((l) => ({ name: l.name, id: l.hidden_id })))
       .flat()
-      ?.filter(({ name }) => name !== '')
+      .filter(({ name }) => name !== '')
+   lessons.unshift({ name: 'Без тестового урока', id: 0 })
 
    return (
       <div className='create-module card-bg'>

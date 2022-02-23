@@ -2,7 +2,7 @@ import React from 'react'
 import { DatePicker } from '..'
 import { isActiveClass, isFunction } from 'utils'
 
-const Input = ({ form, label, registerOptions = {}, options, classNameWrapper = '', withoutWrapper, datepicker, textarea, email, password, time, number, ...props }) => {
+const Input = ({ form, label, registerOptions = {}, options, classNameWrapper = '', withoutWrapper, datepicker, textarea, email, password, time, number, isErrorText = true, ...props }) => {
    if (!form || !props['name']) return <input type='text' placeholder='Error Input' />
    //  const onChangeHandle = (e) => {
    //     input.bind.onChange(e)
@@ -72,7 +72,7 @@ const Input = ({ form, label, registerOptions = {}, options, classNameWrapper = 
             </select>
          )}
 
-         {error && <div className='input-error-text'>{error.message || 'Обязательное поле'}</div>}
+         {error && isErrorText && <div className='input-error-text'>{error.message || 'Обязательное поле'}</div>}
       </>
    )
 
