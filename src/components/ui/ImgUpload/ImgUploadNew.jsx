@@ -1,6 +1,7 @@
 import { useInputFileNew } from 'hooks'
 import React, { Fragment, useEffect, useMemo, useRef } from 'react'
 import { useCallback } from 'react'
+import { useWatch } from 'react-hook-form'
 import { getURL, isActiveClass, isFunction } from 'utils'
 import { Button } from '..'
 
@@ -10,8 +11,8 @@ const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, ti
    const descr = useMemo(() => ['Соотношение сторон: ', ratio, ' (рекомендуемое разрешение: ', recommend, <br />, 'PNG, JPG до ', max].map((s, index) => <Fragment key={index}>{s}</Fragment>), [])
 
    useEffect(() => {
-      inputFileObj.setValueImg(image ?? '')
-   }, [image])
+      // inputFileObj.setValueImg(fileValue ?? '')
+   }, [])
 
    const onDeleteHandler = (e) => {
       inputFileObj.onDelete()
@@ -23,6 +24,11 @@ const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, ti
       // isFunction(onChange) && onChange(img.ref.current?.files[0])
       isFunction(onChange) && onChange(e)
    }
+
+   const fileValue = useWatch({
+      control: form.control,
+      name: inputFileValue.name,
+   })
 
    const {
       formState: { errors },
@@ -36,7 +42,7 @@ const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, ti
          <div className='course-edit__form-upload-desc'>{descr}</div>
          <div className='course-edit__form-upload-wrap'>
             <div className={`course-edit__form-upload-img img img--cover img--upload${isActiveClass(error, 'img--error')} ${imgClass}`} onClick={onOpen}>
-               {<img ref={inputFileValueRef} src='' alt='' />}
+               {<img ref={inputFileValueRef} src={fileValue} alt='' />}
                <input type='hidden' {...inputFileValue} />
             </div>
             <div className='course-edit__form-upload-right'>

@@ -36,7 +36,6 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
       if (hasCourse) {
          ;(async () => {
             ;(await getEntries()).forEach(([key]) => form.setValue(key, course[key] !== '0' ? course[key] : false ?? ''))
-            // inputFileObj.setValueImg(getURL.img(course.image, false) ?? '')
             form.setValue('inputFileValue', getURL.img(course['image'], false) ?? '')
          })()
       }
@@ -89,7 +88,7 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
             <Input form={form} name='width' label='Длительность' className='course-edit__form-group' />
             <Checkbox form={form} name='sale_subscribe' label='Разрешить продавать по подписке' className='course-edit__form-checkbox' />
          </div>
-         <ImgUploadNew form={form} image={form.getValues(`inputFileValue`)} title={'Изображение'} />
+         <ImgUploadNew form={form} title={'Изображение'} />
       </form>
    )
 }
