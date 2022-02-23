@@ -26,12 +26,16 @@ const useInputFileNew = ({ initialValue = '', form, name = '' } = {}) => {
       if (!src) return
       form.setValue(`${name}inputFileValue`, src)
       form.formState.errors.inputFileValue && form.clearErrors(`${name}inputFileValue`)
+      // setTimeout(() => inputFileValueRef.current?.setAttribute('src', src), 0)
+      // wrapperRef.current?.classList.add('course-edit__form-upload--uploaded')
    }
 
    const onDelete = (e) => {
       form.setValue(`${name}inputFile`, '')
       form.setValue(`${name}inputFileValue`, '')
       inputFileRef.current.value = ''
+      // inputFileValueRef.current?.setAttribute('src', '')
+      // wrapperRef.current?.classList.remove('course-edit__form-upload--uploaded')
    }
 
    return { onOpen, onChange, onDelete, setValueImg, inputFileValue, inputFile, inputFileRef, wrapperRef, form }

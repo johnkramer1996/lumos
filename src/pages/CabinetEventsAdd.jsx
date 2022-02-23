@@ -95,7 +95,7 @@ const CabinetEventsAdd = () => {
                      </h1>
                      <div className='course-edit__form'>
                         <h3 className='course-edit__form-title'>Основная информация</h3>
-                        <ImgUploadNew form={form} image={form.getValues(`inputFileValue`)} title={'Изображение'} imgClass={'img--md'} />
+                        <ImgUploadNew form={form} title={'Изображение'} imgClass={'img--md'} />
                         <div className='course-edit__form-grid'>
                            <Input form={form} name='name' label='Название' className='course-edit__form-group' />
                            <Input form={form} name='event_type_id' label='Тип' options={[{ id: 1, name: 'Онлайн-трансляция' }]} className='course-edit__form-group' />

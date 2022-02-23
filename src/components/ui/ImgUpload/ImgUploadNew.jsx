@@ -7,7 +7,7 @@ import { Button } from '..'
 
 const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, title, size = 'md', ratio = '16:9', recommend = '1280x720', max = '5 MБ' }) => {
    const inputFileObj = useInputFileNew({ form, name })
-   const { onOpen, inputFileValue, inputFile, inputFileRef, inputFileValueRef, wrapperRef } = inputFileObj
+   const { onOpen, inputFileValue, inputFile, inputFileRef, wrapperRef } = inputFileObj
    const descr = useMemo(() => ['Соотношение сторон: ', ratio, ' (рекомендуемое разрешение: ', recommend, <br />, 'PNG, JPG до ', max].map((s, index) => <Fragment key={index}>{s}</Fragment>), [])
 
    const fileValue = useWatch({
@@ -21,8 +21,6 @@ const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, ti
    }
    const onChangeHandler = (e) => {
       inputFileObj.onChange(e)
-      // TODO check it
-      // isFunction(onChange) && onChange(img.ref.current?.files[0])
       isFunction(onChange) && onChange(e)
    }
 
@@ -38,7 +36,7 @@ const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, ti
          <div className='course-edit__form-upload-desc'>{descr}</div>
          <div className='course-edit__form-upload-wrap'>
             <div className={`course-edit__form-upload-img img img--cover img--upload${isActiveClass(error, 'img--error')} ${imgClass}`} onClick={onOpen}>
-               {<img ref={inputFileValueRef} src={fileValue} alt='' />}
+               {<img src={fileValue} alt='' />}
                <input type='hidden' {...inputFileValue} />
             </div>
             <div className='course-edit__form-upload-right'>
