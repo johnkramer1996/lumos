@@ -10,9 +10,10 @@ const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, ti
    const { onOpen, inputFileValue, inputFile, inputFileRef, inputFileValueRef, wrapperRef } = inputFileObj
    const descr = useMemo(() => ['Соотношение сторон: ', ratio, ' (рекомендуемое разрешение: ', recommend, <br />, 'PNG, JPG до ', max].map((s, index) => <Fragment key={index}>{s}</Fragment>), [])
 
-   useEffect(() => {
-      // inputFileObj.setValueImg(fileValue ?? '')
-   }, [])
+   const fileValue = useWatch({
+      control: form.control,
+      name: inputFileValue.name,
+   })
 
    const onDeleteHandler = (e) => {
       inputFileObj.onDelete()
@@ -24,11 +25,6 @@ const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, ti
       // isFunction(onChange) && onChange(img.ref.current?.files[0])
       isFunction(onChange) && onChange(e)
    }
-
-   const fileValue = useWatch({
-      control: form.control,
-      name: inputFileValue.name,
-   })
 
    const {
       formState: { errors },
