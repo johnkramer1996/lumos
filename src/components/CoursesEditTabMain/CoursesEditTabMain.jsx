@@ -19,17 +19,16 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
    const form = useForm({
       mode: 'onBlur',
       defaultValues: {
-         name: 'Название курса',
-         category_id: themes[0]?.id || 1,
-         type_study: type_study[0]?.id || 1,
-         format_study: format[0]?.id || 1,
-         sale_subscribe: false,
-         anytime: true,
-         width: '60 мин.',
+         //  name: 'Название курса',
+         //  category_id: themes[0]?.id || 1,
+         //  type_study: type_study[0]?.id || 1,
+         //  format_study: format[0]?.id || 1,
+         //  sale_subscribe: false,
+         //  anytime: true,
+         //  width: '60 мин.',
       },
    })
    const anytime = form.watch('anytime')
-   //  const inputFileObj = useInputFileNew({ form })
    const getEntries = async () => timeout(() => Object.entries(form.getValues()).filter(([key]) => !(key === 'timing' || key === 'inputFile' || key === 'inputFileValue')))
 
    useEffect(() => {

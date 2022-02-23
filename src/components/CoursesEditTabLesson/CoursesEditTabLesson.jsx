@@ -27,40 +27,35 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
    const hasDescriptions = !(Object.keys(descriptions).length === 0)
    const hasWhoms = !(Object.keys(whoms).length === 0)
    const hasPrices = !(Object.keys(prices).length === 0)
-   const hasInfo = hasDescriptions && hasWhoms && hasPrices
+   const hasInfo = hasDescriptions || hasWhoms || hasPrices
 
    const form = useForm({
       mode: 'onBlur',
       defaultValues: {
          short_desc: '',
          test_lesson: '',
-         modules: [
-            { name: '1', text: '2', lessons: [] },
-            { name: '1', text: '2', lessons: [] },
-         ],
+         modules: [],
       },
    })
 
    const getEntries = async () => timeout(() => Object.entries(form.getValues()).filter(([key]) => !(key === 'inputFile' || key === 'inputFileValue')))
 
    useEffect(() => {
-      if (hasCourse && false) {
+      if (hasCourse) {
          ;(async () => {
             // form.reset()
-            const newModules = modules.map((m) => ({
-               name: m.name,
-               id: m.id,
-               lessons: m.lessons.map((l) => ({ name: l.name, number: l.number, id: l.id, hidden_id: l.hidden_id })) || [],
-            }))
-            console.log(newModules)
-            // setTimeout(() => {
-            form.setValue('short_desc', course.short_desc)
-            newModules.length && form.setValue('modules', newModules)
-            if (course.test_lesson) {
-               form.setValue('test_lesson', course.test_lesson?.hidden_id || '')
-            }
             // })
          })()
+         const newModules = modules.map((m) => ({
+            name: m.name,
+            id: m.id,
+            lessons: m.lessons.map((l) => ({ name: l.name, number: l.number, id: l.id, hidden_id: l.hidden_id })) || [],
+         }))
+         // setTimeout(() => {
+         form.resetField('test_lesson')
+         form.setValue('short_desc', course.short_desc)
+         newModules.length && form.setValue('modules', newModules)
+         setTimeout(() => course.test_lesson && form.setValue('test_lesson', course.test_lesson?.hidden_id || ''), 0)
       }
    }, [modules, course])
 
