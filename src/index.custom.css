@@ -296,3 +296,10 @@
 .form-group--row .form-group:first-child {
    padding-right: 30px;
 }
+
+.create-price__checks {
+   flex-wrap: wrap;
+}
+.create-price__checks .input-error-text {
+   width: 100%;
+}

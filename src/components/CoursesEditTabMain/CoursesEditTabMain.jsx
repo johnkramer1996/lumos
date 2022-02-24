@@ -1,6 +1,6 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import { Checkbox, ImgUpload, ImgUploadNew, Input } from 'components/ui'
-import { getDate, getURL, imageDimensionCheck, imageMinSizeCheck, imageRatioCheck, imageWidthAndHeight, timeout, toBoolean } from 'utils'
+import { getDate, getURL, imageDimensionCheck, imageRatioCheck, imageWidthAndHeight, timeout, toBoolean } from 'utils'
 import { useSelector } from 'react-redux'
 import { useDispatch, useInput, useInputFile, useInputFileNew, useNavigate, useRequest } from 'hooks'
 import { useLocation, useParams } from 'react-router-dom'
@@ -10,8 +10,11 @@ import { useForm, useWatch } from 'react-hook-form'
 import * as yup from 'yup'
 import { TIME_NAMES } from 'constants'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { imageFileSizeCheck, imageFormatCheck, imageMinResolutionCheck } from 'validations'
 
-yup.addMethod(yup.mixed, 'imageMinSizeCheck', imageMinSizeCheck)
+yup.addMethod(yup.mixed, 'imageMinResolutionCheck', imageMinResolutionCheck)
+yup.addMethod(yup.mixed, 'imageFormatCheck', imageFormatCheck)
+yup.addMethod(yup.mixed, 'imageFileSizeCheck', imageFileSizeCheck)
 
 const validationSchema = yup.object({
    name: yup.string().required('Обязательное поле'),
@@ -20,21 +23,11 @@ const validationSchema = yup.object({
    format_study: yup.string().required('Обязательное поле'),
    anytime: yup.boolean().required('Обязательное поле'),
    timing: yup.string().required('Обязательное поле'),
-   width_number: yup.number().typeError('некорректное число').required('Обязательное поле'),
+   width_number: yup.number().typeError('Некорректное число').required('Обязательное поле'),
    width_name: yup.string().required('Обязательное поле'),
    sale_subscribe: yup.boolean().required('Обязательное поле'),
    imageValue: yup.string().required('Обязательное поле'),
-   image: yup
-      .mixed()
-      .test('type', 'Не верный формат', (value) => {
-         if (value && value.length === 0) return true
-         return ['image/jpg', 'image/jpeg', 'image/png'].includes(value && value[0] && value[0].type)
-      })
-      .test('fileSize', 'Максимальный размер файла должен быть 5 МБ', (value) => {
-         if (value && value.length === 0) return true
-         return value && value[0] && value[0].size <= 5000000
-      })
-      .imageMinSizeCheck('Минимальное разрешение должно быть 1280-720px', 1280, 720),
+   image: yup.mixed().imageFormatCheck().imageFileSizeCheck(5).imageMinResolutionCheck(1280, 720),
 })
 
 const CoursesEditTabMain = ({ refTabs, refTab }) => {
@@ -46,10 +39,13 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
    const hasCourse = !(Object.keys(course).length === 0)
 
    const form = useForm({
+      mode: 'onChange',
       resolver: yupResolver(validationSchema),
    })
-   const { isDirty } = form.formState
+   const { isDirty, errors } = form.formState
    const anytime = form.watch('anytime')
+
+   console.log(errors)
 
    useEffect(() => {
       if (hasCourse) {

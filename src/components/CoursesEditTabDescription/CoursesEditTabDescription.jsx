@@ -12,6 +12,11 @@ import CoursesEditBlockItem from './CoursesEditBlockItem'
 import CoursesEditArrayFields from 'components/CoursesEdit/CoursesEditArrayFields'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
+import { imageFileSizeCheck, imageFormatCheck, imageMinResolutionCheck } from 'validations'
+
+yup.addMethod(yup.mixed, 'imageMinResolutionCheck', imageMinResolutionCheck)
+yup.addMethod(yup.mixed, 'imageFormatCheck', imageFormatCheck)
+yup.addMethod(yup.mixed, 'imageFileSizeCheck', imageFileSizeCheck)
 
 const validationSchema = yup.object({
    course_description: yup.string().required('Обязательное поле'),
@@ -21,17 +26,25 @@ const validationSchema = yup.object({
          name: yup.string().required('Обязательное поле'),
          text: yup.string().required('Обязательное поле'),
          imageValue: yup.string().required('Обязательное поле'),
-         image: yup
-            .mixed()
-            .test('type', 'Не верный формат', (value) => {
-               if (value && value.length === 0) return true
-               return ['image/jpg', 'image/jpeg', 'image/png'].includes(value && value[0] && value[0].type)
-            })
-            .test('fileSize', 'Максимальный размер файла должен быть 1 МБ', (value) => {
-               if (value && value.length === 0) return true
-               return value && value[0] && value[0].size <= 1000000
-            })
-            .imageMinSizeCheck('Минимальное разрешение должно быть 248-248px', 248, 248),
+         image: yup.mixed().imageFormatCheck().imageFileSizeCheck(1).imageMinResolutionCheck(248, 248),
+      }),
+   ),
+   whoms: yup.array().of(
+      yup.object().shape({
+         name: yup.string().required('Обязательное поле'),
+         text: yup.string().required('Обязательное поле'),
+         imageValue: yup.string().required('Обязательное поле'),
+         image: yup.mixed().imageFormatCheck().imageFileSizeCheck(1).imageMinResolutionCheck(248, 248),
+      }),
+   ),
+   prices: yup.array().of(
+      yup.object().shape({
+         name: yup.string().required('Обязательное поле'),
+         text: yup.string().required('Обязательное поле'),
+         width: yup.string().required('Обязательное поле'),
+         price_with_sale: yup.number().typeError('Некорректное число').required('Обязательное поле'),
+         price: yup.number().typeError('Некорректное число').required('Обязательное поле'),
+         moduls: yup.array().min(1, 'Добавьте один модуль').required('Обязательное поле'),
       }),
    ),
 })
@@ -52,9 +65,10 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
    const hasInfo = hasDescriptions || hasWhoms || hasPrices || course.description || course.result_learn_text
 
    const form = useForm({
+      mode: 'onChange',
       defaultValues: {
-         course_description: '12',
-         result_learn_text: '12',
+         course_description: '',
+         result_learn_text: '',
          descriptions: [],
          whoms: [],
          prices: [],
@@ -76,7 +90,7 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
       )
       form.setValue(
          'prices',
-         course.prices?.map(({ id, name, text, width, price, price_with_sale }) => ({ id, name, text, width, price, price_with_sale })),
+         course.prices?.map(({ id, name, text, width, price, price_with_sale, moduls }) => ({ id, name, text, width, price, price_with_sale, moduls })),
       )
       form.setValue('course_description', course.description ?? '')
       form.setValue('result_learn_text', String(course.result_learn_text) ?? '')
@@ -131,7 +145,6 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
       })
 
       const body = new FormData()
-      // ;(await getEntries()).forEach(([key, value]) => !Array.isArray(value) && body.append(key, typeof value === 'boolean' ? +value : value))
 
       values.descriptions.map(async (fields, index) => await createField(fields.id, index, body, fields, 'descriptions'))
       values.whoms.map(async (fields, index) => await createField(fields.id, index, body, fields, 'whoms'))
@@ -188,15 +201,6 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
             </div>
          </CardBg>
 
-         {/* <CoursesEditBlock title={'О курсе'} state={descriptions} setState={setDescriptions} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'desc')} onDeleteImg={onDeleteImg}>
-            {(props) => <CoursesEditBlockItem key={props.id || props.index} {...props} />}
-         </CoursesEditBlock>
-         <CoursesEditBlock title={'Кому подойдет курс'} state={whoms} setState={setWhoms} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'whom')} onDeleteImg={onDeleteImg}>
-            {(props) => <CoursesEditBlockItem key={props.id || props.index} {...props} />}
-         </CoursesEditBlock>
-         <CoursesEditBlock title={'Стоимость'} state={prices} setState={setPrices} onAddBlockItem={onAddBlockItem} onDeleteBlock={onDeleteBlock.bind(null, 'price')} onDeleteImg={onDeleteImg}>
-            {(props) => <CoursesEditPrice key={props.id || props.index} {...props} />}
-         </CoursesEditBlock> */}
          <CardBg className='create-price'>
             <div className='course-edit__form-group form-group'>
                <h3 className='create-price__title display-4'>Результаты обучения</h3>

@@ -41,7 +41,7 @@ const CoursesEditArrayFields = ({ children, form, onDelete, onDeleteLesson, appe
             <AddSvg />
             <span>{btnText}</span>
          </Button>
-         {form.formState.errors[name] && <div className='input-error-text'>{form.formState.errors[name].message || 'Обязательное поле'}</div>}
+         {form.formState.errors[name] && <div className='input-error-text'>{form.formState.errors[name].message}</div>}
       </>
    )
 }

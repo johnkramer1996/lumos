@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { loadImg } from 'utils'
 
-const useInputFileNew = ({ initialValue = '', form, name = '' } = {}) => {
+const useInputFileNew = ({ form, name = '' } = {}) => {
    const inputFileValue = form.register(`${name}imageValue`, { required: true })
    const inputFile = form.register(`${name}image`)
    const inputFileRef = useRef()
@@ -12,13 +12,15 @@ const useInputFileNew = ({ initialValue = '', form, name = '' } = {}) => {
    const onChange = async (e) => {
       const file = e.target.files[0]
       if (!file) return
+
       const img = await loadImg(file)
-      setValueImg(img.src)
+      setValueImg(img ? img.src : '')
    }
 
    const setValueImg = (src) => {
-      if (!src) return
+      if (src === undefined || src === null) return
       form.setValue(`${name}imageValue`, src)
+      form.clearErrors(`${name}imageValue`)
    }
 
    const onDelete = (e) => {

@@ -5,9 +5,12 @@ import { useForm } from 'react-hook-form'
 import { useSelector } from 'react-redux'
 import { coursesSelectors } from 'store/selectors'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
+import { getError } from 'utils'
 
-const CoursesEditPrice = ({ id, index, onRemove, onDeleteImg, name, form, moduls = [] }) => {
+const CoursesEditPrice = ({ id, index, onRemove, name, form, ...rest }) => {
    const modules = useSelector(coursesSelectors.getModules)
+
+   const error = getError(form.formState.errors, `${name}.${index}.moduls`)
 
    return (
       <div className='create-price__group'>
@@ -24,7 +27,6 @@ const CoursesEditPrice = ({ id, index, onRemove, onDeleteImg, name, form, moduls
             <Input form={form} name={`${name}.${index}.price`} label='Стоимость со скидкой (в рублях)' classNameWrapper='create-price__form-group' number />
          </div>
          <div className='create-price__checks'>
-            {console.log(moduls)}
             {modules.map(({ name: label }, mIndex) => (
                <div key={mIndex} className='create-price__check checkbox'>
                   <input
@@ -32,14 +34,14 @@ const CoursesEditPrice = ({ id, index, onRemove, onDeleteImg, name, form, moduls
                      className='checkbox'
                      id={`module-${index}-${mIndex}`}
                      value={mIndex}
-                     defaultChecked={moduls?.find((item) => +item === mIndex)}
+                     //  defaultChecked={moduls?.find((item) => +item === mIndex)}
                      {...form.register(`${name}.${index}.moduls`)}
                   />
                   <label htmlFor={`module-${index}-${mIndex}`}>{label}</label>
                </div>
             ))}
+            <div className='input-error-text'>{error && error.message}</div>
          </div>
-         {/* <div className='input-error-text'>{form.formState.errors['modules']}</div> */}
          <Input form={form} name={`${name}.${index}.text`} label='Описание (новый пункт через Enter)' classNameWrapper='create-price__text' textarea />
       </div>
    )
