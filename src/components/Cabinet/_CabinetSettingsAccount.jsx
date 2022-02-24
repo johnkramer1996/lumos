@@ -10,7 +10,6 @@ import { ReactComponent as SocialAppleSvg } from 'svg/social-apple.svg'
 import { ReactComponent as SocialVkSvg } from 'svg/social-vk.svg'
 import { ReactComponent as SocialFbSvg } from 'svg/social-fb.svg'
 import { ReactComponent as LogoutSvg } from 'svg/logout.svg'
-import { useForm } from 'react-hook-form'
 
 const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
    const { logout } = useDispatch()
@@ -18,26 +17,24 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
    const rolesId = useSelector(authSelectors.getRolesId)
 
    const avatar = useInputFile({ initialValue: getURL.avatar(user.avatar, rolesId) })
-   const form = useForm({
-      mode: 'onBlur',
-      defaultValues: {
-         email: '',
-         created_at: '',
-         vacation_start: '',
-         vacation_end: '',
-      },
-   })
+   const email = useInput({ is: { isDisabled: true, isEmail: true } })
+   const createdAt = useInput({ is: { isDisabled: true } })
+   const password = useInput({ initialValue: 'password', is: { isDisabled: true, isPassword: true } })
+   const vacationStart = useInput({ initialValue: user.vacation[0], is: { isDate: true } })
+   const vacationEnd = useInput({ initialValue: user.vacation[1], is: { isDate: true } })
 
    useEffect(() => {
       avatar.setValue(getURL.avatar(user.avatar, rolesId))
-      form.setValue('email', user.email)
-      form.setValue('created_at', getDate(user.created_at))
-      form.setValue('vacation_start', user.vacation[0])
-      form.setValue('vacation_end', user.vacation[1])
+      user.email && email.setValue(user.email)
+      user.created_at && createdAt.setValue(getDate(user.created_at))
+      user.vacation[0] && vacationStart.setValue(user.vacation[0])
+      user.vacation[1] && vacationEnd.setValue(user.vacation[1])
    }, [user])
 
    //  TODO COMPARE PASSWORD
    // https://codesandbox.io/s/react-hook-form-getvalues-compare-field-values-orf0p?file=/src/index.js:842-865
+
+   useEffect(() => {}, [])
 
    return (
       <div className='account-settings__group card-bg'>
@@ -65,22 +62,20 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>E-mail</span>
-               <button className='account-settings__item-btn'>
+               <button className='account-settings__item-btn' onClick={email.onDisabledRemove}>
                   Изменить
-                  <input type='checkbox' {...form.register('email-change')} />
                </button>
             </div>
-            <Input form={form} name='email' className='account-settings__item-input' onBlur={onBlur} disabled={!form.watch('email-change')} withoutWrapper />
+            <Input className='account-settings__item-input' input={email} onBlur={onBlur.bind(null, 'email')} withoutWrapper />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Пароль</span>
-               <button className='account-settings__item-btn'>
+               <button className='account-settings__item-btn' onClick={password.onDisabledRemove}>
                   Изменить пароль
-                  <input type='checkbox' {...form.register('password-change')} />
                </button>
             </div>
-            <Input form={form} name='password' className='account-settings__item-input' onBlur={onBlur} disabled={!form.watch('password-change')} withoutWrapper />
+            <Input className='account-settings__item-input' input={password} onBlur={onBlur.bind(null, 'password')} withoutWrapper />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
@@ -109,19 +104,19 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Отпуск от</span>
             </div>
-            <Input form={form} name='vacation_start' className='account-settings__item-input' onBlur={onBlur.bind(null, 'vacation_start')} withoutWrapper datepicker />
+            <Input className='account-settings__item-input' input={vacationStart} onBlur={onBlur.bind(null, 'vacation_start')} withoutWrapper />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Отпуск до</span>
             </div>
-            <Input form={form} name='vacation_end' className='account-settings__item-input' onBlur={onBlur.bind(null, 'vacation_end')} withoutWrapper datepicker />
+            <Input className='account-settings__item-input' input={vacationEnd} onBlur={onBlur.bind(null, 'vacation_end')} withoutWrapper />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Дата регистрации</span>
             </div>
-            <Input form={form} name='created_at' className='account-settings__item-input' onBlur={onBlur.bind(null, 'created_at')} withoutWrapper />
+            <Input className='account-settings__item-input' input={createdAt} onBlur={onBlur.bind(null, 'created_at')} withoutWrapper />
          </div>
          <button className='account-settings__logout btn btn-light-red' onClick={logout}>
             <LogoutSvg />

@@ -35,7 +35,7 @@ const CoursesLessonEditFiles = () => {
    }
 
    return (
-      <div className='lesson-edit__files card-bg'>
+      <>
          <div className='lesson-edit__files-top'>
             <h3 className='lesson-edit__files-title display-4'>Файлы</h3>
             <div className='lesson-edit__files-num'>
@@ -55,7 +55,7 @@ const CoursesLessonEditFiles = () => {
             <div className='lesson-edit__files-upload-hint'>до 10 MБ</div>
             <input ref={inputFile.ref} className='lesson-edit__files-upload-input' type='file' onChange={onChange.bind(null)} />
          </div>
-      </div>
+      </>
    )
 }
 
