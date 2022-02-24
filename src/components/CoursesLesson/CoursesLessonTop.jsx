@@ -12,8 +12,8 @@ const CoursesLessonTop = () => {
    const lesson = useSelector(coursesSelectors.getLesson)
 
    const { number, name } = lesson
-   const { prev_lesson } = data || {}
-   const { next_lesson } = data || {}
+   const { prev_lesson = {} } = data || {}
+   const { next_lesson = {} } = data || {}
 
    return (
       <>

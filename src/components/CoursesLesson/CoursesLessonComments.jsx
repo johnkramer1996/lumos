@@ -21,6 +21,7 @@ const CoursesLessonComments = () => {
 
    const fetchUserLessonCommentsRequest = useRequest({
       request: fetchUserLessonComments,
+      loading: true,
       success: ({ response, prevData, data }) => {
          const comments_id = data.comments.data.filter(({ readed_at }) => !readed_at).map(({ id }) => id)
          comments_id.length && readCommentsRequest.call({ courseId, comments_id })
