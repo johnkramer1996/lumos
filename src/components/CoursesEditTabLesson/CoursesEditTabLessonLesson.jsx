@@ -37,7 +37,8 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
       remove(index)
    }
 
-   const addLesson = () => {
+   const addLesson = (e) => {
+      e.preventDefault()
       setIsShow(true)
       setContent({ title: 'Сначала нужно сохранить ' })
    }

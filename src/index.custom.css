@@ -124,6 +124,10 @@
 .img--error {
    background-color: #ffeaea;
 }
+.img--error::after {
+   border: 5px solid #db422c;
+   box-sizing: border-box;
+}
 
 .input-error {
    background-color: #ffeaea !important;
@@ -190,6 +194,8 @@
 }
 .course-edit__form-upload-img {
    border-radius: 8px;
+}
+.course-edit__form-upload-img.img--error {
 }
 .course-edit__form-upload-right .course-edit__form-upload-desc {
    display: none;
@@ -279,4 +285,14 @@
 }
 .course-edit__form-upload--uploaded .course-edit__form-upload-delete {
    display: block;
+}
+
+.form-group--row {
+   display: flex;
+}
+.form-group--row .form-group {
+   width: 50%;
+}
+.form-group--row .form-group:first-child {
+   padding-right: 30px;
 }

@@ -40,7 +40,6 @@ const CabinetCoursesEdit = () => {
    const refTabMain = useRef()
    const refTabLesson = useRef()
    const refTabDescription = useRef()
-   const refsTab = useMemo(() => [refTabMain, refTabLesson, refTabDescription], [])
 
    const tabItems = [
       {

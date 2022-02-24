@@ -13,3 +13,12 @@ export const LIMIT = {
    LESSON_COMMENTS: 4,
    COURSE_COMMENTS: 4,
 }
+
+export const TIME_NAMES = [
+   { id: 'minutes', name: 'Минута' },
+   { id: 'hours', name: 'Час' },
+   { id: 'days', name: 'День' },
+   { id: 'weeks', name: 'Неделя' },
+   { id: 'month', name: 'Месяц' },
+   { id: 'years', name: 'Год' },
+]

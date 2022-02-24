@@ -8,6 +8,7 @@ import { useCallback } from 'react'
 import { coursesSelectors, systemSelectors } from 'store/selectors'
 import { useForm, useWatch } from 'react-hook-form'
 import * as yup from 'yup'
+import { TIME_NAMES } from 'constants'
 
 yup.addMethod(yup.mixed, 'imageMinSizeCheck', imageMinSizeCheck)
 
@@ -17,7 +18,9 @@ const validationSchema = yup.object({
    type_study: yup.string().required('Обязательное поле'),
    format_study: yup.string().required('Обязательное поле'),
    anytime: yup.boolean().required('Обязательное поле'),
-   width: yup.string().required('Обязательное поле'),
+   timing: yup.string().required('Обязательное поле'),
+   width_number: yup.number().typeError('некорректное число').required('Обязательное поле'),
+   width_name: yup.string().required('Обязательное поле'),
    sale_subscribe: yup.boolean().required('Обязательное поле'),
    imageValue: yup.string().required('Обязательное поле'),
    image: yup
@@ -42,26 +45,18 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
    const hasCourse = !(Object.keys(course).length === 0)
 
    const form = useForm({
-      mode: 'onChange',
-      defaultValues: {},
       resolver: useYupValidationResolver(validationSchema),
    })
    const anytime = form.watch('anytime')
-   //  const getEntries = async () => timeout(() => Object.entries(form.getValues()).filter(([key]) => !(key === 'timing' || key === 'image' || key === 'imageValue')))
-
-   console.log(form.formState.errors)
 
    useEffect(() => {
       if (hasCourse) {
-         ;(async () => {
-            Object.entries(form.getValues())
-               .filter(([k]) => k !== 'image')
-               .forEach(([key]) => form.setValue(key, course[key]))
-            form.setValue('anytime', toBoolean(course['anytime']))
-            form.setValue('sale_subscribe', toBoolean(course['sale_subscribe']))
-            form.setValue('imageValue', getURL.img(course['image'], false) ?? '')
-            console.log(form.getValues())
-         })()
+         Object.entries(form.getValues())
+            .filter(([k]) => !['image'].includes(k))
+            .forEach(([key]) => form.setValue(key, course[key] ?? ''))
+         form.setValue('anytime', toBoolean(course['anytime']))
+         form.setValue('sale_subscribe', toBoolean(course['sale_subscribe']))
+         form.setValue('imageValue', getURL.img(course['image'], false) ?? '')
       }
    }, [course])
 
@@ -91,8 +86,6 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
          body.append(key, val)
       })
 
-      console.log([...body.entries()])
-
       hasCourse ? putCourseRequest.call({ courseId, body }) : CoursesEditRequest.call({ body })
    }
 
@@ -109,7 +102,10 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
                {!anytime && <Input form={form} name='timing' placeholder='Старт курса' className='course-edit__form-group' withoutWrapper datepicker />}
                <Checkbox form={form} name='anytime' label='В любое время' className='course-edit__form-checkbox' />
             </div>
-            <Input form={form} name='width' label='Длительность' className='course-edit__form-group' />
+            <div className='course-edit__form-group form-group form-group--row'>
+               <Input form={form} name='width_number' label='Длительность' className='course-edit__form-group' number />
+               <Input form={form} name='width_name' label='&nbsp;' className='course-edit__form-group' options={TIME_NAMES} />
+            </div>
             <Checkbox form={form} name='sale_subscribe' label='Разрешить продавать по подписке' className='course-edit__form-checkbox' />
          </div>
          <ImgUploadNew form={form} name='' title='Изображение' />

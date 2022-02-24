@@ -13,7 +13,7 @@ import CoursesEditArrayFields from '../CoursesEdit/CoursesEditArrayFields'
 import CoursesEditTabLessonTestLesson from './CoursesEditTabLessonTestLesson'
 import CoursesEditTabLessonLesson from './CoursesEditTabLessonLesson'
 
-const CoursesEditTabLesson = ({ refTabs, refTab }) => {
+const CoursesEditTabLesson = ({ refTabs }) => {
    const { courseId } = useParams()
    const { setContent, setIsShow, setModules, deleteModule, deleteLesson, addModulesMass } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
@@ -30,7 +30,7 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
    const hasInfo = hasDescriptions || hasWhoms || hasPrices
 
    const form = useForm({
-      mode: 'onBlur',
+      // mode: 'onBlur',
       defaultValues: {
          short_desc: '',
          test_lesson: '',
@@ -38,22 +38,19 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
       },
    })
 
-   const getEntries = async () => timeout(() => Object.entries(form.getValues()).filter(([key]) => !(key === 'inputFile' || key === 'inputFileValue')))
-
    useEffect(() => {
       if (hasCourse) {
-         ;(async () => {
-            // form.reset()
-            // })
-         })()
+         Object.entries(form.getValues())
+            .filter(([k]) => !['image', 'modules'].includes(k))
+            .forEach(([key]) => form.setValue(key, course[key] ?? ''))
+
          const newModules = modules.map((m) => ({
             name: m.name,
             id: m.id,
             lessons: m.lessons.map((l) => ({ name: l.name, number: l.number, id: l.id, hidden_id: l.hidden_id })) || [],
          }))
-         // setTimeout(() => {
          form.resetField('test_lesson')
-         form.setValue('short_desc', course.short_desc)
+         //  form.setValue('short_desc', course.short_desc)
          newModules.length && form.setValue('modules', newModules)
          setTimeout(() => course.test_lesson && form.setValue('test_lesson', course.test_lesson?.hidden_id || ''), 0)
       }
@@ -92,25 +89,30 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
 
    const onDeleteLesson = useCallback((lessonId) => lessonId && deleteLessonRequest.call({ courseId, lessonId }), [])
 
-   const submit = async () => {
-      if (!(await form.trigger())) return false
-
+   const onSubmit = (data) => {
       const body = {
          modules: [],
          moduls: [],
          test_lesson: '',
       }
-      ;(await getEntries()).forEach(([key, value]) => (body[key] = typeof value === 'boolean' ? +value : value))
+
+      Object.entries(data).forEach(([key, value]) => {
+         const val = typeof value === 'boolean' ? +value : value?.constructor.name === 'FileList' ? value[0] : value
+         if (val === undefined || val === null) return
+         body[key] = val
+      })
 
       body.moduls = body.modules.map((m) => ({ ...m, lessons: m.lessons.map((l) => ({ ...l, is_test: l.hidden_id === body.test_lesson })) }))
 
       delete body.modules
       delete body.test_lesson
 
+      console.log(body)
+
+      return
+
       addModulesMassRequest.call({ courseId, body })
    }
-
-   useImperativeHandle(refTab, () => ({ submit }))
 
    // TODO CREATE COMPONENT
    const value = useWatch({
@@ -120,38 +122,40 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
 
    return (
       <>
-         <CardBg className='course-edit__small-desc'>
-            <div className='course-edit__small-desc-title display-4'>Короткое описание</div>
-            <Input form={form} name='short_desc' label='Описание' textarea />
-         </CardBg>
+         <form id='form-edit' onSubmit={form.handleSubmit(onSubmit)}>
+            <CardBg className='course-edit__small-desc'>
+               <div className='course-edit__small-desc-title display-4'>Короткое описание</div>
+               <Input form={form} name='short_desc' label='Описание' textarea />
+            </CardBg>
 
-         <CardBg className='create-module'>
-            <h3 className='create-module__title display-4'>Модули</h3>
-            <div className='create-module__items'>
-               <CoursesEditArrayFields isNestComponent={true} name='modules' onDelete={onDeleteModule} form={form} appendFields={{ name: '', text: '', lessons: [] }} btnText='Добавить модуль'>
-                  {({ id, index, onRemove, name, form }) => (
-                     <div key={id} className='create-module__item form-group'>
-                        <label>Название модуля {index + 1}</label>
-                        <div className='create-module__input'>
-                           <Input form={form} name={`${name}.${index}.name`} placeholder='Название модуля' isErrorText={false} withoutWrapper />
-                           <Input form={form} name={`${name}.${index}.id`} type='hidden' withoutWrapper />
-                           <button className='create-module__delete' onClick={() => onRemove(index)}>
-                              <DeleteSvg />
-                           </button>
+            <CardBg className='create-module'>
+               <h3 className='create-module__title display-4'>Модули</h3>
+               <div className='create-module__items'>
+                  <CoursesEditArrayFields isNestComponent={true} name='modules' onDelete={onDeleteModule} form={form} appendFields={{ name: '', text: '', lessons: [] }} btnText='Добавить модуль'>
+                     {({ id, index, onRemove, name, form }) => (
+                        <div key={id} className='create-module__item form-group'>
+                           <label>Название модуля {index + 1}</label>
+                           <div className='create-module__input'>
+                              <Input form={form} name={`${name}.${index}.name`} placeholder='Название модуля' isErrorText={false} withoutWrapper />
+                              <Input form={form} name={`${name}.${index}.id`} type='hidden' withoutWrapper />
+                              <button className='create-module__delete' onClick={() => onRemove(index)}>
+                                 <DeleteSvg />
+                              </button>
+                           </div>
                         </div>
-                     </div>
-                  )}
-               </CoursesEditArrayFields>
-            </div>
-         </CardBg>
+                     )}
+                  </CoursesEditArrayFields>
+               </div>
+            </CardBg>
 
-         {value.map((props, index) => {
-            return <CoursesEditTabLessonLesson key={props.id || index} nestIndex={index} form={form} onDeleteLesson={onDeleteLesson} {...props} />
-         })}
+            {value.map((props, index) => {
+               return <CoursesEditTabLessonLesson key={props.id || index} nestIndex={index} form={form} onDeleteLesson={onDeleteLesson} {...props} />
+            })}
 
-         <CardBg className='create-module'>
-            <CoursesEditTabLessonTestLesson {...{ form }} />
-         </CardBg>
+            <CardBg className='create-module'>
+               <CoursesEditTabLessonTestLesson {...{ form }} />
+            </CardBg>
+         </form>
       </>
    )
 }
