@@ -93,7 +93,7 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
          course.prices?.map(({ id, name, text, width, price, price_with_sale, moduls }) => ({ id, name, text, width, price, price_with_sale, moduls })),
       )
       form.setValue('course_description', course.description ?? '')
-      form.setValue('result_learn_text', String(course.result_learn_text) ?? '')
+      form.setValue('result_learn_text', course.result_learn_text ? String(course.result_learn_text) : '')
    }, [course])
 
    const deleteInfoRequest = useRequest({

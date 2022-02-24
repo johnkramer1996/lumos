@@ -1,10 +1,8 @@
 import React from 'react'
-import { Button, CardBg, Input } from 'components/ui'
+import { Button } from 'components/ui'
 import { useDispatch } from 'hooks'
-import { declOfNum, getDeclOfArray, getURL, uid } from 'utils'
-import { useFieldArray, useWatch } from 'react-hook-form'
+import { useFieldArray } from 'react-hook-form'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
-import CoursesEditTabLessonLesson from 'components/CoursesEditTabLesson/CoursesEditTabLessonLesson'
 
 const CoursesEditArrayFields = ({ children, form, onDelete, appendFields, name = '', btnText = '' }) => {
    const { setIsShow, setContent } = useDispatch()
@@ -22,8 +20,7 @@ const CoursesEditArrayFields = ({ children, form, onDelete, appendFields, name =
 
    const onRemove = (index) => {
       // TODO RETURN CONDITION
-      console.log(form.getValues(`${name}.${index}.lessons`))
-      if (form.getValues(`${name}.${index}.lessons`).length) {
+      if (form.getValues(`${name}.${index}.lessons`)?.length) {
          setIsShow(true)
          setContent({ title: 'У модуля есть уроки, ', descr: 'удалите уроки, потом удалите модуль' })
          return

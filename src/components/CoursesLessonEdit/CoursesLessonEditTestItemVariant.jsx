@@ -40,6 +40,7 @@ const CoursesLessonEditTestItemVariant = ({ nestIndex, form, onDelete }) => {
          <div className='lesson-test__variants-title'>Введите варианты ответов и выберите правильный</div>
          <div className='lesson-test__variants-items'>
             {fields.map((item, index) => {
+               // TODO CHECK
                const answerId = answers[index].id
                return (
                   <div key={item.id} className='lesson-test__variants-item form-group'>
