@@ -109,19 +109,19 @@ const CabinetSettingsAccount = ({ onBlur, onChange, onDelete }) => {
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Отпуск от</span>
             </div>
-            <Input form={form} name='vacation_start' className='account-settings__item-input' onBlur={onBlur.bind(null, 'vacation_start')} withoutWrapper datepicker />
+            <Input form={form} name='vacation_start' className='account-settings__item-input' onBlur={onBlur} withoutWrapper datepicker />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Отпуск до</span>
             </div>
-            <Input form={form} name='vacation_end' className='account-settings__item-input' onBlur={onBlur.bind(null, 'vacation_end')} withoutWrapper datepicker />
+            <Input form={form} name='vacation_end' className='account-settings__item-input' onBlur={onBlur} withoutWrapper datepicker />
          </div>
          <div className='account-settings__item'>
             <div className='account-settings__item-top'>
                <span className='account-settings__item-title'>Дата регистрации</span>
             </div>
-            <Input form={form} name='created_at' className='account-settings__item-input' onBlur={onBlur.bind(null, 'created_at')} withoutWrapper />
+            <Input form={form} name='created_at' className='account-settings__item-input' onBlur={onBlur} withoutWrapper />
          </div>
          <button className='account-settings__logout btn btn-light-red' onClick={logout}>
             <LogoutSvg />

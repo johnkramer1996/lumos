@@ -23,6 +23,7 @@ const CabinetSettings = () => {
       settingsRequest.call({ body })
    }
    const onBlurInput = (e) => {
+      console.log(e)
       const { name, value } = e.target
 
       console.log(name, value)
