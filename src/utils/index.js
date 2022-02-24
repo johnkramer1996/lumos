@@ -213,7 +213,7 @@ export const asyncFind = async (arr, predicate) => Promise.all(arr.map(predicate
 export function loadImg(value) {
    return new Promise((resolve) => {
       const reader = new FileReader()
-      if (!['image/jpg', 'image/jpeg', 'image/png'].includes(value.type)) {
+      if (!['image/jpg', 'image/jpeg', 'image/png'].includes(value?.type)) {
          resolve('')
       }
 

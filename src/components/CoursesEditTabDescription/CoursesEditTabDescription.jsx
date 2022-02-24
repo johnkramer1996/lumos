@@ -126,8 +126,6 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
       const entries = Object.entries(fields).filter(([key]) => !(key === 'id' || key === 'inputFile' || key === 'inputFileValue'))
       entries.forEach(([key, value]) => {
          if (Array.isArray(value)) return value.forEach((val) => body.append(`${fieldName}[${newId}][${key}][]`, val))
-         //  body.append(`${fieldName}[${newId}][${key}]`, typeof value === 'boolean' ? +value : value)
-
          const val = typeof value === 'boolean' ? +value : value?.constructor.name === 'FileList' ? value[0] : value
          if (val === undefined || val === null) return
          body.append(`${fieldName}[${newId}][${key}]`, val)
@@ -158,6 +156,8 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
             body.append(key, val)
          })
 
+      console.log([...body.entries()])
+
       editInfoRequest.call({ courseId, body })
    }
 
@@ -177,7 +177,13 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
          <CardBg className='create-price'>
             <h3 className='create-module__title display-4'>О курсе</h3>
             <div className='create-module__items'>
-               <CoursesEditArrayFields name='descriptions' onDelete={onDeleteBlock.bind(null, 'desc')} form={form} appendFields={{ name: '', text: '' }} btnText='Добавить описание'>
+               <CoursesEditArrayFields
+                  name='descriptions'
+                  onDelete={onDeleteBlock.bind(null, 'desc')}
+                  form={form}
+                  appendFields={{ name: '', text: '', imageValue: '', image: '' }}
+                  btnText='Добавить описание'
+               >
                   {(props) => <CoursesEditBlockItem key={props.id || props.index} {...props} onDeleteImg={onDeleteImg} />}
                </CoursesEditArrayFields>
             </div>
@@ -186,7 +192,13 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
          <CardBg className='create-price'>
             <h3 className='create-module__title display-4'>Кому подойдет курс</h3>
             <div className='create-module__items'>
-               <CoursesEditArrayFields name='whoms' onDelete={onDeleteBlock.bind(null, 'whom')} form={form} appendFields={{ name: '', text: '' }} btnText='Добавить описание'>
+               <CoursesEditArrayFields
+                  name='whoms'
+                  onDelete={onDeleteBlock.bind(null, 'whom')}
+                  form={form}
+                  appendFields={{ name: '', text: '', imageValue: '', image: '' }}
+                  btnText='Добавить описание'
+               >
                   {(props) => <CoursesEditBlockItem key={props.id || props.index} {...props} onDeleteImg={onDeleteImg} />}
                </CoursesEditArrayFields>
             </div>
@@ -195,7 +207,13 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
          <CardBg className='create-price'>
             <h3 className='create-module__title display-4'>Стоимость</h3>
             <div className='create-module__items'>
-               <CoursesEditArrayFields name='prices' onDelete={onDeleteBlock.bind(null, 'price')} form={form} appendFields={{ name: '', text: '' }} btnText='Добавить описание'>
+               <CoursesEditArrayFields
+                  name='prices'
+                  onDelete={onDeleteBlock.bind(null, 'price')}
+                  form={form}
+                  appendFields={{ name: '', text: '', price: '', price_with_sale: '', moduls: [] }}
+                  btnText='Добавить описание'
+               >
                   {(props) => <CoursesEditPrice key={props.id || props.index} {...props} />}
                </CoursesEditArrayFields>
             </div>
