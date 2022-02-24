@@ -49,8 +49,6 @@ const CabinetCoursesEdit = () => {
          props: {
             refTab: refTabMain,
             refTabs: refTabs,
-            refForm,
-            setForm,
          },
       },
       {
@@ -67,13 +65,17 @@ const CabinetCoursesEdit = () => {
          props: {
             refTab: refTabDescription,
             refTabs: refTabs,
-            refForm,
          },
       },
    ]
 
    const isAvaibleTabIndex = (index, activeIndexStep) => {
       const form = refsTab[activeIndexStep].current.getForm()
+      if (form.formState.isDirty) {
+         setIsShow(true)
+         setContent({ title: 'Сначала сохраните' })
+         return
+      }
       if (index === 0) return true
       if ((index === 1 || index === 2) && !hasCourse) {
          setIsShow(true)
@@ -83,11 +85,6 @@ const CabinetCoursesEdit = () => {
       if (index === 2 && !hasModules) {
          setIsShow(true)
          setContent({ title: 'Заполните уроки' })
-         return
-      }
-      if (form.formState.isDirty) {
-         setIsShow(true)
-         setContent({ title: 'Сначала сохраните' })
          return
       }
       return true

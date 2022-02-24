@@ -63,8 +63,6 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
    })
    const { isDirty } = form.formState
 
-   console.log(isDirty)
-
    useEffect(() => {
       Object.entries(form.getValues())
          .filter(([k]) => !['image', 'modules'].includes(k))
