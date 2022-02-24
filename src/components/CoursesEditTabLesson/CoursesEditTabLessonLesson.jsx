@@ -23,7 +23,8 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
       name: `modules.${nestIndex}.name`,
    })
 
-   const onAdd = async () => {
+   const onAdd = (e) => {
+      e.preventDefault()
       append({
          name: '',
          number: fields.length,
@@ -63,9 +64,9 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
                         <DragSvg />
                      </button>
                      {lessonId ? (
-                        <a href={getURL.cabinetCoursesLessonEdit({ courseId, lessonId })} className='create-module__link' onClick={addLesson}>
+                        <Link to={getURL.cabinetCoursesLessonEdit({ courseId, lessonId })} className='create-module__link' onClick={addLesson}>
                            <LinkSvg />
-                        </a>
+                        </Link>
                      ) : (
                         <div className='create-module__link' onClick={addLesson}>
                            <LinkSvg />
