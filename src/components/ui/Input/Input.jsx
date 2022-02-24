@@ -1,20 +1,9 @@
 import React from 'react'
 import { DatePicker } from '..'
-import { isActiveClass, isFunction } from 'utils'
+import { getError, isActiveClass, isFunction } from 'utils'
 
-const Input = ({ errorName, form, label, registerOptions = {}, options, classNameWrapper = '', withoutWrapper, datepicker, textarea, email, password, time, number, isErrorText = true, ...props }) => {
+const Input = ({ form, label, registerOptions = {}, options, classNameWrapper = '', withoutWrapper, datepicker, textarea, email, password, time, number, isErrorText = true, ...props }) => {
    if (!form || !props['name']) return <input type='text' placeholder='Error Input' />
-   //  const onChangeHandle = (e) => {
-   //     input.bind.onChange(e)
-   //     isFunction(onChange) && onChange(e, input)
-   //  }
-   //  const onBlurHandle = (e) => {
-   //     input.bind.onBlur(e)
-   //     isFunction(onBlur) && onBlur(e, input)
-   //  }
-
-   //  onChange={onChangeHandle} onBlur={onBlurHandle}
-
    const name = props['name']
    const {
       register,
@@ -40,7 +29,8 @@ const Input = ({ errorName, form, label, registerOptions = {}, options, classNam
    if (number) registerOptions.onChange = (e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ''))
    if (props.type === 'hidden') registerOptions.required = false
 
-   const error = errorName ? errors[errorName] : errors[name]
+   const error = getError(errors, name)
+
    props = {
       ...register(name, { required: true, ...registerOptions }),
       ...props,

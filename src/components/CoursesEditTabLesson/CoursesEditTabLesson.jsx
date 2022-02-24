@@ -1,18 +1,19 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import React, { useEffect, useImperativeHandle } from 'react'
 import { Button, CardBg, Input } from 'components/ui'
 import { useSelector } from 'react-redux'
-import { useDispatch, useInput, useRequest, useYupValidationResolver } from 'hooks'
+import { useDispatch, useRequest, useYupValidationResolver } from 'hooks'
 import { useParams } from 'react-router-dom'
-import { asyncFind, declOfNum, timeout, uid } from 'utils'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 import { coursesSelectors } from 'store/selectors/'
-import { useFieldArray, useForm, useWatch } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { useCallback } from 'react'
 import CoursesEditArrayFields from '../CoursesEdit/CoursesEditArrayFields'
 import CoursesEditTabLessonTestLesson from './CoursesEditTabLessonTestLesson'
 import CoursesEditTabLessonLesson from './CoursesEditTabLessonLesson'
 import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import CoursesEditTabLessonLessons from './CoursesEditTabLessonLessons'
 
 const validationSchema = yup.object({
    short_desc: yup.string().required('Обязательное поле'),
@@ -22,19 +23,18 @@ const validationSchema = yup.object({
       .min(1, 'Добавьте один модуль')
       .of(
          yup.object().shape({
-            name: yup.string().required(),
+            name: yup.string().required('Обязательное поле'),
             lessons: yup
                .array()
-               //  .min(1, 'Добавьте один урок')
                .of(
                   yup.object().shape({
                      name: yup.string().required(),
                   }),
                )
-               .required('Required'),
+               .required('Обязательное поле'),
          }),
       )
-      .required('Required'),
+      .required('Обязательное поле'),
 })
 
 const CoursesEditTabLesson = ({ refTabs, refTab }) => {
@@ -59,18 +59,19 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
          test_lesson: '',
          modules: [],
       },
-      resolver: useYupValidationResolver(validationSchema),
+      resolver: yupResolver(validationSchema),
    })
-   const { isDirty } = form.formState
+   const { isDirty, errors } = form.formState
+
+   console.log(errors)
 
    useEffect(() => {
       Object.entries(form.getValues())
          .filter(([k]) => !['image', 'modules'].includes(k))
          .forEach(([key]) => form.setValue(key, course[key] ?? ''))
-
-      course.test_lesson && form.setValue('test_lesson', course.test_lesson?.hidden_id || '')
       setTimeout(() => course.test_lesson && form.setValue('test_lesson', course.test_lesson?.hidden_id || ''), 0)
    }, [course])
+
    useEffect(() => {
       const newModules = modules.map((m) => ({
          name: m.name,
@@ -97,7 +98,7 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
             },
          )
 
-         //  !hasInfo && refTabs?.current?.nextItems()
+         !hasInfo && refTabs?.current?.nextItems()
       },
    })
 
@@ -143,54 +144,43 @@ const CoursesEditTabLesson = ({ refTabs, refTab }) => {
       addModulesMassRequest.call({ courseId, body })
    }
 
-   // TODO CREATE COMPONENT
-   const value = useWatch({
-      name: 'modules',
-      control: form.control,
-   })
-
    useImperativeHandle(refTab, () => ({
       getForm: () => form,
    }))
 
    return (
-      <>
-         <form id='form-edit' onSubmit={form.handleSubmit(onSubmit)}>
-            <CardBg className='course-edit__small-desc'>
-               <div className='course-edit__small-desc-title display-4'>Короткое описание</div>
-               <Input form={form} name='short_desc' label='Описание' textarea />
-            </CardBg>
+      <form id='form-edit' onSubmit={form.handleSubmit(onSubmit)}>
+         <CardBg className='course-edit__small-desc'>
+            <div className='course-edit__small-desc-title display-4'>Короткое описание</div>
+            <Input form={form} name='short_desc' label='Описание' textarea />
+         </CardBg>
 
-            <CardBg className='create-module'>
-               <h3 className='create-module__title display-4'>Модули</h3>
-               <div className='create-module__items'>
-                  <CoursesEditArrayFields isNestComponent={true} name='modules' onDelete={onDeleteModule} form={form} appendFields={{ name: '', text: '', lessons: [] }} btnText='Добавить модуль'>
-                     {({ id, index, onRemove, name, form }) => (
-                        <div key={id} className='create-module__item form-group'>
-                           <label>Название модуля {index + 1}</label>
-                           <div className='create-module__input'>
-                              <Input form={form} name={`${name}.${index}.name`} errorName={`${name}[${index}].name`} placeholder='Название модуля' isErrorText={false} withoutWrapper />
-                              {/* <ErrorMessage name={`${name}.${index}.name`} /> */}
-                              <Input form={form} name={`${name}.${index}.id`} type='hidden' withoutWrapper />
-                              <button className='create-module__delete' onClick={() => onRemove(index)}>
-                                 <DeleteSvg />
-                              </button>
-                           </div>
+         <CardBg className='create-module'>
+            <h3 className='create-module__title display-4'>Модули</h3>
+            <div className='create-module__items'>
+               <CoursesEditArrayFields isNestComponent={true} name='modules' onDelete={onDeleteModule} form={form} appendFields={{ name: '', text: '', lessons: [] }} btnText='Добавить модуль'>
+                  {({ id, index, onRemove, name, form }) => (
+                     <div key={id} className='create-module__item form-group'>
+                        <label>Название модуля {index + 1}</label>
+                        <div className='create-module__input'>
+                           <Input form={form} name={`${name}.${index}.name`} placeholder='Название модуля' isErrorText={false} withoutWrapper />
+                           <Input form={form} name={`${name}.${index}.id`} type='hidden' withoutWrapper />
+                           <button className='create-module__delete' onClick={() => onRemove(index)}>
+                              <DeleteSvg />
+                           </button>
                         </div>
-                     )}
-                  </CoursesEditArrayFields>
-               </div>
-            </CardBg>
+                     </div>
+                  )}
+               </CoursesEditArrayFields>
+            </div>
+         </CardBg>
 
-            {value.map((props, index) => {
-               return <CoursesEditTabLessonLesson key={props.id || index} nestIndex={index} form={form} onDeleteLesson={onDeleteLesson} {...props} />
-            })}
+         <CoursesEditTabLessonLessons {...{ form, onDeleteLesson }} />
 
-            <CardBg className='create-module'>
-               <CoursesEditTabLessonTestLesson {...{ form }} />
-            </CardBg>
-         </form>
-      </>
+         <CardBg className='create-module'>
+            <CoursesEditTabLessonTestLesson {...{ form }} />
+         </CardBg>
+      </form>
    )
 }
 

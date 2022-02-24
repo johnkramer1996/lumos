@@ -289,3 +289,10 @@ export function imageMinSizeCheck(message, minWidth, minHeight) {
       return true
    })
 }
+
+export const getError = (errors, name) => {
+   const spl = name.split('.')
+   const error = errors[name] || (spl.length > 1 && errors && spl.reduce((prev, value) => (Array.isArray(prev) || typeof prev === 'object') && prev[value], errors))
+
+   return error
+}

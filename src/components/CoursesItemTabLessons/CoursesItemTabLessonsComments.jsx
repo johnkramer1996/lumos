@@ -20,6 +20,7 @@ const CoursesItemTabLessonsComments = () => {
 
    const fetchCommentsRequest = useRequest({
       request: fetchComments,
+      loading: true,
       success: ({ response, prevData, data }) => {
          const comments_id = data.filter(({ id, readed_at }) => !readed_at).map(({ id }) => id)
          comments_id.length && readCommentsRequest.call({ courseId, comments_id })

@@ -2,7 +2,7 @@ import { useInputFileNew } from 'hooks'
 import React, { Fragment, useEffect, useMemo, useRef } from 'react'
 import { useCallback } from 'react'
 import { useWatch } from 'react-hook-form'
-import { getURL, isActiveClass, isFunction } from 'utils'
+import { getError, getURL, isActiveClass, isFunction } from 'utils'
 import { Button } from '..'
 
 const ImgUploadNew = ({ form, name = '', onChange, onDelete, imgClass, title, size = 'md', ratio = '16:9', recommend = '1280x720', max = '5 MБ' }) => {
@@ -27,8 +27,8 @@ const ImgUploadNew = ({ form, name = '', onChange, onDelete, imgClass, title, si
    const {
       formState: { errors },
    } = form
-   const spl = inputFile.name.split('.')
-   const error = errors[inputFileValue.name] || errors[inputFile.name]
+
+   const error = getError(errors, inputFile.name) || getError(errors, inputFileValue.name)
    // (spl.length > 1 && errors && spl.reduce((prev, value) => (Array.isArray(prev) || typeof prev === 'object') && prev[value], errors))
 
    return (

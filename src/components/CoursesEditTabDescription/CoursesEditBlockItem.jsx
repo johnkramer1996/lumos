@@ -14,17 +14,7 @@ const CoursesEditBlockItem = ({ id, index, onRemove, onDeleteImg, name, form, im
                <DeleteSvg />
             </button>
          </div>
-         <ImgUploadNew
-            form={form}
-            name={`${name}.${index}.`}
-            image={form.getValues(`${name}.${index}.inputFileValue`)}
-            size={'sm'}
-            onDelete={onDeleteImg.bind(null, id)}
-            imgClass={'img--md'}
-            ratio={'1/1'}
-            recommend={'248x248'}
-            max={'1 МБ'}
-         />
+         <ImgUploadNew form={form} name={`${name}.${index}.`} size={'sm'} onDelete={onDeleteImg.bind(null, id)} imgClass={'img--md'} ratio={'1/1'} recommend={'248x248'} max={'1 МБ'} />
          <Input form={form} name={`${name}.${index}.name`} label='Заголовок' />
          <Input form={form} name={`${name}.${index}.text`} label='Описание (новый пункт через Enter)' classNameWrapper='create-price__text' textarea />
          <Input form={form} name={`${name}.${index}.id`} type='hidden' withoutWrapper />

@@ -56,7 +56,7 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
             </div>
          </div>
          {fields.map((item, index) => {
-            const lessonId = lessons[index].id
+            const lessonId = lessons && lessons[index] && lessons[index].id
             return (
                <div key={item.id} className='create-module__item form-group'>
                   <div className='create-module__input'>
@@ -72,14 +72,7 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
                            <LinkSvg />
                         </div>
                      )}
-                     <Input
-                        form={form}
-                        name={`modules.${nestIndex}.lessons.${index}.name`}
-                        errorName={`modules[${nestIndex}].lessons[${index}].name`}
-                        placeholder='Название урока'
-                        isErrorText={false}
-                        withoutWrapper
-                     />
+                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.name`} placeholder='Название урока' isErrorText={false} withoutWrapper />
                      <Input form={form} name={`modules.${nestIndex}.lessons.${index}.number`} type='hidden' withoutWrapper />
                      <Input form={form} name={`modules.${nestIndex}.lessons.${index}.hidden_id`} type='hidden' withoutWrapper />
                      <Input form={form} name={`modules.${nestIndex}.lessons.${index}.id`} type='hidden' withoutWrapper />

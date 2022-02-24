@@ -2,13 +2,14 @@ import React, { forwardRef, useEffect, useImperativeHandle, useMemo, useRef } fr
 import { Checkbox, ImgUpload, ImgUploadNew, Input } from 'components/ui'
 import { getDate, getURL, imageDimensionCheck, imageMinSizeCheck, imageRatioCheck, imageWidthAndHeight, timeout, toBoolean } from 'utils'
 import { useSelector } from 'react-redux'
-import { useDispatch, useInput, useInputFile, useInputFileNew, useNavigate, useRequest, useYupValidationResolver } from 'hooks'
+import { useDispatch, useInput, useInputFile, useInputFileNew, useNavigate, useRequest } from 'hooks'
 import { useLocation, useParams } from 'react-router-dom'
 import { useCallback } from 'react'
 import { coursesSelectors, systemSelectors } from 'store/selectors'
 import { useForm, useWatch } from 'react-hook-form'
 import * as yup from 'yup'
 import { TIME_NAMES } from 'constants'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 yup.addMethod(yup.mixed, 'imageMinSizeCheck', imageMinSizeCheck)
 
@@ -45,7 +46,7 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
    const hasCourse = !(Object.keys(course).length === 0)
 
    const form = useForm({
-      resolver: useYupValidationResolver(validationSchema),
+      resolver: yupResolver(validationSchema),
    })
    const { isDirty } = form.formState
    const anytime = form.watch('anytime')

@@ -32,6 +32,8 @@ const CoursesEditArrayFields = ({ children, form, onDelete, onDeleteLesson, appe
       remove(index)
    }
 
+   const { isDirty, errors } = form.formState
+
    return (
       <>
          <div className='create-module__items'>{fields.map((props, index) => children({ ...props, index, onRemove, name, form, fields }))}</div>
@@ -45,7 +47,3 @@ const CoursesEditArrayFields = ({ children, form, onDelete, onDeleteLesson, appe
 }
 
 export default CoursesEditArrayFields
-
-const NestArray = ({ fields, form, onDeleteLesson }) => {
-   return <></>
-}
