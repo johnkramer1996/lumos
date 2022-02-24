@@ -209,3 +209,83 @@ export const isFunction = (func) => typeof func === 'function'
 
 export const asyncFilter = async (arr, predicate) => Promise.all(arr.map(predicate)).then((results) => arr.filter((_v, index) => results[index]))
 export const asyncFind = async (arr, predicate) => Promise.all(arr.map(predicate)).then((results) => arr.find((_v, index) => results[index]))
+
+export function loadImg(value) {
+   return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(value)
+      reader.onload = function (value) {
+         const img = new Image()
+         img.src = value.target.result
+         img.onload = function () {
+            resolve(img)
+         }
+      }
+   })
+}
+
+export const imageWidthAndHeight = (provideFile) => {
+   return new Promise((resolve) => {
+      const reader = new FileReader()
+
+      reader.readAsDataURL(provideFile)
+      reader.onload = function () {
+         const img = new Image()
+         img.src = reader.result
+
+         img.onload = function () {
+            resolve(this)
+         }
+      }
+   })
+}
+
+export function imageDimensionCheck(message, requiredWidth, requiredHeight) {
+   return this.test('imageDimensionCheck', message, async function (value) {
+      const { path, createError } = this
+
+      if (!value || !value.length) return
+
+      const img = await loadImg(value[0])
+
+      if (img.width !== requiredWidth) {
+         return createError({
+            path,
+            message: `Ширина файла должна быть ${requiredWidth}px!`,
+         })
+      }
+
+      if (img.height !== requiredHeight) {
+         return createError({
+            path,
+            message: `Высота файла должна быть ${requiredHeight}px!`,
+         })
+      }
+
+      return true
+   })
+}
+
+export function imageMinSizeCheck(message, minWidth, minHeight) {
+   return this.test('imageMinSizeCheck', message, async function (value) {
+      const { path, createError } = this
+      if (value && value.length === 0) return true
+
+      const img = await loadImg(value[0])
+
+      if (img.width < minWidth)
+         return createError({
+            path,
+            message: `Минимальная ширина изображения должна быть ${minWidth}px!`,
+         })
+
+      if (img.height < minHeight) {
+         return createError({
+            path,
+            message: `Минимальная высота изображения должна быть ${minHeight}px!`,
+         })
+      }
+
+      return true
+   })
+}

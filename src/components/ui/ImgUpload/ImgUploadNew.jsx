@@ -5,7 +5,7 @@ import { useWatch } from 'react-hook-form'
 import { getURL, isActiveClass, isFunction } from 'utils'
 import { Button } from '..'
 
-const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, title, size = 'md', ratio = '16:9', recommend = '1280x720', max = '5 MБ' }) => {
+const ImgUploadNew = ({ form, name = '', onChange, onDelete, imgClass, title, size = 'md', ratio = '16:9', recommend = '1280x720', max = '5 MБ' }) => {
    const inputFileObj = useInputFileNew({ form, name })
    const { onOpen, inputFileValue, inputFile, inputFileRef, wrapperRef } = inputFileObj
    const descr = useMemo(() => ['Соотношение сторон: ', ratio, ' (рекомендуемое разрешение: ', recommend, <br />, 'PNG, JPG до ', max].map((s, index) => <Fragment key={index}>{s}</Fragment>), [])
@@ -27,8 +27,9 @@ const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, ti
    const {
       formState: { errors },
    } = form
-   const spl = inputFileValue.name.split('.')
-   const error = errors[name] || (spl.length > 1 && errors && spl.reduce((prev, value) => (Array.isArray(prev) || typeof prev === 'object') && prev[value], errors))
+   const spl = inputFile.name.split('.')
+   const error = errors[inputFileValue.name] || errors[inputFile.name]
+   // (spl.length > 1 && errors && spl.reduce((prev, value) => (Array.isArray(prev) || typeof prev === 'object') && prev[value], errors))
 
    return (
       <div ref={wrapperRef} className={`course-edit__form-upload ${size && `course-edit__form-upload--${size}`}`}>
@@ -55,7 +56,7 @@ const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, ti
                            onChangeHandler(e)
                         }}
                         type='file'
-                        accept='image/png, image/gif, image/jpeg'
+                        accept='image/*'
                      />
                      Загрузить изображение
                   </Button>
@@ -65,6 +66,7 @@ const ImgUploadNew = ({ form, image, name = '', onChange, onDelete, imgClass, ti
                </div>
             </div>
          </div>
+         {error && <div className='input-error-text'>{error.message || 'Обязательное поле'}</div>}
       </div>
    )
 }

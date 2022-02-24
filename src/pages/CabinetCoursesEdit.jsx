@@ -84,15 +84,6 @@ const CabinetCoursesEdit = () => {
       return true
    }
 
-   const onSubmit = async () => {
-      const indexActive = refTabs.current.getIndex()
-      if ((await refsTab[indexActive]?.current.submit()) === false) {
-         setIsShow(true)
-         setContent({ title: 'Заполните все поля' })
-         return
-      }
-   }
-
    const onCancel = () => {}
 
    return (
@@ -111,7 +102,7 @@ const CabinetCoursesEdit = () => {
                   </Tabs>
                </div>
                <div className='course-edit__right'>
-                  <CoursesEditHint onSubmit={onSubmit} onCancel={onCancel} isResetBtn={isEditPage && false} textBtn={isEditPage || hasCourse ? 'Сохранить' : 'Добавить'} />
+                  <CoursesEditHint onCancel={onCancel} isResetBtn={isEditPage && false} textBtn={isEditPage || hasCourse ? 'Сохранить' : 'Добавить'} />
                </div>
             </div>
          </div>

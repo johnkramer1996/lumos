@@ -5,6 +5,7 @@ import { useDispatch, useRequest } from 'hooks'
 import { useLocation } from 'react-router-dom'
 import { frontStaticSelectors } from 'store/selectors'
 import { useSelector } from 'react-redux'
+import * as yup from 'yup'
 
 const App = () => {
    const location = useLocation()

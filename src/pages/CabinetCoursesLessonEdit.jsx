@@ -64,7 +64,7 @@ const CoursesLessonEdit = () => {
 
             return {
                ...q,
-               amount_answers: 0,
+               amount_answers: q.ansvers.reduce((p, v) => p + v, 0),
                ansvers: q.answers.map(
                   (a, i) => (
                      !a.id && delete a.id,
