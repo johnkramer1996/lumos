@@ -98,14 +98,19 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
       inputFile && inputFile[0] && body.append(`${fieldName}[${newId}][${'image'}]`, inputFile[0])
    }
 
-   const submit = async () => {
-      if (!(await form.trigger())) return false
-
+   const onSubmit = (data) => {
       const values = {}
-      ;(await getEntries()).forEach(([key, value]) => (values[key] = typeof value === 'boolean' ? +value : value))
+      Object.entries(data).forEach(([key, value]) => {
+         const val = typeof value === 'boolean' ? +value : value?.constructor.name === 'FileList' ? value[0] : value
+         if (val === undefined || val === null) return
+         body[key] = val
+      })
+
+      return
 
       const body = new FormData()
-      ;(await getEntries()).forEach(([key, value]) => !Array.isArray(value) && body.append(key, typeof value === 'boolean' ? +value : value))
+      // ;(await getEntries()).forEach(([key, value]) => !Array.isArray(value) && body.append(key, typeof value === 'boolean' ? +value : value))
+
       values.descriptions.map(async (fields, index) => await createField(fields.id, index, body, fields, 'descriptions'))
       values.whoms.map(async (fields, index) => await createField(fields.id, index, body, fields, 'whoms'))
       values.prices.map(async (fields, index) => await createField(fields.id, index, body, fields, 'prices'))
@@ -117,10 +122,12 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
       editInfoRequest.call({ courseId, body })
    }
 
-   useImperativeHandle(refTab, () => ({ submit }))
+   useImperativeHandle(refTab, () => ({
+      getForm: () => form,
+   }))
 
    return (
-      <>
+      <form id='form-edit' onSubmit={form.handleSubmit(onSubmit)}>
          <CardBg className='create-about'>
             <h3 className='create-about__title display-4'>О курсе</h3>
             <div className='create-about__editor'>
@@ -172,7 +179,7 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
                </div>
             </div>
          </CardBg>
-      </>
+      </form>
    )
 }
 

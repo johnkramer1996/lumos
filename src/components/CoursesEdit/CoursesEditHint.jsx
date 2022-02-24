@@ -1,7 +1,7 @@
 import { Button } from 'components/ui'
 import React from 'react'
 
-const CoursesEditHint = ({ onSubmit, onReset, isResetBtn, textBtn = 'Сохранить' }) => {
+const CoursesEditHint = ({ onReset, isResetBtn, textBtn = 'Сохранить' }) => {
    return (
       <div className='course-edit__hint'>
          <Button className={`course-edit__hint-btn`} type='submit' form='form-edit'>

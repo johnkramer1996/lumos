@@ -15,8 +15,8 @@ const CoursesEditArrayFields = ({ children, form, onDelete, onDeleteLesson, appe
    const array = form.getValues(name)
 
    const onAdd = async (e) => {
+      console.log(e)
       e.preventDefault()
-      if (!(await form.trigger(name))) return
       append(appendFields)
    }
 
@@ -39,6 +39,7 @@ const CoursesEditArrayFields = ({ children, form, onDelete, onDeleteLesson, appe
             <AddSvg />
             <span>{btnText}</span>
          </Button>
+         {form.formState.errors[name] && <div className='input-error-text'>{form.formState.errors[name].message || 'Обязательное поле'}</div>}
       </>
    )
 }

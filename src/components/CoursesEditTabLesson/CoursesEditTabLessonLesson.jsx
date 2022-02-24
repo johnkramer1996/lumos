@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Input } from 'components/ui'
 import { useDispatch } from 'hooks'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { declOfNum, getDeclOfArray, getURL, uid } from 'utils'
 import { useFieldArray, useWatch } from 'react-hook-form'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
@@ -18,13 +18,12 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
    })
    const lessons = form.getValues(`modules.${nestIndex}.lessons`)
 
-   const name = useWatch({
+   const moduleName = useWatch({
       control: form.control,
       name: `modules.${nestIndex}.name`,
    })
 
    const onAdd = async () => {
-      if (!(await form.trigger(`modules.${nestIndex}.lessons`))) return
       append({
          name: '',
          number: fields.length,
@@ -38,15 +37,19 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
    }
 
    const addLesson = (e) => {
-      e.preventDefault()
-      setIsShow(true)
-      setContent({ title: 'Сначала нужно сохранить ' })
+      if (form.formState.isDirty) {
+         e.preventDefault()
+         setIsShow(true)
+         setContent({ title: 'Сначала сохраните' })
+      }
    }
+
+   const error = form.formState.errors && form.formState.errors[`modules[${nestIndex}].lessons`]
 
    return (
       <div className='create-module card-bg'>
          <div className='create-module__top'>
-            <h3 className='create-module__title display-4'>{name || 'Модуль ' + (nestIndex + 1)}</h3>
+            <h3 className='create-module__title display-4'>{moduleName || 'Модуль ' + (nestIndex + 1)}</h3>
             <div className='create-module__num'>
                {fields.length} {declOfNum(fields.length, getDeclOfArray['lessons'])}
             </div>
@@ -60,15 +63,22 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
                         <DragSvg />
                      </button>
                      {lessonId ? (
-                        <Link to={getURL.cabinetCoursesLessonEdit({ courseId, lessonId })} className='create-module__link'>
+                        <a href={getURL.cabinetCoursesLessonEdit({ courseId, lessonId })} className='create-module__link' onClick={addLesson}>
                            <LinkSvg />
-                        </Link>
+                        </a>
                      ) : (
                         <div className='create-module__link' onClick={addLesson}>
                            <LinkSvg />
                         </div>
                      )}
-                     <Input form={form} name={`modules.${nestIndex}.lessons.${index}.name`} placeholder='Название урока' isErrorText={false} withoutWrapper />
+                     <Input
+                        form={form}
+                        name={`modules.${nestIndex}.lessons.${index}.name`}
+                        errorName={`modules[${nestIndex}].lessons[${index}].name`}
+                        placeholder='Название урока'
+                        isErrorText={false}
+                        withoutWrapper
+                     />
                      <Input form={form} name={`modules.${nestIndex}.lessons.${index}.number`} type='hidden' withoutWrapper />
                      <Input form={form} name={`modules.${nestIndex}.lessons.${index}.hidden_id`} type='hidden' withoutWrapper />
                      <Input form={form} name={`modules.${nestIndex}.lessons.${index}.id`} type='hidden' withoutWrapper />
@@ -84,6 +94,7 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
             <AddSvg />
             <span>Добавить урок</span>
          </Button>
+         {error && <div className='input-error-text'>{error.message || 'Обязательное поле'}</div>}
       </div>
    )
 }

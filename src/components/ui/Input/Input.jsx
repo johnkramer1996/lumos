@@ -2,7 +2,7 @@ import React from 'react'
 import { DatePicker } from '..'
 import { isActiveClass, isFunction } from 'utils'
 
-const Input = ({ form, label, registerOptions = {}, options, classNameWrapper = '', withoutWrapper, datepicker, textarea, email, password, time, number, isErrorText = true, ...props }) => {
+const Input = ({ errorName, form, label, registerOptions = {}, options, classNameWrapper = '', withoutWrapper, datepicker, textarea, email, password, time, number, isErrorText = true, ...props }) => {
    if (!form || !props['name']) return <input type='text' placeholder='Error Input' />
    //  const onChangeHandle = (e) => {
    //     input.bind.onChange(e)
@@ -40,8 +40,7 @@ const Input = ({ form, label, registerOptions = {}, options, classNameWrapper = 
    if (number) registerOptions.onChange = (e) => (e.target.value = e.target.value.replace(/[^0-9]/g, ''))
    if (props.type === 'hidden') registerOptions.required = false
 
-   const spl = name.split('.')
-   const error = errors[name] || (spl.length > 1 && errors && spl.reduce((prev, value) => (Array.isArray(prev) || typeof prev === 'object') && prev[value], errors))
+   const error = errorName ? errors[errorName] : errors[name]
    props = {
       ...register(name, { required: true, ...registerOptions }),
       ...props,

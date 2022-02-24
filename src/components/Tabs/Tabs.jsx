@@ -6,7 +6,7 @@ import { isFunction } from 'utils'
 const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-report', isAvaibleIndex, activeTabIndex }, ref) => {
    const location = useLocation()
    const navigate = useNavigate()
-   const { activeStep = 0 } = location?.state || {}
+   const { activeIndexStep = 0 } = location?.state || {}
 
    useEffect(() => {
       activeTabIndex && changeStep(activeTabIndex)
@@ -14,9 +14,9 @@ const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-r
 
    const events = {
       setItemsByIndex: (activeIndex) => changeStep(activeIndex),
-      nextItems: () => events.setItemsByIndex(activeStep + 1 >= items.length ? 0 : activeStep + 1),
-      changeTab: (index) => !(isFunction(isAvaibleIndex) && !isAvaibleIndex(index)) && events.setItemsByIndex(index),
-      getIndex: () => activeStep,
+      nextItems: () => events.setItemsByIndex(activeIndexStep + 1 >= items.length ? 0 : activeIndexStep + 1),
+      changeTab: (index) => !(isFunction(isAvaibleIndex) && !isAvaibleIndex(index, activeIndexStep)) && events.setItemsByIndex(index),
+      getIndex: () => activeIndexStep,
    }
 
    useImperativeHandle(ref, () => events)
@@ -28,13 +28,13 @@ const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-r
          },
          {
             state: {
-               activeStep: index,
+               activeIndexStep: index,
             },
          },
       )
    }
 
-   const Component = items[activeStep].component
+   const Component = items[activeIndexStep].component
 
    return (
       <>
@@ -45,7 +45,7 @@ const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-r
                      {items.map(({ title, notifications }, index) => (
                         <div
                            key={index}
-                           className={`${classPrefix}__tab${activeStep === index ? ` ${classPrefix}__tab--active` : ''} ${classPrefix}__tab${
+                           className={`${classPrefix}__tab${activeIndexStep === index ? ` ${classPrefix}__tab--active` : ''} ${classPrefix}__tab${
                               notifications ? ` ${classPrefix}__tab--notification` : ''
                            }`}
                            onClick={() => events.changeTab(index)}
@@ -58,7 +58,15 @@ const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-r
                </div>
                <LoaderWrapper isLoading={isLoading}>
                   <div className={`${classPrefix}__content ${classPrefix}__content--active`}>
-                     {isFunction(children) ? children({ activeStep, refTabs: ref }) : children ? children : typeof Component === 'object' ? Component : <Component {...items[activeStep].props} />}
+                     {isFunction(children) ? (
+                        children({ activeIndexStep, refTabs: ref })
+                     ) : children ? (
+                        children
+                     ) : typeof Component === 'object' ? (
+                        Component
+                     ) : (
+                        <Component {...items[activeIndexStep].props} />
+                     )}
                   </div>
                </LoaderWrapper>
             </>

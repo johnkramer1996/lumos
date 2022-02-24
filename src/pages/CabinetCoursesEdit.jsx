@@ -5,15 +5,12 @@ import { CoursesEditTabMain, CoursesEditTabLesson, CoursesEditTabDescription, Ta
 import { useLocation, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { authSelectors, coursesSelectors } from 'store/selectors'
-import CoursesEditLessonEdit from 'components/CoursesLessonEdit/CoursesLessonEdit'
 import CoursesEditHint from 'components/CoursesEdit/CoursesEditHint'
 
 const CabinetCoursesEdit = () => {
-   const { courseId, lessonId } = useParams()
-   const location = useLocation()
+   const { courseId } = useParams()
    const { toCourses } = useNavigate()
    const isEditPage = !!courseId
-   const isLessonPage = !!lessonId
    const { resetCourses, setIsShow, setContent, setCourse, setModules, fetchInfo } = useDispatch()
    const user = useSelector(authSelectors.getUser)
    const { id: user_id } = user
@@ -22,6 +19,8 @@ const CabinetCoursesEdit = () => {
    const hasCourse = !(Object.keys(course).length === 0)
    const hasModules = !(Object.keys(modules).length === 0)
    const { user_id: page_user_id } = course
+
+   const [form, setForm] = useState()
 
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
@@ -40,6 +39,8 @@ const CabinetCoursesEdit = () => {
    const refTabMain = useRef()
    const refTabLesson = useRef()
    const refTabDescription = useRef()
+   const refForm = useRef()
+   const refsTab = useMemo(() => [refTabMain, refTabLesson, refTabDescription], [])
 
    const tabItems = [
       {
@@ -48,6 +49,8 @@ const CabinetCoursesEdit = () => {
          props: {
             refTab: refTabMain,
             refTabs: refTabs,
+            refForm,
+            setForm,
          },
       },
       {
@@ -64,11 +67,13 @@ const CabinetCoursesEdit = () => {
          props: {
             refTab: refTabDescription,
             refTabs: refTabs,
+            refForm,
          },
       },
    ]
 
-   const isAvaibleTabIndex = (index) => {
+   const isAvaibleTabIndex = (index, activeIndexStep) => {
+      const form = refsTab[activeIndexStep].current.getForm()
       if (index === 0) return true
       if ((index === 1 || index === 2) && !hasCourse) {
          setIsShow(true)
@@ -78,6 +83,11 @@ const CabinetCoursesEdit = () => {
       if (index === 2 && !hasModules) {
          setIsShow(true)
          setContent({ title: 'Заполните уроки' })
+         return
+      }
+      if (form.formState.isDirty) {
+         setIsShow(true)
+         setContent({ title: 'Сначала сохраните' })
          return
       }
       return true
@@ -94,14 +104,14 @@ const CabinetCoursesEdit = () => {
                      <span>{isEditPage ? 'Редактирование' : 'Добавление'} курса</span>
                   </h1>
                   <Tabs ref={refTabs} items={tabItems} classPrefix={'course-edit'} isLoading={fetchInfoRequest.isLoading} activeTabIndex={0} isAvaibleIndex={isAvaibleTabIndex}>
-                     {({ activeStep }) => {
-                        const Component = tabItems[activeStep].component
-                        return <Component {...tabItems[activeStep].props} />
+                     {({ activeIndexStep }) => {
+                        const Component = tabItems[activeIndexStep].component
+                        return <Component {...tabItems[activeIndexStep].props} />
                      }}
                   </Tabs>
                </div>
                <div className='course-edit__right'>
-                  <CoursesEditHint onCancel={onCancel} isResetBtn={isEditPage && false} textBtn={isEditPage || hasCourse ? 'Сохранить' : 'Добавить'} />
+                  <CoursesEditHint form={form} onCancel={onCancel} isResetBtn={isEditPage && false} textBtn={isEditPage || hasCourse ? 'Сохранить' : 'Добавить'} />
                </div>
             </div>
          </div>

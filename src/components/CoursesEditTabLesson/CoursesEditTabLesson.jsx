@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { Button, CardBg, Input } from 'components/ui'
 import { useSelector } from 'react-redux'
-import { useDispatch, useInput, useRequest } from 'hooks'
+import { useDispatch, useInput, useRequest, useYupValidationResolver } from 'hooks'
 import { useParams } from 'react-router-dom'
 import { asyncFind, declOfNum, timeout, uid } from 'utils'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
@@ -12,8 +12,32 @@ import { useCallback } from 'react'
 import CoursesEditArrayFields from '../CoursesEdit/CoursesEditArrayFields'
 import CoursesEditTabLessonTestLesson from './CoursesEditTabLessonTestLesson'
 import CoursesEditTabLessonLesson from './CoursesEditTabLessonLesson'
+import * as yup from 'yup'
 
-const CoursesEditTabLesson = ({ refTabs }) => {
+const validationSchema = yup.object({
+   short_desc: yup.string().required('Обязательное поле'),
+   test_lesson: yup.string().required('Обязательное поле'),
+   modules: yup
+      .array()
+      .min(1, 'Добавьте один модуль')
+      .of(
+         yup.object().shape({
+            name: yup.string().required(),
+            lessons: yup
+               .array()
+               //  .min(1, 'Добавьте один урок')
+               .of(
+                  yup.object().shape({
+                     name: yup.string().required(),
+                  }),
+               )
+               .required('Required'),
+         }),
+      )
+      .required('Required'),
+})
+
+const CoursesEditTabLesson = ({ refTabs, refTab }) => {
    const { courseId } = useParams()
    const { setContent, setIsShow, setModules, deleteModule, deleteLesson, addModulesMass } = useDispatch()
    const course = useSelector(coursesSelectors.getCourse)
@@ -30,31 +54,33 @@ const CoursesEditTabLesson = ({ refTabs }) => {
    const hasInfo = hasDescriptions || hasWhoms || hasPrices
 
    const form = useForm({
-      // mode: 'onBlur',
       defaultValues: {
          short_desc: '',
          test_lesson: '',
          modules: [],
       },
+      resolver: useYupValidationResolver(validationSchema),
    })
+   const { isDirty } = form.formState
+
+   console.log(isDirty)
 
    useEffect(() => {
-      if (hasCourse) {
-         Object.entries(form.getValues())
-            .filter(([k]) => !['image', 'modules'].includes(k))
-            .forEach(([key]) => form.setValue(key, course[key] ?? ''))
+      Object.entries(form.getValues())
+         .filter(([k]) => !['image', 'modules'].includes(k))
+         .forEach(([key]) => form.setValue(key, course[key] ?? ''))
 
-         const newModules = modules.map((m) => ({
-            name: m.name,
-            id: m.id,
-            lessons: m.lessons.map((l) => ({ name: l.name, number: l.number, id: l.id, hidden_id: l.hidden_id })) || [],
-         }))
-         form.resetField('test_lesson')
-         //  form.setValue('short_desc', course.short_desc)
-         newModules.length && form.setValue('modules', newModules)
-         setTimeout(() => course.test_lesson && form.setValue('test_lesson', course.test_lesson?.hidden_id || ''), 0)
-      }
-   }, [modules, course])
+      course.test_lesson && form.setValue('test_lesson', course.test_lesson?.hidden_id || '')
+      setTimeout(() => course.test_lesson && form.setValue('test_lesson', course.test_lesson?.hidden_id || ''), 0)
+   }, [course])
+   useEffect(() => {
+      const newModules = modules.map((m) => ({
+         name: m.name,
+         id: m.id,
+         lessons: m.lessons.map((l) => ({ name: l.name, number: l.number, id: l.id, hidden_id: l.hidden_id })) || [],
+      }))
+      newModules.length && form.setValue('modules', newModules)
+   }, [modules])
 
    const addModulesMassRequest = useRequest({
       request: addModulesMass,
@@ -66,7 +92,14 @@ const CoursesEditTabLesson = ({ refTabs }) => {
             ? setContent({ title: 'Уроки обновлены,', descr: 'Заполните описание курса и его стоимость.' })
             : setContent({ title: 'Уроки обновлены', descr: '' })
 
-         !hasInfo && refTabs?.current?.nextItems()
+         form.reset(
+            {},
+            {
+               keepValues: true,
+            },
+         )
+
+         //  !hasInfo && refTabs?.current?.nextItems()
       },
    })
 
@@ -109,8 +142,6 @@ const CoursesEditTabLesson = ({ refTabs }) => {
 
       console.log(body)
 
-      return
-
       addModulesMassRequest.call({ courseId, body })
    }
 
@@ -119,6 +150,10 @@ const CoursesEditTabLesson = ({ refTabs }) => {
       name: 'modules',
       control: form.control,
    })
+
+   useImperativeHandle(refTab, () => ({
+      getForm: () => form,
+   }))
 
    return (
       <>
@@ -136,7 +171,8 @@ const CoursesEditTabLesson = ({ refTabs }) => {
                         <div key={id} className='create-module__item form-group'>
                            <label>Название модуля {index + 1}</label>
                            <div className='create-module__input'>
-                              <Input form={form} name={`${name}.${index}.name`} placeholder='Название модуля' isErrorText={false} withoutWrapper />
+                              <Input form={form} name={`${name}.${index}.name`} errorName={`${name}[${index}].name`} placeholder='Название модуля' isErrorText={false} withoutWrapper />
+                              {/* <ErrorMessage name={`${name}.${index}.name`} /> */}
                               <Input form={form} name={`${name}.${index}.id`} type='hidden' withoutWrapper />
                               <button className='create-module__delete' onClick={() => onRemove(index)}>
                                  <DeleteSvg />

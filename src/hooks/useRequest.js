@@ -13,7 +13,7 @@ const useRequest = ({ request, success, error, loading } = {}) => {
             if (!isMounted) return
             switch (type) {
                case 'before':
-                  loading && setIsLoading(true)
+                  !loading && setIsLoading(true)
                   break
                case 'success':
                   isFunction(success) && success(data)

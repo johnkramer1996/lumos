@@ -47,6 +47,7 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
    const form = useForm({
       resolver: useYupValidationResolver(validationSchema),
    })
+   const { isDirty } = form.formState
    const anytime = form.watch('anytime')
 
    useEffect(() => {
@@ -74,6 +75,12 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
       success: ({ response, data }) => {
          setIsShow(true)
          setContent({ title: 'Курс Обновлен' })
+         form.reset(
+            {},
+            {
+               keepValues: true,
+            },
+         )
       },
    })
 
@@ -88,6 +95,10 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
 
       hasCourse ? putCourseRequest.call({ courseId, body }) : CoursesEditRequest.call({ body })
    }
+
+   useImperativeHandle(refTab, () => ({
+      getForm: () => form,
+   }))
 
    return (
       <form id='form-edit' onSubmit={form.handleSubmit(onSubmit)} className='course-edit__form'>
