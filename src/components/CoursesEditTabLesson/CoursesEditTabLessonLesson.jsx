@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, Input } from 'components/ui'
 import { useDispatch } from 'hooks'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { declOfNum, getDeclOfArray, getURL, uid } from 'utils'
+import { declOfNum, getDeclOfArray, getError, getURL, uid } from 'utils'
 import { useFieldArray, useWatch } from 'react-hook-form'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
@@ -25,6 +25,7 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
 
    const onAdd = (e) => {
       e.preventDefault()
+      form.clearErrors(`modules.${nestIndex}.lessons`)
       append({
          name: '',
          number: fields.length,
@@ -34,6 +35,7 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
 
    const onRemove = async (index, lessonId) => {
       onDeleteLesson(lessonId)
+      console.log(fields)
       remove(index)
    }
 
@@ -45,7 +47,7 @@ const CoursesEditTabLessonLesson = ({ nestIndex, form, onDeleteLesson }) => {
       }
    }
 
-   const error = form.formState.errors && form.formState.errors[`modules[${nestIndex}].lessons`]
+   const error = getError(form.formState.errors, `modules.${nestIndex}.lessons`)
 
    return (
       <div className='create-module card-bg'>

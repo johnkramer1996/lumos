@@ -26,6 +26,7 @@ const validationSchema = yup.object({
             name: yup.string().required('Обязательное поле'),
             lessons: yup
                .array()
+               .min(1, 'Добавьте один урок')
                .of(
                   yup.object().shape({
                      name: yup.string().required(),
