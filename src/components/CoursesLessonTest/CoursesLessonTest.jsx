@@ -1,4 +1,4 @@
-import { Button, Checkbox, Input } from 'components/ui'
+import { Button, Checkbox, Input, LoaderWrapper } from 'components/ui'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
@@ -22,7 +22,7 @@ const validationSchema = yup.object({
    ),
 })
 
-const CoursesLessonTest = () => {
+const CoursesLessonTest = ({ isLoading }) => {
    const { courseId, lessonId } = useParams()
    const { sendLessonTest, setIsShow, setContent, setType } = useDispatch()
    const rolesId = useSelector(authSelectors.getRolesId)
@@ -32,7 +32,12 @@ const CoursesLessonTest = () => {
       mode: 'onChange',
       resolver: yupResolver(validationSchema),
       defaultValues: {
-         questions: [{ question: '', amount_answers: null, ansvers: [] }],
+         questions: [
+            {
+               question_id: null,
+               ansvers: [],
+            },
+         ],
       },
    })
    const { fields } = useFieldArray({
@@ -74,24 +79,26 @@ const CoursesLessonTest = () => {
    return (
       <form onSubmit={form.handleSubmit(onSubmit)} className='test-page__wrap'>
          <div className='test-page__left'>
-            <div className='test-page__items'>
-               {questions.map((props, index) => {
-                  const error = getError(form.formState.errors, `questions.${index}.ansvers`)
-                  return (
-                     <div key={props.id || index} className='test-page__item card-bg'>
-                        <div className='test-page__item-title'>{props.question}</div>
-                        <div className='test-page__item-variants'>
-                           <Input form={form} name={`questions.${index}.question_id`} type='hidden' />
-                           {props.answers?.map(({ id, ansver }, indexAnswer) => (
-                              //  <Checkbox key={indexAnswer} form={form} name={`${name}.${index}.moduls`} value={mIndex} label={label} className='create-price__check' />
-                              <Checkbox key={indexAnswer} form={form} name={`questions.${index}.ansvers`} value={id} label={ansver} className='course-edit__form-checkbox' />
-                           ))}
-                           <div className='input-error-text'>{error && error.message}</div>
+            <LoaderWrapper isLoading={isLoading}>
+               <div className='test-page__items'>
+                  {questions.map((props, index) => {
+                     const error = getError(form.formState.errors, `questions.${index}.ansvers`)
+                     return (
+                        <div key={props.id || index} className='test-page__item card-bg'>
+                           <div className='test-page__item-title'>{props.question}</div>
+                           <div className='test-page__item-variants'>
+                              <Input form={form} name={`questions.${index}.question_id`} type='hidden' />
+                              {props.answers?.map(({ id, ansver }, indexAnswer) => (
+                                 //  <Checkbox key={indexAnswer} form={form} name={`${name}.${index}.moduls`} value={mIndex} label={label} className='create-price__check' />
+                                 <Checkbox key={indexAnswer} form={form} name={`questions.${index}.ansvers`} value={id} label={ansver} className='course-edit__form-checkbox' />
+                              ))}
+                              <div className='input-error-text'>{error && error.message}</div>
+                           </div>
                         </div>
-                     </div>
-                  )
-               })}
-            </div>
+                     )
+                  })}
+               </div>
+            </LoaderWrapper>
          </div>
          <div className='test-page__right'>
             {hasAccess(rolesId, [ROLES.TRAINER]) && (
