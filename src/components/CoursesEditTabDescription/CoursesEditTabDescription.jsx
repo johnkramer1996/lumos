@@ -106,6 +106,12 @@ const CoursesEditTabDescription = ({ refTabs, refTab }) => {
    const editInfoRequest = useRequest({
       request: editInfo,
       success: ({ response, data }) => {
+         form.reset(
+            {},
+            {
+               keepValues: true,
+            },
+         )
          if (hasInfo) {
             setIsShow(true)
             setContent({ title: 'Информация о курсе обновлена', descr: '' })

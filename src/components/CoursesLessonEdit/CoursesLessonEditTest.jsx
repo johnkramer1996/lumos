@@ -12,7 +12,7 @@ import CoursesLessonEditTestItemVariant from './CoursesLessonEditTestItemVariant
 import { useWatch } from 'react-hook-form'
 
 const CoursesLessonEditTest = ({ form }) => {
-   const onDeleteModule = () => {}
+   const onDelete = () => {}
    const onDeleteVariant = () => {}
 
    const questions = useWatch({
@@ -32,7 +32,7 @@ const CoursesLessonEditTest = ({ form }) => {
          </div>
          <Input form={form} name='questions_to_delete' type='hidden' />
          <Input form={form} name='ansvers_to_delete' type='hidden' />
-         <CoursesEditArrayFields isNestComponent={true} name='questions' onDelete={onDeleteModule} form={form} appendFields={{ question: '', answers: [], id: null }} btnText='Добавить модуль'>
+         <CoursesEditArrayFields isNestComponent={true} name='questions' onDelete={onDelete} form={form} appendFields={{ question: '', answers: [], id: null }} btnText='Добавить модуль'>
             {({ id, index, onRemove, name, form }) => (
                <div key={id} className='create-module__item form-group'>
                   <div className='lesson-test__group'>
@@ -41,19 +41,19 @@ const CoursesLessonEditTest = ({ form }) => {
                         <button
                            className='lesson-test__delete'
                            onClick={() => {
-                              form.setValue('questions_to_delete', [...form.getValues('questions_to_delete'), questions[index].id])
+                              const id = questions[index].id
+                              id && form.setValue('questions_to_delete', [...form.getValues('questions_to_delete'), questions[index].id])
                               onRemove(index)
                            }}
                         >
                            <DeleteSvg />
                         </button>
                      </div>
-                     <div className='create-module__input'>
+                     <div className='lesson-test__input'>
                         <Input form={form} name={`${name}.${index}.question`} placeholder='Вопрос' isErrorText={false} textarea withoutWrapper />
                         <Input form={form} name={`${name}.${index}.id`} type='hidden' withoutWrapper />
                      </div>
                      <CoursesLessonEditTestItemVariant nestIndex={index} form={form} onDelete={onDeleteVariant} />
-                     {/* <CoursesLessonEditTestItemVariant key={props.id || index} nestIndex={index} form={form} onDelete={onDeleteVariant} {...props} /> */}
                   </div>
                </div>
             )}

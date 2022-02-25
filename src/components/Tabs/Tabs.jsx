@@ -3,7 +3,7 @@ import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'rea
 import { useLocation, useNavigate } from 'react-router-dom'
 import { isFunction } from 'utils'
 
-const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-report', isAvaibleIndex, activeTabIndex }, ref) => {
+const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-report', isAvaibleIndex, setIndex, activeTabIndex }, ref) => {
    const location = useLocation()
    const navigate = useNavigate()
    const { activeIndexStep = 0 } = location?.state || {}
@@ -13,7 +13,7 @@ const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-r
    }, [])
 
    const events = {
-      setItemsByIndex: (activeIndex) => changeStep(activeIndex),
+      setItemsByIndex: (index) => changeStep(index, isFunction(index) && setIndex(index)),
       nextItems: () => events.setItemsByIndex(activeIndexStep + 1 >= items.length ? 0 : activeIndexStep + 1),
       changeTab: (index) => !(isFunction(isAvaibleIndex) && !isAvaibleIndex(index, activeIndexStep)) && events.setItemsByIndex(index),
       getIndex: () => activeIndexStep,
@@ -21,10 +21,11 @@ const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-r
 
    useImperativeHandle(ref, () => events)
 
-   const changeStep = (index) => {
+   const changeStep = (index, newLocation = {}) => {
       navigate(
          {
             ...location,
+            ...newLocation,
          },
          {
             state: {
@@ -34,7 +35,7 @@ const Tabs = ({ children, items = [], isLoading = false, classPrefix = 'course-r
       )
    }
 
-   const Component = items[activeIndexStep].component
+   const Component = (items[activeIndexStep] || items[0]).component
 
    return (
       <>

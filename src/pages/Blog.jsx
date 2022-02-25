@@ -29,16 +29,16 @@ const Blog = () => {
       })
    }, [location.search])
 
-   const onChangeTabs = (index) => {
+   const onSetTabIndex = (index) => {
       const id = blogCategory.find((_, i) => +i === +index - 1)?.id
       const params = {
          category_id: id ? [id] : [],
       }
 
-      navigate({
+      return {
          pathname: location.pathname,
          search: `?${createSearchParams(params)}`,
-      })
+      }
    }
 
    const tabItems = useMemo(
@@ -65,11 +65,13 @@ const Blog = () => {
       [blogCategory, popularBlogs, newBlogs],
    )
 
+   console.log(fetchFrontBlogCategoryRequest.isLoading)
+
    return (
       <section className='blog'>
          <div className='container'>
             <h1 className='blog__title display-2'>Блог</h1>
-            <Tabs items={tabItems} classPrefix='blog' setIndex={onChangeTabs} isLoading={fetchFrontBlogCategoryRequest.isLoading} />
+            <Tabs items={tabItems} classPrefix='blog' setIndex={onSetTabIndex} isLoading={fetchFrontBlogCategoryRequest.isLoading} />
          </div>
       </section>
    )

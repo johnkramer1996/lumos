@@ -22,6 +22,7 @@ const CabinetEvents = () => {
    const roleRequest = useMemo(() => getRequest([fetchUserEvents, fetchEvents], rolesId), [])
    const fetchEventsRequest = useRequest({
       request: roleRequest,
+      loading: true,
    })
 
    useEffect(() => {

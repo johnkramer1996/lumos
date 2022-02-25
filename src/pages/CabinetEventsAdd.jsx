@@ -3,9 +3,21 @@ import { useDispatch, useInput, useInputFile, useInputFileNew, useNavigate, useR
 import React, { useEffect, useLayoutEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { getDate, getURL, isActiveClass, timeout } from 'utils'
+import { getURL, timeout } from 'utils'
 import { useForm } from 'react-hook-form'
 import { eventsSelectors } from 'store/selectors'
+import { TIME_NAMES } from 'constants'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+const validationSchema = yup.object({
+   name: yup.string().required('Обязательное поле'),
+   timing: yup.string().required('Обязательное поле'),
+   //  width_number: yup.number().typeError('Некорректное число').required('Обязательное поле'),
+   //  width_name: yup.string().required('Обязательное поле'),
+   imageValue: yup.string().required('Обязательное поле'),
+   image: yup.mixed().imageFormatCheck().imageFileSizeCheck(5).imageMinResolutionCheck(1280, 720),
+})
 
 const CabinetEventsAdd = () => {
    const { eventId } = useParams()
@@ -15,18 +27,25 @@ const CabinetEventsAdd = () => {
    const event = useSelector(eventsSelectors.getEvent)
    const hasEvent = !(Object.keys(event).length === 0)
 
-   const form = useForm()
-   const inputFileObj = useInputFileNew({ form })
-   // TODO ADD VIDEO KEY
-   const getEntries = async () => timeout(() => Object.entries(form.getValues()).filter(([key]) => !(key === 'video_key' || key === 'inputFile' || key === 'inputFileValue')))
+   const form = useForm({
+      mode: 'onChange',
+      resolver: yupResolver(validationSchema),
+      defaultValues: {
+         name: '',
+         event_type_id: '',
+         edate: '',
+         timing: '',
+         text: '',
+      },
+   })
 
    useEffect(() => {
+      console.log(event, fetchEventRequest.isLoading)
       if (hasEvent) {
-         ;(async () => {
-            ;(await getEntries()).forEach(([key]) => form.setValue(key, event[key] !== '0' ? event[key] : false ?? ''))
-            // inputFileObj.setValueImg(getURL.img(event.image, false) ?? '')
-            form.setValue('inputFileValue', getURL.img(event['image'], false) ?? '')
-         })()
+         Object.entries(form.getValues())
+            .filter(([k]) => !['image'].includes(k))
+            .forEach(([key]) => form.setValue(key, event[key] ?? ''))
+         form.setValue('imageValue', getURL.img(event['image'], false) ?? '')
       }
    }, [event])
 
@@ -66,14 +85,17 @@ const CabinetEventsAdd = () => {
       },
    })
 
-   const onSave = async (e) => {
-      if (!(await form.trigger())) return
-
+   const onSave = (data) => {
       const body = new FormData()
 
-      ;(await getEntries()).forEach(([key, value]) => body.append(key, typeof value === 'boolean' ? +value : value))
-      const inputFile = form.getValues('inputFile')
-      inputFile[0] && body.append('image', inputFile[0])
+      Object.entries(data)
+         // TODO REMOVE VIDEO KEY
+         .filter(([k]) => !['imageValue', 'video_key'].includes(k))
+         .forEach(([key, value]) => {
+            const val = typeof value === 'boolean' ? +value : value?.constructor.name === 'FileList' ? value[0] : value
+            if (val === undefined || val === null) return
+            body.append(key, val)
+         })
 
       hasEvent ? putEventRequest.call({ eventId, body }) : addEventRequest.call({ body })
    }
@@ -89,7 +111,7 @@ const CabinetEventsAdd = () => {
          <div className='container'>
             <form onSubmit={form.handleSubmit(onSave)} className='edit-event__inner'>
                <div className='edit-event__left'>
-                  <LoaderWrapper isLoading={fetchEventRequest.isLoading}>
+                  <LoaderWrapper isLoading={false && fetchEventRequest.isLoading}>
                      <h1 className='edit-event__title display-3'>
                         <span>{isEditPage ? 'Редактирование' : 'Добавление'} мероприятия</span>
                      </h1>
@@ -100,18 +122,22 @@ const CabinetEventsAdd = () => {
                            <Input form={form} name='name' label='Название' className='course-edit__form-group' />
                            <Input form={form} name='event_type_id' label='Тип' options={[{ id: 1, name: 'Онлайн-трансляция' }]} className='course-edit__form-group' />
                            <Input form={form} name='edate' label='Дата' datepicker className='course-edit__form-group' />
-                           <Input form={form} name='etime' label='Время начала (по МСК)' time className='course-edit__form-group' />
+                           <Input form={form} name='etime' label='Время начала (по МСК)' className='course-edit__form-group' />
+                           {/* <div className='course-edit__form-group form-group form-group--row'>
+                              <Input form={form} name='width_number' label='Длительность' className='course-edit__form-group' number />
+                              <Input form={form} name='width_name' label='&nbsp;' className='course-edit__form-group' options={TIME_NAMES} />
+                           </div> */}
                            <Input form={form} name='timing' label='Ориентировочная длительность' className='course-edit__form-group' />
                         </div>
                      </div>
                      <div className='create-about card-bg'>
                         <h3 className='create-about__title display-4'>Описание</h3>
-                        <Input className='create-about__editor' form={form} name={'text'} textarea />
+                        <Input form={form} name='text' className='create-about__editor' textarea />
                      </div>
                      <div className='edit-event__broadcast card-bg'>
                         <h3 className='edit-event__broadcast-title display-4'>Трансляция</h3>
                         <div className='edit-event__broadcast-bottom'>
-                           <Input classNameWrapper='edit-event__broadcast-form-group' form={form} name={'video_key'} registerOptions={{ required: false }} label={'Ключ трансляции'} />
+                           <Input form={form} name={'video_key'} registerOptions={{ required: false }} label='Ключ трансляции' classNameWrapper='edit-event__broadcast-form-group' />
                            <Button className='edit-event__broadcast-btn' outline>
                               Как узнать ключ трансляции?
                            </Button>

@@ -1,17 +1,11 @@
 import { Button, Checkbox, Input } from 'components/ui'
-import { useInput } from 'hooks'
 import React from 'react'
-import { useFieldArray, useWatch } from 'react-hook-form'
-import { useDispatch, useSelector } from 'react-redux'
-import { useParams } from 'react-router-dom'
-import { coursesSelectors } from 'store/selectors'
+import { useFieldArray } from 'react-hook-form'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { ReactComponent as AddSvg } from 'svg/add.svg'
-import { uid } from 'utils'
+import { getError } from 'utils'
 
-const CoursesLessonEditTestItemVariant = ({ nestIndex, form, onDelete }) => {
-   const { courseId } = useParams()
-   const { setIsShow, setContent } = useDispatch()
+const CoursesLessonEditTestItemVariant = ({ nestIndex, form }) => {
    const { fields, remove, append } = useFieldArray({
       control: form.control,
       name: `questions.${nestIndex}.answers`,
@@ -20,31 +14,25 @@ const CoursesLessonEditTestItemVariant = ({ nestIndex, form, onDelete }) => {
 
    const onAdd = async (e) => {
       e.preventDefault()
-      if (!(await form.trigger(`questions.${nestIndex}.answers`))) return
-
+      form.clearErrors(`questions.${nestIndex}.answers`)
       append({
          ansver: 'ответ' + fields.length,
          is_true: false,
          id: null,
-         //  hidden_id: uid(),
       })
    }
 
-   const onRemove = async (index, lessonId) => {
-      onDelete(lessonId)
-      remove(index)
-   }
+   const onRemove = async (index) => remove(index)
+
+   const error = getError(form.formState.errors, `questions.${nestIndex}.answers`)
 
    return (
       <div className='lesson-test__variants'>
          <div className='lesson-test__variants-title'>Введите варианты ответов и выберите правильный</div>
          <div className='lesson-test__variants-items'>
             {fields.map((item, index) => {
-               // TODO CHECK
-               const answerId = answers[index].id
                return (
                   <div key={item.id} className='lesson-test__variants-item form-group'>
-                     {/* <Checkbox form={form} name='can_comment' label='Комментарии' type='switch' className='lesson-edit__switch' /> */}
                      <Checkbox form={form} name={`questions.${nestIndex}.answers.${index}.is_true`} type='radio' />
                      <Input form={form} name={`questions.${nestIndex}.answers.${index}.ansver`} placeholder='Вариант ответа' isErrorText={false} withoutWrapper />
                      <Input form={form} name={`questions.${nestIndex}.answers.${index}.id`} type='hidden' withoutWrapper />
@@ -68,11 +56,9 @@ const CoursesLessonEditTestItemVariant = ({ nestIndex, form, onDelete }) => {
             <AddSvg />
             <span>Добавить вариант</span>
          </Button>
+         {error && <div className='input-error-text'>{error.message || 'Обязательное поле'}</div>}
       </div>
    )
 }
-
-// ansver
-// is_true
 
 export default CoursesLessonEditTestItemVariant

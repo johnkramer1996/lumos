@@ -17,7 +17,7 @@ const validationSchema = yup.object({
    description: yup.string().required('Обязательное поле'),
    can_comment: yup.boolean().required('Обязательное поле'),
    has_text: yup.boolean().required('Обязательное поле'),
-   count_answers: yup.number().required('Обязательное поле'),
+   //  count_answers: yup.number().required('Обязательное поле'),
    questions: yup
       .array()
       // .min(1, 'Добавьте один вопрос')
@@ -45,7 +45,6 @@ const CoursesLessonEdit = () => {
    const { setIsShow, setContent, fetchLesson, resetCourses, resetLessonQuestionsData, putLesson } = useDispatch()
    const lesson = useSelector(coursesSelectors.getLesson)
    const questions = useSelector(coursesSelectors.getLessonQuestions)
-   const questionsData = useSelector(coursesSelectors.getLessonQuestionsData)
 
    const form = useForm({
       resolver: yupResolver(validationSchema),
@@ -56,11 +55,12 @@ const CoursesLessonEdit = () => {
       },
    })
    const { isDirty, errors } = form.formState
+
    console.log(errors)
 
    useEffect(() => {
       form.setValue('name', lesson.name ?? '')
-      form.setValue('description', lesson.description ?? 'Описание')
+      form.setValue('description', lesson.description ?? '')
       form.setValue('can_comment', lesson.can_comment ?? false)
       form.setValue('has_text', lesson.has_text ?? false)
       form.setValue('count_answers', lesson.count_answers ?? '')

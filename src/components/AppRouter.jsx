@@ -10,7 +10,7 @@ const AppRouter = () => {
    const { auth } = useDispatch()
    const isAuth = useSelector(authSelectors.getIsAuth)
 
-   const authRequest = useRequest({ request: auth, loading: localStorage.getItem('token') })
+   const authRequest = useRequest({ request: auth, loading: !!localStorage.getItem('token') })
 
    useEffect(() => localStorage.getItem('token') && authRequest.call(), [])
 

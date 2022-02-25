@@ -20,8 +20,6 @@ const CabinetCoursesEdit = () => {
    const hasModules = !(Object.keys(modules).length === 0)
    const { user_id: page_user_id } = course
 
-   const [form, setForm] = useState()
-
    const fetchInfoRequest = useRequest({
       request: fetchInfo,
       loading: isEditPage,
@@ -39,7 +37,6 @@ const CabinetCoursesEdit = () => {
    const refTabMain = useRef()
    const refTabLesson = useRef()
    const refTabDescription = useRef()
-   const refForm = useRef()
    const refsTab = useMemo(() => [refTabMain, refTabLesson, refTabDescription], [])
 
    const tabItems = [
@@ -108,7 +105,7 @@ const CabinetCoursesEdit = () => {
                   </Tabs>
                </div>
                <div className='course-edit__right'>
-                  <CoursesEditHint form={form} onCancel={onCancel} isResetBtn={isEditPage && false} textBtn={isEditPage || hasCourse ? 'Сохранить' : 'Добавить'} />
+                  <CoursesEditHint onCancel={onCancel} isResetBtn={isEditPage && false} textBtn={isEditPage || hasCourse ? 'Сохранить' : 'Добавить'} />
                </div>
             </div>
          </div>

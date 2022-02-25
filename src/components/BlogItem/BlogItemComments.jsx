@@ -28,12 +28,12 @@ const BlogItemComments = () => {
       },
    })
    //  const readCommentsRequest = useRequest({ request: readComments })
-   const addFrontBlogCommentRequest = useRequest({ request: addFrontBlogComment })
+   const addFrontBlogCommentRequest = useRequest({ request: addFrontBlogComment, loading: true })
 
    useEffect(() => {
       if (valueLastPage.current === page) return
       valueLastPage.current = page
-      // fetchFrontBlogCommentsRequest.call({ blogId, page, _limit: limit })
+      fetchFrontBlogCommentsRequest.call({ blogId, page, _limit: limit })
    }, [page])
 
    const onAddHandle = (text) => {
@@ -43,7 +43,7 @@ const BlogItemComments = () => {
    return (
       <>
          {can_comment && (
-            <Comments isLoading={false && fetchFrontBlogCommentsRequest.isLoading} items={comments} limit={limit} total={total} isLastPage={isLastPage} onAddHandle={onAddHandle} setPage={setPage} />
+            <Comments isLoading={fetchFrontBlogCommentsRequest.isLoading} items={comments} limit={limit} total={total} isLastPage={isLastPage} onAddHandle={onAddHandle} setPage={setPage} />
          )}
       </>
    )

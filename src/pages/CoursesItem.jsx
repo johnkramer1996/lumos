@@ -55,6 +55,8 @@ const CoursesItem = () => {
       addUserToCourseRequest.call({ body: { user_id, course_id: id } })
    }
 
+   console.log('update')
+
    return (
       <>
          <LoaderWrapper isLoading={fetchFrontCourseRequest.isLoading}>
