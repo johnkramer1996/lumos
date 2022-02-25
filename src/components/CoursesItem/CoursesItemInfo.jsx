@@ -1,26 +1,31 @@
 import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { getURL, isActiveClass, timer } from 'utils'
+import { declOfNum, getDeclOfArray, getURL, isActiveClass, timer } from 'utils'
 import { ReactComponent as PlaySvg } from 'svg/play.svg'
 import { Button } from 'components/ui'
 import { frontCoursesSelectors, systemSelectors } from 'store/selectors'
 import { useEffect } from 'react'
+import { TIME_NAMES } from 'constants'
 
 const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
    const course = useSelector(frontCoursesSelectors.getCourse)
    const prices = useSelector(frontCoursesSelectors.getPrices)
-   const { image, name, short_desc, width, type_study: typeStudy, format_study, anytime } = course
+   const { image, name, short_desc, width_number, width_name, type_study: typeStudy, format_study, anytime, timing } = course
    const { price, price_with_sale } = prices[0] || {}
    const { type_study = [], format = [] } = useSelector(systemSelectors.getReferences)
    const { name: typeName } = type_study.find(({ id }) => id === typeStudy) || {}
    const { name: foramtName } = format.find(({ id }) => id === format_study) || {}
-   const where = anytime === 1 ? 'В любое время' : '01.01.2001'
+   const where = anytime === 1 ? 'В любое время' : timing || ''
 
    const days = useRef()
    const hours = useRef()
    const minutes = useRef()
    const seconds = useRef()
    useEffect(() => timer(days, hours, minutes, seconds), [])
+
+   console.log(width_name)
+
+   //  const _width_name = (TIME_NAMES.find(({ id }) => id === width_name) || {}).name || ''
 
    return (
       <section className='course-info'>
@@ -38,7 +43,9 @@ const CoursesItemInfo = ({ onEnroll, isEnrolledPage }) => {
                   <div className='course-info__badges'>
                      <div className='course-info__badge'>
                         <span>Длительность</span>
-                        <strong>{width}</strong>
+                        <strong>
+                           {width_number} {declOfNum(width_number, getDeclOfArray[width_name])}
+                        </strong>
                      </div>
                      <div className='course-info__badge'>
                         <span>Тип обучения</span>

@@ -7,7 +7,7 @@ import { coursesSelectors } from 'store/selectors'
 import { ReactComponent as DeleteSvg } from 'svg/delete.svg'
 import { getError } from 'utils'
 
-const CoursesEditPrice = ({ id, index, onRemove, name, form, ...rest }) => {
+const CoursesEditPrice = ({ id, index, onRemove, name, form }) => {
    const modules = useSelector(coursesSelectors.getModules)
 
    const error = getError(form.formState.errors, `${name}.${index}.moduls`)
@@ -27,13 +27,8 @@ const CoursesEditPrice = ({ id, index, onRemove, name, form, ...rest }) => {
             <Input form={form} name={`${name}.${index}.price`} label='Стоимость со скидкой (в рублях)' classNameWrapper='create-price__form-group' number />
          </div>
          <div className='create-price__checks'>
-            {console.log(rest)}
             {modules.map(({ name: label }, mIndex) => (
                <Checkbox key={mIndex} form={form} name={`${name}.${index}.moduls`} value={mIndex} label={label} className='create-price__check' />
-               //  <div key={mIndex} className='create-price__check checkbox'>
-               //     <input type='checkbox' className='checkbox' id={`module-${index}-${mIndex}`} value={mIndex} {...form.register(`${name}.${index}.moduls`)} />
-               //     <label htmlFor={`module-${index}-${mIndex}`}>{label}</label>
-               //  </div>
             ))}
             <div className='input-error-text'>{error && error.message}</div>
          </div>

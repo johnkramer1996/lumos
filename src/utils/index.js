@@ -16,26 +16,31 @@ export const getDeclOfArray = {
    files: ['файл', 'файла', 'файлов'],
    comments: ['комментарий', 'комментария', 'комментариев'],
    new: ['новый', 'новых', 'новых'],
+   minutes: ['минута', 'минуты', 'минут'],
+   hours: ['час', 'часа', 'часов'],
+   days: ['день', 'дня', 'дней'],
+   weeks: ['неделя', 'недели', 'недель'],
+   months: ['месяц', 'месяца', 'месяцей'],
+   years: ['год', 'года', 'лет'],
 }
 
-export const eventBus = {
-   on(event, callback) {
-      document.addEventListener(event, (e) => callback(e.detail))
-   },
-   dispatch(event, data) {
-      document.dispatchEvent(new CustomEvent(event, { detail: data }))
-   },
-   remove(event, callback) {
-      document.removeEventListener(event, callback)
-   },
-}
+// export const eventBus = {
+//    on(event, callback) {
+//       document.addEventListener(event, (e) => callback(e.detail))
+//    },
+//    dispatch(event, data) {
+//       document.dispatchEvent(new CustomEvent(event, { detail: data }))
+//    },
+//    remove(event, callback) {
+//       document.removeEventListener(event, callback)
+//    },
+// }
 
 export const timeout = (func, time = 0) => new Promise((res) => setTimeout(() => res(func()), time))
 
 export const getData = (response, prev = false) => {
    let data = response.data
    while (data.data !== undefined) {
-      // TODO CHECK IT
       if (prev && !data.data?.data) return data
       data = data.data
    }
@@ -50,7 +55,6 @@ export const asyncAction =
    ({ data, callbackHandler, request, success = () => {}, error = () => {} } = {}) =>
    async (dispatch) => {
       try {
-         // await timeout(100)
          callbackHandler('before', { dispatch })
          const response = await request(data)
          const successArgs = { response, prevData: getData(response, true), data: getData(response) }

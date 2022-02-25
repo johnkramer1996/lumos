@@ -45,8 +45,6 @@ const CoursesEditTabMain = ({ refTabs, refTab }) => {
    const { isDirty, errors } = form.formState
    const anytime = form.watch('anytime')
 
-   console.log(errors)
-
    useEffect(() => {
       if (hasCourse) {
          Object.entries(form.getValues())

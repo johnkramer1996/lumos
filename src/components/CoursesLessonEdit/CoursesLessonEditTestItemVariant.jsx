@@ -36,7 +36,6 @@ const CoursesLessonEditTestItemVariant = ({ nestIndex, form }) => {
                      <Checkbox form={form} name={`questions.${nestIndex}.answers.${index}.is_true`} type='radio' />
                      <Input form={form} name={`questions.${nestIndex}.answers.${index}.ansver`} placeholder='Вариант ответа' isErrorText={false} withoutWrapper />
                      <Input form={form} name={`questions.${nestIndex}.answers.${index}.id`} type='hidden' withoutWrapper />
-                     {/* <Input input={input_ansver} placeholder='Вариант ответа' withoutWrapper /> */}
                      <button
                         className='lesson-test__variants-delete'
                         type='button'

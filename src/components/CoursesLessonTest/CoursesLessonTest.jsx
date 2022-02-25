@@ -1,21 +1,57 @@
-import { Button } from 'components/ui'
-import React, { useState } from 'react'
+import { Button, Checkbox, Input } from 'components/ui'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { authSelectors, coursesSelectors } from 'store/selectors'
-import { getURL, hasAccess } from 'utils'
+import { getError, getURL, hasAccess } from 'utils'
 import { ReactComponent as EditSvg } from 'svg/edit.svg'
 import { ROLES } from 'constants'
 import CoursesLessonTestQuestions from './CoursesLessonTestQuestions'
 import { useDispatch, useRequest } from 'hooks'
 import { modalsContentTypes } from 'store/reducers/modals/types'
+import { useFieldArray, useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+
+const validationSchema = yup.object({
+   questions: yup.array().of(
+      yup.object().shape({
+         question_id: yup.number().required('Обязательное поле'),
+         ansvers: yup.array().of(yup.number()).min(1, 'Добавьте один ответ').required('Обязательное поле'),
+      }),
+   ),
+})
 
 const CoursesLessonTest = () => {
-   const { setLessonAnswers } = useDispatch()
    const { courseId, lessonId } = useParams()
    const { sendLessonTest, setIsShow, setContent, setType } = useDispatch()
    const rolesId = useSelector(authSelectors.getRolesId)
    const questions = useSelector(coursesSelectors.getLessonQuestions)
+
+   const form = useForm({
+      mode: 'onChange',
+      resolver: yupResolver(validationSchema),
+      defaultValues: {
+         questions: [{ question: '', amount_answers: null, ansvers: [] }],
+      },
+   })
+   const { fields } = useFieldArray({
+      control: form.control,
+      name: 'questions',
+   })
+
+   console.log(form.formState.errors)
+
+   useEffect(() => {
+      console.log(questions)
+      form.setValue(
+         'questions',
+         questions.map((m) => ({
+            question_id: m.id,
+            ansvers: [],
+         })),
+      )
+   }, [questions])
 
    const sendLessonTestRequest = useRequest({
       request: sendLessonTest,
@@ -26,26 +62,35 @@ const CoursesLessonTest = () => {
       },
    })
 
-   const onSubmit = () => {
+   const onSubmit = (data) => {
+      console.log(data)
       const body = {
-         list_ansvers: questions.map(({ id, value }) => ({
-            question_id: id,
-            ansvers: value,
-         })),
+         list_ansvers: data.questions,
       }
-
-      setLessonAnswers(body.list_ansvers)
 
       sendLessonTestRequest.call({ courseId, lessonId, body })
    }
 
    return (
-      <div className='test-page__wrap'>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='test-page__wrap'>
          <div className='test-page__left'>
             <div className='test-page__items'>
-               {questions.map((props, index) => (
-                  <CoursesLessonTestQuestions key={props.id || index} {...props} index={index} />
-               ))}
+               {questions.map((props, index) => {
+                  const error = getError(form.formState.errors, `questions.${index}.ansvers`)
+                  return (
+                     <div key={props.id || index} className='test-page__item card-bg'>
+                        <div className='test-page__item-title'>{props.question}</div>
+                        <div className='test-page__item-variants'>
+                           <Input form={form} name={`questions.${index}.question_id`} type='hidden' />
+                           {props.answers?.map(({ id, ansver }, indexAnswer) => (
+                              //  <Checkbox key={indexAnswer} form={form} name={`${name}.${index}.moduls`} value={mIndex} label={label} className='create-price__check' />
+                              <Checkbox key={indexAnswer} form={form} name={`questions.${index}.ansvers`} value={id} label={ansver} className='course-edit__form-checkbox' />
+                           ))}
+                           <div className='input-error-text'>{error && error.message}</div>
+                        </div>
+                     </div>
+                  )
+               })}
             </div>
          </div>
          <div className='test-page__right'>
@@ -67,13 +112,11 @@ const CoursesLessonTest = () => {
                      <div className='test-page__card-num'>1 из {questions.length}</div>
                   </div>
                   <div className='test-page__card-desc'>Выберите варианты ответов во всех вопросах, чтобы завершить тест</div>
-                  <Button className='test-page__card-btn' onClick={onSubmit}>
-                     Пройти тест
-                  </Button>
+                  <Button className='test-page__card-btn'>Пройти тест</Button>
                </div>
             )}
          </div>
-      </div>
+      </form>
    )
 }
 

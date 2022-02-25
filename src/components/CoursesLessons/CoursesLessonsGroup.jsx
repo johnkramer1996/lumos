@@ -12,7 +12,6 @@ const CoursesLessonsGroup = ({ id, name, lessons, currentLesson, courseId, roles
          <div className='lkp-course__items'>
             {lessons.map(({ id, name, progress }, indexLesson) => {
                index++
-               console.log(id)
                return (
                   <div key={id || indexLesson}>
                      {currentLesson.id === id ? (

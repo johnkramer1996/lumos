@@ -3,10 +3,6 @@ import { isActiveClass, uid } from 'utils'
 
 const Checkbox = ({ form, label = '', onChange, type = 'checkbox', className, registerOptions, ...props }) => {
    if (!form || !props['name']) return <input type='text' placeholder='Error Input' />
-   const onChangeHandle = (e) => {
-      // input.bind?.onChange(e)
-      // onChange(e, input)
-   }
    const id = uid()
 
    const name = props['name']
