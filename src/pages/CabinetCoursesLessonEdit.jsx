@@ -42,7 +42,7 @@ const validationSchema = yup.object({
 const CoursesLessonEdit = () => {
    const { courseId, lessonId } = useParams()
    const { navigate } = useNavigate()
-   const { setIsShow, setContent, fetchLesson, resetCourses, resetLessonQuestionsData, putLesson } = useDispatch()
+   const { setIsShow, setContent, fetchLesson, resetCourses, putLesson } = useDispatch()
    const lesson = useSelector(coursesSelectors.getLesson)
    const questions = useSelector(coursesSelectors.getLessonQuestions)
 
@@ -71,10 +71,9 @@ const CoursesLessonEdit = () => {
    const putLessonRequest = useRequest({
       request: putLesson,
       success: () => {
+         navigate(-1)
          setIsShow(true)
          setContent({ title: 'Урок обновлен' })
-         resetLessonQuestionsData()
-         navigate(-1)
       },
    })
    useEffect(() => {
